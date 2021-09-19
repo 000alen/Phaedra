@@ -1,0 +1,39 @@
+.page {
+  box-sizing: border-box;
+  background-color: #161616;
+  display: inline-block;
+  border-radius: 10px;
+  height: auto;
+  width: 100vw;
+  padding-right: 2.5vw;
+  padding-bottom: 5px;
+}
+
+.pageLeftContainer {
+  float: left;
+  width: 50vw;
+  background-color: #161616;
+}
+
+.pageMarkdown {
+  width: 100%;
+  color: white;
+  font-size: 14px;
+}
+
+.pageRightContainer {
+  float: right;
+  width: 45vw;
+  background-color: #161616;
+}
+
+.pagePdf {
+  margin-right: 20px;
+}
+  
+.page-number {
+  padding-top: 10px;
+  color: gray;
+  font-size: 13px;
+  text-align: center;
+}

@@ -1,0 +1,10 @@
+Flask
+flask_cors
+pdfplumber
+nltk
+torch
+transformers
+sentencepiece
+names-generator
+wikipedia
+vocabulary

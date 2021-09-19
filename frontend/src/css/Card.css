@@ -1,0 +1,25 @@
+.cardContainer {
+    background-color: #18A0FB;
+
+    height: 160px !important;
+    width: 250px !important;
+    border: none !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardFileUploader {    
+    
+    height: 140px !important;
+    width: 230px !important;
+    border: none !important;
+    border-radius: 5px !important;
+}
+
+.cardFileUploaderInner {
+    color: white;
+    font-size: 3.1rem;
+    margin: 0 auto;
+}

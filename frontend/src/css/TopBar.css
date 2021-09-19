@@ -1,0 +1,106 @@
+.topBar {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 40px;
+    /* top: 0; */
+
+    background-color: #1B1D23;
+    -webkit-user-select: none;
+    z-index: 20;
+}
+
+.topBar > .titleBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.topBar > .titleBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /*width: 100%;*/
+}
+
+.titleBar > .toggleButton {
+    width: 40px;
+    height: 33px;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.titleBar > .toggleButton:hover {
+    background-color: #272C36;
+}
+
+.titleBar > .toggleButton:active {
+    background-color: #4F9FEE;
+}
+
+.titleBar > .title {
+    margin-left: 12px;
+    width: 100%;
+    line-height: 30px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+    -webkit-app-region: drag;
+    text-align: left;
+    color: white;
+}
+
+.topBar > .titleBarBtns {
+    display: flex;
+    flex-direction: row;
+    width: 120px;
+    height: 40px;
+}
+
+.titleBarBtns > .topBtn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.titleBarBtns > .topBtn:hover {
+    background-color: #272C36;
+}
+
+.titleBarBtns > .topBtn:active {
+    background-color: #4F9FEE;
+}
+
+.titleBarBtns > .minimizeBtn {
+    background-image: url("../assets/icons/iconMinimize.png");
+    background-size: contain;
+}
+
+.titleBarBtns > .maximizeBtn {
+    background-image: url("../assets/icons/iconMaximize.png");background-size: contain;
+}
+
+.titleBarBtns > .restoreBtn {
+    background-image: url("../assets/icons/iconRestore.png");
+    background-size: contain;
+}
+
+.titleBarBtns > .closeBtn {
+    background-image: url("../assets/icons/iconClose.png");
+    background-size: contain;
+}
+
+.topBarChildren {
+    width: 80%;
+    margin-left: 10px;
+}

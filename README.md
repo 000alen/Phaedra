@@ -16,6 +16,7 @@ A software that summarizes texts, selects key concepts and allows you to ask que
 
 ```
 cd backend
+./env/Scripts/activate
 python -m Phaedra.API
 ```
 

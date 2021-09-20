@@ -1,16 +1,29 @@
 import requests
+
 from Phaedra.Notebook import Notebook
 
-notebook = Notebook.from_json("./notebooks/dreamy_rubin.json")
+# OPEN_PATH = "./notebooks/nice_blackburn.json"
+OPEN_PATH = input("OPEN_PATH> ")
+
+# FROM_PDF_PATH = "./bitcoin.pdf"
+FROM_PDF_PATH = input("FROM_PDF_PATH> ")
+
+# FROM_TEXT_PATH = "./ethereum.txt"
+FROM_TEXT_PATH = input("FROM_TEXT_PATH> ")
+
+# FROM_JSON_PATH = "./notebooks/dreamy_rubin.json"
+FROM_JSON_PATH = input("FROM_JSON_PATH> ")
+
+notebook = Notebook.from_json(FROM_JSON_PATH)
 notebook_json = notebook.json()
 page_json = notebook.pages[0].json()
 cell_json = notebook.pages[0].cells[0].json()
 
 url = "http://127.0.0.1:5000"
 requests_info = {
-    "/notebook/open": {"method": "POST", "data": {"path": "./notebooks/nice_blackburn.json"}},
-    "/notebook/new/from_pdf": {"method": "POST", "data": {"path": "./bitcoin.pdf"}},
-    "/notebook/new/from_text": {"method": "POST", "data": {"text": open("./ethereum.txt").read()}},  
+    "/notebook/open": {"method": "POST", "data": {"path": OPEN_PATH}},
+    "/notebook/new/from_pdf": {"method": "POST", "data": {"path": FROM_PDF_PATH}},
+    "/notebook/new/from_text": {"method": "POST", "data": {"text": open(FROM_TEXT_PATH).read()}},  
     "/entities": {"method": "POST", "data": {
         "notebook": notebook_json,
         "page_index": 0

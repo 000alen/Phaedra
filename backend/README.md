@@ -1,6 +1,6 @@
 # Phaedra-backend
 
-# Getting started
+## Getting started
 
 ```
 python -m venv env
@@ -8,13 +8,13 @@ python -m venv env
 pip install -r requirements.txt
 ```
 
-## Running terminal interface
+### Running terminal interface
 
 ```
 python -m Phaedra
 ```
 
-## Running API
+### Running API
 
 ```
 python -m Phaedra.API

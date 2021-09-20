@@ -10,6 +10,20 @@ A software that summarizes texts, selects key concepts and allows you to ask que
 
 [README.md](./frontend/README.md)
 
+# Getting started
+
+## Running (developing and testing)
+
+```
+cd backend
+python -m Phaedra.API
+```
+
+```
+cd frontend
+yarn go
+```
+
 # Authors
 
 - Noah Buccolini ([missresetti](https://github.com/missresetti))

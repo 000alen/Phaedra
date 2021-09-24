@@ -130,7 +130,6 @@ def remove_cell():
 
 @app.route("/cell/add/question", methods=["POST"])
 def add_question_cell():
-
     print(request.json["notebook"])
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))

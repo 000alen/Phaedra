@@ -2,6 +2,8 @@ import pdfplumber
 import re
 import string
 
+from typing import List
+
 from nltk import word_tokenize, corpus
 
 STOP_WORDS = corpus.stopwords.words("english")
@@ -13,7 +15,7 @@ def extract_text(file_path: str) -> str:
     return "".join(page.extract_text() for page in pdfplumber.open(file_path).pages)
 
 
-def extract_text_to_pages(file_path: str) -> list[str]:
+def extract_text_to_pages(file_path: str) -> List[str]:
     print(f"Extracting text: '{file_path[:5]}...'")
     return [page.extract_text() for page in pdfplumber.open(file_path).pages]
 
@@ -24,7 +26,7 @@ def preprocess_text(text: str) -> str:
     response_text: str = ""
 
     for line in text.split("\n"):
-        all_words: list = word_tokenize(line)
+        all_words = word_tokenize(line)
 
         has_stop_word = False
         for word in all_words:

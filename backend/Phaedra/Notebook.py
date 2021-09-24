@@ -2,6 +2,8 @@ import names_generator
 import wikipedia
 import uuid
 
+from typing import List, Dict
+
 from Phaedra.PDF import extract_text_to_pages, preprocess_text
 from Phaedra.NLP import summarize_text, question_text, extract_named_entities, tokenizer, batch_summarize_text, batch_question_text_same_question, batch_check_linguistic_acceptability, batch_get_sentence_similarity, capitalize_text, meaning, synonym, antonym, usage_example
 
@@ -9,7 +11,7 @@ QUERY_SIZE = 20
 CHUNK_SIZE = 512 - QUERY_SIZE
 
 
-def chunk_sources(sources: list[str]) -> list[list[int], list[str]]:
+def chunk_sources(sources: List[str]) -> List[List[int], List[str]]:
     tokenized_sources = [tokenizer(source)["input_ids"] for source in sources]
 
     indexes = []
@@ -51,9 +53,9 @@ def chunk_sources(sources: list[str]) -> list[list[int], list[str]]:
 class Cell:
     id: str
     content: str
-    data: dict
+    data: Dict
 
-    def __init__(self, content: str = None, data: dict = None) -> None:
+    def __init__(self, content: str = None, data: Dict = None) -> None:
         if content is None:
             content = ""
     
@@ -76,7 +78,7 @@ class Cell:
         cell.id = _json["id"]
         return cell
 
-    def json(self) -> dict:
+    def json(self) -> Dict:
         return {
             "id": self.id,
             "content": self.content,
@@ -92,10 +94,10 @@ class Cell:
 
 class Page:
     id: str
-    cells: list[Cell]
-    data: dict
+    cells: List[Cell]
+    data: Dict
 
-    def __init__(self, cells: list[Cell] = None, data: dict = None) -> None:
+    def __init__(self, cells: List[Cell] = None, data: Dict = None) -> None:
         if cells is None:
             cells = []
 
@@ -118,7 +120,7 @@ class Page:
         page.id = _json["id"]
         return page
 
-    def json(self) -> dict:
+    def json(self) -> Dict:
         json = {}
         json["id"] = self.id
         json["cells"] = [cell.json() for cell in self.cells]
@@ -196,13 +198,13 @@ class Notebook:
     id: str
     name: str
     document: str
-    pages: list[Page]
+    pages: List[Page]
 
     def __init__(
         self, 
         name: str = None,
         document: str = None,
-        pages: list[Page] = None
+        pages: List[Page] = None
     ) -> None:
         if name is None:
             name = names_generator.generate_name()
@@ -260,7 +262,7 @@ class Notebook:
         return cls(pages=pages, name=name, file=None)
 
     @classmethod
-    def from_json(cls, file: str = None, _json: dict = None) -> "Notebook":
+    def from_json(cls, file: str = None, _json: Dict = None) -> "Notebook":
         assert file is not None or _json is not None
 
         if file is not None:
@@ -289,7 +291,7 @@ class Notebook:
 
         return string
 
-    def json(self) -> dict:
+    def json(self) -> Dict:
         json = {}
         json["id"] = self.id
         json["name"] = self.name
@@ -309,7 +311,7 @@ class Notebook:
     def remove_page(self, page: Page) -> None:
         self.pages.remove(page)
 
-    def entities(self, page_index: int) -> list[str]:
+    def entities(self, page_index: int) -> List[str]:
         source = self.get_page(page_index).data["source"]
         return extract_named_entities(source)
 
@@ -317,7 +319,7 @@ class Notebook:
         return capitalize_text(self.get_page(page_index).question(question))
 
     # XXX
-    def sparse_question(self, question) -> list[str]:
+    def sparse_question(self, question) -> List[str]:
         contexts = []
         for i, page in enumerate(self.pages):
             source = page.data["source"]

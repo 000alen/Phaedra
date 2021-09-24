@@ -3,6 +3,8 @@ import nltk
 import torch
 import json
 
+from typing import List
+
 from vocabulary.vocabulary import Vocabulary
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -44,7 +46,7 @@ def summarize_text(text: str, max_length=1000, min_length=100, do_sample=False) 
     return "".join(predictions)
 
 
-def batch_summarize_text(texts: list[str], max_length=1000, min_length=100, do_sample=False) -> list[str]:
+def batch_summarize_text(texts: List[str], max_length=1000, min_length=100, do_sample=False) -> List[str]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -98,7 +100,7 @@ def question_text(question: str, context: str) -> str:
     return "".join(predictions)
 
 
-def batch_question_text(questions: list[str], contexts: list[str]) -> list[str]:
+def batch_question_text(questions: List[str], contexts: List[str]) -> List[str]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -133,7 +135,7 @@ def batch_question_text(questions: list[str], contexts: list[str]) -> list[str]:
     return predictions
 
 
-def batch_question_text_same_context(questions: list[str], context: str) -> list[str]:
+def batch_question_text_same_context(questions: List[str], context: str) -> List[str]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -169,7 +171,7 @@ def batch_question_text_same_context(questions: list[str], context: str) -> list
     return predictions
 
 
-def batch_question_text_same_question(question: str, contexts: list[str]) -> list[str]:
+def batch_question_text_same_question(question: str, contexts: List[str]) -> List[str]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -228,7 +230,7 @@ def check_linguistic_acceptability(text: str) -> bool:
 
 
 # XXX
-def batch_check_linguistic_acceptability(texts: list[str]) -> list[bool]:
+def batch_check_linguistic_acceptability(texts: List[str]) -> List[bool]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -258,7 +260,7 @@ def get_sentence_similarity(sentence1: str, sentence2: str) -> float:
     return float(predictions)
 
 
-def batch_get_sentence_similarity(sentences1: list[str], sentences2: list[str]) -> list[float]:
+def batch_get_sentence_similarity(sentences1: List[str], sentences2: List[str]) -> List[float]:
     def chunks(iterator, n):
         for i in range(0, len(iterator), n):
             yield iterator[i:i + n]
@@ -278,7 +280,7 @@ def batch_get_sentence_similarity(sentences1: list[str], sentences2: list[str]) 
     return [float(prediction) for prediction in predictions]
 
 
-def extract_named_entities(text: str) -> set[str]:
+def extract_named_entities(text: str) -> List[str]:
     print(f"Extracting NE: '{text[:5]}...'")
     words = nltk.word_tokenize(text)
     tags = nltk.pos_tag(words)
@@ -295,18 +297,17 @@ def capitalize_text(text: str) -> str:
     return " ".join(sentence.capitalize() for sentence in sentences)
 
 
-def meaning(word: str) -> list[str]:
+def meaning(word: str) -> List[str]:
     return [_["text"] for _ in json.loads(Vocabulary.meaning(word))]
 
 
-def synonym(word: str) -> list[str]:
+def synonym(word: str) -> List[str]:
     return [_["text"] for _ in json.loads(Vocabulary.synonym(word))]
 
 
-def antonym(word: str) -> list[str]:
+def antonym(word: str) -> List[str]:
     return [_["text"] for _ in json.loads(Vocabulary.antonym(word))]
 
 
-def usage_example(word: str) -> list[str]:
+def usage_example(word: str) -> List[str]:
     return [_["text"] for _ in json.loads(Vocabulary.usage_example(word))]
-

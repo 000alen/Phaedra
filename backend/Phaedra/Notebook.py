@@ -2,7 +2,7 @@ import names_generator
 import wikipedia
 import uuid
 
-from typing import List, Dict
+from typing import List, Tuple, Dict 
 
 from Phaedra.PDF import extract_text_to_pages, preprocess_text
 from Phaedra.NLP import summarize_text, question_text, extract_named_entities, tokenizer, batch_summarize_text, batch_question_text_same_question, batch_check_linguistic_acceptability, batch_get_sentence_similarity, capitalize_text, meaning, synonym, antonym, usage_example
@@ -11,7 +11,7 @@ QUERY_SIZE = 20
 CHUNK_SIZE = 512 - QUERY_SIZE
 
 
-def chunk_sources(sources: List[str]) -> List[List[int], List[str]]:
+def chunk_sources(sources: List[str]) -> Tuple[List[int], List[str]]:
     tokenized_sources = [tokenizer(source)["input_ids"] for source in sources]
 
     indexes = []

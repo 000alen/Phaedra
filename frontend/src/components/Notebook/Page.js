@@ -18,17 +18,33 @@ export function Page({id, notebookController, data, document, cells, active, act
                         pageId={id}
                         active={active ? (activeCell === cell.id) : null} />
                 )}
+                <div className="flex flex-wrap justify-center">
+                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                        <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
+                        <button>Cell</button>
+                    </div>
+                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                        <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
+                        <button>Question</button>
+                    </div>
+                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                        <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
+                        <button>Wikipedia</button>
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <Document 
-                    file={document}
-                    renderMode="svg">
-                    <DocumentPage 
-                        pageNumber={data.number}
-                        renderTextLayer={false} />
-                </Document>
-            </div>
+            
+            {data.number && (
+                <div>
+                    <Document 
+                        file={document}
+                        renderMode="svg">
+                        <DocumentPage 
+                            pageNumber={data.number}
+                            renderTextLayer={false} />
+                    </Document>
+                </div>
+            )}
         </div>
     )
 }

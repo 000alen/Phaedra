@@ -35,3 +35,10 @@ ipcRenderer.on('isMaximized', () => {
 ipcRenderer.on('isRestored', () => {
   changeMaximizeRestoreButton(false);
 });
+
+document.addEventListener('mouseup', (event) => {
+  if (window.getSelection().toString().length){
+    let text = window.getSelection().toString();
+    console.log(text);
+  }
+});

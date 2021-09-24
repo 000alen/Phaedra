@@ -1,9 +1,15 @@
-const url = "http://localhost:5000"
 const headers = {"Content-Type": "application/json"}
+
+export function getApiUrl() {
+    let apiUrl = window.localStorage.getItem("apiUrl");
+    if (apiUrl) return apiUrl;
+    window.localStorage.setItem("apiUrl", "http://localhost:5000");
+    return "http://localhost:5000";
+}
 
 // "/notebook/open"
 async function openNotebook(path) {
-    const response = await fetch(`${url}/notebook/open`, {
+    const response = await fetch(`${getApiUrl()}/notebook/open`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -16,7 +22,7 @@ async function openNotebook(path) {
 
 // "/notebook/new"
 async function newNotebook(id, name, file, pages) {
-    const response = await fetch(`${url}/notebook/new`, {
+    const response = await fetch(`${getApiUrl()}/notebook/new`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -32,7 +38,7 @@ async function newNotebook(id, name, file, pages) {
 
 // "/notebook/new/from_pdf"
 async function newNotebookFromPdf(path) {
-    const response = await fetch(`${url}/notebook/new/from_pdf`, {
+    const response = await fetch(`${getApiUrl()}/notebook/new/from_pdf`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -45,7 +51,7 @@ async function newNotebookFromPdf(path) {
 
 // "/notebook/new/from_text"
 async function newNotebookFromText(text) {
-    const response = await fetch(`${url}/notebook/new/from_text`, {
+    const response = await fetch(`${getApiUrl()}/notebook/new/from_text`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -58,7 +64,7 @@ async function newNotebookFromText(text) {
 
 // "/entities"
 async function entities(notebook_json, page_index) {
-    const response = await fetch(`${url}/entities`, {
+    const response = await fetch(`${getApiUrl()}/entities`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -72,7 +78,7 @@ async function entities(notebook_json, page_index) {
 
 // "/question"
 async function question(notebook_json, page_index, question) {
-    const response = await fetch(`${url}/question`, {
+    const response = await fetch(`${getApiUrl()}/question`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -87,7 +93,7 @@ async function question(notebook_json, page_index, question) {
 
 // "/question/sparse"
 async function sparseQuestion(notebook_json, question) {
-    const response = await fetch(`${url}/question/sparse`, {
+    const response = await fetch(`${getApiUrl()}/question/sparse`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -101,7 +107,7 @@ async function sparseQuestion(notebook_json, question) {
 
 // "/page/new"
 async function newPage(id, name, cells, data) {
-    const response = await fetch(`${url}/page/new`, {
+    const response = await fetch(`${getApiUrl()}/page/new`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
@@ -117,7 +123,7 @@ async function newPage(id, name, cells, data) {
 
 // "/page/remove"
 async function removePage(notebook_json, page_json) {
-    const response = await fetch(`${url}/page/remove`, {
+    const response = await fetch(`${getApiUrl()}/page/remove`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -131,7 +137,7 @@ async function removePage(notebook_json, page_json) {
 
 // "/cell/new"
 async function newCell(id, data, content) {
-    const response = await fetch(`${url}/cell/new`, {
+    const response = await fetch(`${getApiUrl()}/cell/new`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -146,7 +152,7 @@ async function newCell(id, data, content) {
 
 // "/cell/add"
 async function addCell(notebook_json, page_index, cell_json) {
-    const response = await fetch(`${url}/cell/add`, {
+    const response = await fetch(`${getApiUrl()}/cell/add`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -161,7 +167,7 @@ async function addCell(notebook_json, page_index, cell_json) {
 
 // "/cell/get"
 async function getCell(notebook_json, page_index, cell_index) {
-    const response = await fetch(`${url}/cell/get`, {
+    const response = await fetch(`${getApiUrl()}/cell/get`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -176,7 +182,7 @@ async function getCell(notebook_json, page_index, cell_index) {
 
 // "/cell/remove"
 async function removeCell(notebook_json, page_index, cell_json) {
-    const response = await fetch(`${url}/cell/remove`, {
+    const response = await fetch(`${getApiUrl()}/cell/remove`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -191,7 +197,7 @@ async function removeCell(notebook_json, page_index, cell_json) {
 
 // "/cell/add/question"
 async function addQuestionCell(notebook_json, page_index, question) {
-    const response = await fetch(`${url}/cell/add/question`, {
+    const response = await fetch(`${getApiUrl()}/cell/add/question`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -206,7 +212,7 @@ async function addQuestionCell(notebook_json, page_index, question) {
 
 // "/cell/add/wikipedia"
 async function addWikipediaCell(notebook_json, page_index, query) {
-    const response = await fetch(`${url}/cell/add/wikipedia`, {
+    const response = await fetch(`${getApiUrl()}/cell/add/wikipedia`, {
         method: "POST",
         headers: headers,
         body: JSON.stringify({
@@ -221,7 +227,7 @@ async function addWikipediaCell(notebook_json, page_index, query) {
 
 // "/kill"
 async function kill() {
-    return await fetch(`${url}/kill`);
+    return await fetch(`${getApiUrl()}/kill`);
 }
 
 export { 

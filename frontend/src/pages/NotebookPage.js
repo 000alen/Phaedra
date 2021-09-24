@@ -24,7 +24,7 @@ export class NotebookPage extends Component {
     render() {
         return (
             <div className="page notebookPage">
-                <ToolBar />
+                <ToolBar  notebookRef={this.notebookRef} />
                 <Notebook key={this.id} ref={this.notebookRef} tabId={this.state.id} appController={this.state.appController} notebook={this.state.notebook} path={this.state.path} />
                 <QuestionBox notebookRef={this.notebookRef} />
             </div>

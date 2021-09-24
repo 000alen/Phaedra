@@ -195,13 +195,13 @@ class Page:
 class Notebook:
     id: str
     name: str
-    file: str
+    document: str
     pages: list[Page]
 
     def __init__(
         self, 
         name: str = None,
-        file: str = None,
+        document: str = None,
         pages: list[Page] = None
     ) -> None:
         if name is None:
@@ -212,18 +212,18 @@ class Notebook:
 
         self.id = str(uuid.uuid4())
         self.name = name
-        self.file = file
+        self.document = document
         self.pages = pages
 
     def __eq__(self, other: object) -> bool:
         if type(other) is not Notebook:
             return False
         
-        return self.id == other.id and self.name == other.name and self.file == other.file and self.pages == other.pages
+        return self.id == other.id and self.name == other.name and self.document == other.document and self.pages == other.pages
 
     @classmethod
-    def from_pdf(cls, file: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
-        sources = extract_text_to_pages(file)
+    def from_pdf(cls, document: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
+        sources = extract_text_to_pages(document)
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 
@@ -238,7 +238,7 @@ class Notebook:
             cell = Cell(content=summary)
             pages[indexes[i]].add_cell(cell)
 
-        return cls(pages=pages, name=name, file=file)
+        return cls(pages=pages, name=name, document=document)
     
     @classmethod
     def from_text(cls, text: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
@@ -267,13 +267,13 @@ class Notebook:
             import json
             _json = json.load(open(file))
 
-        notebook = cls(name=_json["name"], pages=[Page.from_json(page_json) for page_json in _json["pages"]])
+        notebook = cls(name=_json["name"], document=_json["document"], pages=[Page.from_json(page_json) for page_json in _json["pages"]])
         notebook.id = _json["id"]
         return notebook
 
     def markdown(self) -> str:
         string = ""
-        string += f"# {self.name} ({self.file})\n\n"
+        string += f"# {self.name} ({self.document})\n\n"
 
         for i, page in enumerate(self.pages):
             string += f"## Page {i}\n"  
@@ -293,7 +293,7 @@ class Notebook:
         json = {}
         json["id"] = self.id
         json["name"] = self.name
-        json["file"] = self.file
+        json["document"] = self.document
         json["pages"] = [page.json() for page in self.pages]
         return json
 

@@ -23,7 +23,7 @@ def new_notebook():
     file = request.json["file"]
     pages = [Page.from_json(page_json) for page_json in request.json["pages"]]
 
-    notebook = Notebook(name=name, file=file, pages=pages)
+    notebook = Notebook(name=name, document=file, pages=pages)
     notebook.id = _id
 
     json_notebook = notebook.json()

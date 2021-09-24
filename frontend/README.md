@@ -9,5 +9,5 @@ yarn install
 ### Running
 
 ```
-yarn go
+yarn start
 ```

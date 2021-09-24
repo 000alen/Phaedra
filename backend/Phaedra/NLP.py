@@ -26,7 +26,6 @@ tokenizer = transformers.T5Tokenizer.from_pretrained(MODEL_NAME)
 model = transformers.T5ForConditionalGeneration.from_pretrained(
     MODEL_NAME).to(DEVICE)
 
-
 def summarize_text(text: str, max_length=1000, min_length=100, do_sample=False) -> str:
     print(f"Summarizing: '{text[:5]}...'")
 

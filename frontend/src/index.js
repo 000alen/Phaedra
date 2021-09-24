@@ -5,6 +5,8 @@ import './index.css';
 
 export const {ipcRenderer} = window.require('electron');
 
+window.localStorage.clear();
+
 ReactDOM.render(
   <React.StrictMode>
     <App />

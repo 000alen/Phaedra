@@ -22,7 +22,7 @@ python -m Phaedra.API
 
 ```
 cd frontend
-yarn go
+yarn start
 ```
 
 # Authors

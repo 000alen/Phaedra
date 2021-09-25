@@ -34,13 +34,13 @@ export function Page({id, notebookController, data, document, cells, active, act
                 </div>
             </div>
             
-            {data.number && (
+            {data.document_page_number && (
                 <div>
                     <Document 
                         file={document}
                         renderMode="svg">
                         <DocumentPage 
-                            pageNumber={data.number}
+                            pageNumber={data.document_page_number}
                             renderTextLayer={false} />
                     </Document>
                 </div>

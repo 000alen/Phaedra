@@ -55,13 +55,13 @@ def chunk_sources(sources: List[str]) -> Tuple[List[int], List[str]]:
 class Notebook:
     id: str
     name: str
-    document: str
+    document_path: str
     pages: List[Page]
 
     def __init__(
         self,
         name: str = None,
-        document: str = None,
+        document_path: str = None,
         pages: List[Page] = None
     ) -> None:
         if name is None:
@@ -72,26 +72,26 @@ class Notebook:
 
         self.id = str(uuid.uuid4())
         self.name = name
-        self.document = document
+        self.document_path = document_path
         self.pages = pages
 
     def __eq__(self, other: object) -> bool:
         if type(other) is not Notebook:
             return False
 
-        return self.id == other.id and self.name == other.name and self.document == other.document and self.pages == other.pages
+        return self.id == other.id and self.name == other.name and self.document_path == other.document_path and self.pages == other.pages
 
     @classmethod
-    def from_pdf(cls, file=None, document: str = None, name: str = None, do_preprocessing: bool = True) -> "Notebook":
-        if file is not None:
-            sources = extract_text_to_pages(file)
-        else:
-            sources = extract_text_to_pages(document)
+    def from_pdf(cls, document_file=None, document_path: str = None, name: str = None, do_preprocessing: bool = True) -> "Notebook":
+        if document_file is None:
+            document_file = open(document_path, "rb")
+
+        sources = extract_text_to_pages(document_file)
 
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 
-        pages = [Page(data={"source": source, "number": i + 1})
+        pages = [Page(data={"source": source, "document_page_number": i + 1})
                  for i, source in enumerate(sources)]
 
         indexes, sources = chunk_sources(sources)
@@ -103,7 +103,7 @@ class Notebook:
             cell = Cell(content=summary)
             pages[indexes[i]].add_cell(cell)
 
-        return cls(pages=pages, name=name, document=document)
+        return cls(pages=pages, name=name, document_path=document_path)
 
     @classmethod
     def from_text(cls, text: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
@@ -113,8 +113,8 @@ class Notebook:
 
         indexes, sources = chunk_sources(sources)
 
-        pages = [Page(data={"source": source, "number": i + 1})
-                 for i, source in enumerate(sources)]
+        pages = [Page(data={"source": source})
+                 for source in sources]
 
         summaries = batch_summarize_text(sources)
         summaries = [capitalize_text(summary) for summary in summaries]
@@ -123,24 +123,24 @@ class Notebook:
             cell = Cell(content=summary)
             pages[indexes[i]].add_cell(cell)
 
-        return cls(pages=pages, name=name, file=None)
+        return cls(pages=pages, name=name, document_path=None)
 
     @classmethod
-    def from_json(cls, file: str = None, _json: Dict = None) -> "Notebook":
-        assert file is not None or _json is not None
+    def from_json(cls, file_path: str = None, _json: Dict = None) -> "Notebook":
+        assert file_path is not None or _json is not None
 
-        if file is not None:
+        if file_path is not None:
             import json
-            _json = json.load(open(file))
+            _json = json.load(open(file_path))
 
-        notebook = cls(name=_json["name"], document=_json["document"], pages=[
+        notebook = cls(name=_json["name"], document_path=_json["document_path"], pages=[
                        Page.from_json(page_json) for page_json in _json["pages"]])
         notebook.id = _json["id"]
         return notebook
 
     def markdown(self) -> str:
         string = ""
-        string += f"# {self.name} ({self.document})\n\n"
+        string += f"# {self.name} ({self.document_path})\n\n"
 
         for i, page in enumerate(self.pages):
             string += f"## Page {i}\n"
@@ -161,7 +161,7 @@ class Notebook:
         json = {}
         json["id"] = self.id
         json["name"] = self.name
-        json["document"] = self.document
+        json["document_path"] = self.document_path
         json["pages"] = [page.json() for page in self.pages]
         return json
 

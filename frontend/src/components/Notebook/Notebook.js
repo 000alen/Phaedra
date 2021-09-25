@@ -8,15 +8,12 @@ export class Notebook extends Component {
     constructor(props) {
         super(props);
 
-        // this.componentDidMount = this.componentDidMount.bind(this);
-        // this.componentWillUnmount = this.componentWillUnmount.bind(this);
-
         this.loadDocument = this.loadDocument.bind(this);
         this.toggleSelectPage = this.toggleSelectPage.bind(this);
         this.toggleSelectCell = this.toggleSelectCell.bind(this);
         
         const {tabId, appController} = props;
-        const {notebook, path} = props;
+        const {notebook, notebookPath} = props;
 
         const notebookController = {
             toggleSelectPage: this.toggleSelectPage,
@@ -28,8 +25,8 @@ export class Notebook extends Component {
             appController: appController,
             notebookController: notebookController,
             notebook: notebook,
-            path: path,
-            documentPath: notebook.document,
+            notebookPath: notebookPath,
+            documentPath: notebook.document_path,
             documentFile: null,
             activePage: null,
             activeCell: null

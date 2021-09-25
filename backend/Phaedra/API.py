@@ -21,7 +21,7 @@ def new_notebook():
     file = request.json["file"]
     pages = [Page.from_json(page_json) for page_json in request.json["pages"]]
 
-    notebook = Notebook(name=name, document=file, pages=pages)
+    notebook = Notebook(name=name, document_path=file, pages=pages)
     notebook.id = _id
 
     json_notebook = notebook.json()
@@ -34,7 +34,7 @@ def new_notebook_from_pdf():
     _base64 = request.json["base64"]
     content = base64.b64decode(_base64)
     stream = io.BytesIO(content)
-    notebook = Notebook.from_pdf(file=stream, document=path)
+    notebook = Notebook.from_pdf(document_file=stream, document_path=path)
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 

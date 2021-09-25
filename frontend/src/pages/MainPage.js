@@ -41,8 +41,8 @@ export function MainPage({id, appController}) {
                         key={id}
                         id={id}
                         appController={appController}
-                        notebook={notebook}
-                        path={path} />);
+                        notebook={notebook} />
+                    );
                 });    
             });
         });
@@ -56,7 +56,7 @@ export function MainPage({id, appController}) {
                 id={id} 
                 appController={appController}
                 notebook={notebook}
-                path={path} />);
+                notebookPath={path} />);
         });
     };
 

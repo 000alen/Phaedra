@@ -4,8 +4,11 @@ import io
 import wikipedia
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from flask_ngrok import run_with_ngrok
 
-from Phaedra.Notebook import Notebook, Page, Cell
+from Phaedra.Notebook import Notebook
+from Phaedra.Notebook.Page import Page
+from Phaedra.Notebook.Cell import Cell
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -160,6 +163,11 @@ def kill():
 
     _kill()
     return jsonify(True)
+
+
+def run_remote():
+    run_with_ngrok(app)
+    app.run()
 
 
 if __name__ == "__main__":

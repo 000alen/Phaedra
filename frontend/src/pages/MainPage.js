@@ -3,7 +3,7 @@ import { ipcRenderer } from '../index';
 import {newNotebookFromPdf} from '../API';
 import {NotebookPage} from './NotebookPage';
 
-const dialogOptions = {
+const openDialogOptions = {
     properties: ['openFile'],
     filters: [
         { name: 'Notebooks', extensions: ['pdf', "json"] }
@@ -17,7 +17,7 @@ export function MainPage({id, appController}) {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        ipcRenderer.invoke('openDialog', dialogOptions).then((results) => {
+        ipcRenderer.invoke('openDialog', openDialogOptions).then((results) => {
             setDialogOpen(false);
             if (!results.canceled) {
                 const path = results.filePaths[0];

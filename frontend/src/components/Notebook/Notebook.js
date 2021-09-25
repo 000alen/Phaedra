@@ -12,7 +12,7 @@ export class Notebook extends Component {
         this.toggleSelectPage = this.toggleSelectPage.bind(this);
         this.toggleSelectCell = this.toggleSelectCell.bind(this);
         
-        const {tabId, appController} = props;
+        const {tabId, appController, pageController} = props;
         const {notebook, notebookPath} = props;
 
         const notebookController = {
@@ -23,6 +23,7 @@ export class Notebook extends Component {
         this.state =  {
             tabId: tabId,
             appController: appController,
+            pageController: pageController,
             notebookController: notebookController,
             notebook: notebook,
             notebookPath: notebookPath,
@@ -39,6 +40,7 @@ export class Notebook extends Component {
         if (state !== null) {
             console.log("Loading saved state");
             state.appController = this.state.appController;
+            state.pageController = this.state.pageController;
             state.notebookController = this.state.notebookController;
             state.documentFile.data = Uint8Array.from(state.documentFile.data);
             this.setState(state);
@@ -89,6 +91,7 @@ export class Notebook extends Component {
 
     toggleSelectCell(pageId, cellId) {
         if (this.state.activePage === pageId && this.state.activeCell === cellId) {
+            this.state.pageController.hideQuestionBox();
             this.setState((state) => {
                 return {
                     ...state,
@@ -97,6 +100,7 @@ export class Notebook extends Component {
                 };
             });
         } else {
+            this.state.pageController.showQuestionBox(pageId, cellId);
             this.setState((state) => {
                 return {
                     ...state,
@@ -125,15 +129,23 @@ export class Notebook extends Component {
         return (
             <div className="notebook">
                 {this.state.notebook.pages.map(page => 
-                    <Page 
-                        key={page.id} 
-                        id={page.id} 
-                        notebookController={this.state.notebookController}
-                        data={page.data}
-                        document={this.state.documentFile}
-                        cells={page.cells}
-                        active={this.state.activePage === page.id}
-                        activeCell={this.state.activeCell} />
+                    <div>
+                        <Page 
+                            key={page.id} 
+                            id={page.id} 
+                            notebookController={this.state.notebookController}
+                            data={page.data}
+                            document={this.state.documentFile}
+                            cells={page.cells}
+                            active={this.state.activePage === page.id}
+                            activeCell={this.state.activeCell} />
+                        <div className="flex flex-wrap justify-center">
+                            <div className="flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
+                                <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
+                                <button>Page</button>
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
         );

@@ -63,8 +63,18 @@ ipcMain.handle('readFile', (event, ...args) => {
     return result;
 });
 
+ipcMain.handle('writeFile', (event, ...args) => {
+    const result = fs.writeFileSync(...args);
+    return result;
+});
+
 ipcMain.handle('openDialog', async (event, ...args) => {
     const result = await dialog.showOpenDialog(...args);
+    return result;
+});
+
+ipcMain.handle('saveDialog', async (event, ...args) => {
+    const result = await dialog.showSaveDialog(...args);
     return result;
 });
 

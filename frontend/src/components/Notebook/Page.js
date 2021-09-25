@@ -6,7 +6,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 export function Page({id, notebookController, data, document, cells, active, activeCell}) {
     return (
-        <div className="page p-2 m-2 bg-white rounded-sm shadow-md grid grid-cols-2">
+        <div className="page p-2 m-2 bg-gray-50 rounded-sm shadow-md grid grid-cols-2">
             <div>
                 {cells.map((cell) => 
                     <Cell 
@@ -19,15 +19,15 @@ export function Page({id, notebookController, data, document, cells, active, act
                         active={active ? (activeCell === cell.id) : null} />
                 )}
                 <div className="flex flex-wrap justify-center">
-                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                    <div className="flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
                         <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
                         <button>Cell</button>
                     </div>
-                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                    <div className="flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
                         <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
                         <button>Question</button>
                     </div>
-                    <div className="flex items-center p-2 m-2 bg-white rounded-sm shadow-md space-x-2">
+                    <div className="flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
                         <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
                         <button>Wikipedia</button>
                     </div>
@@ -35,7 +35,7 @@ export function Page({id, notebookController, data, document, cells, active, act
             </div>
             
             {data.document_page_number && (
-                <div>
+                <div className="rounded-sm">
                     <Document 
                         file={document}
                         renderMode="svg">

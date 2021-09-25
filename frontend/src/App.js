@@ -15,6 +15,7 @@ export class App extends Component {
 		this.selectTab = this.selectTab.bind(this);
 		this.closeTab = this.closeTab.bind(this);
 		this.addTab = this.addTab.bind(this);
+		this.deselectAllTabs = this.deselectAllTabs.bind(this);
 		this.changeTabContent = this.changeTabContent.bind(this);
 		this.changeTabTitle = this.changeTabTitle.bind(this);
 
@@ -23,6 +24,7 @@ export class App extends Component {
 			selectTab: this.selectTab,
 			closeTab: this.closeTab,
 			addTab: this.addTab,
+			deselectAllTabs: this.deselectAllTabs,
 			changeTabContent: this.changeTabContent,
 			changeTabTitle: this.changeTabTitle,
 		};
@@ -60,6 +62,7 @@ export class App extends Component {
 			let newTabs = state.tabs.filter((tab) => tab.id !== id);
 
 			const index = this.idToIndex(id);			
+
 			if (state.tabs[index].active && newTabs.length !== 0) {
 				const newIndex = index === 0 ? 0 : index - 1;
 				newTabs[newIndex].active = true;
@@ -90,6 +93,16 @@ export class App extends Component {
 				active: tab.id === id
 			}));
 
+			return {...state, tabs: newTabs};
+		});
+	}
+
+	deselectAllTabs() {
+		this.setState((state) => {
+			const newTabs = state.tabs.map(tab => ({
+				...tab,
+				active: false
+			  }));
 			return {...state, tabs: newTabs};
 		});
 	}

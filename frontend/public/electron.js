@@ -67,3 +67,8 @@ ipcMain.handle('openDialog', async (event, ...args) => {
     const result = await dialog.showOpenDialog(...args);
     return result;
 });
+
+ipcMain.handle('base64encode', async (event, ...args) => {
+    const result = Buffer.from(...args).toString('base64');
+    return result;
+});

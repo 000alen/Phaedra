@@ -1,4 +1,6 @@
 import json
+import base64
+import io
 import wikipedia
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -7,13 +9,6 @@ from Phaedra.Notebook import Notebook, Page, Cell
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
-
-@app.route("/notebook/open", methods=["POST"])
-def open_notebook():
-    notebook = Notebook.from_json(file=request.json["path"])
-    json_notebook = notebook.json()
-    return jsonify(json_notebook), 200
 
 
 @app.route("/notebook/new", methods=["POST"])
@@ -32,7 +27,11 @@ def new_notebook():
 
 @app.route("/notebook/new/from_pdf", methods=["POST"])
 def new_notebook_from_pdf():
-    notebook = Notebook.from_pdf(request.json["path"])
+    path = request.json["path"]
+    _base64 = request.json["base64"]
+    content = base64.b64decode(_base64)
+    stream = io.BytesIO(content)
+    notebook = Notebook.from_pdf(file=stream, document=path)
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 

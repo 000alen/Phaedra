@@ -224,8 +224,12 @@ class Notebook:
         return self.id == other.id and self.name == other.name and self.document == other.document and self.pages == other.pages
 
     @classmethod
-    def from_pdf(cls, document: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
-        sources = extract_text_to_pages(document)
+    def from_pdf(cls, file = None, document: str = None, name: str = None, do_preprocessing: bool = True) -> "Notebook":
+        if file is not None:
+            sources = extract_text_to_pages(file)
+        else:
+            sources = extract_text_to_pages(document)
+   
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 

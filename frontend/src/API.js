@@ -7,19 +7,6 @@ export function getApiUrl() {
     return "http://localhost:5000";
 }
 
-// "/notebook/open"
-async function openNotebook(path) {
-    const response = await fetch(`${getApiUrl()}/notebook/open`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-            path: path,
-        })
-    });
-
-    return response.json();
-}
-
 // "/notebook/new"
 async function newNotebook(id, name, file, pages) {
     const response = await fetch(`${getApiUrl()}/notebook/new`, {
@@ -37,12 +24,13 @@ async function newNotebook(id, name, file, pages) {
 }
 
 // "/notebook/new/from_pdf"
-async function newNotebookFromPdf(path) {
+async function newNotebookFromPdf(path, base64) {
     const response = await fetch(`${getApiUrl()}/notebook/new/from_pdf`, {
         method: "POST",
         headers: headers, 
         body: JSON.stringify({
             path: path,
+            base64: base64,
         })
     });
 
@@ -231,7 +219,6 @@ async function kill() {
 }
 
 export { 
-    openNotebook,
     newNotebook,
     newNotebookFromPdf,
     newNotebookFromText,

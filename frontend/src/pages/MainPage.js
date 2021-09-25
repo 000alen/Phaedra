@@ -32,14 +32,19 @@ export function MainPage({id, appController}) {
         });
     };
 
+    /// XXX
     const handleOpenPdf = (path) => {
-        newNotebookFromPdf(path).then((notebook) => {
-            appController.changeTabContent(id, <NotebookPage 
-                key={id}
-                id={id}
-                appController={appController}
-                notebook={notebook}
-                path={path} />);
+        ipcRenderer.invoke('readFile', path).then((content) => {
+            ipcRenderer.invoke('base64encode', content).then((base64) => {
+                newNotebookFromPdf(path, base64).then((notebook) => {
+                    appController.changeTabContent(id, <NotebookPage 
+                        key={id}
+                        id={id}
+                        appController={appController}
+                        notebook={notebook}
+                        path={path} />);
+                });    
+            });
         });
     };
 

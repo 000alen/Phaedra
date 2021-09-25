@@ -11,12 +11,12 @@ TITLE_EXPRESSION = re.compile(r"[0-9]+\.(\w|\s)+")
 
 
 def extract_text(file_path: str) -> str:
-    print(f"Extracting text: '{file_path[:5]}...'")
+    # print(f"Extracting text: '{file_path[:5]}...'")
     return "".join(page.extract_text() for page in pdfplumber.open(file_path).pages)
 
 
 def extract_text_to_pages(file_path: str) -> List[str]:
-    print(f"Extracting text: '{file_path[:5]}...'")
+    # print(f"Extracting text: '{file_path[:5]}...'")
     return [page.extract_text() for page in pdfplumber.open(file_path).pages]
 
 

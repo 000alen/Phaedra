@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { ipcRenderer } from '../index';
 import {newNotebookFromPdf} from '../API';
 import {NotebookPage} from './NotebookPage';
+import { CardButton } from '../components/CardButton';
 
 const openDialogOptions = {
     properties: ['openFile'],
@@ -13,7 +14,7 @@ const openDialogOptions = {
 export function MainPage({id, appController}) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleOpenNotebook = () => {
+    const handleOpen = () => {
         if (dialogOpen) return;
         setDialogOpen(true);
 
@@ -32,7 +33,6 @@ export function MainPage({id, appController}) {
         });
     };
 
-    /// XXX
     const handleOpenPdf = (path) => {
         ipcRenderer.invoke('readFile', path).then((content) => {
             ipcRenderer.invoke('base64encode', content).then((base64) => {
@@ -60,11 +60,19 @@ export function MainPage({id, appController}) {
         });
     };
 
+    const handleNew = () => {
+
+    };
+
     return (
-        <div className="page mainPage flex flex-wrap content-center justify-center">
-            <button 
-                className="h-48 w-96 text-4xl bg-blue-400 text-white border border-blue-400 rounded hover:bg-transparent hover:text-blue-400"
-                onClick={handleOpenNotebook}>+</button>
-        </div>
+        <div className="page mainPage flex flex-wrap content-center justify-center space-x-4">
+            <CardButton onClick={handleOpen}>
+                Open
+            </CardButton>
+
+            <CardButton onClick={handleNew}>
+                New
+            </CardButton>
+       </div>
     )
 }

@@ -1,0 +1,17 @@
+.app {
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+.appContent {
+  width: 100%;
+  height: calc(100% - 40px);
+  margin-top: 40px;
+}
+
+/* XXX */
+.appContent > div {
+  width: 100%;
+  height: 100%;
+}

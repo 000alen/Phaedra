@@ -13,7 +13,8 @@ function createWindow() {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            devTools: true,
         }
     });
 
@@ -41,6 +42,11 @@ function createWindow() {
 
     ipcMain.on('closeApp', () => {
         mainWindow.close();
+    });
+
+    mainWindow.webContents.on('new-window', function(e, url) {
+        e.preventDefault();
+        require('electron').shell.openExternal(url);
     });
 }
 

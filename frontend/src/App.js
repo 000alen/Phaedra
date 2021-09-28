@@ -1,147 +1,126 @@
 import React, { Component } from 'react';
-import { TopBar } from './components/TopBar';
-import { Tabs } from './components/Tabs/Tabs';
-import { MainPage } from './pages/MainPage';
-import { EmptyPage } from './pages/EmptyPage';
+import TopBar from './components/TopBar';
+import Tabs from './components/Tabs';
+import NotebookPage from './pages/NotebookPage';
+import EmptyPage from './pages/EmptyPage';
+import MainPage from './pages/MainPage/MainPage';
+import './css/App.css'
 
-import './App.css';
-import './index.css';
+class App extends Component {
+  constructor(props) {
+    super(props);
 
-export class App extends Component {
-	constructor(props) {
-		super(props);
+    this.selectTab = this.selectTab.bind(this);
+    this.addTab = this.addTab.bind(this);
+    this.closeTab = this.closeTab.bind(this);
+    this.changeTabTitle = this.changeTabTitle.bind(this);
+    this.changeTabContent = this.changeTabContent.bind(this);
 
-		this.moveTab = this.moveTab.bind(this);
-		this.selectTab = this.selectTab.bind(this);
-		this.closeTab = this.closeTab.bind(this);
-		this.addTab = this.addTab.bind(this);
-		this.deselectAllTabs = this.deselectAllTabs.bind(this);
-		this.changeTabContent = this.changeTabContent.bind(this);
-		this.changeTabTitle = this.changeTabTitle.bind(this);
+    const appController = {
+      selectTab: this.selectTab,
+      addTab: this.addTab,
+      closeTab: this.closeTab,
+      changeTabTitle: this.changeTabTitle,
+      changeTabContent: this.changeTabContent
+    }
 
-		const appController = {
-			moveTab: this.moveTab,
-			selectTab: this.selectTab,
-			closeTab: this.closeTab,
-			addTab: this.addTab,
-			deselectAllTabs: this.deselectAllTabs,
-			changeTabContent: this.changeTabContent,
-			changeTabTitle: this.changeTabTitle,
-		};
+    this.state = {
+      appController: appController,
+      tabs: [],
+      selectedTab: null
+    };
+  }
 
-		this.state = {
-			appController: appController,
-			tabs: []
-		};
-	}
+  getTabIndex(id) {
+    return this.state.tabs.findIndex(tab => tab.id === id);
+  }
 
-	idToIndex(id) {
-		return this.state.tabs.findIndex(tab => tab.id === id);
-	}
+  getTabId(index) {
+    return this.state.tabs[index].id;
+  }
 
-	moveTab(initialIndex, finalIndex) {
-		this.setState((state) => {
-			let newTabs = [...state.tabs];
-			newTabs.splice(finalIndex, 0, newTabs.splice(initialIndex, 1)[0]);
-			return {...state, tabs: newTabs};
-		});
-	}
+  createEmptyTab() {
+    return {
+      id: this.state.tabs.length + 1,
+      title: `Tab ${this.state.tabs.length + 1}`,
+      content: <EmptyPage 
+        key={this.state.tabs.length + 1} 
+        id={this.state.tabs.length + 1} 
+        appController={this.state.appController} />
+    }
+  }
 
-	selectTab(id) {
-		this.setState((state) => {
-			const newTabs = state.tabs.map(tab => ({
-				...tab,
-				active: tab.id === id
-			  }));
-			return {...state, tabs: newTabs};
-		});
-	}
+  selectTab(id) {
+    this.setState({ ...this.state, selectedTab: id });
+  }
 
-	closeTab(id) {
-		this.setState((state) => {
-			let newTabs = state.tabs.filter((tab) => tab.id !== id);
+  addTab() {
+    const newTab = this.createEmptyTab();
+    
+    let newSelectedTab;
+    if (!this.state.tabs.length) {
+      newSelectedTab = newTab.id;
+    } else {
+      newSelectedTab = this.state.selectedTab;
+    }
 
-			const index = this.idToIndex(id);			
+    this.setState({ ...this.state, tabs: [...this.state.tabs, newTab], selectedTab: newSelectedTab });
+  }
 
-			if (state.tabs[index].active && newTabs.length !== 0) {
-				const newIndex = index === 0 ? 0 : index - 1;
-				newTabs[newIndex].active = true;
-			}
+  closeTab(id) {
+    const newTabs = this.state.tabs.filter(tab => tab.id !== id);
 
-			return {...state, tabs: newTabs};
-		});
-	}
+    let newSelectedTab;
+    if (this.state.selectedTab === id) {
+      const index = this.getTabIndex(id);
+      newSelectedTab = this.getTabId(index === 0 ? 0 : index - 1);
+    } else {
+      newSelectedTab = this.state.selectedTab;
+    }
 
-	addTab() {
-		this.setState((state) => {
-			let newTabs = [...state.tabs];			
-			const id = newTabs.length + 1;
+    if (!newTabs.length) newSelectedTab = null;
 
-			let newTab = {
-				id: id,
-				title: `Tab ${id}`,
-				active: true,
-				content: <MainPage 
-					key={id}
-					id={id} 
-					appController={this.state.appController} />,
-			};
-			newTabs.push(newTab);
+    this.setState({ ...this.state, tabs: newTabs, selectedTab: newSelectedTab })
+  }
 
-			newTabs = newTabs.map(tab => ({
-				...tab,
-				active: tab.id === id
-			}));
+  getTabContent(id) {
+    if (!id) return null;
+    return this.state.tabs.find(tab => tab.id === id).content;
+  }
 
-			return {...state, tabs: newTabs};
-		});
-	}
+  changeTabTitle(id, newTitle) {
+    const index = this.getTabIndex(id);
+    const newTabs = this.state.tabs.slice();
+    newTabs[index].title = newTitle;
+    this.setState({ ...this.state, tabs: newTabs });
+  }
 
-	deselectAllTabs() {
-		this.setState((state) => {
-			const newTabs = state.tabs.map(tab => ({
-				...tab,
-				active: false
-			  }));
-			return {...state, tabs: newTabs};
-		});
-	}
+  changeTabContent(id, newContent) {
+    const index = this.getTabIndex(id);
+    const newTabs = this.state.tabs.slice();
+    newTabs[index].content = newContent;
+    this.setState({ ...this.state, tabs: newTabs });
+  }
 
-	changeTabContent(id, newContent) {
-		this.setState((state) => {
-			const newTabs = state.tabs.map(tab => ({
-				...tab,
-				content: tab.id === id ? newContent : tab.content
-			  }));
-			return {...state, tabs: newTabs};
-		});
-	}
+  render() {
+    const { tabs, selectedTab } = this.state;
 
-	changeTabTitle(id, newTitle) {
-		this.setState((state) => {
-			const newTabs = state.tabs.map(tab => ({
-				...tab,
-				title: tab.id === id ? newTitle : tab.title
-			  }));
-			return {...state, tabs: newTabs};
-		});
-	}
-
-	render() {
-		const activeTab = this.state.tabs.filter((tab) => tab.active === true);
-
-		return (
-			<div className="app">
-				<TopBar>
-					<Tabs
-						appController={this.state.appController}
-						tabs={this.state.tabs} />	
-				</TopBar>
-					
-				<div className="appContent">
-					{activeTab.length !== 0 ? activeTab[0].content : <EmptyPage />}
-				</div>
-			</div>
-		);
-	}
+    return (
+      <div className="app">
+        <TopBar>
+          <Tabs
+            tabs={tabs}
+            selectedTab={selectedTab}
+            onAdd={this.addTab}
+            onSelect={this.selectTab}
+            onClose={this.closeTab} />
+        </TopBar>
+        <div className="appContent">
+          {selectedTab ? this.getTabContent(selectedTab) : <MainPage appController={this.state.appController} />}
+        </div>
+      </div>
+    );
+  }
 }
+
+export default App;

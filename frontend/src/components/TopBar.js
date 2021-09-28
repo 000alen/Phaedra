@@ -1,33 +1,78 @@
-import React from 'react'
-import { ipcRenderer } from '../index';
+import React, {useState} from 'react';
+import { initializeIcons, IconButton } from '@fluentui/react';
+import { ipcRenderer, theme } from '../index';
 
 import '../css/TopBar.css';
 
-export function TopBar({children}) {
-    const handleMinimizeButtonClick = () => {
-        ipcRenderer.send('minimizeApp');
-    };
+initializeIcons();
 
-    const handleMaximizeRestoreButtonClick = () => {
-        ipcRenderer.send('maximizeRestoreApp');
-    };
-    
-    const handleCloseButtonClick = () => {
-        ipcRenderer.send('closeApp');
-    };
+function TopBar({ children }) {
+  const [showMaximize, setShowMaximize] = useState(true);
 
-    return (
-        <div className="topBar bg-gray-900">
-            <div className="titleBar">
-                <div className="titleBarChildren">
-                    {children}
-                </div>
-            </div>
-            <div className="titleBarButtons">
-                <button className="topButton minimizeButton hover:bg-gray-800 active:bg-blue-400" onClick={handleMinimizeButtonClick} id="minimizeButton" title="Minimize"></button>
-                <button className="topButton maximizeButton hover:bg-gray-800 active:bg-blue-400" onClick={handleMaximizeRestoreButtonClick} id="maximizeRestoreButton"  title="Maximize"></button>
-                <button className="topButton closeButton hover:bg-gray-800 active:bg-blue-400" onClick={handleCloseButtonClick} id="closeButton" title="Close"></button>
-            </div>
+  const changeMaximizeRestoreButton = (isMaximizedApp) => {
+    if (isMaximizedApp) {
+      setShowMaximize(false);
+    } else {
+      setShowMaximize(true);
+    }
+  }
+  
+  const handleMinimizeButtonClick = () => {
+    ipcRenderer.send('minimizeApp');
+  };
+
+  const handleMaximizeRestoreButtonClick = () => {
+    ipcRenderer.send('maximizeRestoreApp');
+  };
+
+  const handleCloseButtonClick = () => {
+    ipcRenderer.send('closeApp');
+  };
+
+  const minimizeIcon = {
+    iconName: "ChromeMinimize",
+    styles: {
+        root: { color: theme.palette.black }
+    }
+  };
+
+  const maximizeRestoreIcon = {
+    iconName: showMaximize ? "ChromeFullScreen" : "ChromeRestore",
+    styles: {
+        root: { color: theme.palette.black }
+    }
+  }
+
+  const closeIcon = {
+    iconName: "ChromeClose",
+    styles: {
+        root: { color: theme.palette.black },
+    }
+  }
+
+  ipcRenderer.on('isMaximized', () => {
+    changeMaximizeRestoreButton(true);
+  });
+  
+  ipcRenderer.on('isRestored', () => {
+    changeMaximizeRestoreButton(false);
+  });  
+
+  return (
+    <div className="topBar">
+      <div className="titleBar">
+        <div className="titleBarChildren">
+          {children}
         </div>
-    )
+      </div>
+
+      <div className="titleBarButtons">
+        <IconButton className="topButton" iconProps={minimizeIcon} onClick={handleMinimizeButtonClick} />
+        <IconButton className="topButton" iconProps={maximizeRestoreIcon} onClick={handleMaximizeRestoreButtonClick} />
+        <IconButton className="topButton" iconProps={closeIcon} onClick={handleCloseButtonClick} />
+      </div>
+    </div>
+  )
 }
+
+export default TopBar;

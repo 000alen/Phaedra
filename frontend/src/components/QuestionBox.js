@@ -1,6 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import {initializeIcons, Icon} from '@fluentui/react';
+import '../css/QuestionBox.css';
 
-export class QuestionBox extends Component {
+initializeIcons();
+
+class QuestionBox extends Component {
     constructor(props) {
         super(props);
 
@@ -34,7 +38,7 @@ export class QuestionBox extends Component {
     render() {
         return (
             <div className="questionBox flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
-                <img className="h-4 w-4" src={`./assets/feather/book.svg`} />
+                <Icon iconName="SearchBookmark"/>
                 <form onSubmit={this.handleSubmit}>
                     <input className="bg-transparent w-96" type="text" placeholder="Question" value={this.state.value} onChange={this.handleChange} />
                 </form>
@@ -42,3 +46,5 @@ export class QuestionBox extends Component {
         )
     }
 }
+
+export default QuestionBox;

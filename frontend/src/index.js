@@ -1,46 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { App } from './App';
-import './index.css';
+import { ThemeProvider, createTheme } from '@fluentui/react';
+import App from './App';
+import './css/index.css';
 
-export const {ipcRenderer} = window.require('electron');
+export const { ipcRenderer } = window.require('electron');
+
+export const theme = createTheme({
+  palette: {
+    themePrimary: '#933bff',
+    themeLighterAlt: '#fbf7ff',
+    themeLighter: '#eee0ff',
+    themeLight: '#dfc4ff',
+    themeTertiary: '#be89ff',
+    themeSecondary: '#a052ff',
+    themeDarkAlt: '#8435e6',
+    themeDark: '#702dc2',
+    themeDarker: '#52218f',
+    neutralLighterAlt: '#f8f8f8',
+    neutralLighter: '#f4f4f4',
+    neutralLight: '#eaeaea',
+    neutralQuaternaryAlt: '#dadada',
+    neutralQuaternary: '#d0d0d0',
+    neutralTertiaryAlt: '#c8c8c8',
+    neutralTertiary: '#595959',
+    neutralSecondary: '#373737',
+    neutralPrimaryAlt: '#2f2f2f',
+    neutralPrimary: '#000000',
+    neutralDark: '#151515',
+    black: '#0b0b0b',
+    white: '#ffffff',
+}});
 
 window.localStorage.clear();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
-
-const minimizeButton = document.getElementById('minimizeButton');
-const maximizeRestoreButton = document.getElementById('maximizeRestoreButton');
-const closeButton = document.getElementById('closeButton');
-
-function changeMaximizeRestoreButton(isMaximizedApp) {
-  if (isMaximizedApp) {
-    maximizeRestoreButton.title = 'Restore';
-    maximizeRestoreButton.classList.remove('maximizeButton');
-    maximizeRestoreButton.classList.add('restoreButton');
-  } else {
-    maximizeRestoreButton.title = 'Maximize'
-    maximizeRestoreButton.classList.remove('restoreButton');
-    maximizeRestoreButton.classList.add('maximizeButton');
-  }
-}
-
-ipcRenderer.on('isMaximized', () => {
-  changeMaximizeRestoreButton(true);
-});
-
-ipcRenderer.on('isRestored', () => {
-  changeMaximizeRestoreButton(false);
-});
-
-document.addEventListener('mouseup', (event) => {
-  if (window.getSelection().toString().length){
-    let text = window.getSelection().toString();
-    console.log(text);
-  }
-});

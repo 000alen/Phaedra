@@ -1,40 +1,96 @@
 import React, {useState} from 'react';
-import { getApiUrl } from '../API';
-import NavigationBar from '../components/NavigationBar';
-import SideBar from '../components/SideBar';
+import Card from '../components/Card';
+import {ipcRenderer} from '../index';
+import {newNotebookFromPdf} from '../API';
+import NotebookPage from './NotebookPage';
 
-export function EmptyPage() {
-    const [apiUrl, setApiUrl] = useState(getApiUrl());
+const openIcon = {
+    iconName: 'OpenFile',
+};
 
-    const handleUrl = (event) => {
-        setApiUrl(event.target.value);
-        window.localStorage.setItem('apiUrl', event.target.value);
+const newIcon = {
+    iconName: 'FileTemplate',
+};
+
+const openDialogOptions = {
+    properties: ['openFile'],
+    filters: [
+        { name: 'Notebooks', extensions: ['pdf', "json"] }
+    ]
+};
+
+function EmptyPage({id, appController}) {
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const handleOpen = () => {
+        if (dialogOpen) return;
+        setDialogOpen(true);
+
+        ipcRenderer.invoke('openDialog', openDialogOptions).then((results) => {
+            setDialogOpen(false);
+            if (!results.canceled) {
+                const path = results.filePaths[0];
+                const extension = path.split('.').pop().toLowerCase();
+
+                if (extension === 'pdf') {
+                    handleOpenPdf(path);
+                } else if (extension === 'json') {
+                    handleOpenJson(path);
+                }
+            }
+        });
+    };
+
+    const handleOpenPdf = (path) => {
+        ipcRenderer.invoke('readFile', path).then((content) => {
+            ipcRenderer.invoke('base64encode', content).then((base64) => {
+                newNotebookFromPdf(path, base64).then((notebook) => {
+                    appController.changeTabContent(id, <NotebookPage 
+                        key={id}
+                        id={id}
+                        appController={appController}
+                        notebook={notebook} />
+                    );
+                });    
+            });
+        });
+    };
+
+    const handleOpenJson = (path) => {
+        ipcRenderer.invoke('readFile', path, "utf-8").then((content) => {
+            const notebook = JSON.parse(content);
+            appController.changeTabContent(id, <NotebookPage 
+                key={id}
+                id={id} 
+                appController={appController}
+                notebook={notebook}
+                notebookPath={path} />
+            );
+        });
+    };
+
+    const handleNew = () => {
+        alert('Not implemented yet');
     };
 
     return (
-        <div className="page emptyPage">
-            <NavigationBar />
+        <div className="flex items-center justify-center">
+            <div className="flex flex-row space-x-1">
+                <Card
+                    iconProps={openIcon}
+                    title="Open file"
+                    subtitle="Open a PDF document or a JSON notebook"
+                    onClick={handleOpen} />
 
-            <div style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-            }}>
-                <SideBar />
+                <Card
+                    iconProps={newIcon}
+                    title="Create new file"
+                    subtitle="Create a JSON notebook"
+                    onClick={handleNew} />
 
-                <div>
-                    <div className="flex flex-row">
-                        <button className="p-2 bg-indigo-600 rounded text-white font-semibold">Open</button>
-                        <button className="p-2 bg-indigo-600 rounded text-white font-semibold">New</button>
-                    </div>
-        
-                    <h1 className="text-7xl">Welcome to Phaedra!</h1>
-                    <div className="flex flex-row space-x-2">
-                        <h2>API_URL:</h2>
-                        <input type="text" value={apiUrl} placeholder="url" onChange={handleUrl} />
-                    </div>
-                </div>
             </div>
         </div>
-    )
+    );
 }
+
+export default EmptyPage;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { addQuestionCell } from '../../API';
+import App from '../../App';
 import {ipcRenderer} from '../../index';
-import {Page} from './Page';
+import Page from './Page';
 
-
-export class Notebook extends Component {
+class Notebook extends Component {
     constructor(props) {
         super(props);
 
@@ -48,7 +48,6 @@ export class Notebook extends Component {
     }
 
     componentWillUnmount() {
-        console.log("Saving state");
         window.localStorage.setItem(this.state.notebook.name, JSON.stringify(this.state));
     }
 
@@ -128,26 +127,19 @@ export class Notebook extends Component {
 
         return (
             <div className="notebook">
-                {this.state.notebook.pages.map(page => 
-                    <div>
-                        <Page 
-                            key={page.id} 
-                            id={page.id} 
-                            notebookController={this.state.notebookController}
-                            data={page.data}
-                            document={this.state.documentFile}
-                            cells={page.cells}
-                            active={this.state.activePage === page.id}
-                            activeCell={this.state.activeCell} />
-                        <div className="flex flex-wrap justify-center">
-                            <div className="flex items-center p-2 m-2 bg-gray-100 rounded-sm shadow-md space-x-2">
-                                <img className="h-4 w-4" src={`./assets/feather/plus.svg`} />
-                                <button>Page</button>
-                            </div>
-                        </div>
-                    </div>
+                {this.state.notebook.pages.map(page => <Page 
+                    key={page.id} 
+                    id={page.id} 
+                    notebookController={this.state.notebookController}
+                    data={page.data}
+                    document={this.state.documentFile}
+                    cells={page.cells}
+                    active={this.state.activePage === page.id}
+                    activeCell={this.state.activeCell} />
                 )}
             </div>
         );
     }
 }
+
+export default Notebook;

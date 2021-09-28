@@ -1,0 +1,21 @@
+.mainPage {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.sideBar {
+    width: 200px;
+    height: 100%;
+}
+
+.pageContent {
+    width: 100%;
+    height: 100%;
+}
+
+.pageContent > div {
+    width: 100%;
+    height: 100%;
+}

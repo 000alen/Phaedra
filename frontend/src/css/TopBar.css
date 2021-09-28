@@ -1,66 +1,43 @@
 .topBar {
-    position: fixed;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 40px;
-    -webkit-user-select: none;
-    z-index: 100;
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 40px;
+  z-index: 100;
+  -webkit-user-select: none;
 }
 
-.topBar > .titleBar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.titleBar {
+  width: 100%;
+  -webkit-app-region: drag;
 }
 
-.topBar > .titleBar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    margin-left: 5px;
-    margin-right: 5px;
-    -webkit-app-region: drag;
+.titleBarChildren {
+  max-width: 90%;
+  height: 100%;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  -webkit-app-region: no-drag;
 }
 
-.titleBar > .titleBarChildren {
-    -webkit-app-region: no-drag;
+.titleBarButtons {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 120px;
+  height: 40px;
 }
 
-.topBar > .titleBarButtons{
-    display: flex;
-    flex-direction: row;
-    flex-grow: 0;
-    flex-shrink: 0;
-    width: 120px;
-    height: 40px;
-}
-
-.titleBarButtons > .topButton{
-    width: 40px;
-    height: 40px;
-    border: none;
-    outline: none;
-    background-color: transparent;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: 0.2s;
-    cursor: pointer;
-}
-
-.titleBarButtons > .minimizeButton{
-    background-image: url('../assets/icon_minimize.png');
-}
-
-.titleBarButtons > .maximizeButton{
-    background-image: url('../assets/icon_maximize.png');
-}
-
-.titleBarButtons > .restoreButton{
-    background-image: url('../assets/icon_restore.png');
-}
-
-.titleBarButtons > .closeButton{
-    background-image: url('../assets/icon_close.png');
+.topButton {
+  width: 40px;
+  height: 40px;
+  border: none;
+  outline: none;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: 0.2s;
+  cursor: pointer;
 }

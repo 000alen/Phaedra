@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {ToolBar} from '../components/ToolBar';
-import {Notebook} from '../components/Notebook/Notebook';
-import { QuestionBox } from '../components/QuestionBox';
+import Ribbon from '../components/Ribbon';
+import Notebook from '../components/Notebook/Notebook';
+import QuestionBox from '../components/QuestionBox';
 
-export class NotebookPage extends Component {
+class NotebookPage extends Component {
     constructor(props) {
         super(props);
 
@@ -17,45 +17,53 @@ export class NotebookPage extends Component {
         const pageController = {
             showQuestionBox: this.showQuestionBox,
             hideQuestionBox: this.hideQuestionBox
-        };
+        }
 
         this.notebookRef = React.createRef();
-    
+
         this.state = {
             id: id,
             appController: appController,
             pageController: pageController,
             notebook: notebook,
             notebookPath: notebookPath,
-            showQuestionBox: false
+            questionBoxShown: false
         };
     }
 
     showQuestionBox() {
-        this.setState((state) => {
-            return {
-                ...state,
-                showQuestionBox: true
-            };
+        this.setState({
+            ...this.state,
+            questionBoxShown: true
         });
     }
-    
+
     hideQuestionBox() {
-        this.setState((state) => {
-            return {
-                ...state,
-                showQuestionBox: false
-            };
+        this.setState({
+            ...this.state,
+            questionBoxShown: false
         });
     }
 
     render() {
         return (
-            <div className="page notebookPage">
-                <ToolBar  notebookRef={this.notebookRef} pageController={this.state.pageController} />
-                <Notebook key={this.state.id} ref={this.notebookRef} pageController={this.state.pageController} tabId={this.state.id} appController={this.state.appController} notebook={this.state.notebook} notebookPath={this.state.notebookPath} />
-                {this.state.showQuestionBox && <QuestionBox notebookRef={this.notebookRef} />}
+            <div>
+                <Ribbon />
+
+                <Notebook 
+                    key={this.state.id}
+                    ref={this.notebookRef}
+                    appController={this.state.appController}
+                    pageController={this.state.pageController}
+                    tabId={this.state.id} 
+                    notebook={this.state.notebook}
+                    notebookPath={this.state.notebookPath} />
+
+                {this.state.questionBoxShown && <QuestionBox 
+                    notebookRef={this.state.notebookRef} />}
             </div>
         )
     }
 }
+
+export default NotebookPage;

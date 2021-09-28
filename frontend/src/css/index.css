@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.react-pdf__Page__svg {
+    width: 100% !important;
+    height: auto !important;
+    user-select: unset !important;
+}
+
+.react-pdf__Page__svg svg {
+    width: 100% !important;
+    height: auto !important;
+}

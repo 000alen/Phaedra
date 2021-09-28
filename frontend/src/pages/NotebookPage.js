@@ -36,6 +36,9 @@ class NotebookPage extends Component {
             ...this.state,
             questionBoxShown: true
         });
+
+        // Unrelated
+        this.notebookRef.current.addPage('new_page', {}, [{id: 'new_cell', data: {}, content: 'Hola, mundo!'}]);
     }
 
     hideQuestionBox() {

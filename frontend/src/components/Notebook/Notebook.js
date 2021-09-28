@@ -10,13 +10,17 @@ class Notebook extends Component {
         this.loadDocument = this.loadDocument.bind(this);
         this.toggleSelectPage = this.toggleSelectPage.bind(this);
         this.toggleSelectCell = this.toggleSelectCell.bind(this);
-        
+        this.addPage = this.addPage.bind(this);
+        this.addQuestionCell = this.addQuestionCell.bind(this);
+
         const {tabId, appController, pageController} = props;
         const {notebook, notebookPath} = props;
 
         const notebookController = {
             toggleSelectPage: this.toggleSelectPage,
             toggleSelectCell: this.toggleSelectCell,
+            addPage: this.addPage,
+            addQuestionCell: this.addQuestionCell,
         };
 
         this.state =  {
@@ -107,6 +111,25 @@ class Notebook extends Component {
                 };
             });
         }
+    }
+
+    addPage(id, data, cells) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: [
+                        ...state.notebook.pages,
+                        {id: id, data: data, cells: cells}
+                    ]
+                }
+            };
+        });
+    }
+
+    addCell(pageId, id, data, content) {
+
     }
 
     addQuestionCell(question) {

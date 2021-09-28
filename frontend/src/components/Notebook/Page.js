@@ -81,8 +81,8 @@ class Page extends Component {
     }
 
     render() {
-        return this.renderWithDocument();
-        // return this.renderWithoutDocument();
+        // return this.renderWithDocument();
+        return this.renderWithoutDocument();
     }
 }
 

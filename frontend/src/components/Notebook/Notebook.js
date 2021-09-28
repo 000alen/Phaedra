@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { addQuestionCell } from '../../API';
-import App from '../../App';
 import {ipcRenderer} from '../../index';
 import Page from './Page';
 

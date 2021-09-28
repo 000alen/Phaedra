@@ -10,7 +10,7 @@ class NotebookPage extends Component {
         this.showQuestionBox = this.showQuestionBox.bind(this);
         this.hideQuestionBox = this.hideQuestionBox.bind(this);
 
-        const {id, appController, notebook, notebookPath} = props;
+        const {id, appController, notebook } = props;
 
         appController.changeTabTitle(id, notebook.name);
 
@@ -25,8 +25,8 @@ class NotebookPage extends Component {
             id: id,
             appController: appController,
             pageController: pageController,
-            notebook: notebook,
-            notebookPath: notebookPath,
+            // notebook: notebook,
+            // notebookPath: notebookPath,
             questionBoxShown: false
         };
     }
@@ -56,8 +56,8 @@ class NotebookPage extends Component {
                     appController={this.state.appController}
                     pageController={this.state.pageController}
                     tabId={this.state.id} 
-                    notebook={this.state.notebook}
-                    notebookPath={this.state.notebookPath} />
+                    notebook={this.props.notebook}
+                    notebookPath={this.props.notebookPath} />
 
                 {this.state.questionBoxShown && <QuestionBox 
                     notebookRef={this.state.notebookRef} />}

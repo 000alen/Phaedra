@@ -11,21 +11,17 @@ class Page extends Component {
     constructor(props) {
         super(props);
 
-        const {id, notebookController, data, document, cells, active, activeCell} = props;
+        const {id, notebookController } = props;
 
         this.state = {
             id: id,
             notebookController: notebookController,
-            data: data,
-            document: document,
-            cells: cells,
-            active: active,
-            activeCell: activeCell
         }
     }
 
     renderWithDocument() {
-        const {id, notebookController, data, document, cells, active, activeCell} = this.state;
+        const { id, notebookController } = this.state;
+        const { data, cells, active, activeCell, document } = this.props;
 
         return (
             <div className="page p-2 m-2 rounded-sm shadow-md grid grid-cols-2">
@@ -57,24 +53,26 @@ class Page extends Component {
     }
 
     renderWithoutDocument() {
-        // 8.5 x 11 inches
         const pageStyle = {
             width: '8.5in',
             height: '11in',
         };
 
+        const { id, notebookController } = this.state;
+        const { data, cells, active, activeCell, document } = this.props;
+
         return (
             <div className="flex items-center justify-center bg-gray-200">
                 <div className="page p-2 m-2 rounded-sm shadow-md bg-white" style={pageStyle}>
                     <div>
-                        {this.state.cells.map((cell) => <Cell 
+                        {cells.map((cell) => <Cell 
                             key={cell.id} 
                             id={cell.id} 
-                            notebookController={this.state.notebookController}
+                            notebookController={notebookController}
                             data={cell.data}
                             content={cell.content}
-                            pageId={this.state.id}
-                            active={this.state.active ? (this.state.activeCell === cell.id) : null} />
+                            pageId={id}
+                            active={active ? (activeCell === cell.id) : null} />
                         )}
                     </div>
                 </div>

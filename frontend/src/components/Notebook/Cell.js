@@ -12,7 +12,9 @@ function Cell({ id, notebookController, data, content, pageId, active }) {
 
     return (
         <div className="cell p-2 m-2 rounded-sm shadow-md text-justify" style={active ? activeStyle : style} onClick={handleSelect}>
-            <ReactMarkdown children={content} />
+            <ReactMarkdown 
+                children={content}
+                linkTarget="_blank" />
         </div>
     );
 }

@@ -37,10 +37,3 @@ class Cell:
             "content": self.content,
             "data": self.data
         }
-
-    def add_text(self, text: str) -> None:
-        self.content += f"\n{text}"
-
-    def add_titled_text(self, title: str, text: str) -> None:
-        self.content += f"\n\n**{title}**\n{text}"
-

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { addQuestionCell } from '../../API';
+import { addEntitiesCell, addQuestionCell, addSparseQuestionCell, addWikipediaSummaryCell, addWikipediaSuggestionsCell, addWikipediaImageCell, addMeaningCell, addSynonymCell, addAntonymCell, addUsageExampleCell } from '../../API';
 import {ipcRenderer} from '../../index';
 import Page from './Page';
 
@@ -10,23 +10,58 @@ class Notebook extends Component {
         this.loadDocument = this.loadDocument.bind(this);
         this.toggleSelectPage = this.toggleSelectPage.bind(this);
         this.toggleSelectCell = this.toggleSelectCell.bind(this);
-        this.addPage = this.addPage.bind(this);
-        this.addQuestionCell = this.addQuestionCell.bind(this);
 
-        const {tabId, appController, pageController} = props;
+        this.insertPage = this.insertPage.bind(this);
+        this.addPage = this.addPage.bind(this);
+        this.getPage = this.getPage.bind(this);
+        this.removePage = this.removePage.bind(this);
+
+        this.insertCell = this.insertCell.bind(this);
+        this.addCell = this.addCell.bind(this);
+        this.getCell = this.getCell.bind(this);
+        this.removeCell = this.removeCell.bind(this);
+        
+        this.addEntitiesCell = this.addEntitiesCell.bind(this);
+        this.addQuestionCell = this.addQuestionCell.bind(this);
+        this.addSparseQuestionCell = this.addSparseQuestionCell.bind(this);
+        this.addWikipediaSummaryCell = this.addWikipediaSummaryCell.bind(this);
+        this.addWikipediaSuggestionsCell = this.addWikipediaSuggestionsCell.bind(this);
+        this.addWikipediaImageCell = this.addWikipediaImageCell.bind(this);
+
+        this.addMeaningCell = this.addMeaningCell.bind(this);
+        this.addSynonymCell = this.addSynonymCell.bind(this);
+        this.addAntonymCell = this.addAntonymCell.bind(this);
+        this.addUsageExampleCell = this.addUsageExampleCell.bind(this);
+
+        const {tabId, appController } = props;
         const {notebook, notebookPath} = props;
 
         const notebookController = {
             toggleSelectPage: this.toggleSelectPage,
             toggleSelectCell: this.toggleSelectCell,
+            insertPage: this.insertPage,
             addPage: this.addPage,
+            getPage: this.getPage,
+            removePage: this.removePage,
+            insertCell: this.insertCell,
+            addCell: this.addCell,
+            getCell: this.getCell,
+            removeCell: this.removeCell,
+            addEntitiesCell: this.addEntitiesCell,
             addQuestionCell: this.addQuestionCell,
+            addSparseQuestionCell: this.addSparseQuestionCell,
+            addWikipediaSummaryCell: this.addWikipediaSummaryCell,
+            addWikipediaSuggestionsCell: this.addWikipediaSuggestionsCell,
+            addWikipediaImageCell: this.addWikipediaImageCell,
+            addMeaningCell: this.addMeaningCell,
+            addSynonymCell: this.addSynonymCell,
+            addAntonymCell: this.addAntonymCell,
+            addUsageExampleCell: this.addUsageExampleCell
         };
 
         this.state =  {
             tabId: tabId,
             appController: appController,
-            pageController: pageController,
             notebookController: notebookController,
             notebook: notebook,
             notebookPath: notebookPath,
@@ -52,16 +87,6 @@ class Notebook extends Component {
 
     componentWillUnmount() {
         window.localStorage.setItem(this.state.notebook.name, JSON.stringify(this.state));
-    }
-
-    pageIdToIndex(pageId) {
-        return this.state.notebook.pages.findIndex(page => page.id === pageId);
-    }
-
-    cellIdToIndex(pageId, cellId) {
-        const pageIndex = this.pageIdToIndex(pageId);
-        const page = this.state.notebook.pages[pageIndex];
-        return page.cells.findIndex(cell => cell.id === cellId);
     }
 
     loadDocument() {
@@ -93,7 +118,6 @@ class Notebook extends Component {
 
     toggleSelectCell(pageId, cellId) {
         if (this.state.activePage === pageId && this.state.activeCell === cellId) {
-            this.state.pageController.hideQuestionBox();
             this.setState((state) => {
                 return {
                     ...state,
@@ -102,7 +126,6 @@ class Notebook extends Component {
                 };
             });
         } else {
-            this.state.pageController.showQuestionBox(pageId, cellId);
             this.setState((state) => {
                 return {
                     ...state,
@@ -113,7 +136,19 @@ class Notebook extends Component {
         }
     }
 
-    addPage(id, data, cells) {
+    insertPage(page, index) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.splice(index, 0, page)
+                }
+            };
+        });
+    }
+
+    addPage(page) {
         this.setState((state) => {
             return {
                 ...state,
@@ -121,20 +156,200 @@ class Notebook extends Component {
                     ...state.notebook,
                     pages: [
                         ...state.notebook.pages,
-                        {id: id, data: data, cells: cells}
+                        page
                     ]
                 }
             };
         });
     }
 
-    addCell(pageId, id, data, content) {
-
+    getPage(pageId) {
+        return this.state.notebook.pages.find(page => page.id === pageId);
     }
 
-    addQuestionCell(question) {
-        const pageIndex = this.pageIdToIndex(this.state.activePage);
-        addQuestionCell(this.state.notebook, pageIndex, question).then((notebook) => {
+    removePage(pageId) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.filter(page => page.id !== pageId)
+                }
+            };
+        });
+    }
+
+    insertCell(pageId, cell, index) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.map(page => {
+                        if (page.id === pageId) {
+                            return {
+                                ...page,
+                                cells: page.cells.splice(index, 0, cell)
+                            };
+                        } else {
+                            return page;
+                        }
+                    })
+                }
+            };
+        });
+    }
+
+    addCell(pageId, cell) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.map(page => {
+                        if (page.id === pageId) {
+                            return {
+                                ...page,
+                                cells: [
+                                    ...page.cells,
+                                    cell
+                                ]
+                            };
+                        } else {
+                            return page;
+                        }
+                    })
+                }
+            };
+        });
+    }
+
+    getCell(pageId, cellId) {
+        return this.state.notebook.pages.find(page => page.id === pageId).cells.find(cell => cell.id === cellId);
+    }
+
+    removeCell(pageId, cellId) {
+        this.setState((state) => {
+            return {
+                ...state,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.map(page => {
+                        if (page.id === pageId) {
+                            return {
+                                ...page,
+                                cells: page.cells.filter(cell => cell.id !== cellId)
+                            };
+                        } else {
+                            return page;
+                        }
+                    })
+                }
+            };
+        });
+    }
+
+    addEntitiesCell(pageId) {
+        addEntitiesCell(this.state.notebook, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addQuestionCell(question, pageId) {
+        addQuestionCell(this.state.notebook, question, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addSparseQuestionCell(question) {
+        addSparseQuestionCell(this.state.notebook, question).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addWikipediaSummaryCell(query, pageId) {
+        addWikipediaSummaryCell(this.state.notebook, query, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addWikipediaSuggestionsCell(query, pageId) {
+        addWikipediaSuggestionsCell(this.state.notebook, query, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addWikipediaImageCell(query, pageId) {
+        addWikipediaImageCell(this.state.notebook, query, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addMeaningCell(word, pageId) {
+        addMeaningCell(this.state.notebook, word, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addSynonymCell(word, pageId) {
+        addSynonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addAntonymCell(word, pageId) {
+        addAntonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addUsageExampleCell(word, pageId) {
+        addUsageExampleCell(this.state.notebook, word, pageId).then((notebook) => {
             this.setState((state) => {
                 return {
                     ...state,

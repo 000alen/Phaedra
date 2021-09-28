@@ -1,12 +1,16 @@
 import names_generator
 import uuid
+import wikipedia
 
 from typing import List, Tuple, Dict
 
 from Phaedra.PDF import extract_text_to_pages, preprocess_text
-from Phaedra.NLP import tokenizer, extract_named_entities, batch_summarize_text, batch_question_text_same_question, capitalize_text
+from Phaedra.NLP import tokenizer, extract_named_entities, capitalize_text, question_text
+from Phaedra.NLP.Vocabulary import meaning, synonym, antonym, usage_example
+from Phaedra.NLP.Batch import batch_summarize_text, batch_question_text_same_question
 from Phaedra.Notebook.Page import Page
 from Phaedra.Notebook.Cell import Cell
+from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
 
 QUERY_SIZE = 20
 CHUNK_SIZE = 512 - QUERY_SIZE
@@ -55,8 +59,8 @@ def chunk_sources(sources: List[str]) -> Tuple[List[int], List[str]]:
 class Notebook:
     id: str
     name: str
-    document_path: str
     pages: List[Page]
+    document_path: str
 
     def __init__(
         self,
@@ -152,7 +156,7 @@ class Notebook:
                 string += f"{cell.content}\n\n"
 
             entities = ", ".join(
-                f"\"{entity}\"" for entity in self.entities(i))
+                f"\"{entity}\"" for entity in self._entities(i))
             string += f"Entities: {entities}\n\n"
 
         return string
@@ -165,27 +169,50 @@ class Notebook:
         json["pages"] = [page.json() for page in self.pages]
         return json
 
+    def insert_page(self, page: Page, index: int) -> None:
+        self.pages.insert(index, page)
+
     def add_page(self, page: Page) -> None:
         self.pages.append(page)
 
-    def index_page(self, page: Page) -> int:
-        return self.pages.index(page)
+    def get_page(self, page_id: str) -> Page:
+        for page in self.pages:
+            if page.id == page_id:
+                return page
 
-    def get_page(self, page_index: int) -> Page:
-        return self.pages[page_index]
+    def get_page_index(self, page_id: str) -> int:
+        for i, page in enumerate(self.pages):
+            if page.id == page_id:
+                return i
+    
+    def remove_page(self, page_id: str) -> None:
+        self.pages.remove(self.get_page(page_id))
 
-    def remove_page(self, page: Page) -> None:
-        self.pages.remove(page)
+    def insert_cell(self, page_id, cell, index):
+        page = self.get_page(page_id)
+        page.insert_cell(cell, index)
 
-    def entities(self, page_index: int) -> List[str]:
-        source = self.get_page(page_index).data["source"]
+    def add_cell(self, page_id, cell):
+        page = self.get_page(page_id)
+        page.add_cell(cell)
+
+    def get_cell(self, page_id: str, cell_id: str) -> Cell:
+        page = self.get_page(page_id)
+        return page.get_cell(cell_id)
+
+    def remove_cell(self, page_id, cell_id):
+        page = self.get_page(page_id)
+        page.remove_cell(cell_id)
+
+    def _entities(self, page_id):
+        source = self.get_page(page_id).data["source"]
         return extract_named_entities(source)
 
-    def question(self, question: str, page_index: int) -> str:
-        return capitalize_text(self.get_page(page_index).question(question))
+    def _question(self, question, page_id):
+        page = self.get_page(page_id)
+        return capitalize_text(question_text(question, page.data["source"]))
 
-    # XXX
-    def sparse_question(self, question) -> List[str]:
+    def _sparse_question(self, question) -> List[str]:
         contexts = []
         for i, page in enumerate(self.pages):
             source = page.data["source"]
@@ -202,3 +229,58 @@ class Notebook:
         answers = [capitalize_text(answer) for answer in answers]
 
         return answers
+
+    def add_entities_cell(self, page_id):
+        page = self.get_page(page_id)
+        content = titled_text("Entities", ordered_list(self._entities(page_id)))
+        page.add_cell(Cell(content=content))
+
+    def add_question_cell(self, question: str, page_id: str):
+        page = self.get_page(page_id)
+        content = titled_text(question, self._question(question, page_id))
+        page.add_cell(Cell(content=content))
+
+    def add_sparse_question_cell(self, question: str):
+        content = titled_text(question, ordered_list(self._sparse_question(question)))
+        self.pages[-1].add_cell(Cell(content=content))
+
+    def add_wikipedia_summary_cell(self, query: str, page_id):
+        page = self.get_page(page_id)
+        content = titled_text(f"Wikipedia summary: {query}", wikipedia.summary(query))
+        page.add_cell(Cell(content=content))
+
+    def add_wikipedia_suggestions_cell(self, query: str, page_id):
+        page = self.get_page(page_id)
+        suggestions, _ = wikipedia.search(query, results=5, suggestion=True)
+        links = {suggestion: wikipedia.page(suggestion).url for suggestion in suggestions}
+        links = [link(text, url) for text, url in links.items()]
+        content = titled_text(f"Wikipedia suggestions: {query}", ordered_list(links))
+        page.add_cell(Cell(content=content))
+
+    def add_wikipedia_image_cell(self, query: str, page_id):
+        page = self.get_page(page_id)
+        wikipedia_page = wikipedia.page(query)
+        url = wikipedia_page.images[0]
+        content = image(query, url)
+        page.add_cell(Cell(content=content))
+
+    def add_meaning_cell(self, word: str, page_id):
+        page = self.get_cell(page_id)
+        content = titled_text(f"Meaning: {word}", ordered_list(meaning(word)))
+        page.add_cell(Cell(content=content))
+
+    def add_synonym_cell(self, word: str, page_id):
+        page = self.get_cell(page_id)
+        content = titled_text(f"Synonym: {word}", ordered_list(synonym(word)))
+        page.add_cell(Cell(content=content))
+
+    def add_antonym_cell(self, word: str, page_id):
+        page = self.get_cell(page_id)
+        content = titled_text(f"Antonym: {word}", ordered_list(antonym(word)))
+        page.add_cell(Cell(content=content))
+
+    def add_usage_example_cell(self, word: str, page_id):
+        page = self.get_cell(page_id)
+        content = titled_text(f"Usage: {word}", ordered_list(usage_example(word)))
+        page.add_cell(Cell(content=content))
+

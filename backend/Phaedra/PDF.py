@@ -1,6 +1,7 @@
 import pdfplumber
 import re
 import string
+import logging
 
 from typing import List
 
@@ -11,18 +12,27 @@ TITLE_EXPRESSION = re.compile(r"[0-9]+\.(\w|\s)+")
 
 
 def extract_text(file_path: str) -> str:
-    # print(f"Extracting text: '{file_path[:5]}...'")
+    if type(file_path) is str:
+        logging.info(f"Extracting text: '{file_path[:5]}...'")
+    else:
+        logging.info(f"Extracting text from: {file_path}")
+
     return "".join(page.extract_text() for page in pdfplumber.open(file_path).pages)
 
 
 def extract_text_to_pages(file_path: str) -> List[str]:
-    # print(f"Extracting text: '{file_path[:5]}...'")
+    if type(file_path) is str:
+        logging.info(f"Extracting text (to pages): '{file_path[:5]}...'")
+    else:
+        logging.info(f"Extracting text (to pages) from: {file_path}")
+        
     return [page.extract_text() for page in pdfplumber.open(file_path).pages]
 
 
 # Preprocess the text from the page
 def preprocess_text(text: str) -> str:
-    print(f"Preprocessing: '{text[:5]}...'")
+    logging.info(f"Preprocessing: '{text[:5]}...'")
+
     response_text: str = ""
 
     for line in text.split("\n"):

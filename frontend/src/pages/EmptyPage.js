@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Card from '../components/Card';
 import {ipcRenderer} from '../index';
-import {newNotebookFromPdf} from '../API';
+import {notebookFromPdf} from '../API';
 import NotebookPage from './NotebookPage';
 
 const openIcon = {
@@ -44,7 +44,7 @@ function EmptyPage({id, appController}) {
     const handleOpenPdf = (path) => {
         ipcRenderer.invoke('readFile', path).then((content) => {
             ipcRenderer.invoke('base64encode', content).then((base64) => {
-                newNotebookFromPdf(path, base64).then((notebook) => {
+                notebookFromPdf(path, base64).then((notebook) => {
                     appController.changeTabContent(id, <NotebookPage 
                         key={id}
                         id={id}

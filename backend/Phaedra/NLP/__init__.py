@@ -9,7 +9,7 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 logging.info(f"Running on: {DEVICE}")
 
-MODEL_NAME = "t5-small"
+MODEL_NAME = "t5-base"
 
 logging.info(f"Loading model: {MODEL_NAME}")
 

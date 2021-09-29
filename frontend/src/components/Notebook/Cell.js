@@ -1,6 +1,16 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { theme } from '../../index';
+import { v4 as uuidv4 } from 'uuid';
+
+export function createCell() {
+    return {
+        id: uuidv4(),
+        data: {},
+        content: 'Hello, world!'
+    }
+}
+
 
 function Cell({ id, notebookController, data, content, pageId, active }) {
     const handleSelect = () => {

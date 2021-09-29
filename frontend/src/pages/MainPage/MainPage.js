@@ -40,18 +40,18 @@ const navLinkGroups = [
     }
 ];
 
-const navLinkContents = {
-    'recent': <Recent />,
-    'pinned': <Pinned />,
-    'empty': <Empty />,
-    'from_pdf': <FromPdf />,
-    'from_text': <FromText />,
-    'notebook': <Notebook />,
-    'backend': <Backend />,
-};
-
-function MainPage() {
+function MainPage({id, appController}) {
     const [selectedKey, setSelectedKey] = useState('backend');
+
+    const navLinkContents = {
+        'recent': <Recent id={id} appController={appController} />,
+        'pinned': <Pinned id={id} appController={appController} />,
+        'empty': <Empty id={id} appController={appController} />,
+        'from_pdf': <FromPdf id={id} appController={appController} />,
+        'from_text': <FromText id={id} appController={appController} />,
+        'notebook': <Notebook id={id} appController={appController} />,
+        'backend': <Backend id={id} appController={appController} />,
+    };
 
     return (
         <div className="mainPage">

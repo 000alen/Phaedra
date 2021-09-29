@@ -3,6 +3,7 @@ import Card from '../components/Card';
 import {ipcRenderer} from '../index';
 import {notebookFromPdf} from '../API';
 import NotebookPage from './NotebookPage';
+import { createNotebook } from '../components/Notebook/Notebook';
 
 const openIcon = {
     iconName: 'OpenFile',
@@ -70,7 +71,14 @@ function EmptyPage({id, appController}) {
     };
 
     const handleNew = () => {
-        alert('Not implemented yet');
+        const notebook = createNotebook(`Unnamed Notebook ${id}`);
+
+        appController.changeTabContent(id, <NotebookPage
+            key={id}
+            id={id}
+            appController={appController}
+            notebook={notebook} />
+        );
     };
 
     return (

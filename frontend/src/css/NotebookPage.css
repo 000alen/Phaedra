@@ -1,0 +1,10 @@
+.ribbonDiv {
+    position: fixed;
+    width: 100%;
+    top: 40px;
+    z-index: 100;
+}
+
+.notebookPageContent {
+    margin-top: 128px;
+}

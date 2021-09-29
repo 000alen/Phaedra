@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import {initializeIcons, Icon} from '@fluentui/react';
+import {Icon} from '@fluentui/react';
 import '../css/QuestionBox.css';
-
-initializeIcons();
 
 class QuestionBox extends Component {
     constructor(props) {

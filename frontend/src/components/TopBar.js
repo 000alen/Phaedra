@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import { initializeIcons, IconButton } from '@fluentui/react';
+import { IconButton } from '@fluentui/react';
 import { ipcRenderer, theme } from '../index';
 
 import '../css/TopBar.css';
-
-initializeIcons();
 
 function TopBar({ children }) {
   const [showMaximize, setShowMaximize] = useState(true);
@@ -58,8 +56,12 @@ function TopBar({ children }) {
     changeMaximizeRestoreButton(false);
   });  
 
+  const topBarStyle = {
+    backgroundColor: theme.palette.white,
+  };
+
   return (
-    <div className="topBar">
+    <div className="topBar" style={topBarStyle}>
       <div className="titleBar">
         <div className="titleBarChildren">
           {children}

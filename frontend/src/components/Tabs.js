@@ -1,8 +1,6 @@
 import React from 'react'
-import { initializeIcons, IconButton } from '@fluentui/react';
+import { IconButton } from '@fluentui/react';
 import { theme } from '../index';
-
-initializeIcons();
 
 const iconButtonStyles = {
     rootHovered: {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import TopBar from './components/TopBar';
 import Tabs from './components/Tabs';
-import NotebookPage from './pages/NotebookPage';
 import EmptyPage from './pages/EmptyPage';
 import MainPage from './pages/MainPage/MainPage';
 import './css/App.css'
@@ -10,6 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    this.getNextTabId = this.getNextTabId.bind(this);
     this.selectTab = this.selectTab.bind(this);
     this.addTab = this.addTab.bind(this);
     this.closeTab = this.closeTab.bind(this);
@@ -17,6 +17,7 @@ class App extends Component {
     this.changeTabContent = this.changeTabContent.bind(this);
 
     const appController = {
+      getNextTabId: this.getNextTabId,
       selectTab: this.selectTab,
       addTab: this.addTab,
       closeTab: this.closeTab,
@@ -31,6 +32,10 @@ class App extends Component {
     };
   }
 
+  getNextTabId() {
+    return this.state.tabs.length + 1;
+  }
+
   getTabIndex(id) {
     return this.state.tabs.findIndex(tab => tab.id === id);
   }
@@ -40,12 +45,14 @@ class App extends Component {
   }
 
   createEmptyTab() {
+    const id = this.state.tabs.length + 1;
+
     return {
-      id: this.state.tabs.length + 1,
-      title: `Tab ${this.state.tabs.length + 1}`,
+      id: id,
+      title: `Tab ${id}`,
       content: <EmptyPage 
-        key={this.state.tabs.length + 1} 
-        id={this.state.tabs.length + 1} 
+        key={id} 
+        id={id} 
         appController={this.state.appController} />
     }
   }
@@ -54,8 +61,18 @@ class App extends Component {
     this.setState({ ...this.state, selectedTab: id });
   }
 
-  addTab() {
-    const newTab = this.createEmptyTab();
+  addTab(content) {
+    let newTab;
+    if (!content) {
+      newTab = this.createEmptyTab();
+    } else {
+      const id = content.props.id;
+      newTab = {
+        id: id,
+        title: `Tab ${id}`,
+        content: content
+      }
+    }
     
     let newSelectedTab;
     if (!this.state.tabs.length) {
@@ -90,14 +107,14 @@ class App extends Component {
 
   changeTabTitle(id, newTitle) {
     const index = this.getTabIndex(id);
-    const newTabs = this.state.tabs.slice();
+    let newTabs = [...this.state.tabs];
     newTabs[index].title = newTitle;
     this.setState({ ...this.state, tabs: newTabs });
   }
 
   changeTabContent(id, newContent) {
     const index = this.getTabIndex(id);
-    const newTabs = this.state.tabs.slice();
+    let newTabs = [...this.state.tabs];
     newTabs[index].content = newContent;
     this.setState({ ...this.state, tabs: newTabs });
   }

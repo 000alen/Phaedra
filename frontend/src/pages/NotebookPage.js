@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Ribbon from '../components/Ribbon';
 import Notebook from '../components/Notebook/Notebook';
-import { PrimaryButton } from '@fluentui/react';
+import '../css/NotebookPage.css';
 
 class NotebookPage extends Component {
     constructor(props) {
@@ -20,25 +20,22 @@ class NotebookPage extends Component {
     }
 
     render() {
-        const handleClick = () => {
-            // this.notebookRef.current.addWikipediaSuggestionsCell("Coronavirus", this.notebookRef.current.state.activePage);
-            this.notebookRef.current.addWikipediaImageCell("Coronavirus", this.notebookRef.current.state.activePage);
-        };
-
         return (
             <div>
-                <Ribbon />
-
-                <PrimaryButton text="test" onClick={handleClick} />
-
-                <Notebook 
-                    key={this.state.id}
-                    ref={this.notebookRef}
-                    appController={this.state.appController}
-                    tabId={this.state.id} 
-                    notebook={this.props.notebook}
-                    notebookPath={this.props.notebookPath} />
-            </div>
+                <div className="ribbonDiv">
+                    <Ribbon notebookRef={this.notebookRef} />
+                </div>
+   
+                <div className="notebookPageContent">
+                    <Notebook 
+                        key={this.state.id}
+                        ref={this.notebookRef}
+                        appController={this.state.appController}
+                        tabId={this.state.id} 
+                        notebook={this.props.notebook}
+                        notebookPath={this.props.notebookPath} />
+                </div>
+           </div>
         )
     }
 }

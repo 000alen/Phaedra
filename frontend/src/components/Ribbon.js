@@ -1,93 +1,77 @@
 import React from 'react';
 import { Pivot, PivotItem, CommandBar } from '@fluentui/react';
+import { ipcRenderer, theme } from '../index';
+import {createPage} from './Notebook/Page';
+import {createCell} from './Notebook/Cell';
 
-const overflowProps = { ariaLabel: 'More commands' };
+function Ribbon({ notebookRef }) {
+  const ribbonStyle = {
+    backgroundColor: theme.palette.white,
+  };
 
-const _items = [
-  {
-    key: 'newItem',
-    text: 'New',
-    iconProps: { iconName: 'Add' },
-    subMenuProps: {
-      items: [
-        {
-          key: 'emailMessage',
-          text: 'Email message',
-          iconProps: { iconName: 'Mail' },
-        },
-        {
-          key: 'calendarEvent',
-          text: 'Calendar event',
-          iconProps: { iconName: 'Calendar' },
-        },
-      ],
+  const handleSave = () => {
+    const {path, notebook} = notebookRef.current.state;
+    ipcRenderer.invoke('writeFile', path, JSON.stringify(notebook));
+  };
+
+  const handleInsertPage = () => {
+    const {notebookController, activePage} = notebookRef.current.state;
+    const activePageIndex = notebookController.indexPage(activePage);
+    notebookController.insertPage(createPage(), activePageIndex + 1);
+  };
+
+  const handleInsertCell = () => {
+    const {notebookController, activePage, activeCell} = notebookRef.current.state;
+    const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+    notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
+  };
+
+  const homeItems = [
+    {
+      key: 'save',
+      text: 'Save',
+      iconProps: { iconName: 'Save' },
+      onClick: handleSave,
+    }
+  ];
+
+  const insertItems = [
+    {
+      key: 'insertPage',
+      text: 'Insert Page',
+      iconProps: { iconName: 'Add' },
+      onClick: handleInsertPage,
     },
-  },
-  {
-    key: 'upload',
-    text: 'Upload',
-    iconProps: { iconName: 'Upload' },
-    onClick: () => console.log('Upload'),
-  },
-  {
-    key: 'share',
-    text: 'Share',
-    iconProps: { iconName: 'Share' },
-    onClick: () => console.log('Share'),
-  },
-  {
-    key: 'download',
-    text: 'Download',
-    iconProps: { iconName: 'Download' },
-    onClick: () => console.log('Download'),
-  },
-];
+    {
+      key: 'insertCell',
+      text: 'Insert Cell',
+      iconProps: { iconName: 'Add' },
+      onClick: handleInsertCell,
+    }
+  ];
 
-const _overflowItems = [
-  { key: 'move', text: 'Move to...', onClick: () => console.log('Move to'), iconProps: { iconName: 'MoveToFolder' } },
-  { key: 'copy', text: 'Copy to...', onClick: () => console.log('Copy to'), iconProps: { iconName: 'Copy' } },
-  { key: 'rename', text: 'Rename...', onClick: () => console.log('Rename'), iconProps: { iconName: 'Edit' } },
-];
+  const reviewItems = [];
 
-const _farItems = [
-  {
-    key: 'tile',
-    text: 'Grid view',
-    // This needs an ariaLabel since it's icon-only
-    ariaLabel: 'Grid view',
-    iconOnly: true,
-    iconProps: { iconName: 'Tiles' },
-    onClick: () => console.log('Tiles'),
-  },
-  {
-    key: 'info',
-    text: 'Info',
-    // This needs an ariaLabel since it's icon-only
-    ariaLabel: 'Info',
-    iconOnly: true,
-    iconProps: { iconName: 'Info' },
-    onClick: () => console.log('Info'),
-  },
-];
+  const viewItems = [];
 
-function Ribbon() {
   return (
-    <div>
+    <div style={ribbonStyle}>
       <Pivot aria-label="Ribbon">
         <PivotItem headerText="Home" itemKey="home">
-          <CommandBar
-            items={_items}
-            overflowItems={_overflowItems}
-            overflowButtonProps={overflowProps}
-            farItems={_farItems}
-            ariaLabel="Inbox actions"
-            primaryGroupAriaLabel="Email actions"
-            farItemsGroupAriaLabel="More actions" />
+          <CommandBar items={homeItems} />
         </PivotItem>
 
-        <PivotItem headerText="Insert" itemKey="insert" />
-        <PivotItem headerText="Review" itemKey="review" />
-        <PivotItem headerText="View" itemKey="view" />
+        <PivotItem headerText="Insert" itemKey="insert">
+          <CommandBar items={insertItems} />
+        </PivotItem>
+
+        <PivotItem headerText="Review" itemKey="review">
+          <CommandBar items={reviewItems} />
+        </PivotItem>
+
+        <PivotItem headerText="View" itemKey="view">
+          <CommandBar items={viewItems} />
+        </PivotItem>
       </Pivot>
     </div>
   );

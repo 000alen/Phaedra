@@ -1,8 +1,6 @@
 import React from 'react';
-import { initializeIcons, DocumentCard, DocumentCardTitle, DocumentCardImage } from '@fluentui/react';
+import { DocumentCard, DocumentCardTitle, DocumentCardImage } from '@fluentui/react';
 import { mergeStyles } from '@fluentui/react/lib/Styling';
-
-initializeIcons();
 
 function Card({iconProps, title, subtitle, onClick}) {
     const conversationTileClass = mergeStyles({ height: "auto", paddingBottom: "10px" });

@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Card from '../components/Card';
-import {ipcRenderer} from '../index';
-import {notebookFromPdf} from '../API';
 import NotebookPage from './NotebookPage';
+import { openFile } from '../NotebookFS';
 import { createNotebook } from '../components/Notebook/Notebook';
 
 const openIcon = {
@@ -13,59 +12,22 @@ const newIcon = {
     iconName: 'FileTemplate',
 };
 
-const openDialogOptions = {
-    properties: ['openFile'],
-    filters: [
-        { name: 'Notebooks', extensions: ['pdf', "json"] }
-    ]
-};
-
-function EmptyPage({id, appController}) {
+function EmptyPage({ id, appController }) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleOpen = () => {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        ipcRenderer.invoke('openDialog', openDialogOptions).then((results) => {
+        openFile().then((notebook) => {
             setDialogOpen(false);
-            if (!results.canceled) {
-                const path = results.filePaths[0];
-                const extension = path.split('.').pop().toLowerCase();
-
-                if (extension === 'pdf') {
-                    handleOpenPdf(path);
-                } else if (extension === 'json') {
-                    handleOpenJson(path);
-                }
-            }
-        });
-    };
-
-    const handleOpenPdf = (path) => {
-        ipcRenderer.invoke('readFile', path).then((content) => {
-            ipcRenderer.invoke('base64encode', content).then((base64) => {
-                notebookFromPdf(path, base64).then((notebook) => {
-                    appController.changeTabContent(id, <NotebookPage 
-                        key={id}
-                        id={id}
-                        appController={appController}
-                        notebook={notebook} />
-                    );
-                });    
-            });
-        });
-    };
-
-    const handleOpenJson = (path) => {
-        ipcRenderer.invoke('readFile', path, "utf-8").then((content) => {
-            const notebook = JSON.parse(content);
-            appController.changeTabContent(id, <NotebookPage 
+            if (!notebook) return;
+            
+            appController.setTabContent(id, <NotebookPage
                 key={id}
-                id={id} 
+                id={id}
                 appController={appController}
-                notebook={notebook}
-                notebookPath={path} />
+                notebook={notebook} />
             );
         });
     };
@@ -73,7 +35,7 @@ function EmptyPage({id, appController}) {
     const handleNew = () => {
         const notebook = createNotebook(`Unnamed Notebook ${id}`);
 
-        appController.changeTabContent(id, <NotebookPage
+        appController.setTabContent(id, <NotebookPage
             key={id}
             id={id}
             appController={appController}

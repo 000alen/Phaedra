@@ -1,133 +1,136 @@
 import React from 'react';
 import { Pivot, PivotItem, CommandBar } from '@fluentui/react';
-import { ipcRenderer, theme } from '../index';
-import {createPage} from './Notebook/Page';
-import {createCell} from './Notebook/Cell';
+import { theme } from '../index';
+import { writeFile, saveDialog } from '../ElectronAPI';
+import { createPage } from './Notebook/Page';
+import { createCell } from './Notebook/Cell';
 
 function Ribbon({ notebookRef, commandBoxRef }) {
-  const ribbonStyle = {
-    backgroundColor: theme.palette.white,
-  };
+    const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  const handleSave = () => {
-    const {notebookPath, notebook} = notebookRef.current.state;
-    ipcRenderer.invoke('writeFile', notebookPath, JSON.stringify(notebook));
-  };
+    const ribbonStyle = {
+        backgroundColor: theme.palette.white,
+    };
 
-  const handleQuestion = () => {
-    const {notebookController, activePage} = notebookRef.current.state;
-    const {command} = commandBoxRef.current.state;
-    notebookController.addQuestionCell(command, activePage);
-    commandBoxRef.current.consume();
-  };
+    const handleSave = () => {
+        const { notebookController } = notebookRef.current.state;
+        notebookController.save();
+    };
 
-  const handleInsertPage = () => {
-    const {notebookController, activePage} = notebookRef.current.state;
-    const activePageIndex = notebookController.indexPage(activePage);
-    notebookController.insertPage(createPage(), activePageIndex + 1);
-  };
+    const handleQuestion = () => {
+        const { notebookController, activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addQuestionCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
 
-  const handleInsertCell = () => {
-    const {notebookController, activePage, activeCell} = notebookRef.current.state;
-    const activeCellIndex = notebookController.indexCell(activePage, activeCell);
-    notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
-  };
+    const handleInsertPage = () => {
+        const { notebookController, activePage } = notebookRef.current.state;
+        const activePageIndex = notebookController.indexPage(activePage);
+        notebookController.insertPage(createPage(), activePageIndex + 1);
+    };
 
-  
-  const handleWikipediaSummary = () => {
-    const {notebookController, activePage} = notebookRef.current.state;
-    const {command} = commandBoxRef.current.state;
-    notebookController.addWikipediaSummaryCell(command, activePage);
-    commandBoxRef.current.consume();
-  };
+    const handleInsertCell = () => {
+        const { notebookController, activePage, activeCell } = notebookRef.current.state;
+        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+        notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
+    };
 
-  const handleWikipediaSuggestions = () => {
-    const {notebookController, activePage} = notebookRef.current.state;
-    const {command} = commandBoxRef.current.state;
-    notebookController.addWikipediaSuggestionsCell(command, activePage);
-    commandBoxRef.current.consume();
-  };
 
-  const handleWikipediaImage = () => {
-    const {notebookController, activePage} = notebookRef.current.state;
-    const {command} = commandBoxRef.current.state;
-    notebookController.addWikipediaImageCell(command, activePage);
-    commandBoxRef.current.consume();
-  };
+    const handleWikipediaSummary = () => {
+        const { notebookController, activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addWikipediaSummaryCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
 
-  const homeItems = [
-    {
-      key: 'save',
-      text: 'Save',
-      iconProps: { iconName: 'Save' },
-      onClick: handleSave,
-    },
-    {
-      key: 'question',
-      text: 'Question',
-      iconProps: { iconName: 'SurveyQuestions' },
-      onClick: handleQuestion
-    }
-  ];
+    const handleWikipediaSuggestions = () => {
+        const { notebookController, activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addWikipediaSuggestionsCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
 
-  const insertItems = [
-    {
-      key: 'insertPage',
-      text: 'Insert Page',
-      iconProps: { iconName: 'Add' },
-      onClick: handleInsertPage,
-    },
-    {
-      key: 'insertCell',
-      text: 'Insert Cell',
-      iconProps: { iconName: 'Add' },
-      onClick: handleInsertCell,
-    },
-    {
-      key: 'wikipediaSummary',
-      text: 'Wikipedia Summary',
-      iconProps: { iconName: 'Add' },
-      onClick: handleWikipediaSummary,
-    },
-    {
-      key: 'wikipediaSuggestions',
-      text: 'Wikipedia Suggestions',
-      iconProps: { iconName: 'Add' },
-      onClick: handleWikipediaSuggestions,
-    },
-    {
-      key: 'wikipediaImage',
-      text: 'Wikipedia Image',
-      iconProps: { iconName: 'Add' },
-      onClick: handleWikipediaImage,
-    }
-  ];
+    const handleWikipediaImage = () => {
+        const { notebookController, activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addWikipediaImageCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
 
-  const reviewItems = [];
+    const homeItems = [
+        {
+            key: 'save',
+            text: 'Save',
+            iconProps: { iconName: 'Save' },
+            onClick: handleSave,
+        },
+        {
+            key: 'question',
+            text: 'Question',
+            iconProps: { iconName: 'SurveyQuestions' },
+            onClick: handleQuestion
+        }
+    ];
 
-  const viewItems = [];
+    const insertItems = [
+        {
+            key: 'insertPage',
+            text: 'Insert Page',
+            iconProps: { iconName: 'Add' },
+            onClick: handleInsertPage,
+        },
+        {
+            key: 'insertCell',
+            text: 'Insert Cell',
+            iconProps: { iconName: 'Add' },
+            onClick: handleInsertCell,
+        },
+        {
+            key: 'wikipediaSummary',
+            text: 'Wikipedia Summary',
+            iconProps: { iconName: 'Add' },
+            onClick: handleWikipediaSummary,
+        },
+        {
+            key: 'wikipediaSuggestions',
+            text: 'Wikipedia Suggestions',
+            iconProps: { iconName: 'Add' },
+            onClick: handleWikipediaSuggestions,
+        },
+        {
+            key: 'wikipediaImage',
+            text: 'Wikipedia Image',
+            iconProps: { iconName: 'Add' },
+            onClick: handleWikipediaImage,
+        }
+    ];
 
-  return (
-    <div style={ribbonStyle}>
-      <Pivot aria-label="Ribbon">
-        <PivotItem headerText="Home" itemKey="home">
-          <CommandBar items={homeItems} />
-        </PivotItem>
+    const reviewItems = [];
 
-        <PivotItem headerText="Insert" itemKey="insert">
-          <CommandBar items={insertItems} />
-        </PivotItem>
+    const viewItems = [];
 
-        <PivotItem headerText="Review" itemKey="review">
-          <CommandBar items={reviewItems} />
-        </PivotItem>
+    return (
+        <div style={ribbonStyle}>
+            <Pivot aria-label="Ribbon">
+                <PivotItem headerText="Home" itemKey="home">
+                    <CommandBar items={homeItems} />
+                </PivotItem>
 
-        <PivotItem headerText="View" itemKey="view">
-          <CommandBar items={viewItems} />
-        </PivotItem>
-      </Pivot>
-    </div>
-  );
+                <PivotItem headerText="Insert" itemKey="insert">
+                    <CommandBar items={insertItems} />
+                </PivotItem>
+
+                <PivotItem headerText="Review" itemKey="review">
+                    <CommandBar items={reviewItems} />
+                </PivotItem>
+
+                <PivotItem headerText="View" itemKey="view">
+                    <CommandBar items={viewItems} />
+                </PivotItem>
+            </Pivot>
+        </div>
+    );
 }
 
 export default Ribbon;

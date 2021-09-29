@@ -10,10 +10,10 @@ class NotebookPage extends Component {
 
         this.showCommandBox = this.showCommandBox.bind(this);
         this.hideCommandBox = this.hideCommandBox.bind(this);
-        
-        const {id, appController, notebook } = props;
 
-        appController.changeTabTitle(id, notebook.name);
+        const { id, appController, notebook } = props;
+
+        appController.setTabTitle(id, notebook.name);
 
         this.notebookRef = React.createRef();
         this.commandBoxRef = React.createRef();
@@ -33,13 +33,13 @@ class NotebookPage extends Component {
 
     showCommandBox() {
         this.setState((state) => {
-            return {...state, commandBoxShown: true}
+            return { ...state, commandBoxShown: true }
         });
     }
 
     hideCommandBox() {
         this.setState((state) => {
-            return {...state, commandBoxShown: false}
+            return { ...state, commandBoxShown: false }
         });
     }
 
@@ -49,20 +49,20 @@ class NotebookPage extends Component {
                 <div className="ribbonDiv">
                     <Ribbon notebookRef={this.notebookRef} commandBoxRef={this.commandBoxRef} />
                 </div>
-   
+
                 <div className="notebookPageContent">
-                    <Notebook 
+                    <Notebook
                         key={this.state.id}
                         ref={this.notebookRef}
                         appController={this.state.appController}
                         pageController={this.state.pageController}
-                        tabId={this.state.id} 
+                        tabId={this.state.id}
                         notebook={this.props.notebook}
                         notebookPath={this.props.notebookPath} />
 
                     {this.state.commandBoxShown && <CommandBox ref={this.commandBoxRef} notebookRef={this.notebookRef} />}
                 </div>
-           </div>
+            </div>
         )
     }
 }

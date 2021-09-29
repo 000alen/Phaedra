@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { addEntitiesCell, addQuestionCell, addSparseQuestionCell, addWikipediaSummaryCell, addWikipediaSuggestionsCell, addWikipediaImageCell, addMeaningCell, addSynonymCell, addAntonymCell, addUsageExampleCell } from '../../API';
-import { ipcRenderer } from '../../index';
+import { readFile, writeFile, saveDialog } from '../../ElectronAPI';
 import Page from './Page';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -58,6 +58,8 @@ class Notebook extends Component {
         this.addAntonymCell = this.addAntonymCell.bind(this);
         this.addUsageExampleCell = this.addUsageExampleCell.bind(this);
 
+        this.save = this.save.bind(this);
+
         const { tabId, appController, pageController } = props;
         const { notebook, notebookPath } = props;
 
@@ -83,7 +85,8 @@ class Notebook extends Component {
             addMeaningCell: this.addMeaningCell,
             addSynonymCell: this.addSynonymCell,
             addAntonymCell: this.addAntonymCell,
-            addUsageExampleCell: this.addUsageExampleCell
+            addUsageExampleCell: this.addUsageExampleCell,
+            save: this.save
         };
 
         this.state = {
@@ -101,6 +104,8 @@ class Notebook extends Component {
     }
 
     componentDidMount() {
+        if (this.state.documentPath && !this.state.documentFile) this.loadDocument();
+
         let state = JSON.parse(window.localStorage.getItem(this.state.notebook.name));
 
         if (state !== null) {
@@ -111,7 +116,7 @@ class Notebook extends Component {
             if (state.documentPath && state.documentFile) {
                 state.documentFile.data = Uint8Array.from(state.documentFile.data);
             }
-            
+
             this.setState(state);
         }
     }
@@ -121,7 +126,7 @@ class Notebook extends Component {
     }
 
     loadDocument() {
-        ipcRenderer.invoke('readFile', this.state.documentPath).then((documentContent) => {
+        readFile(this.state.documentPath).then((documentContent) => {
             this.setState((state) => {
                 const documentFile = { url: this.state.documentPath, data: documentContent };
                 return { ...state, documentFile: documentFile };
@@ -395,9 +400,34 @@ class Notebook extends Component {
         });
     }
 
-    render() {
-        if (this.state.documentPath && !this.state.documentFile) this.loadDocument();
+    save() {
+        const saveDialogOptions = {
+            filters: [
+                { name: 'Notebooks', extensions: ['json'] }
+            ]
+        };
 
+        const {notebookPath, notebook} = this.state;
+
+        if (notebookPath) {
+            writeFile(notebookPath, JSON.stringify(notebook));
+        } else {
+            saveDialog(saveDialogOptions).then((results) => {
+                if (!results.canceled) {
+                    const path = results.filePath;
+                    writeFile(path, JSON.stringify(notebook));
+                    this.setState((state) => {
+                        return {
+                            ...state,
+                            notebookPath: path
+                        };
+                    });
+                }
+            });
+        }
+    }
+
+    render() {
         return (
             <div className="notebook">
                 {this.state.notebook.pages.map(page => <Page

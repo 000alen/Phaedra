@@ -9,7 +9,7 @@ class CommandBox extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.consume = this.consume.bind(this);
 
-        const {notebookRef} = props;
+        const { notebookRef } = props;
 
         this.state = {
             notebookRef: notebookRef,
@@ -19,13 +19,13 @@ class CommandBox extends Component {
 
     handleChange = (event) => {
         this.setState((state) => {
-            return {...state, command: event.target.value};
+            return { ...state, command: event.target.value };
         });
     }
 
     consume() {
         this.setState((state) => {
-            return {...state, command: ''};
+            return { ...state, command: '' };
         });
     }
 

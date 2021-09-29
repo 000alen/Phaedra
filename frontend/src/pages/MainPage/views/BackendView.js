@@ -2,7 +2,7 @@ import { CompoundButton, TextField } from '@fluentui/react';
 import React, { useState } from 'react';
 import { getApiUrl } from '../../../API';
 
-export default function Backend() {
+export default function BackendView() {
     const [apiUrl, setApiUrl] = useState(getApiUrl());
 
     const handleUrl = (event) => {

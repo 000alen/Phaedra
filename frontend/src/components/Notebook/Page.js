@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { pdfjs, Document, Page as DocumentPage } from 'react-pdf';
 import Cell from './Cell';
 import { theme } from '../../index';
@@ -25,13 +25,20 @@ class Page extends Component {
     constructor(props) {
         super(props);
 
-        const {id, notebookController, pageController } = props;
+        this.handleSelect = this.handleSelect.bind(this);
+
+        const { id, notebookController, pageController } = props;
 
         this.state = {
             id: id,
             notebookController: notebookController,
             pageController: pageController
         }
+    }
+
+    handleSelect() {
+        const { notebookController, id } = this.state;
+        notebookController.toggleSelectPage(id);
     }
 
     renderWithDocument() {
@@ -44,14 +51,15 @@ class Page extends Component {
 
         const paperStyle = {
             backgroundColor: theme.palette.white,
+            border: active? `1px solid ${theme.palette.themePrimary}` : null,
         }
 
         return (
             <div className="page grid grid-cols-2" style={containerStyle}>
-                <div className="m-2 p-2 rounded-md shadow-md" style={paperStyle}>
-                    {cells.map((cell) => <Cell 
-                        key={cell.id} 
-                        id={cell.id} 
+                <div className="m-2 p-2 rounded-md shadow-md" style={paperStyle} onClick={this.handleSelect}>
+                    {cells.map((cell) => <Cell
+                        key={cell.id}
+                        id={cell.id}
                         pageController={pageController}
                         notebookController={notebookController}
                         data={cell.data}
@@ -60,18 +68,16 @@ class Page extends Component {
                         active={active ? (activeCell === cell.id) : null} />
                     )}
                 </div>
-                
-                {data.document_page_number && (
-                    <div className="m-2 rounded-md shadow-md">
-                        <Document 
-                            file={document}
-                            renderMode="svg">
-                            <DocumentPage 
-                                pageNumber={data.document_page_number}
-                                renderTextLayer={false} />
-                        </Document>
-                    </div>
-                )}
+
+                <div className="m-2 rounded-md shadow-md">
+                    <Document
+                        file={document}
+                        renderMode="svg">
+                        <DocumentPage
+                            pageNumber={data.document_page_number}
+                            renderTextLayer={false} />
+                    </Document>
+                </div>
             </div>
         );
     }
@@ -88,15 +94,16 @@ class Page extends Component {
             width: '8.5in',
             height: '11in',
             backgroundColor: theme.palette.white,
+            border: active? `1px solid ${theme.palette.themePrimary}` : null,
         };
 
         return (
             <div className="flex items-center justify-center" style={containerStyle}>
-                <div className="page p-2 m-2 rounded-md shadow-md" style={pageStyle}>
+                <div className="page p-2 m-2 rounded-md shadow-md" style={pageStyle} onClick={this.handleSelect}>
                     <div>
-                        {cells.map((cell) => <Cell 
-                            key={cell.id} 
-                            id={cell.id} 
+                        {cells.map((cell) => <Cell
+                            key={cell.id}
+                            id={cell.id}
                             pageController={pageController}
                             notebookController={notebookController}
                             data={cell.data}

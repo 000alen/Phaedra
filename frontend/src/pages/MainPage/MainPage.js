@@ -1,12 +1,12 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Nav } from '@fluentui/react';
-import Backend from './views/Backend';
-import Empty from './views/Empty';
-import FromPdf from './views/FromPdf';
-import FromText from './views/FromText';
-import Notebook from './views/Notebook';
-import Pinned from './views/Pinned';
-import Recent from './views/Recent';
+import BackendView from './views/BackendView';
+import FromPdfView from './views/FromPdfView';
+import FromTextView from './views/FromTextView';
+import NotebookView from './views/NotebookView';
+import PinnedView from './views/PinnedView';
+import RecentView from './views/RecentView';
+import EmptyView from './views/EmptyView';
 
 import '../../css/MainPage.css';
 
@@ -40,17 +40,17 @@ const navLinkGroups = [
     }
 ];
 
-function MainPage({id, appController}) {
+function MainPage({ id, appController }) {
     const [selectedKey, setSelectedKey] = useState('backend');
 
     const navLinkContents = {
-        'recent': <Recent id={id} appController={appController} />,
-        'pinned': <Pinned id={id} appController={appController} />,
-        'empty': <Empty id={id} appController={appController} />,
-        'from_pdf': <FromPdf id={id} appController={appController} />,
-        'from_text': <FromText id={id} appController={appController} />,
-        'notebook': <Notebook id={id} appController={appController} />,
-        'backend': <Backend id={id} appController={appController} />,
+        'recent': <RecentView id={id} appController={appController} />,
+        'pinned': <PinnedView id={id} appController={appController} />,
+        'empty': <EmptyView id={id} appController={appController} />,
+        'from_pdf': <FromPdfView id={id} appController={appController} />,
+        'from_text': <FromTextView id={id} appController={appController} />,
+        'notebook': <NotebookView id={id} appController={appController} />,
+        'backend': <BackendView id={id} appController={appController} />,
     };
 
     return (

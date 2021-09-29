@@ -17,12 +17,12 @@ function Cell({ id, pageController, notebookController, data, content, pageId, a
         notebookController.toggleSelectCell(pageId, id);
     };
 
-    const style = {backgroundColor: theme.palette.neutralLight}
-    const activeStyle = {backgroundColor: theme.palette.themePrimary, color: theme.palette.white }
+    const style = { backgroundColor: theme.palette.neutralLight }
+    const activeStyle = { backgroundColor: theme.palette.themePrimary, color: theme.palette.white }
 
     return (
         <div className="cell p-2 m-2 rounded-sm shadow-md text-justify" style={active ? activeStyle : style} onClick={handleSelect}>
-            <ReactMarkdown 
+            <ReactMarkdown
                 children={content}
                 linkTarget="_blank" />
         </div>

@@ -12,11 +12,11 @@ const columns = [
     { key: 'value', name: 'Value', fieldName: 'value', minWidth: 100, maxWidth: 200, isResizable: true },
 ];
 
-export default function Pinned() {
+export default function RecentView() {
     return (
         <div>
-            <DetailsList 
-                items={items} 
+            <DetailsList
+                items={items}
                 columns={columns} />
         </div>
     )

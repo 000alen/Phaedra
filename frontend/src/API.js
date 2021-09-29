@@ -1,16 +1,16 @@
-const headers = {"Content-Type": "application/json"}
+const headers = { "Content-Type": "application/json" }
 
 function getApiUrl() {
     let apiUrl = window.localStorage.getItem("apiUrl");
     if (apiUrl) return apiUrl;
-    window.localStorage.setItem("apiUrl", "http://localhost:5000");
-    return "http://localhost:5000";
+    window.localStorage.setItem("apiUrl", "http://c4cd-35-196-215-222.ngrok.io");
+    return "http://c4cd-35-196-215-222.ngrok.io";
 }
 
 async function notebookFromPdf(path, base64) {
     const response = await fetch(`${getApiUrl()}/notebook/from_pdf`, {
         method: "POST",
-        headers: headers, 
+        headers: headers,
         body: JSON.stringify({
             path: path,
             base64: base64,
@@ -23,7 +23,7 @@ async function notebookFromPdf(path, base64) {
 async function notebookFromText(text) {
     const response = await fetch(`${getApiUrl()}/notebook/from_text`, {
         method: "POST",
-        headers: headers, 
+        headers: headers,
         body: JSON.stringify({
             text: text
         })
@@ -35,11 +35,11 @@ async function notebookFromText(text) {
 async function addEntitiesCell(notebook_json, page_id) {
     const response = await fetch(`${getApiUrl()}/cell/add/entities`, {
         method: "POST",
-        headers: headers, 
+        headers: headers,
         body: JSON.stringify({
             notebook: JSON.stringify(notebook_json),
             page_id: page_id,
-        })      
+        })
     });
 
     return response.json();
@@ -62,7 +62,7 @@ async function addQuestionCell(notebook_json, question, page_id) {
 async function addSparseQuestionCell(notebook_json, question) {
     const response = await fetch(`${getApiUrl()}/cell/add/sparse_question`, {
         method: "POST",
-        headers: headers, 
+        headers: headers,
         body: JSON.stringify({
             notebook: JSON.stringify(notebook_json),
             question: question,
@@ -174,7 +174,7 @@ async function kill() {
     return await fetch(`${getApiUrl()}/kill`);
 }
 
-export { 
+export {
     getApiUrl,
     notebookFromPdf,
     notebookFromText,

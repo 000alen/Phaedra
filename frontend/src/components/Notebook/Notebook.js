@@ -58,7 +58,7 @@ class Notebook extends Component {
         this.addAntonymCell = this.addAntonymCell.bind(this);
         this.addUsageExampleCell = this.addUsageExampleCell.bind(this);
 
-        const { tabId, appController } = props;
+        const { tabId, appController, pageController } = props;
         const { notebook, notebookPath } = props;
 
         const notebookController = {
@@ -89,6 +89,7 @@ class Notebook extends Component {
         this.state = {
             tabId: tabId,
             appController: appController,
+            pageController: pageController,
             notebookController: notebookController,
             notebook: notebook,
             notebookPath: notebookPath,
@@ -148,6 +149,7 @@ class Notebook extends Component {
 
     toggleSelectCell(pageId, cellId) {
         if (this.state.activePage === pageId && this.state.activeCell === cellId) {
+            this.state.pageController.hideCommandBox();
             this.setState((state) => {
                 return {
                     ...state,
@@ -156,6 +158,7 @@ class Notebook extends Component {
                 };
             });
         } else {
+            this.state.pageController.showCommandBox();
             this.setState((state) => {
                 return {
                     ...state,
@@ -400,6 +403,7 @@ class Notebook extends Component {
                 {this.state.notebook.pages.map(page => <Page
                     key={page.id}
                     id={page.id}
+                    pageController={this.state.pageController}
                     notebookController={this.state.notebookController}
                     data={page.data}
                     document={this.state.documentFile}

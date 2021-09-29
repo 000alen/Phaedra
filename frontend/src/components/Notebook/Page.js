@@ -25,16 +25,17 @@ class Page extends Component {
     constructor(props) {
         super(props);
 
-        const {id, notebookController } = props;
+        const {id, notebookController, pageController } = props;
 
         this.state = {
             id: id,
             notebookController: notebookController,
+            pageController: pageController
         }
     }
 
     renderWithDocument() {
-        const { id, notebookController } = this.state;
+        const { id, notebookController, pageController } = this.state;
         const { data, cells, active, activeCell, document } = this.props;
 
         const containerStyle = {
@@ -51,6 +52,7 @@ class Page extends Component {
                     {cells.map((cell) => <Cell 
                         key={cell.id} 
                         id={cell.id} 
+                        pageController={pageController}
                         notebookController={notebookController}
                         data={cell.data}
                         content={cell.content}
@@ -75,7 +77,7 @@ class Page extends Component {
     }
 
     renderWithoutDocument() {
-        const { id, notebookController } = this.state;
+        const { id, notebookController, pageController } = this.state;
         const { cells, active, activeCell } = this.props;
 
         const containerStyle = {
@@ -95,6 +97,7 @@ class Page extends Component {
                         {cells.map((cell) => <Cell 
                             key={cell.id} 
                             id={cell.id} 
+                            pageController={pageController}
                             notebookController={notebookController}
                             data={cell.data}
                             content={cell.content}

@@ -1,29 +1,53 @@
 import React, { Component } from 'react';
 import Ribbon from '../components/Ribbon';
 import Notebook from '../components/Notebook/Notebook';
+import CommandBox from '../components/CommandBox';
 import '../css/NotebookPage.css';
 
 class NotebookPage extends Component {
     constructor(props) {
         super(props);
 
+        this.showCommandBox = this.showCommandBox.bind(this);
+        this.hideCommandBox = this.hideCommandBox.bind(this);
+        
         const {id, appController, notebook } = props;
 
         appController.changeTabTitle(id, notebook.name);
 
         this.notebookRef = React.createRef();
+        this.commandBoxRef = React.createRef();
+
+        const pageController = {
+            showCommandBox: this.showCommandBox,
+            hideCommandBox: this.hideCommandBox
+        }
 
         this.state = {
             id: id,
             appController: appController,
+            pageController: pageController,
+            commandBoxShown: false,
         };
+    }
+
+    showCommandBox() {
+        this.setState((state) => {
+            return {...state, commandBoxShown: true}
+        });
+    }
+
+    hideCommandBox() {
+        this.setState((state) => {
+            return {...state, commandBoxShown: false}
+        });
     }
 
     render() {
         return (
             <div>
                 <div className="ribbonDiv">
-                    <Ribbon notebookRef={this.notebookRef} />
+                    <Ribbon notebookRef={this.notebookRef} commandBoxRef={this.commandBoxRef} />
                 </div>
    
                 <div className="notebookPageContent">
@@ -31,9 +55,12 @@ class NotebookPage extends Component {
                         key={this.state.id}
                         ref={this.notebookRef}
                         appController={this.state.appController}
+                        pageController={this.state.pageController}
                         tabId={this.state.id} 
                         notebook={this.props.notebook}
                         notebookPath={this.props.notebookPath} />
+
+                    {this.state.commandBoxShown && <CommandBox ref={this.commandBoxRef} notebookRef={this.notebookRef} />}
                 </div>
            </div>
         )

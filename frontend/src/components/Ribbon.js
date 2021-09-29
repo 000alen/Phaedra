@@ -4,14 +4,21 @@ import { ipcRenderer, theme } from '../index';
 import {createPage} from './Notebook/Page';
 import {createCell} from './Notebook/Cell';
 
-function Ribbon({ notebookRef }) {
+function Ribbon({ notebookRef, commandBoxRef }) {
   const ribbonStyle = {
     backgroundColor: theme.palette.white,
   };
 
   const handleSave = () => {
-    const {path, notebook} = notebookRef.current.state;
-    ipcRenderer.invoke('writeFile', path, JSON.stringify(notebook));
+    const {notebookPath, notebook} = notebookRef.current.state;
+    ipcRenderer.invoke('writeFile', notebookPath, JSON.stringify(notebook));
+  };
+
+  const handleQuestion = () => {
+    const {notebookController, activePage} = notebookRef.current.state;
+    const {command} = commandBoxRef.current.state;
+    notebookController.addQuestionCell(command, activePage);
+    commandBoxRef.current.consume();
   };
 
   const handleInsertPage = () => {
@@ -26,12 +33,40 @@ function Ribbon({ notebookRef }) {
     notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
   };
 
+  
+  const handleWikipediaSummary = () => {
+    const {notebookController, activePage} = notebookRef.current.state;
+    const {command} = commandBoxRef.current.state;
+    notebookController.addWikipediaSummaryCell(command, activePage);
+    commandBoxRef.current.consume();
+  };
+
+  const handleWikipediaSuggestions = () => {
+    const {notebookController, activePage} = notebookRef.current.state;
+    const {command} = commandBoxRef.current.state;
+    notebookController.addWikipediaSuggestionsCell(command, activePage);
+    commandBoxRef.current.consume();
+  };
+
+  const handleWikipediaImage = () => {
+    const {notebookController, activePage} = notebookRef.current.state;
+    const {command} = commandBoxRef.current.state;
+    notebookController.addWikipediaImageCell(command, activePage);
+    commandBoxRef.current.consume();
+  };
+
   const homeItems = [
     {
       key: 'save',
       text: 'Save',
       iconProps: { iconName: 'Save' },
       onClick: handleSave,
+    },
+    {
+      key: 'question',
+      text: 'Question',
+      iconProps: { iconName: 'SurveyQuestions' },
+      onClick: handleQuestion
     }
   ];
 
@@ -47,6 +82,24 @@ function Ribbon({ notebookRef }) {
       text: 'Insert Cell',
       iconProps: { iconName: 'Add' },
       onClick: handleInsertCell,
+    },
+    {
+      key: 'wikipediaSummary',
+      text: 'Wikipedia Summary',
+      iconProps: { iconName: 'Add' },
+      onClick: handleWikipediaSummary,
+    },
+    {
+      key: 'wikipediaSuggestions',
+      text: 'Wikipedia Suggestions',
+      iconProps: { iconName: 'Add' },
+      onClick: handleWikipediaSuggestions,
+    },
+    {
+      key: 'wikipediaImage',
+      text: 'Wikipedia Image',
+      iconProps: { iconName: 'Add' },
+      onClick: handleWikipediaImage,
     }
   ];
 

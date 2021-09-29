@@ -12,7 +12,7 @@ export function createCell() {
 }
 
 
-function Cell({ id, notebookController, data, content, pageId, active }) {
+function Cell({ id, pageController, notebookController, data, content, pageId, active }) {
     const handleSelect = () => {
         notebookController.toggleSelectCell(pageId, id);
     };

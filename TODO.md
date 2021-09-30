@@ -2,7 +2,7 @@
 
 - [ ] Loading screens
 - [ ] Shimmer
-- [ ] Implement vocabulary functionality on frontend
+- [x] Implement vocabulary functionality on frontend
 - [ ] HoverCard
 - [ ] Tabs overflow
 - [ ] Status bar

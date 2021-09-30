@@ -93,7 +93,7 @@ class Page extends Component {
 
         const pageStyle = {
             width: '8.5in',
-            height: '11in',
+            minHeight: '11in',
             backgroundColor: theme.palette.white,
             border: active? `1px solid ${theme.palette.themePrimary}` : null,
         };
@@ -122,11 +122,11 @@ class Page extends Component {
     render() {
         const { document, data } = this.props;
 
-        if (document && data.document_page_number) {
-            return this.renderWithDocument();
-        } else {
+        // if (document && data.document_page_number) {
+            // return this.renderWithDocument();
+        // } else {
             return this.renderWithoutDocument();
-        }
+        // }
     }
 }
 

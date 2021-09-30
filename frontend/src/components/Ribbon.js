@@ -18,14 +18,14 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
         const cell = notebookController.getCell(activePage, activeCell);
         appController.setClipboard(cell);
     };
-    
+
     const handlePaste = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
         const activeCellIndex = notebookController.indexCell(activePage, activeCell);
         let cell = { ...appController.getClipboard() };
         cell.id = uuidv4();
-        notebookController.insertCell(activePage, cell, activeCellIndex + 1);    
+        notebookController.insertCell(activePage, cell, activeCellIndex + 1);
     };
 
     const handleEdit = () => {
@@ -76,6 +76,44 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
         const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
         notebookController.addWikipediaImageCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
+
+    const handleEntities = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        notebookController.addEntitiesCell(activePage);
+    };
+
+    const handleMeaning = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addMeaningCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
+
+    const handleSynonyms = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addSynonymsCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
+
+    const handleAntonyms = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addAntonymsCell(command, activePage);
+        commandBoxRef.current.consume();
+    };
+
+    const handleUsage = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addUsageExampleCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
@@ -142,10 +180,41 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
             text: 'Wikipedia Image',
             iconProps: { iconName: 'Add' },
             onClick: handleWikipediaImage,
+        },
+        {
+            key: 'entities',
+            text: 'Entities',
+            iconProps: { iconName: 'Add' },
+            onClick: handleEntities
         }
     ];
 
-    const reviewItems = [];
+    const reviewItems = [
+        {
+            key: 'meaning',
+            text: 'Meaning',
+            iconProps: { iconName: 'Add' },
+            onClick: handleMeaning,
+        },
+        {
+            key: 'synonyms',
+            text: 'Synonyms',
+            iconProps: { iconName: 'Add' },
+            onClick: handleSynonyms,
+        },
+        {
+            key: 'antonyms',
+            text: 'Antonyms',
+            iconProps: { iconName: 'Add' },
+            onClick: handleAntonyms,
+        },
+        {
+            key: 'examples',
+            text: 'Usage example',
+            iconProps: { iconName: 'Add' },
+            onClick: handleUsage,
+        }
+    ];
 
     const viewItems = [];
 

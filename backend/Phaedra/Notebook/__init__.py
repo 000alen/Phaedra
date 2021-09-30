@@ -265,22 +265,22 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_meaning_cell(self, word: str, page_id):
-        page = self.get_cell(page_id)
+        page = self.get_page(page_id)
         content = titled_text(f"Meaning: {word}", ordered_list(meaning(word)))
         page.add_cell(Cell(content=content))
 
     def add_synonym_cell(self, word: str, page_id):
-        page = self.get_cell(page_id)
+        page = self.get_page(page_id)
         content = titled_text(f"Synonym: {word}", ordered_list(synonym(word)))
         page.add_cell(Cell(content=content))
 
     def add_antonym_cell(self, word: str, page_id):
-        page = self.get_cell(page_id)
+        page = self.get_page(page_id)
         content = titled_text(f"Antonym: {word}", ordered_list(antonym(word)))
         page.add_cell(Cell(content=content))
 
     def add_usage_example_cell(self, word: str, page_id):
-        page = self.get_cell(page_id)
+        page = self.get_page(page_id)
         content = titled_text(f"Usage: {word}", ordered_list(usage_example(word)))
         page.add_cell(Cell(content=content))
 

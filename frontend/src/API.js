@@ -3,8 +3,8 @@ const headers = { "Content-Type": "application/json" }
 function getApiUrl() {
     let apiUrl = window.localStorage.getItem("apiUrl");
     if (apiUrl) return apiUrl;
-    window.localStorage.setItem("apiUrl", "http://c4cd-35-196-215-222.ngrok.io");
-    return "http://c4cd-35-196-215-222.ngrok.io";
+    window.localStorage.setItem("apiUrl", "http://f1cb-34-134-144-242.ngrok.io");
+    return "http://f1cb-34-134-144-242.ngrok.io";
 }
 
 async function notebookFromPdf(path, base64) {

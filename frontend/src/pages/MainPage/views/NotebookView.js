@@ -14,7 +14,7 @@ export default function NotebookView({ appController }) {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        openJson().then((notebook) => {
+        openJson().then(({notebook, notebookPath}) => {
             setDialogOpen(false);
             if (!notebook) return;
             
@@ -23,7 +23,8 @@ export default function NotebookView({ appController }) {
                 key={id}
                 id={id}
                 appController={appController}
-                notebook={notebook} />
+                notebook={notebook}
+                notebookPath={notebookPath} />
             );
 
         });

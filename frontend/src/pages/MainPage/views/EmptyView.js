@@ -10,7 +10,7 @@ const newIcon = {
 export default function EmptyView({ appController }) {
     const handleNew = () => {
         const id = appController.getNextTabId();
-        const notebook = createNotebook(`Unnamed Notebook ${id}`);
+        const notebook = createNotebook({name: `Unnamed Notebook ${id}`});
 
         appController.addTab(<NotebookPage
             key={id}

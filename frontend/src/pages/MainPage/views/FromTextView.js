@@ -14,7 +14,7 @@ export default function FromTextView({ appController }) {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        openText().then((notebook) => {
+        openText().then(({notebook}) => {
             setDialogOpen(false);
             if (!notebook) return;
 

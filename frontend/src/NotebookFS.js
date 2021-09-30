@@ -17,7 +17,7 @@ export function openPdf() {
                 readFile(path).then((content) => {
                     base64encode(content).then((base64) => {
                         notebookFromPdf(path, base64).then((notebook) => {
-                            resolve(notebook);
+                            resolve({notebook: notebook, notebookPath: null});
                         });
                     });
                 });
@@ -40,7 +40,7 @@ export function openJson() {
                 const path = results.filePaths[0];
     
                 readFile(path, 'utf-8').then((notebook) => {
-                    resolve(JSON.parse(notebook))
+                    resolve({notebook: JSON.parse(notebook), notebookPath: path});
                 });
             }
         });
@@ -62,7 +62,7 @@ export function openText() {
                 const path = results.filePaths[0];
                 readFile(path, 'utf-8').then((text) => {
                     notebookFromText(text).then((notebook) => {
-                        resolve(notebook);
+                        resolve({notebook: notebook, notebookPath: null});
                     });
                 });
             }
@@ -84,7 +84,7 @@ export function openFile() {
             readFile(path).then((content) => {
                 base64encode(content).then((base64) => {
                     notebookFromPdf(path, base64).then((notebook) => {
-                        resolve(notebook);
+                        resolve({notebook: notebook, notebookPath: null});
                     });
                 });
             });    
@@ -94,7 +94,7 @@ export function openFile() {
     const handleOpenJson = (path) => {
         return new Promise((resolve, reject) => {
             readFile(path, "utf-8").then((content) => {
-                resolve(JSON.parse(content));
+                resolve({notebook: JSON.parse(content), notebookPath: path});
             });
     
         });
@@ -104,7 +104,7 @@ export function openFile() {
         return new Promise((resolve, reject) => {
             readFile(path, "utf-8").then((text) => {
                 notebookFromText(text).then((notebook) => {
-                    resolve(notebook);
+                    resolve({notebook: notebook, notebookPath: null});
                 });
             });    
         });
@@ -125,8 +125,8 @@ export function openFile() {
                     handler = handleOpenText(path);
                 }
 
-                handler.then((notebook) => {
-                    resolve(notebook);
+                handler.then((results) => {
+                    resolve(results);
                 });   
             }
         });    

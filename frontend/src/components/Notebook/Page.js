@@ -6,26 +6,23 @@ import { v4 as uuidv4 } from 'uuid';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export function createPage() {
+export function createPage(id, data, cells) {
+    if (!id) id = uuidv4();
+    if (!data) data = {};
+    if (!cells) cells = [];
+
     return {
-        id: uuidv4(),
-        data: {},
-        cells: [
-            {
-                id: uuidv4(),
-                data: {},
-                content: 'Hello, world!',
-            }
-        ],
+        id: id,
+        data: data,
+        cells: cells
     };
 }
-
 
 class Page extends Component {
     constructor(props) {
         super(props);
 
-        this.handleSelect = this.handleSelect.bind(this);
+        this.handleSelection = this.handleSelection.bind(this);
 
         const { id, notebookController, pageController } = props;
 
@@ -36,14 +33,17 @@ class Page extends Component {
         }
     }
 
-    handleSelect() {
+    handleSelection(event) {
+        const { active, editing } = this.props;
+        if (active && editing) return;
+
         const { notebookController, id } = this.state;
-        notebookController.toggleSelectPage(id);
+        notebookController.handleSelection(id);
     }
 
     renderWithDocument() {
         const { id, notebookController, pageController } = this.state;
-        const { data, cells, active, activeCell, document } = this.props;
+        const { data, cells, active, activeCell, document, editing } = this.props;
 
         const containerStyle = {
             backgroundColor: theme.palette.neutralLight,
@@ -51,12 +51,12 @@ class Page extends Component {
 
         const paperStyle = {
             backgroundColor: theme.palette.white,
-            border: active? `1px solid ${theme.palette.themePrimary}` : null,
+            border: active? `1px solid ${theme.palette.themePrimary}` : `1px solid ${theme.palette.white}`,
         }
 
         return (
             <div className="page grid grid-cols-2" style={containerStyle}>
-                <div className="m-2 p-2 rounded-md shadow-md" style={paperStyle} onClick={this.handleSelect}>
+                <div className="m-2 p-2 rounded-md shadow-md" style={paperStyle} onClick={this.handleSelection}>
                     {cells.map((cell) => <Cell
                         key={cell.id}
                         id={cell.id}
@@ -65,11 +65,12 @@ class Page extends Component {
                         data={cell.data}
                         content={cell.content}
                         pageId={id}
-                        active={active ? (activeCell === cell.id) : null} />
+                        active={active ? (activeCell === cell.id) : null}
+                        editing={editing} />
                     )}
                 </div>
 
-                <div className="m-2 rounded-md shadow-md">
+                <div className="m-2">
                     <Document
                         file={document}
                         renderMode="svg">
@@ -84,7 +85,7 @@ class Page extends Component {
 
     renderWithoutDocument() {
         const { id, notebookController, pageController } = this.state;
-        const { cells, active, activeCell } = this.props;
+        const { cells, active, activeCell, editing } = this.props;
 
         const containerStyle = {
             backgroundColor: theme.palette.neutralLight,
@@ -99,7 +100,7 @@ class Page extends Component {
 
         return (
             <div className="flex items-center justify-center" style={containerStyle}>
-                <div className="page p-2 m-2 rounded-md shadow-md" style={pageStyle} onClick={this.handleSelect}>
+                <div className="page p-2 m-2 rounded-md shadow-md" style={pageStyle} onClick={this.handleSelection}>
                     <div>
                         {cells.map((cell) => <Cell
                             key={cell.id}
@@ -109,7 +110,8 @@ class Page extends Component {
                             data={cell.data}
                             content={cell.content}
                             pageId={id}
-                            active={active ? (activeCell === cell.id) : null} />
+                            active={active ? (activeCell === cell.id) : null}
+                            editing={editing} />
                         )}
                     </div>
                 </div>

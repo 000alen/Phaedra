@@ -1,58 +1,79 @@
 import React from 'react';
 import { Pivot, PivotItem, CommandBar } from '@fluentui/react';
 import { theme } from '../index';
-import { writeFile, saveDialog } from '../ElectronAPI';
 import { createPage } from './Notebook/Page';
 import { createCell } from './Notebook/Cell';
+import { v4 as uuidv4 } from 'uuid';
 
-function Ribbon({ notebookRef, commandBoxRef }) {
-    const [dialogOpen, setDialogOpen] = React.useState(false);
-
-    const ribbonStyle = {
-        backgroundColor: theme.palette.white,
-    };
+function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
 
     const handleSave = () => {
         const { notebookController } = notebookRef.current.state;
         notebookController.save();
     };
 
+    const handleCopy = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
+        const cell = notebookController.getCell(activePage, activeCell);
+        appController.setClipboard(cell);
+    };
+    
+    const handlePaste = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
+        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+        let cell = { ...appController.getClipboard() };
+        cell.id = uuidv4();
+        notebookController.insertCell(activePage, cell, activeCellIndex + 1);    
+    };
+
+    const handleEdit = () => {
+        const { notebookController } = notebookRef.current.state;
+        notebookController.toggleEditing();
+    };
+
     const handleQuestion = () => {
-        const { notebookController, activePage } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
         notebookController.addQuestionCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
     const handleInsertPage = () => {
-        const { notebookController, activePage } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
         const activePageIndex = notebookController.indexPage(activePage);
         notebookController.insertPage(createPage(), activePageIndex + 1);
     };
 
     const handleInsertCell = () => {
-        const { notebookController, activePage, activeCell } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
         const activeCellIndex = notebookController.indexCell(activePage, activeCell);
         notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
     };
 
-
     const handleWikipediaSummary = () => {
-        const { notebookController, activePage } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
         notebookController.addWikipediaSummaryCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
     const handleWikipediaSuggestions = () => {
-        const { notebookController, activePage } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
         notebookController.addWikipediaSuggestionsCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
     const handleWikipediaImage = () => {
-        const { notebookController, activePage } = notebookRef.current.state;
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
         notebookController.addWikipediaImageCell(command, activePage);
         commandBoxRef.current.consume();
@@ -64,6 +85,24 @@ function Ribbon({ notebookRef, commandBoxRef }) {
             text: 'Save',
             iconProps: { iconName: 'Save' },
             onClick: handleSave,
+        },
+        {
+            key: 'copy',
+            text: 'Copy',
+            iconProps: { iconName: 'Copy' },
+            onClick: handleCopy,
+        },
+        {
+            key: 'paste',
+            text: 'Paste',
+            iconProps: { iconName: 'Paste' },
+            onClick: handlePaste,
+        },
+        {
+            key: 'edit',
+            text: 'Edit',
+            iconProps: { iconName: 'Edit' },
+            onClick: handleEdit,
         },
         {
             key: 'question',
@@ -109,6 +148,10 @@ function Ribbon({ notebookRef, commandBoxRef }) {
     const reviewItems = [];
 
     const viewItems = [];
+
+    const ribbonStyle = {
+        backgroundColor: theme.palette.white,
+    };
 
     return (
         <div style={ribbonStyle}>

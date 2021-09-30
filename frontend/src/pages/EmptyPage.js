@@ -19,7 +19,7 @@ function EmptyPage({ id, appController }) {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        openFile().then((notebook) => {
+        openFile().then(({notebook, notebookPath}) => {
             setDialogOpen(false);
             if (!notebook) return;
             
@@ -27,13 +27,14 @@ function EmptyPage({ id, appController }) {
                 key={id}
                 id={id}
                 appController={appController}
-                notebook={notebook} />
+                notebook={notebook}
+                notebookPath={notebookPath} />
             );
         });
     };
 
     const handleNew = () => {
-        const notebook = createNotebook(`Unnamed Notebook ${id}`);
+        const notebook = createNotebook({name: `Unnamed Notebook ${id}`});
 
         appController.setTabContent(id, <NotebookPage
             key={id}

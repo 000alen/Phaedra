@@ -47,7 +47,11 @@ class NotebookPage extends Component {
         return (
             <div>
                 <div className="ribbonDiv">
-                    <Ribbon notebookRef={this.notebookRef} commandBoxRef={this.commandBoxRef} />
+                    <Ribbon 
+                        notebookRef={this.notebookRef} 
+                        commandBoxRef={this.commandBoxRef} 
+                        appController={this.state.appController}
+                        pageController={this.state.pageController} />
                 </div>
 
                 <div className="notebookPageContent">
@@ -60,7 +64,9 @@ class NotebookPage extends Component {
                         notebook={this.props.notebook}
                         notebookPath={this.props.notebookPath} />
 
-                    {this.state.commandBoxShown && <CommandBox ref={this.commandBoxRef} notebookRef={this.notebookRef} />}
+                    {this.state.commandBoxShown && <CommandBox 
+                        ref={this.commandBoxRef} 
+                        notebookRef={this.notebookRef} />}
                 </div>
             </div>
         )

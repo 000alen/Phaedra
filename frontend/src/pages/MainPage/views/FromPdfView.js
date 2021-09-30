@@ -14,7 +14,7 @@ export default function FromPdfView({ appController }) {
         if (dialogOpen) return;
         setDialogOpen(true);
 
-        openPdf().then((notebook) => {
+        openPdf().then(({notebook}) => {
             setDialogOpen(false);
             if (!notebook) return;
 

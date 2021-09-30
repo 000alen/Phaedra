@@ -4,26 +4,24 @@ import { readFile, writeFile, saveDialog } from '../../ElectronAPI';
 import Page from './Page';
 import { v4 as uuidv4 } from 'uuid';
 
-export function createNotebook(name) {
-    const notebook = {
-        id: uuidv4(),
+export function createNotebook({id, name, document_path, pages}) {
+    if (!id) id = uuidv4();
+    if (!name) name = "Untitled";
+    if (!document_path) document_path = null;
+    if (!pages) pages = [
+        {
+            id: uuidv4(),
+            data: {},
+            cells: []
+        }
+    ];
+
+    return {
+        id: id,
         name: name,
-        document_path: null,
-        pages: [
-            {
-                id: uuidv4(),
-                data: {},
-                cells: [
-                    {
-                        id: uuidv4(),
-                        data: {},
-                        content: 'Hello, world!',
-                    }
-                ]
-            }
-        ],
+        document_path: document_path,
+        pages: pages
     }
-    return notebook;
 }
 
 class Notebook extends Component {
@@ -31,8 +29,8 @@ class Notebook extends Component {
         super(props);
 
         this.loadDocument = this.loadDocument.bind(this);
-        this.toggleSelectPage = this.toggleSelectPage.bind(this);
-        this.toggleSelectCell = this.toggleSelectCell.bind(this);
+        
+        this.handleSelection = this.handleSelection.bind(this);
 
         this.insertPage = this.insertPage.bind(this);
         this.addPage = this.addPage.bind(this);
@@ -60,12 +58,16 @@ class Notebook extends Component {
 
         this.save = this.save.bind(this);
 
+        this.toggleEditing = this.toggleEditing.bind(this);
+
+        this.setCellContent = this.setCellContent.bind(this);
+        this.setCellData = this.setCellData.bind(this);
+
         const { tabId, appController, pageController } = props;
         const { notebook, notebookPath } = props;
 
         const notebookController = {
-            toggleSelectPage: this.toggleSelectPage,
-            toggleSelectCell: this.toggleSelectCell,
+            handleSelection: this.handleSelection,
             insertPage: this.insertPage,
             addPage: this.addPage,
             indexPage: this.indexPage,
@@ -86,7 +88,10 @@ class Notebook extends Component {
             addSynonymCell: this.addSynonymCell,
             addAntonymCell: this.addAntonymCell,
             addUsageExampleCell: this.addUsageExampleCell,
-            save: this.save
+            save: this.save,
+            toggleEditing: this.toggleEditing,
+            setCellContent: this.setCellContent,
+            setCellData: this.setCellData,
         };
 
         this.state = {
@@ -99,7 +104,8 @@ class Notebook extends Component {
             documentPath: notebook.document_path,
             documentFile: null,
             activePage: null,
-            activeCell: null
+            activeCell: null,
+            editing: false,
         };
     }
 
@@ -134,44 +140,23 @@ class Notebook extends Component {
         })
     }
 
-    toggleSelectPage(pageId) {
-        if (this.state.activePage === pageId) {
-            this.setState((state) => {
-                return {
-                    ...state,
-                    activePage: null
-                };
-            });
-        } else {
-            this.setState((state) => {
-                return {
-                    ...state,
-                    activePage: pageId
-                };
-            });
-        }
-    }
-
-    toggleSelectCell(pageId, cellId) {
+    handleSelection(pageId, cellId) {
         if (this.state.activePage === pageId && this.state.activeCell === cellId) {
             this.state.pageController.hideCommandBox();
             this.setState((state) => {
-                return {
-                    ...state,
-                    activePage: null,
-                    activeCell: null
-                };
+                return { ...state, activePage: null, activeCell: null };
+            });
+        } else if (this.state.activePage === pageId && this.state.activeCell !== cellId) {
+            this.state.pageController.showCommandBox();
+            this.setState((state) => {
+                return { ...state, activePage: pageId, activeCell: cellId };
             });
         } else {
             this.state.pageController.showCommandBox();
             this.setState((state) => {
-                return {
-                    ...state,
-                    activePage: pageId,
-                    activeCell: cellId
-                };
+                return { ...state, activePage: pageId, activeCell: cellId };
             });
-        }
+        } 
     }
 
     insertPage(page, index) {
@@ -409,6 +394,8 @@ class Notebook extends Component {
 
         const {notebookPath, notebook} = this.state;
 
+        console.log(notebookPath);
+
         if (notebookPath) {
             writeFile(notebookPath, JSON.stringify(notebook));
         } else {
@@ -427,10 +414,87 @@ class Notebook extends Component {
         }
     }
 
+    toggleEditing() {
+        this.setState((state) => {
+            return {
+                ...state,
+                editing: !state.editing
+            };
+        });
+    }
+
+    setCellContent(pageId, cellId, content, deselect) {
+        if (deselect === undefined) deselect = false;
+
+        this.setState((state) => {
+            return {
+                ...state,
+                activePage: deselect ? null : state.activePage,
+                activeCell: deselect ? null : state.activeCell,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.map(page => {
+                        if (page.id === pageId) {
+                            return {
+                                ...page,
+                                cells: page.cells.map(cell => {
+                                    if (cell.id === cellId) {
+                                        return {
+                                            ...cell,
+                                            content: content
+                                        };
+                                    } else {
+                                        return cell;
+                                    }
+                                })
+                            };
+                        } else {
+                            return page;
+                        }
+                    })
+                }
+            };
+        });
+    }
+
+    setCellData(pageId, cellId, data, deselect) {
+        if (deselect === undefined) deselect = false;
+
+        this.setState((state) => {
+            return {
+                ...state,
+                activePage: deselect ? null : state.activePage,
+                activeCell: deselect ? null : state.activeCell,
+                notebook: {
+                    ...state.notebook,
+                    pages: state.notebook.pages.map(page => {
+                        if (page.id === pageId) {
+                            return {
+                                ...page,
+                                cells: page.cells.map(cell => {
+                                    if (cell.id === cellId) {
+                                        return {
+                                            ...cell,
+                                            data: data
+                                        };
+                                    } else {
+                                        return cell;
+                                    }
+                                })
+                            };
+                        } else {
+                            return page;
+                        }
+                    })
+                }
+            };
+        });
+    }
+
     render() {
         return (
             <div className="notebook">
-                {this.state.notebook.pages.map(page => <Page
+                {this.state.notebook.pages.map((page) => <Page
                     key={page.id}
                     id={page.id}
                     pageController={this.state.pageController}
@@ -439,7 +503,8 @@ class Notebook extends Component {
                     document={this.state.documentFile}
                     cells={page.cells}
                     active={this.state.activePage === page.id}
-                    activeCell={this.state.activeCell} />
+                    activeCell={this.state.activeCell}
+                    editing={this.state.editing} />
                 )}
             </div>
         );

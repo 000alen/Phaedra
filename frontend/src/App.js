@@ -16,19 +16,25 @@ class App extends Component {
         this.setTabTitle = this.setTabTitle.bind(this);
         this.setTabContent = this.setTabContent.bind(this);
 
+        this.getClipboard = this.getClipboard.bind(this);
+        this.setClipboard = this.setClipboard.bind(this);
+
         const appController = {
             getNextTabId: this.getNextTabId,
             selectTab: this.selectTab,
             addTab: this.addTab,
             closeTab: this.closeTab,
             setTabTitle: this.setTabTitle,
-            setTabContent: this.setTabContent
+            setTabContent: this.setTabContent,
+            getClipboard: this.getClipboard,
+            setClipboard: this.setClipboard
         }
 
         this.state = {
             appController: appController,
             tabs: [],
-            selectedTab: null
+            selectedTab: null,
+            clipboard: null
         };
     }
 
@@ -117,6 +123,19 @@ class App extends Component {
         let newTabs = [...this.state.tabs];
         newTabs[index].content = newContent;
         this.setState({ ...this.state, tabs: newTabs });
+    }
+
+    getClipboard() {
+        return this.state.clipboard;
+    }
+
+    setClipboard(content) {
+        this.setState((state) => {
+            return {
+                ...state, 
+                clipboard: content
+            };
+        });
     }
 
     render() {

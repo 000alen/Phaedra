@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Ribbon from '../components/Ribbon';
+import Ribbon from '../components/Ribbon/Ribbon';
 import Notebook from '../components/Notebook/Notebook';
 import CommandBox from '../components/CommandBox';
 import '../css/NotebookPage.css';

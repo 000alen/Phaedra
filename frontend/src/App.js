@@ -3,6 +3,7 @@ import TopBar from './components/TopBar';
 import Tabs from './components/Tabs';
 import EmptyPage from './pages/EmptyPage';
 import MainPage from './pages/MainPage/MainPage';
+import { v4 as uuidv4 } from 'uuid';
 import './css/App.css'
 
 class App extends Component {
@@ -51,11 +52,11 @@ class App extends Component {
     }
 
     createEmptyTab() {
-        const id = this.state.tabs.length + 1;
+        const id = uuidv4();
 
         return {
             id: id,
-            title: `Tab ${id}`,
+            title: `New Tab`,
             content: <EmptyPage
                 key={id}
                 id={id}
@@ -96,7 +97,12 @@ class App extends Component {
         let newSelectedTab;
         if (this.state.selectedTab === id) {
             const index = this.getTabIndex(id);
-            newSelectedTab = this.getTabId(index === 0 ? 0 : index - 1);
+
+            if (newTabs.length === 0) {
+                newSelectedTab = null
+            } else {
+                newSelectedTab = newTabs[index === 0 ? 0 : index - 1].id
+            };
         } else {
             newSelectedTab = this.state.selectedTab;
         }

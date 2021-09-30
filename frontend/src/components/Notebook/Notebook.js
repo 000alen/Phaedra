@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
-import { addEntitiesCell, addQuestionCell, addSparseQuestionCell, addWikipediaSummaryCell, addWikipediaSuggestionsCell, addWikipediaImageCell, addMeaningCell, addSynonymCell, addAntonymCell, addUsageExampleCell } from '../../API';
+import { 
+    addEntitiesCell, 
+    addQuestionCell, 
+    addSparseQuestionCell, 
+    addWikipediaSummaryCell, 
+    addWikipediaSuggestionsCell, 
+    addWikipediaImageCell, 
+    addMeaningCell, 
+    addSynonymCell, 
+    addAntonymCell, 
+    addUsageExampleCell
+} from '../../API';
 import { readFile, writeFile, saveDialog } from '../../ElectronAPI';
 import Page from './Page';
 import { v4 as uuidv4 } from 'uuid';
 
-export function createNotebook({id, name, document_path, pages}) {
+export function createNotebook({ id, name, document_path, pages }) {
     if (!id) id = uuidv4();
     if (!name) name = "Untitled";
     if (!document_path) document_path = null;
@@ -29,7 +40,7 @@ class Notebook extends Component {
         super(props);
 
         this.loadDocument = this.loadDocument.bind(this);
-        
+
         this.handleSelection = this.handleSelection.bind(this);
 
         this.insertPage = this.insertPage.bind(this);
@@ -156,7 +167,7 @@ class Notebook extends Component {
             this.setState((state) => {
                 return { ...state, activePage: pageId, activeCell: cellId };
             });
-        } 
+        }
     }
 
     insertPage(page, index) {
@@ -392,7 +403,7 @@ class Notebook extends Component {
             ]
         };
 
-        const {notebookPath, notebook} = this.state;
+        const { notebookPath, notebook } = this.state;
 
         console.log(notebookPath);
 

@@ -101,14 +101,6 @@ def add_antonym_cell():
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/usage_example", methods=["POST"])
-def add_usage_example_cell():
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_usage_example_cell(request.json["word"], request.json["page_id"])
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
 @app.route("/kill", methods=["GET"])
 def kill():
     def _kill():

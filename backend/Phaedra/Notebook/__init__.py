@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict
 
 from Phaedra.PDF import extract_text_to_pages, preprocess_text
 from Phaedra.NLP import tokenizer, extract_named_entities, capitalize_text, question_text
-from Phaedra.NLP.Vocabulary import meaning, synonym, antonym, usage_example
+from Phaedra.NLP.Vocabulary import meaning, synonym, antonym
 from Phaedra.NLP.Batch import batch_summarize_text, batch_question_text_same_question
 from Phaedra.Notebook.Page import Page
 from Phaedra.Notebook.Cell import Cell
@@ -266,7 +266,15 @@ class Notebook:
 
     def add_meaning_cell(self, word: str, page_id):
         page = self.get_page(page_id)
-        content = titled_text(f"Meaning: {word}", ordered_list(meaning(word)))
+        _meaning = meaning(word)
+
+        content = titled_text(f"Meaning: {word}", 
+            "\n\n".join(
+                titled_text(f"Type: {word_type}", ordered_list(meaning)) 
+                for word_type, meaning in _meaning.items()
+            )
+        )
+
         page.add_cell(Cell(content=content))
 
     def add_synonym_cell(self, word: str, page_id):
@@ -278,9 +286,3 @@ class Notebook:
         page = self.get_page(page_id)
         content = titled_text(f"Antonym: {word}", ordered_list(antonym(word)))
         page.add_cell(Cell(content=content))
-
-    def add_usage_example_cell(self, word: str, page_id):
-        page = self.get_page(page_id)
-        content = titled_text(f"Usage: {word}", ordered_list(usage_example(word)))
-        page.add_cell(Cell(content=content))
-

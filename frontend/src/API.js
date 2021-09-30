@@ -3,8 +3,8 @@ const headers = { "Content-Type": "application/json" }
 function getApiUrl() {
     let apiUrl = window.localStorage.getItem("apiUrl");
     if (apiUrl) return apiUrl;
-    window.localStorage.setItem("apiUrl", "http://f1cb-34-134-144-242.ngrok.io");
-    return "http://f1cb-34-134-144-242.ngrok.io";
+    window.localStorage.setItem("apiUrl", "http://localhost:5000");
+    return "http://localhost:5000";
 }
 
 async function notebookFromPdf(path, base64) {
@@ -156,20 +156,6 @@ async function addAntonymCell(notebook_json, word, page_id) {
     return response.json();
 }
 
-async function addUsageExampleCell(notebook_json, word, page_id) {
-    const response = await fetch(`${getApiUrl()}/cell/add/usage_example`, {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify({
-            notebook: JSON.stringify(notebook_json),
-            word: word,
-            page_id: page_id,
-        })
-    });
-
-    return response.json();
-}
-
 async function kill() {
     return await fetch(`${getApiUrl()}/kill`);
 }
@@ -187,6 +173,5 @@ export {
     addMeaningCell,
     addSynonymCell,
     addAntonymCell,
-    addUsageExampleCell,
     kill
 }

@@ -8,7 +8,4 @@ transformers
 sentencepiece
 names-generator
 wikipedia
-vocabulary
-
-# fastt5
-# psutil
+pydictionary

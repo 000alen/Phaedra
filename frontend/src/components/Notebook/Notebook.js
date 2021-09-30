@@ -9,7 +9,6 @@ import {
     addMeaningCell, 
     addSynonymCell, 
     addAntonymCell, 
-    addUsageExampleCell
 } from '../../API';
 import { readFile, writeFile, saveDialog } from '../../ElectronAPI';
 import Page from './Page';
@@ -65,7 +64,6 @@ class Notebook extends Component {
         this.addMeaningCell = this.addMeaningCell.bind(this);
         this.addSynonymCell = this.addSynonymCell.bind(this);
         this.addAntonymCell = this.addAntonymCell.bind(this);
-        this.addUsageExampleCell = this.addUsageExampleCell.bind(this);
 
         this.save = this.save.bind(this);
 
@@ -98,7 +96,6 @@ class Notebook extends Component {
             addMeaningCell: this.addMeaningCell,
             addSynonymCell: this.addSynonymCell,
             addAntonymCell: this.addAntonymCell,
-            addUsageExampleCell: this.addUsageExampleCell,
             save: this.save,
             toggleEditing: this.toggleEditing,
             setCellContent: this.setCellContent,
@@ -376,17 +373,6 @@ class Notebook extends Component {
 
     addAntonymCell(word, pageId) {
         addAntonymCell(this.state.notebook, word, pageId).then((notebook) => {
-            this.setState((state) => {
-                return {
-                    ...state,
-                    notebook: notebook
-                };
-            });
-        });
-    }
-
-    addUsageExampleCell(word, pageId) {
-        addUsageExampleCell(this.state.notebook, word, pageId).then((notebook) => {
             this.setState((state) => {
                 return {
                     ...state,

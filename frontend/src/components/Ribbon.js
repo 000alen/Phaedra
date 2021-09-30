@@ -93,27 +93,19 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
         commandBoxRef.current.consume();
     };
 
-    const handleSynonyms = () => {
+    const handleSynonym = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
-        notebookController.addSynonymsCell(command, activePage);
+        notebookController.addSynonymCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
-    const handleAntonyms = () => {
+    const handleAntonym = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
         const { command } = commandBoxRef.current.state;
-        notebookController.addAntonymsCell(command, activePage);
-        commandBoxRef.current.consume();
-    };
-
-    const handleUsage = () => {
-        const { notebookController } = notebookRef.current.state;
-        const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addUsageExampleCell(command, activePage);
+        notebookController.addAntonymCell(command, activePage);
         commandBoxRef.current.consume();
     };
 
@@ -200,20 +192,14 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
             key: 'synonyms',
             text: 'Synonyms',
             iconProps: { iconName: 'Add' },
-            onClick: handleSynonyms,
+            onClick: handleSynonym,
         },
         {
             key: 'antonyms',
             text: 'Antonyms',
             iconProps: { iconName: 'Add' },
-            onClick: handleAntonyms,
+            onClick: handleAntonym,
         },
-        {
-            key: 'examples',
-            text: 'Usage example',
-            iconProps: { iconName: 'Add' },
-            onClick: handleUsage,
-        }
     ];
 
     const viewItems = [];

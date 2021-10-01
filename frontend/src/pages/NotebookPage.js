@@ -46,13 +46,11 @@ class NotebookPage extends Component {
     render() {
         return (
             <div>
-                <div className="ribbonDiv">
-                    <Ribbon 
-                        notebookRef={this.notebookRef} 
-                        commandBoxRef={this.commandBoxRef} 
-                        appController={this.state.appController}
-                        pageController={this.state.pageController} />
-                </div>
+                <Ribbon 
+                    notebookRef={this.notebookRef} 
+                    commandBoxRef={this.commandBoxRef} 
+                    appController={this.state.appController}
+                    pageController={this.state.pageController} />
 
                 <div className="notebookPageContent">
                     <Notebook

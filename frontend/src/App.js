@@ -5,6 +5,7 @@ import EmptyPage from './pages/EmptyPage';
 import MainPage from './pages/MainPage/MainPage';
 import { v4 as uuidv4 } from 'uuid';
 import './css/App.css'
+import StatusBar from './components/StatusBar';
 
 class App extends Component {
     constructor(props) {
@@ -160,6 +161,8 @@ class App extends Component {
                 <div className="appContent">
                     {selectedTab ? this.getTabContent(selectedTab) : <MainPage appController={this.state.appController} />}
                 </div>
+
+                <StatusBar />
             </div>
         );
     }

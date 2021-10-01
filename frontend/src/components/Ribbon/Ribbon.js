@@ -7,13 +7,15 @@ import InsertItems from './items/InsertItems';
 import ReviewItems from './items/ReviewItems';
 import ViewItems from './items/ViewItems';
 
+import '../../css/Ribbon.css';
+
 function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
     const ribbonStyle = {
         backgroundColor: theme.palette.white,
     };
 
     return (
-        <div style={ribbonStyle}>
+        <div className="ribbon" style={ribbonStyle}>
             <Pivot 
                 aria-label="Ribbon"
                 defaultSelectedKey="home">

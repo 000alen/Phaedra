@@ -1,12 +1,12 @@
 .topBar {
-    position: fixed;
-    display: flex;
-    flex-direction: row;
     width: 100%;
     height: 40px;
+    
+    display: flex;
+    flex-direction: row;
+    
     z-index: 100;
     -webkit-user-select: none;
-    background-color: white;
 }
 
 .titleBar {

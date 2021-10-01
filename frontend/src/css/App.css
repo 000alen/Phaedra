@@ -1,13 +1,13 @@
 .app {
     width: 100vw;
     height: 100vh;
-    overflow-x: hidden;
 }
 
 .appContent {
     width: 100%;
-    height: calc(100% - 40px);
-    margin-top: 40px;
+    height: calc(100% - 60px);
+
+    overflow: scroll;
 }
 
 .appContent > div {

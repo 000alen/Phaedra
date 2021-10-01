@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-    /* display: none; */
+    display: none;
 }
 
 .react-pdf__Page__svg {

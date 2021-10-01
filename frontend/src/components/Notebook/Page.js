@@ -122,11 +122,11 @@ class Page extends Component {
     render() {
         const { document, data } = this.props;
 
-        // if (document && data.document_page_number) {
-            // return this.renderWithDocument();
-        // } else {
+        if (document && data.document_page_number) {
+            return this.renderWithDocument();
+        } else {
             return this.renderWithoutDocument();
-        // }
+        }
     }
 }
 

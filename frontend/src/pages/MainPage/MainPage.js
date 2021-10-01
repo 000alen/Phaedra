@@ -55,7 +55,7 @@ function MainPage({ id, appController }) {
 
     return (
         <div className="mainPage">
-            <div className="sideBar">
+            <div className="mainPageSideBar">
                 <Nav
                     ariaLabel="Nav example with custom group headers"
                     groups={navLinkGroups}
@@ -64,7 +64,7 @@ function MainPage({ id, appController }) {
                 />
             </div>
 
-            <div className="pageContent">
+            <div className="mainPageContent">
                 {navLinkContents[selectedKey]}
             </div>
         </div>

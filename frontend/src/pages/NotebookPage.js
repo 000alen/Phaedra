@@ -45,7 +45,7 @@ class NotebookPage extends Component {
 
     render() {
         return (
-            <div>
+            <div className="notebookPage">
                 <Ribbon 
                     notebookRef={this.notebookRef} 
                     commandBoxRef={this.commandBoxRef} 

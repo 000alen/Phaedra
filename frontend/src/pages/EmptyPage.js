@@ -3,6 +3,7 @@ import Card from '../components/Card';
 import NotebookPage from './NotebookPage';
 import { openFile } from '../NotebookFS';
 import { createNotebook } from '../components/Notebook/Notebook';
+import '../css/EmptyPage.css';
 
 const openIcon = {
     iconName: 'OpenFile',
@@ -45,7 +46,7 @@ function EmptyPage({ id, appController }) {
     };
 
     return (
-        <div className="flex items-center justify-center">
+        <div className="emptyPage flex items-center justify-center">
             <div className="flex flex-row space-x-1">
                 <Card
                     iconProps={openIcon}

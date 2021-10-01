@@ -158,6 +158,7 @@ class App extends Component {
                         onSelect={this.selectTab}
                         onClose={this.closeTab} />
                 </TopBar>
+                
                 <div className="appContent">
                     {selectedTab ? this.getTabContent(selectedTab) : <MainPage appController={this.state.appController} />}
                 </div>

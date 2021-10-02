@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { theme } from '../../index';
 import { v4 as uuidv4 } from 'uuid';
-import { PrimaryButton, TextField } from '@fluentui/react';
+import { PrimaryButton, Shimmer, TextField, mergeStyles } from '@fluentui/react';
 
 export function createCell(id, data, content) {
     if (!id) id = uuidv4();
@@ -42,6 +42,14 @@ function Cell({ id, pageController, notebookController, data, content, pageId, a
         border: `1px solid ${theme.palette.themePrimary}`
     }
 
+    const wrapperClass = mergeStyles({
+        selectors: {
+          '& > .ms-Shimmer-container': {
+            margin: '10px 0',
+          },
+        },
+    });
+
     return (
         (active && editing) ? <div className="cell m-2 space-y-2">
             <TextField 
@@ -53,7 +61,7 @@ function Cell({ id, pageController, notebookController, data, content, pageId, a
                 text="Set"
                 onClick={handleSet} /> 
         </div> : <div 
-            className="cell p-2 m-2 rounded-sm shadow-md text-justify" 
+            className={`cell p-2 m-2 rounded-sm shadow-md text-justify ${wrapperClass}`} 
             style={active ? activeStyle : style} 
             onClick={handleSelection}>
                 <ReactMarkdown

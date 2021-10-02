@@ -21,6 +21,8 @@ class App extends Component {
         this.getClipboard = this.getClipboard.bind(this);
         this.setClipboard = this.setClipboard.bind(this);
 
+        this.statusBarRef = React.createRef();
+
         const appController = {
             getNextTabId: this.getNextTabId,
             selectTab: this.selectTab,
@@ -163,7 +165,8 @@ class App extends Component {
                     {selectedTab ? this.getTabContent(selectedTab) : <MainPage appController={this.state.appController} />}
                 </div>
 
-                <StatusBar />
+                <StatusBar 
+                    ref={this.statusBarRef} />
             </div>
         );
     }

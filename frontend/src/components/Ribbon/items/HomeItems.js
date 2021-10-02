@@ -40,38 +40,129 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
     const homeItems = [
         {
             key: 'save',
-            text: 'Save',
             iconProps: { iconName: 'Save' },
             onClick: handleSave,
         },
         {
-            key: 'copy',
-            text: 'Copy',
-            iconProps: { iconName: 'Copy' },
-            onClick: handleCopy,
+            key: 'history',
+            iconProps: { iconName: 'History' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'undo',
+                        text: 'Undo',
+                        iconProps: { iconName: 'Undo' },
+                    },
+                    {
+                        key: 'redo',
+                        text: 'Redo',
+                        iconProps: { iconName: 'Redo' },
+                    }
+                ]
+            }
+        },
+
+        {
+            key: 'clipboard',
+            iconProps: { iconName: 'ClipboardSolid' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'cut',
+                        text: 'Cut',
+                        iconProps: { iconName: 'Cut' },
+                    },
+                    {
+                        key: 'copy',
+                        text: 'Copy',
+                        iconProps: { iconName: 'Copy' },
+                        onClick: handleCopy,
+                    },
+                    {
+                        key: 'paste',
+                        text: 'Paste',
+                        iconProps: { iconName: 'Paste' },
+                        onClick: handlePaste,
+                    },
+            
+                ]
+            }
         },
         {
-            key: 'paste',
-            text: 'Paste',
-            iconProps: { iconName: 'Paste' },
-            onClick: handlePaste,
+            key: 'bold',
+            iconProps: { iconName: 'Bold' },
         },
         {
-            key: 'edit',
-            text: 'Edit',
-            iconProps: { iconName: 'Edit' },
-            onClick: handleEdit,
+            key: 'italic',
+            iconProps: { iconName: 'Italic' },
         },
         {
-            key: 'question',
-            text: 'Question',
-            iconProps: { iconName: 'SurveyQuestions' },
-            onClick: handleQuestion
+            key: 'underline',
+            iconProps: { iconName: 'Underline' },
+        },
+        {
+            key: 'moreFontOptions',
+            iconProps: { iconName: 'More' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'strikethrough',
+                        text: 'Strikethrough',
+                        iconProps: { iconName: 'Strikethrough' },
+                    },
+                    {
+                        key: 'subscript',
+                        text: 'Subscript',
+                        iconProps: { iconName: 'Subscript' },
+                    },
+                    {
+                        key: 'superscript',
+                        text: 'Superscript',
+                        iconProps: { iconName: 'Superscript' },
+                    },
+                    {
+                        key: 'fontColor',
+                        text: 'Font Color',
+                        iconProps: { iconName: 'FontColor' },
+                    },
+                    {
+                        key: 'highlight',
+                        text: 'Highlight',
+                        iconProps: { iconName: 'Highlight' },
+                    },
+                    {
+                        key: 'clearFormatting',
+                        text: 'Clear Formatting',
+                        iconProps: { iconName: 'ClearFormatting' },
+                    }
+                ]
+            }
+        },
+        {
+            key: 'bullet',
+            iconProps: { iconName: 'BulletedList' },
+        },
+        {
+            key: 'number',
+            iconProps: { iconName: 'NumberedList' },
         }
     ];    
 
+    const homeFarItems = [
+        {
+            key: 'question',
+            iconProps: { iconName: 'Search' },
+            onClick: handleQuestion
+        },
+        {
+            key: 'edit',
+            iconProps: { iconName: 'Edit' },
+            onClick: handleEdit,
+        },
+    ];
+
     return (
-        <CommandBar items={homeItems} />
+        <CommandBar items={homeItems}  farItems={homeFarItems}/>
     )
 }
 

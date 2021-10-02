@@ -50,45 +50,65 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
     
     const insertItems = [
         {
-            key: 'insertPage',
-            text: 'Insert Page',
+            key: 'insert',
             iconProps: { iconName: 'Add' },
-            onClick: handleInsertPage,
-        },
-        {
-            key: 'insertCell',
-            text: 'Insert Cell',
-            iconProps: { iconName: 'Add' },
-            onClick: handleInsertCell,
-        },
-        {
-            key: 'wikipediaSummary',
-            text: 'Wikipedia Summary',
-            iconProps: { iconName: 'Add' },
-            onClick: handleWikipediaSummary,
-        },
-        {
-            key: 'wikipediaSuggestions',
-            text: 'Wikipedia Suggestions',
-            iconProps: { iconName: 'Add' },
-            onClick: handleWikipediaSuggestions,
-        },
-        {
-            key: 'wikipediaImage',
-            text: 'Wikipedia Image',
-            iconProps: { iconName: 'Add' },
-            onClick: handleWikipediaImage,
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'insertPage',
+                        text: 'Insert Page',
+                        onClick: handleInsertPage,
+                    },
+                    {
+                        key: 'insertCell',
+                        text: 'Insert Cell',
+                        onClick: handleInsertCell,
+                    },            
+                ]
+            }            
         },
         {
             key: 'entities',
             text: 'Entities',
-            iconProps: { iconName: 'Add' },
+            iconProps: { iconName: 'People' },
             onClick: handleEntities
+        },
+        {
+            key: 'wikipedia',
+            text: 'Wikipedia',
+            iconProps: { iconName: 'Articles' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'wikipediaSummary',
+                        text: 'Wikipedia Summary',
+                        onClick: handleWikipediaSummary,
+                    },
+                    {
+                        key: 'wikipediaSuggestions',
+                        text: 'Wikipedia Suggestions',
+                        onClick: handleWikipediaSuggestions,
+                    },
+                    {
+                        key: 'wikipediaImage',
+                        text: 'Wikipedia Image',
+                        onClick: handleWikipediaImage,
+                    }, 
+                ]
+            }
         }
-    ];    
+    ];
+
+    const insertFarItems = [
+        {
+            key: 'loadDocument',
+            text: 'Load Document',
+            iconProps: { iconName: 'TextDocument' },
+        }
+    ];
 
     return (
-        <CommandBar items={insertItems} />
+        <CommandBar items={insertItems} farItems={insertFarItems} />
     )
 }
 

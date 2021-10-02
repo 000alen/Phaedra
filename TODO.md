@@ -12,3 +12,4 @@
 - [ ] Launch a release
 - [ ] Add a reliable source for vocabulary
 - [ ] Key bindings
+- [ ] History

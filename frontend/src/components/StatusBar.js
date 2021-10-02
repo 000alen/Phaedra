@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {Spinner, SpinnerSize, Text} from '@fluentui/react';
+import {theme} from '../index';
 import '../css/StatusBar.css';
 
 class StatusBar extends Component {
@@ -44,8 +45,12 @@ class StatusBar extends Component {
     render() {
         const { loadingShown, loadingText } = this.state;
 
+        const statusBarStyle = {
+            backgroundColor: theme.palette.neutralLight,
+        }
+
         return (
-            <div className="statusBar flex items-center ml-2 space-x-2">
+            <div className="statusBar flex items-center pl-2 space-x-2" style={statusBarStyle}>
                 {loadingShown && <>
                     <Spinner 
                         size={SpinnerSize.xSmall} />

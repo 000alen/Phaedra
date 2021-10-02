@@ -28,23 +28,29 @@ function ReviewItems({ notebookRef, commandBoxRef, appController, pageController
     
     const reviewItems = [
         {
-            key: 'meaning',
-            text: 'Meaning',
-            iconProps: { iconName: 'Add' },
-            onClick: handleMeaning,
-        },
-        {
-            key: 'synonyms',
-            text: 'Synonyms',
-            iconProps: { iconName: 'Add' },
-            onClick: handleSynonym,
-        },
-        {
-            key: 'antonyms',
-            text: 'Antonyms',
-            iconProps: { iconName: 'Add' },
-            onClick: handleAntonym,
-        },
+            key: 'dictionary',
+            text: 'Dictionary',
+            iconProps: { iconName: 'Dictionary' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'meaning',
+                        text: 'Meaning',
+                        onClick: handleMeaning,
+                    },
+                    {
+                        key: 'synonyms',
+                        text: 'Synonyms',
+                        onClick: handleSynonym,
+                    },
+                    {
+                        key: 'antonyms',
+                        text: 'Antonyms',
+                        onClick: handleAntonym,
+                    },            
+                ]
+            }
+        }
     ];    
     
     return (

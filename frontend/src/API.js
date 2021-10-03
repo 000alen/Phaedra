@@ -72,6 +72,20 @@ async function addSparseQuestionCell(notebook_json, question) {
     return response.json();
 }
 
+async function addGenerateCell(notebook_json, prompt, page_id) {
+    const response = await fetch(`${getApiUrl()}/cell/add/generate`, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({
+            notebook: JSON.stringify(notebook_json),
+            prompt: prompt,
+            page_id: page_id
+        })
+    });
+
+    return response.json();
+}
+
 async function addWikipediaSummaryCell(notebook_json, query, page_id) {
     const response = await fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
         method: "POST",
@@ -167,6 +181,7 @@ export {
     addEntitiesCell,
     addQuestionCell,
     addSparseQuestionCell,
+    addGenerateCell,
     addWikipediaSummaryCell,
     addWikipediaSuggestionsCell,
     addWikipediaImageCell,

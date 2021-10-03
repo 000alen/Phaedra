@@ -13,3 +13,4 @@
 - [ ] Add a reliable source for vocabulary
 - [ ] Key bindings
 - [ ] History
+- [ ] Provide examples for generation (backend with GPT)

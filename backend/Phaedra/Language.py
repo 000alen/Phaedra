@@ -70,6 +70,17 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
     return batch_answer([question] * len(contexts), contexts)
 
 
+def generate(prompt: str) -> str:
+    logging.info(f"Generating: '{prompt[:5]}...'")
+    return generator(prompt, max_length=1000)[0]["generated_text"]
+
+
+def batch_generate(prompts: List[str]) -> List[str]:
+    logging.info(f"Batch generating: {len(prompts)}")
+    results = generator(prompts)
+    return [result["generated_text"] for result in results]
+
+
 # XXX: Not working properly
 def entities(text: str) -> List[str]:
     logging.info(f"Extracting NE: '{text[:5]}...'")

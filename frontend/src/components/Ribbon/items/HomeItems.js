@@ -37,6 +37,14 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
         commandBoxRef.current.consume();
     };
     
+    const handleGenerate = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const { command } = commandBoxRef.current.state;
+        notebookController.addGenerateCell(command, activePage);
+        commandBoxRef.current.consume();    
+    };
+
     const homeItems = [
         {
             key: 'save',
@@ -149,6 +157,11 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
     ];    
 
     const homeFarItems = [
+        {
+            key: 'generate',
+            iconProps: { iconName: 'Processing' },
+            onClick: handleGenerate
+        },
         {
             key: 'question',
             iconProps: { iconName: 'Search' },

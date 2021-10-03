@@ -10,10 +10,10 @@ import names_generator  # type: ignore
 import wikipedia  # type: ignore
 
 from Phaedra.Text import extract_text_from_pdf_to_pages, preprocess_text
-from Phaedra.Language import tokenizer, entities, answer, meaning, synonym, antonym, batch_summarize, batch_answer_same_question
+from Phaedra.Language import tokenizer, entities, answer, generate, meaning, synonym, antonym, batch_summarize, batch_answer_same_question
 from Phaedra.Notebook.Page import Page, PAGE_JSON_TYPE
 from Phaedra.Notebook.Cell import Cell
-from Phaedra.Notebook.Markdown import titled_text, ordered_list, link, image
+from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
 
 __all__ = (
     "Notebook",
@@ -267,6 +267,14 @@ class Notebook:
 
         return answers
 
+    def _generate(self, prompt: str, page_id: str) -> str:
+        page = self.get_page(page_id)
+
+        assert page is not None
+
+        source = page.data["source"]
+        return generate(f"context: \"{source}\"\n\nprompt: \"{prompt}\"\n\n text: ")
+
     def add_entities_cell(self, page_id: str):
         page = self.get_page(page_id)
 
@@ -288,6 +296,14 @@ class Notebook:
         content = titled_text(question, ordered_list(
             self._sparse_question(question)))
         self.pages[-1].add_cell(Cell(content=content))
+
+    def add_generate_cell(self, prompt: str, page_id: str):
+        page = self.get_page(page_id)
+
+        assert page is not None
+
+        content = titled_text(prompt, self._generate(prompt, page_id))
+        page.add_cell(Cell(content=content))
 
     def add_wikipedia_summary_cell(self, query: str, page_id: str):
         page = self.get_page(page_id)

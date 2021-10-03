@@ -3,6 +3,7 @@ import {
     addEntitiesCell, 
     addQuestionCell, 
     addSparseQuestionCell, 
+    addGenerateCell,
     addWikipediaSummaryCell, 
     addWikipediaSuggestionsCell, 
     addWikipediaImageCell, 
@@ -57,6 +58,7 @@ class Notebook extends Component {
         this.addEntitiesCell = this.addEntitiesCell.bind(this);
         this.addQuestionCell = this.addQuestionCell.bind(this);
         this.addSparseQuestionCell = this.addSparseQuestionCell.bind(this);
+        this.addGenerateCell = this.addGenerateCell.bind(this);
         this.addWikipediaSummaryCell = this.addWikipediaSummaryCell.bind(this);
         this.addWikipediaSuggestionsCell = this.addWikipediaSuggestionsCell.bind(this);
         this.addWikipediaImageCell = this.addWikipediaImageCell.bind(this);
@@ -90,6 +92,7 @@ class Notebook extends Component {
             addEntitiesCell: this.addEntitiesCell,
             addQuestionCell: this.addQuestionCell,
             addSparseQuestionCell: this.addSparseQuestionCell,
+            addGenerateCell: this.addGenerateCell,
             addWikipediaSummaryCell: this.addWikipediaSummaryCell,
             addWikipediaSuggestionsCell: this.addWikipediaSuggestionsCell,
             addWikipediaImageCell: this.addWikipediaImageCell,
@@ -307,6 +310,17 @@ class Notebook extends Component {
 
     addSparseQuestionCell(question) {
         addSparseQuestionCell(this.state.notebook, question).then((notebook) => {
+            this.setState((state) => {
+                return {
+                    ...state,
+                    notebook: notebook
+                };
+            });
+        });
+    }
+
+    addGenerateCell(prompt, pageId) {
+        addGenerateCell(this.state.notebook, prompt, pageId).then((notebook) => {
             this.setState((state) => {
                 return {
                     ...state,

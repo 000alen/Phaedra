@@ -64,6 +64,15 @@ def add_sparse_question_cell():
     return jsonify(json_notebook)
 
 
+@app.route("/cell/add/generate", methods=["POST"])
+def add_generate_cell():
+    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
+    notebook.add_generate_cell(
+        request.json["prompt"], request.json["page_id"])
+    json_notebook = notebook.json()
+    return jsonify(json_notebook)
+
+
 @app.route("/cell/add/wikipedia_summary", methods=["POST"])
 def add_wikipedia_summary_cell():
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))

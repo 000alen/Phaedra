@@ -1,11 +1,21 @@
+"""
+Phaedra's backend API module.
+"""
+
 import json
 import base64
 import io
+
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from flask_ngrok import run_with_ngrok
+from flask_cors import CORS # type: ignore
+from flask_ngrok import run_with_ngrok # type: ignore
 
 from Phaedra.Notebook import Notebook
+
+__all__ = (
+    "run",
+    "run_remote"
+)
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -17,7 +27,7 @@ def notebook_from_pdf():
     pdf_base64 = request.json["base64"]
     pdf_bytes = base64.b64decode(pdf_base64)
     pdf_stream = io.BytesIO(pdf_bytes)
-    notebook = Notebook.from_pdf(document_file=pdf_stream, document_path=path)
+    notebook = Notebook.from_pdf(document_stream=pdf_stream, document_path=path)
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -40,7 +50,8 @@ def add_entities_cell():
 @app.route("/cell/add/question", methods=["POST"])
 def add_question_cell():
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_question_cell(request.json["question"], request.json["page_id"])
+    notebook.add_question_cell(
+        request.json["question"], request.json["page_id"])
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -56,7 +67,8 @@ def add_sparse_question_cell():
 @app.route("/cell/add/wikipedia_summary", methods=["POST"])
 def add_wikipedia_summary_cell():
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_summary_cell(request.json["query"], request.json["page_id"])
+    notebook.add_wikipedia_summary_cell(
+        request.json["query"], request.json["page_id"])
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -64,7 +76,8 @@ def add_wikipedia_summary_cell():
 @app.route("/cell/add/wikipedia_suggestions", methods=["POST"])
 def add_wikipedia_suggestions_cell():
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_suggestions_cell(request.json["query"], request.json["page_id"])
+    notebook.add_wikipedia_suggestions_cell(
+        request.json["query"], request.json["page_id"])
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -72,7 +85,8 @@ def add_wikipedia_suggestions_cell():
 @app.route("/cell/add/wikipedia_image", methods=["POST"])
 def add_wikipedia_image_cell():
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_image_cell(request.json["query"], request.json["page_id"])
+    notebook.add_wikipedia_image_cell(
+        request.json["query"], request.json["page_id"])
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -113,10 +127,14 @@ def kill():
     return jsonify(True)
 
 
+def run():
+    app.run()
+
+
 def run_remote():
     run_with_ngrok(app)
     app.run()
 
 
 if __name__ == "__main__":
-    app.run()
+    run()

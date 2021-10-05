@@ -34,7 +34,7 @@ summarizer = transformers.pipeline("summarization", device=DEVICE)
 tokenizer = summarizer.tokenizer
 answerer = transformers.pipeline("question-answering", device=DEVICE)
 generator = transformers.pipeline("text-generation", device=DEVICE)
-ner = transformers.pipeline("ner", device=DEVICE)
+ner = transformers.pipeline("ner", grouped_entities=True, device=DEVICE)
 dictionary = PyDictionary()
 
 

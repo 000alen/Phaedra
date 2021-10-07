@@ -19,7 +19,7 @@ export default function BackendView() {
             <CompoundButton
                 primary
                 secondaryText="Serve Phaedra's backend from Google Colaboratory"
-                href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/PhaedraColab.ipynb"
+                href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra.ipynb"
                 target="_blank">
                 Create remote backend
             </CompoundButton>

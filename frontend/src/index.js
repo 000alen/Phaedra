@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import ReactDOMServer from 'react-dom/server';
 import { initializeIcons, ThemeProvider, createTheme } from '@fluentui/react';
 import App from './App';
 import './css/index.css';
@@ -36,6 +37,8 @@ export const theme = createTheme({
 window.localStorage.clear();
 
 initializeIcons();
+
+console.log(ReactDOMServer.renderToStaticMarkup(<App />));
 
 ReactDOM.render(
     <React.StrictMode>

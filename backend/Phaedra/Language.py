@@ -72,7 +72,7 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 
 def generate(prompt: str) -> str:
     logging.info(f"Generating: '{prompt[:5]}...'")
-    return generator(prompt, max_length=1000)[0]["generated_text"]
+    return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[0]["generated_text"]
 
 
 def batch_generate(prompts: List[str]) -> List[str]:

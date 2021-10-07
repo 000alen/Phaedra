@@ -1,5 +1,6 @@
 # To do list
 
+- [ ] Error handling
 - [ ] Loading screens
 - [ ] Shimmer
 - [x] Implement vocabulary functionality on frontend
@@ -8,7 +9,7 @@
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
-- [ ] Implement generative text models on backend
+- [x] Implement generative text models on backend
 - [ ] Launch a release
 - [ ] Add a reliable source for vocabulary
 - [ ] Key bindings

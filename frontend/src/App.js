@@ -63,7 +63,8 @@ class App extends Component {
             content: <EmptyPage
                 key={id}
                 id={id}
-                appController={this.state.appController} />
+                appController={this.state.appController}
+                statusBarRef={this.statusBarRef} />
         }
     }
 
@@ -162,7 +163,9 @@ class App extends Component {
                 </TopBar>
                 
                 <div className="appContent">
-                    {selectedTab ? this.getTabContent(selectedTab) : <MainPage appController={this.state.appController} />}
+                    {selectedTab ? this.getTabContent(selectedTab) : <MainPage 
+                        appController={this.state.appController}
+                        statusBarRef={this.statusBarRef} />}
                 </div>
 
                 <StatusBar 

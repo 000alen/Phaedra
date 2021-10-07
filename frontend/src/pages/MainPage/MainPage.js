@@ -40,17 +40,17 @@ const navLinkGroups = [
     }
 ];
 
-function MainPage({ id, appController }) {
+function MainPage({ id, appController, statusBarRef }) {
     const [selectedKey, setSelectedKey] = useState('backend');
 
     const navLinkContents = {
-        'recent': <RecentView id={id} appController={appController} />,
-        'pinned': <PinnedView id={id} appController={appController} />,
-        'empty': <EmptyView id={id} appController={appController} />,
-        'from_pdf': <FromPdfView id={id} appController={appController} />,
-        'from_text': <FromTextView id={id} appController={appController} />,
-        'notebook': <NotebookView id={id} appController={appController} />,
-        'backend': <BackendView id={id} appController={appController} />,
+        'recent': <RecentView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'pinned': <PinnedView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'empty': <EmptyView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'from_pdf': <FromPdfView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'from_text': <FromTextView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'notebook': <NotebookView id={id} appController={appController} statusBarRef={statusBarRef} />,
+        'backend': <BackendView id={id} appController={appController} statusBarRef={statusBarRef} />,
     };
 
     return (

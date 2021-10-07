@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { 
-    addEntitiesCell, 
-    addQuestionCell, 
-    addSparseQuestionCell, 
+import {
+    addEntitiesCell,
+    addQuestionCell,
+    addSparseQuestionCell,
     addGenerateCell,
-    addWikipediaSummaryCell, 
-    addWikipediaSuggestionsCell, 
-    addWikipediaImageCell, 
-    addMeaningCell, 
-    addSynonymCell, 
-    addAntonymCell, 
+    addWikipediaSummaryCell,
+    addWikipediaSuggestionsCell,
+    addWikipediaImageCell,
+    addMeaningCell,
+    addSynonymCell,
+    addAntonymCell,
 } from '../../API';
 import { readFile, writeFile, saveDialog } from '../../ElectronAPI';
 import Page from './Page';
@@ -74,8 +74,6 @@ class Notebook extends Component {
         this.setCellContent = this.setCellContent.bind(this);
         this.setCellData = this.setCellData.bind(this);
 
-        this.historyTop = this.historyTop.bind(this);
-
         this.undo = this.undo.bind(this);
         this.redo = this.redo.bind(this);
 
@@ -108,7 +106,6 @@ class Notebook extends Component {
             toggleEditing: this.toggleEditing,
             setCellContent: this.setCellContent,
             setCellData: this.setCellData,
-            historyTop: this.historyTop,
             undo: this.undo,
             redo: this.redo
         };
@@ -126,7 +123,7 @@ class Notebook extends Component {
             activeCell: null,
             editing: false,
             history: [],
-            historyPointer: 0,
+            historyPointer: -1,
         };
     }
 
@@ -180,46 +177,43 @@ class Notebook extends Component {
         }
     }
 
-    insertPage(page, index) {
-        let newNotebook = { ...this.state.notebook };
-        newNotebook.pages.splice(index, 0, page);
+    insertPage(page, index, operation) {
+        if (operation === undefined) operation = "do";
+
+        let notebook = { ...this.state.notebook };
+        notebook.pages.splice(index, 0, page);
+
+        let history = this.handleHistory({
+            command: 'insertPage',
+            page: page,
+            index: index
+        }, operation);
+
         this.setState((state) => {
             return {
                 ...state,
-                notebook: newNotebook,
-                history: [
-                    ...state.history,
-                    {
-                        command: "insertPage",
-                        page: page,
-                        index: index
-                    }
-                ],
-                historyPointer: state.historyPointer + 1
+                ...history,
+                notebook: notebook,
             };
         });
-        this.historyPush();
     }
 
-    addPage(page) {
+    addPage(page, operation) {
+        if (operation === undefined) operation = "do";
+
+        let notebook = { ...this.state.notebook };
+        notebook.pages.push(page);
+
+        let history = this.handleHistory({
+            command: 'addPage',
+            page: page
+        }, operation);
+
         this.setState((state) => {
             return {
                 ...state,
-                notebook: {
-                    ...state.notebook,
-                    pages: [
-                        ...state.notebook.pages,
-                        page
-                    ]
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "addPage",
-                        page: page
-                    }
-                ],
-                historyPointer: state.historyPointer + 1
+                ...history,
+                notebook: notebook,
             };
         });
     }
@@ -234,80 +228,69 @@ class Notebook extends Component {
         return this.state.notebook.pages.find(page => page.id === pageId);
     }
 
-    removePage(pageId) {
+    removePage(pageId, operation) {
+        if (operation === undefined) operation = "do";
+        
+        let notebook = { ...this.state.notebook };
+        notebook.pages = notebook.pages.filter(page => page.id !== pageId);
+
         const page = this.getPage(pageId);
         const pageIndex = this.indexPage(pageId);
+        let history = this.handleHistory({
+            command: 'removePage',
+            pageId: pageId,
+            page: page,
+            pageIndex: pageIndex
+        }, operation);
+
         this.setState((state) => {
             return {
                 ...state,
-                notebook: {
-                    ...state.notebook,
-                    pages: state.notebook.pages.filter(page => page.id !== pageId)
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "removePage",
-                        pageId: pageId,
-                        page: page,
-                        pageIndex: pageIndex
-                    }
-                ],
-                historyPointer: state.historyPointer + 1
+                ...history,
+                notebook: notebook,
             };
         });
     }
 
-    insertCell(pageId, cell, index) {
-        let newNotebook = { ...this.state.notebook };
-        const pageIndex = this.indexPage(pageId);
-        newNotebook.pages[pageIndex].cells.splice(index, 0, cell);
+    insertCell(pageId, cell, index, operation) {
+        if (operation === undefined) operation = "do";
+
+        let notebook = { ...this.state.notebook };
+        notebook.pages[this.indexPage(pageId)].cells.splice(index, 0, cell);
+
+        let history = this.handleHistory({
+            command: 'insertCell',
+            pageId: pageId,
+            cell: cell,
+            cellIndex: index,
+        }, operation);
 
         this.setState((state) => {
             return {
                 ...state,
-                notebook: newNotebook,
-                history: [
-                    ...state.history,
-                    {
-                        command: "insertCell",
-                        pageId: pageId,
-                        cell: cell,
-                        cellIndex: index
-                    }
-                ],
+                ...history,
+                notebook: notebook,
             };
         });
     }
 
-    addCell(pageId, cell) {
+    addCell(pageId, cell, operation) {
+        if (operation === undefined) operation = "do";
+        
+        let notebook = { ...this.state.notebook };
+        notebook.pages[this.indexPage(pageId)].cells.push(cell);
+
+        let history = this.handleHistory({
+            command: 'addCell',
+            pageId: pageId,
+            cell: cell,
+        }, operation);
+
         this.setState((state) => {
             return {
                 ...state,
-                notebook: {
-                    ...state.notebook,
-                    pages: state.notebook.pages.map(page => {
-                        if (page.id === pageId) {
-                            return {
-                                ...page,
-                                cells: [
-                                    ...page.cells,
-                                    cell
-                                ]
-                            };
-                        } else {
-                            return page;
-                        }
-                    })
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "addCell",
-                        page: pageId,
-                        cell: cell
-                    }
-                ],
+                ...history,
+                notebook: notebook
             };
         });
     }
@@ -322,224 +305,225 @@ class Notebook extends Component {
         return this.state.notebook.pages.find(page => page.id === pageId).cells.find(cell => cell.id === cellId);
     }
 
-    removeCell(pageId, cellId) {
+    removeCell(pageId, cellId, operation) {
+        if (operation === undefined) operation = "do";
+        
+        const pageIndex = this.indexPage(pageId);
+        let notebook = { ...this.state.notebook };
+        notebook.pages[pageIndex].cells = notebook.pages[pageIndex].cells.filter(cell => cell.id !== cellId);
+
         const cell = this.getCell(pageId, cellId);
         const cellIndex = this.indexCell(pageId, cellId);
+        let history = this.handleHistory({
+            command: 'removeCell',
+            pageId: pageId,
+            cellId: cellId,
+            cell: cell,
+            cellIndex: cellIndex
+        }, operation);
 
         this.setState((state) => {
             return {
                 ...state,
-                notebook: {
-                    ...state.notebook,
-                    pages: state.notebook.pages.map(page => {
-                        if (page.id === pageId) {
-                            return {
-                                ...page,
-                                cells: page.cells.filter(cell => cell.id !== cellId)
-                            };
-                        } else {
-                            return page;
-                        }
-                    })
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "removeCell",
-                        pageId: pageId,
-                        cellId: cellId,
-                        cell: cell,
-                        cellIndex: cellIndex
-                    }
-                ],
-                historyPointer: state.historyPointer + 1
+                ...history,
+                notebook: notebook
             };
         });
     }
 
-    addEntitiesCell(pageId) {
+    addEntitiesCell(pageId, operation) {
+        if (operation === undefined) operation = "do";
+        
         addEntitiesCell(this.state.notebook, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addEntitiesCell',
+                pageId: pageId,
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addEntitiesCell",
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addQuestionCell(question, pageId) {
+    addQuestionCell(question, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addQuestionCell(this.state.notebook, question, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addQuestionCell',
+                question: question,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addQuestionCell",
-                            question: question,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addSparseQuestionCell(question) {
+    addSparseQuestionCell(question, operation) {
+        if (operation === undefined) operation = "do";
+
         addSparseQuestionCell(this.state.notebook, question).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addSparseQuestionCell',
+                question: question,
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addSparseQuestionCell",
-                            question: question
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addGenerateCell(prompt, pageId) {
+    addGenerateCell(prompt, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addGenerateCell(this.state.notebook, prompt, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addGenerateCell',
+                prompt: prompt,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addGenerateCell",
-                            prompt: prompt,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addWikipediaSummaryCell(query, pageId) {
+    addWikipediaSummaryCell(query, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addWikipediaSummaryCell(this.state.notebook, query, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addWikipediaSummaryCell',
+                query: query,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addWikipediaSummaryCell",
-                            query: query,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addWikipediaSuggestionsCell(query, pageId) {
+    addWikipediaSuggestionsCell(query, pageId, operation) {
+        if (operation === undefined) operation = "do";
+        
         addWikipediaSuggestionsCell(this.state.notebook, query, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addWikipediaSuggestionsCell',
+                query: query,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addWikipediaSuggestionsCell",
-                            query: query,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addWikipediaImageCell(query, pageId) {
+    addWikipediaImageCell(query, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addWikipediaImageCell(this.state.notebook, query, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addWikipediaImageCell',
+                query: query,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addWikipediaImageCell",
-                            query: query,
-                            pageId: pageId
-                        },
-                    ],
                 };
             });
         });
     }
 
-    addMeaningCell(word, pageId) {
+    addMeaningCell(word, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addMeaningCell(this.state.notebook, word, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addMeaningCell',
+                word: word,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addMeaningCell",
-                            word: word,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addSynonymCell(word, pageId) {
+    addSynonymCell(word, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addSynonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addSynonymCell',
+                word: word,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addSynonymCell",
-                            word: word,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
     }
 
-    addAntonymCell(word, pageId) {
+    addAntonymCell(word, pageId, operation) {
+        if (operation === undefined) operation = "do";
+
         addAntonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            let history = this.handleHistory({
+                command: 'addAntonymCell',
+                word: word,
+                pageId: pageId
+            }, operation);
+
             this.setState((state) => {
                 return {
                     ...state,
+                    ...history,
                     notebook: notebook,
-                    history: [
-                        ...state.history,
-                        {
-                            command: "addAntonymCell",
-                            word: word,
-                            pageId: pageId
-                        }
-                    ],
                 };
             });
         });
@@ -583,177 +567,192 @@ class Notebook extends Component {
         });
     }
 
-    setCellContent(pageId, cellId, content, deselect) {
+    setCellContent(pageId, cellId, content, deselect, operation) {
         if (deselect === undefined) deselect = false;
+        if (operation === undefined) operation = "do";
+
+        const pageIndex = this.indexPage(pageId);
+        const cellIndex = this.indexCell(pageId, cellId);
+        let notebook = { ...this.state.notebook };
+        notebook.pages[pageIndex].cells[cellIndex].content = content;
 
         const previousContent = this.getCell(pageId, cellId).content;
+        let history = this.handleHistory({
+            command: 'setCellContent',
+            pageId: pageId,
+            cellId: cellId,
+            content: content,
+            previousContent: previousContent
+        }, operation);
 
         this.setState((state) => {
             return {
                 ...state,
+                ...history,
                 activePage: deselect ? null : state.activePage,
                 activeCell: deselect ? null : state.activeCell,
-                notebook: {
-                    ...state.notebook,
-                    pages: state.notebook.pages.map(page => {
-                        if (page.id === pageId) {
-                            return {
-                                ...page,
-                                cells: page.cells.map(cell => {
-                                    if (cell.id === cellId) {
-                                        return {
-                                            ...cell,
-                                            content: content
-                                        };
-                                    } else {
-                                        return cell;
-                                    }
-                                })
-                            };
-                        } else {
-                            return page;
-                        }
-                    })
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "setCellContent",
-                        pageId: pageId,
-                        cellId: cellId,
-                        content: content,
-                        previousContent: previousContent
-                    }
-                ]
+                notebook: notebook
             };
         });
     }
 
-    setCellData(pageId, cellId, data, deselect) {
+    setCellData(pageId, cellId, data, deselect, operation) {
         if (deselect === undefined) deselect = false;
+        if (operation === undefined) operation = "do";
+
+        const pageIndex = this.indexPage(pageId);
+        const cellIndex = this.indexCell(pageId, cellId);
+        let notebook = { ...this.state.notebook };
+        notebook.pages[pageIndex].cells[cellIndex].data = data;
 
         const previousData = this.getCell(pageId, cellId).data;
+        let history = this.handleHistory({
+            command: 'setCellData',
+            pageId: pageId,
+            cellId: cellId,
+            data: data,
+            previousData: previousData
+        }, operation);
 
         this.setState((state) => {
             return {
                 ...state,
+                ...history,
                 activePage: deselect ? null : state.activePage,
                 activeCell: deselect ? null : state.activeCell,
-                notebook: {
-                    ...state.notebook,
-                    pages: state.notebook.pages.map(page => {
-                        if (page.id === pageId) {
-                            return {
-                                ...page,
-                                cells: page.cells.map(cell => {
-                                    if (cell.id === cellId) {
-                                        return {
-                                            ...cell,
-                                            data: data
-                                        };
-                                    } else {
-                                        return cell;
-                                    }
-                                })
-                            };
-                        } else {
-                            return page;
-                        }
-                    })
-                },
-                history: [
-                    ...state.history,
-                    {
-                        command: "setCellData",
-                        pageId: pageId,
-                        cellId: cellId,
-                        data: data,
-                        previousData: previousData
-                    }
-                ]
+                notebook: notebook
             };
         });
     }
 
-    historyTop() {
-        return this.state.history[this.state.historyPointer];
+    handleHistory(command, operation) {
+        if (operation === undefined) operation = "do";
+
+        let history = [ ...this.state.history ];
+        let historyPointer = this.state.historyPointer;
+
+        if (operation === "do") {
+            if (historyPointer === history.length - 1) {
+                history.push(command);
+            } else {
+                history.splice(historyPointer, history.length - historyPointer, command);
+            }
+
+            historyPointer++;
+
+        } else if (operation === "undo") {
+            historyPointer--;
+        } else if (operation === "redo") {
+            historyPointer++;
+        }
+
+        return {
+            history: history,
+            historyPointer: historyPointer
+        };
     }
 
     undo() {
-        const command = this.historyTop();
-
-        console.log(command);
+        const command = this.state.history[this.state.historyPointer];
 
         switch (command.command) {
-            case "insertPage": 
-                this.removePage(command.page.id);
-            break;
-            case "addPage": 
-                this.removePage(command.page.id);
-            break;
-            case "removePage": 
-                this.insertPage(command.page, command.pageIndex);
-            break;
-            case "insertCell": 
-                this.removeCell(command.pageId, command.cell.id);
-            break;
-            case "addCell": 
-                this.removeCell(command.pageId, command.cell.id);
-            break;
-            case "removeCell": 
-                this.insertCell(command.pageId, command.cell, command.cellIndex);
-            break;
-            case "addEntitiesCell": 
-                this.removeCell(command.pageId, command.cellId);
-            break;
-            case "addQuestionCell": 
-            break;
-            case "addSparseQuestionCell": 
-            break;
-            case "addGenerationCell": 
-            break;
-            case "addWikipediaSummaryCell": 
-            break;
-            case "addWikipediaSuggestionsCell": 
-            break;
-            case "addWikipediaImageCell": 
-            break;
-            case "addMeaningCell": 
-            break;
-            case "addSynonymCell": 
-            break;
-            case "addAntonymCell": 
-            break;
-            case "setCellContent": 
-                this.setCellContent(command.pageId, command.cellId, command.previousContent);
-            break;
-            case "setCellData": 
-                this.setCellData(command.pageId, command.cellId, command.previousData);
-            break;
+            case "insertPage":
+                this.removePage(command.page.id, "undo");
+                break;
+            case "addPage":
+                this.removePage(command.page.id, "undo");
+                break;
+            case "removePage":
+                this.insertPage(command.page, command.pageIndex, "undo");
+                break;
+            case "insertCell":
+                this.removeCell(command.pageId, command.cell.id, "undo");
+                break;
+            case "addCell":
+                this.removeCell(command.pageId, command.cell.id, "undo");
+                break;
+            case "removeCell":
+                this.insertCell(command.pageId, command.cell, command.cellIndex, "undo");
+                break;
+            case "addEntitiesCell":
+            case "addQuestionCell":
+            case "addSparseQuestionCell":
+            case "addGenerateCell":
+            case "addWikipediaSummaryCell":
+            case "addWikipediaSuggestionsCell":
+            case "addWikipediaImageCell":
+            case "addMeaningCell":
+            case "addSynonymCell":
+            case "addAntonymCell":
+                this.removeCell(command.pageId, command.cellId, "undo");
+                break;
+            case "setCellContent":
+                this.setCellContent(command.pageId, command.cellId, command.previousContent, undefined, "undo");
+                break;
+            case "setCellData":
+                this.setCellData(command.pageId, command.cellId, command.previousData, undefined, "undo");
+                break;
         }
     }
 
     redo() {
-        const command = this.historyTop();
+        const command = this.state.history[this.state.historyPointer];
+
         switch (command.command) {
-            case "insertPage": break;
-            case "addPage": break;
-            case "removePage": break;
-            case "insertCell": break;
-            case "addCell": break;
-            case "removeCell": break;
-            case "addEntitiesCell": break;
-            case "addQuestionCell": break;
-            case "addSparseQuestionCell": break;
-            case "addGenerationCell": break;
-            case "addWikipediaSummaryCell": break;
-            case "addWikipediaSuggestionsCell": break;
-            case "addWikipediaImageCell": break;
-            case "addMeaningCell": break;
-            case "addSynonymCell": break;
-            case "addAntonymCell": break;
-            case "setCellContent": break;
-            case "setCellData": break;
+            case "insertPage":
+                this.insertPage(command.page, command.pageIndex, "redo");
+                break;
+            case "addPage":
+                this.addPage(command.page, "redo");
+                break;
+            case "removePage":
+                this.removePage(command.pageId, "redo");
+                break;
+            case "insertCell":
+                this.insertCell(command.pageId, command.cell, command.cellIndex, "redo");
+                break;
+            case "addCell":
+                this.addCell(command.pageId, command.cell, "redo");
+                break;
+            case "removeCell":
+                this.removeCell(command.pageId, command.cellId, "redo");
+                break;
+            case "addEntitiesCell":
+                this.addEntitiesCell(command.pageId, "redo");
+                break;
+            case "addQuestionCell":
+                this.addQuestionCell(command.question, command.pageId, "redo");
+                break;
+            case "addSparseQuestionCell":
+                this.addSparseQuestionCell(command.question, "redo");
+                break;
+            case "addGenerateCell":
+                this.addGenerateCell(command.prompt, command.pageId, "redo");
+                break;
+            case "addWikipediaSummaryCell":
+                this.addWikipediaSummaryCell(command.query, command.pageId, "redo");
+                break;
+            case "addWikipediaSuggestionsCell":
+                this.addWikipediaSuggestionsCell(command.query, command.pageId, "redo");
+                break;
+            case "addWikipediaImageCell":
+                this.addWikipediaImageCell(command.query, command.pageId, "redo");
+                break;
+            case "addMeaningCell":
+                this.addMeaningCell(command.word, command.pageId, "redo");
+                break;
+            case "addSynonymCell":
+                this.addSynonymCell(command.word, command.pageId, "redo");
+                break;
+            case "addAntonymCell":
+                this.addAntonymCell(command.word, command.pageId, "redo");
+                break;
+            case "setCellContent":
+                this.setCellContent(command.pageId, command.cellId, command.content, undefined, "redo");
+                break;
+            case "setCellData":
+                this.setCellData(command.pageId, command.cellId, command.data, undefined, "redo");
+                break;
         }
     }
 

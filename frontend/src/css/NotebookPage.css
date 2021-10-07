@@ -5,6 +5,6 @@
 
 .notebookPageContent {
     width: 100%;
-    height: calc(100% - 88px);
+    /* height: calc(100% - 88px); */
     overflow: scroll;
 }

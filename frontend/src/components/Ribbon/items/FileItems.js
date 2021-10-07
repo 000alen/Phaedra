@@ -1,8 +1,21 @@
 import React from 'react';
-import {CommandBar} from '@fluentui/react';
+import {CommandBar, MessageBarType } from '@fluentui/react';
 
 function FileItems({ notebookRef, commandBoxRef, appController, pageController }) {
-    const fileItems = [];
+    const handleTest = () => {
+        pageController.addMessageBar('test', MessageBarType.info);
+    };
+    
+    const fileItems = [
+        {
+            key: 'test',
+            name: 'Test',
+            iconProps: {
+                iconName: 'TestCase'
+            },
+            onClick: handleTest 
+        }
+    ];
 
     return (
         <CommandBar items={fileItems} />                

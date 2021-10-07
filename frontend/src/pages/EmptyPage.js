@@ -13,15 +13,21 @@ const newIcon = {
     iconName: 'FileTemplate',
 };
 
-function EmptyPage({ id, appController }) {
+function EmptyPage({ id, appController, statusBarRef }) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleOpen = () => {
+        const { statusBarController } = statusBarRef.current.state;
+
         if (dialogOpen) return;
+
+        statusBarController.showLoading();
         setDialogOpen(true);
 
         openFile().then(({notebook, notebookPath}) => {
+            statusBarController.hideLoading();
             setDialogOpen(false);
+
             if (!notebook) return;
             
             appController.setTabContent(id, <NotebookPage

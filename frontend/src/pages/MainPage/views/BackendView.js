@@ -1,13 +1,16 @@
-import { CompoundButton, TextField } from '@fluentui/react';
+import { DefaultButton, CompoundButton, PrimaryButton, TextField } from '@fluentui/react';
 import React, { useState } from 'react';
-import { getApiUrl } from '../../../API';
+import { getApiUrl, setApiUrl } from '../../../API';
 
-export default function BackendView() {
-    const [apiUrl, setApiUrl] = useState(getApiUrl());
+export default function BackendView({ statusBarRef }) {
+    const [url, setUrl] = useState(getApiUrl());
 
-    const handleUrl = (event) => {
-        setApiUrl(event.target.value);
-        window.localStorage.setItem('apiUrl', event.target.value);
+    const handleUrlChange = (event) => {
+        setUrl(event.target.value);
+    };
+
+    const handleSetUrl = () => {
+        setApiUrl(`http://${url}`);
     };
 
     const textFieldStyles = {
@@ -27,9 +30,17 @@ export default function BackendView() {
             <TextField
                 label="Backend URL"
                 prefix="http://"
-                onChange={handleUrl}
+                onChange={handleUrlChange}
                 styles={textFieldStyles}
-                defaultValue={apiUrl.slice(7)} />
+                defaultValue={url.slice(7)} />
+
+            <div className="flex flex-row align-top space-x-2">
+                <PrimaryButton 
+                    text="Set"
+                    onClick={handleSetUrl} />
+                <DefaultButton 
+                    text="Ping API (beacon)" />
+            </div>
         </div>
     )
 }

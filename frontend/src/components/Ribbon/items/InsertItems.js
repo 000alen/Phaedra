@@ -1,23 +1,7 @@
 import React from 'react';
 import {CommandBar} from '@fluentui/react';
-import { createPage } from '../../Notebook/Page';
-import { createCell } from '../../Notebook/Cell';
 
 function InsertItems({ notebookRef, commandBoxRef, appController, pageController }) {
-    const handleInsertPage = () => {
-        const { notebookController } = notebookRef.current.state;
-        const { activePage } = notebookRef.current.state;
-        const activePageIndex = notebookController.indexPage(activePage);
-        notebookController.insertPage(createPage(), activePageIndex + 1);
-    };
-    
-    const handleInsertCell = () => {
-        const { notebookController } = notebookRef.current.state;
-        const { activePage, activeCell } = notebookRef.current.state;
-        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
-        notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
-    };
-    
     const handleWikipediaSummary = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
@@ -49,24 +33,6 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
     };
     
     const insertItems = [
-        {
-            key: 'insert',
-            iconProps: { iconName: 'Add' },
-            subMenuProps: {
-                items: [
-                    {
-                        key: 'insertPage',
-                        text: 'Insert Page',
-                        onClick: handleInsertPage,
-                    },
-                    {
-                        key: 'insertCell',
-                        text: 'Insert Cell',
-                        onClick: handleInsertCell,
-                    },            
-                ]
-            }            
-        },
         {
             key: 'entities',
             text: 'Entities',
@@ -100,11 +66,11 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
     ];
 
     const insertFarItems = [
-        {
-            key: 'loadDocument',
-            text: 'Load Document',
-            iconProps: { iconName: 'TextDocument' },
-        }
+        // {
+        //     key: 'loadDocument',
+        //     text: 'Load Document',
+        //     iconProps: { iconName: 'TextDocument' },
+        // }
     ];
 
     return (

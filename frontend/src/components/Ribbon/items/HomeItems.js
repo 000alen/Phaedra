@@ -1,11 +1,53 @@
 import React from 'react';
 import {CommandBar} from '@fluentui/react';
+import { createPage } from '../../Notebook/Page';
+import { createCell } from '../../Notebook/Cell';
 import {v4 as uuidv4} from 'uuid';
 
 function HomeItems({ notebookRef, commandBoxRef, appController, pageController }) {
     const handleSave = () => {
         const { notebookController } = notebookRef.current.state;
         notebookController.save();
+    };
+
+    const handleInsertPage = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage } = notebookRef.current.state;
+        const activePageIndex = notebookController.indexPage(activePage);
+        notebookController.insertPage(createPage(), activePageIndex + 1);
+    };
+    
+    const handleInsertCell = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
+        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+        notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
+    };
+
+    const handleDelete = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
+        const cell = notebookController.getCell(activePage, activeCell);
+        appController.setClipboard(cell);
+        notebookController.removeCell(activePage, activeCell);
+    };
+
+    const handleUndo = () => {
+        const { notebookController } = notebookRef.current.state;
+        notebookController.undo();
+    };
+
+    const handleRedo = () => {
+        const { notebookController } = notebookRef.current.state;
+        notebookController.redo();
+    };
+
+    const handleCut = () => {
+        const { notebookController } = notebookRef.current.state;
+        const { activePage, activeCell } = notebookRef.current.state;
+        const cell = notebookController.getCell(activePage, activeCell);
+        appController.setClipboard(cell);
+        notebookController.removeCell(activePage, activeCell);
     };
     
     const handleCopy = () => {
@@ -52,6 +94,29 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
             onClick: handleSave,
         },
         {
+            key: 'insert',
+            iconProps: { iconName: 'Add' },
+            subMenuProps: {
+                items: [
+                    {
+                        key: 'insertPage',
+                        text: 'Insert Page',
+                        onClick: handleInsertPage,
+                    },
+                    {
+                        key: 'insertCell',
+                        text: 'Insert Cell',
+                        onClick: handleInsertCell,
+                    },            
+                ]
+            }
+        },
+        {
+            key: 'delete',
+            iconProps: { iconName: 'Delete' },
+            onClick: handleDelete,
+        },
+        {
             key: 'history',
             iconProps: { iconName: 'History' },
             subMenuProps: {
@@ -60,16 +125,17 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
                         key: 'undo',
                         text: 'Undo',
                         iconProps: { iconName: 'Undo' },
+                        onClick: handleUndo,
                     },
                     {
                         key: 'redo',
                         text: 'Redo',
                         iconProps: { iconName: 'Redo' },
+                        onClick: handleRedo,
                     }
                 ]
             }
         },
-
         {
             key: 'clipboard',
             iconProps: { iconName: 'ClipboardSolid' },
@@ -79,6 +145,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
                         key: 'cut',
                         text: 'Cut',
                         iconProps: { iconName: 'Cut' },
+                        onClick: handleCut,
                     },
                     {
                         key: 'copy',
@@ -96,64 +163,64 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
                 ]
             }
         },
-        {
-            key: 'bold',
-            iconProps: { iconName: 'Bold' },
-        },
-        {
-            key: 'italic',
-            iconProps: { iconName: 'Italic' },
-        },
-        {
-            key: 'underline',
-            iconProps: { iconName: 'Underline' },
-        },
-        {
-            key: 'moreFontOptions',
-            iconProps: { iconName: 'More' },
-            subMenuProps: {
-                items: [
-                    {
-                        key: 'strikethrough',
-                        text: 'Strikethrough',
-                        iconProps: { iconName: 'Strikethrough' },
-                    },
-                    {
-                        key: 'subscript',
-                        text: 'Subscript',
-                        iconProps: { iconName: 'Subscript' },
-                    },
-                    {
-                        key: 'superscript',
-                        text: 'Superscript',
-                        iconProps: { iconName: 'Superscript' },
-                    },
-                    {
-                        key: 'fontColor',
-                        text: 'Font Color',
-                        iconProps: { iconName: 'FontColor' },
-                    },
-                    {
-                        key: 'highlight',
-                        text: 'Highlight',
-                        iconProps: { iconName: 'Highlight' },
-                    },
-                    {
-                        key: 'clearFormatting',
-                        text: 'Clear Formatting',
-                        iconProps: { iconName: 'ClearFormatting' },
-                    }
-                ]
-            }
-        },
-        {
-            key: 'bullet',
-            iconProps: { iconName: 'BulletedList' },
-        },
-        {
-            key: 'number',
-            iconProps: { iconName: 'NumberedList' },
-        }
+        // {
+        //     key: 'bold',
+        //     iconProps: { iconName: 'Bold' },
+        // },
+        // {
+        //     key: 'italic',
+        //     iconProps: { iconName: 'Italic' },
+        // },
+        // {
+        //     key: 'underline',
+        //     iconProps: { iconName: 'Underline' },
+        // },
+        // {
+        //     key: 'moreFontOptions',
+        //     iconProps: { iconName: 'More' },
+        //     subMenuProps: {
+        //         items: [
+        //             {
+        //                 key: 'strikethrough',
+        //                 text: 'Strikethrough',
+        //                 iconProps: { iconName: 'Strikethrough' },
+        //             },
+        //             {
+        //                 key: 'subscript',
+        //                 text: 'Subscript',
+        //                 iconProps: { iconName: 'Subscript' },
+        //             },
+        //             {
+        //                 key: 'superscript',
+        //                 text: 'Superscript',
+        //                 iconProps: { iconName: 'Superscript' },
+        //             },
+        //             {
+        //                 key: 'fontColor',
+        //                 text: 'Font Color',
+        //                 iconProps: { iconName: 'FontColor' },
+        //             },
+        //             {
+        //                 key: 'highlight',
+        //                 text: 'Highlight',
+        //                 iconProps: { iconName: 'Highlight' },
+        //             },
+        //             {
+        //                 key: 'clearFormatting',
+        //                 text: 'Clear Formatting',
+        //                 iconProps: { iconName: 'ClearFormatting' },
+        //             }
+        //         ]
+        //     }
+        // },
+        // {
+        //     key: 'bullet',
+        //     iconProps: { iconName: 'BulletedList' },
+        // },
+        // {
+        //     key: 'number',
+        //     iconProps: { iconName: 'NumberedList' },
+        // }
     ];    
 
     const homeFarItems = [

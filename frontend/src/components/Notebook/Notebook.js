@@ -74,6 +74,11 @@ class Notebook extends Component {
         this.setCellContent = this.setCellContent.bind(this);
         this.setCellData = this.setCellData.bind(this);
 
+        this.historyTop = this.historyTop.bind(this);
+
+        this.undo = this.undo.bind(this);
+        this.redo = this.redo.bind(this);
+
         const { tabId, appController, pageController } = props;
         const { notebook, notebookPath } = props;
 
@@ -103,6 +108,9 @@ class Notebook extends Component {
             toggleEditing: this.toggleEditing,
             setCellContent: this.setCellContent,
             setCellData: this.setCellData,
+            historyTop: this.historyTop,
+            undo: this.undo,
+            redo: this.redo
         };
 
         this.state = {
@@ -117,6 +125,8 @@ class Notebook extends Component {
             activePage: null,
             activeCell: null,
             editing: false,
+            history: [],
+            historyPointer: 0,
         };
     }
 
@@ -176,9 +186,19 @@ class Notebook extends Component {
         this.setState((state) => {
             return {
                 ...state,
-                notebook: newNotebook
+                notebook: newNotebook,
+                history: [
+                    ...state.history,
+                    {
+                        command: "insertPage",
+                        page: page,
+                        index: index
+                    }
+                ],
+                historyPointer: state.historyPointer + 1
             };
         });
+        this.historyPush();
     }
 
     addPage(page) {
@@ -191,7 +211,15 @@ class Notebook extends Component {
                         ...state.notebook.pages,
                         page
                     ]
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "addPage",
+                        page: page
+                    }
+                ],
+                historyPointer: state.historyPointer + 1
             };
         });
     }
@@ -207,13 +235,25 @@ class Notebook extends Component {
     }
 
     removePage(pageId) {
+        const page = this.getPage(pageId);
+        const pageIndex = this.indexPage(pageId);
         this.setState((state) => {
             return {
                 ...state,
                 notebook: {
                     ...state.notebook,
                     pages: state.notebook.pages.filter(page => page.id !== pageId)
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "removePage",
+                        pageId: pageId,
+                        page: page,
+                        pageIndex: pageIndex
+                    }
+                ],
+                historyPointer: state.historyPointer + 1
             };
         });
     }
@@ -226,7 +266,16 @@ class Notebook extends Component {
         this.setState((state) => {
             return {
                 ...state,
-                notebook: newNotebook
+                notebook: newNotebook,
+                history: [
+                    ...state.history,
+                    {
+                        command: "insertCell",
+                        pageId: pageId,
+                        cell: cell,
+                        cellIndex: index
+                    }
+                ],
             };
         });
     }
@@ -250,7 +299,15 @@ class Notebook extends Component {
                             return page;
                         }
                     })
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "addCell",
+                        page: pageId,
+                        cell: cell
+                    }
+                ],
             };
         });
     }
@@ -266,6 +323,9 @@ class Notebook extends Component {
     }
 
     removeCell(pageId, cellId) {
+        const cell = this.getCell(pageId, cellId);
+        const cellIndex = this.indexCell(pageId, cellId);
+
         this.setState((state) => {
             return {
                 ...state,
@@ -281,7 +341,18 @@ class Notebook extends Component {
                             return page;
                         }
                     })
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "removeCell",
+                        pageId: pageId,
+                        cellId: cellId,
+                        cell: cell,
+                        cellIndex: cellIndex
+                    }
+                ],
+                historyPointer: state.historyPointer + 1
             };
         });
     }
@@ -291,7 +362,14 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addEntitiesCell",
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -302,7 +380,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addQuestionCell",
+                            question: question,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -313,7 +399,14 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addSparseQuestionCell",
+                            question: question
+                        }
+                    ],
                 };
             });
         });
@@ -324,7 +417,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addGenerateCell",
+                            prompt: prompt,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -335,7 +436,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addWikipediaSummaryCell",
+                            query: query,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -346,7 +455,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addWikipediaSuggestionsCell",
+                            query: query,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -357,7 +474,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addWikipediaImageCell",
+                            query: query,
+                            pageId: pageId
+                        },
+                    ],
                 };
             });
         });
@@ -368,7 +493,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addMeaningCell",
+                            word: word,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -379,7 +512,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addSynonymCell",
+                            word: word,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -390,7 +531,15 @@ class Notebook extends Component {
             this.setState((state) => {
                 return {
                     ...state,
-                    notebook: notebook
+                    notebook: notebook,
+                    history: [
+                        ...state.history,
+                        {
+                            command: "addAntonymCell",
+                            word: word,
+                            pageId: pageId
+                        }
+                    ],
                 };
             });
         });
@@ -437,6 +586,8 @@ class Notebook extends Component {
     setCellContent(pageId, cellId, content, deselect) {
         if (deselect === undefined) deselect = false;
 
+        const previousContent = this.getCell(pageId, cellId).content;
+
         this.setState((state) => {
             return {
                 ...state,
@@ -463,13 +614,25 @@ class Notebook extends Component {
                             return page;
                         }
                     })
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "setCellContent",
+                        pageId: pageId,
+                        cellId: cellId,
+                        content: content,
+                        previousContent: previousContent
+                    }
+                ]
             };
         });
     }
 
     setCellData(pageId, cellId, data, deselect) {
         if (deselect === undefined) deselect = false;
+
+        const previousData = this.getCell(pageId, cellId).data;
 
         this.setState((state) => {
             return {
@@ -497,14 +660,106 @@ class Notebook extends Component {
                             return page;
                         }
                     })
-                }
+                },
+                history: [
+                    ...state.history,
+                    {
+                        command: "setCellData",
+                        pageId: pageId,
+                        cellId: cellId,
+                        data: data,
+                        previousData: previousData
+                    }
+                ]
             };
         });
     }
 
+    historyTop() {
+        return this.state.history[this.state.historyPointer];
+    }
+
+    undo() {
+        const command = this.historyTop();
+
+        console.log(command);
+
+        switch (command.command) {
+            case "insertPage": 
+                this.removePage(command.page.id);
+            break;
+            case "addPage": 
+                this.removePage(command.page.id);
+            break;
+            case "removePage": 
+                this.insertPage(command.page, command.pageIndex);
+            break;
+            case "insertCell": 
+                this.removeCell(command.pageId, command.cell.id);
+            break;
+            case "addCell": 
+                this.removeCell(command.pageId, command.cell.id);
+            break;
+            case "removeCell": 
+                this.insertCell(command.pageId, command.cell, command.cellIndex);
+            break;
+            case "addEntitiesCell": 
+                this.removeCell(command.pageId, command.cellId);
+            break;
+            case "addQuestionCell": 
+            break;
+            case "addSparseQuestionCell": 
+            break;
+            case "addGenerationCell": 
+            break;
+            case "addWikipediaSummaryCell": 
+            break;
+            case "addWikipediaSuggestionsCell": 
+            break;
+            case "addWikipediaImageCell": 
+            break;
+            case "addMeaningCell": 
+            break;
+            case "addSynonymCell": 
+            break;
+            case "addAntonymCell": 
+            break;
+            case "setCellContent": 
+                this.setCellContent(command.pageId, command.cellId, command.previousContent);
+            break;
+            case "setCellData": 
+                this.setCellData(command.pageId, command.cellId, command.previousData);
+            break;
+        }
+    }
+
+    redo() {
+        const command = this.historyTop();
+        switch (command.command) {
+            case "insertPage": break;
+            case "addPage": break;
+            case "removePage": break;
+            case "insertCell": break;
+            case "addCell": break;
+            case "removeCell": break;
+            case "addEntitiesCell": break;
+            case "addQuestionCell": break;
+            case "addSparseQuestionCell": break;
+            case "addGenerationCell": break;
+            case "addWikipediaSummaryCell": break;
+            case "addWikipediaSuggestionsCell": break;
+            case "addWikipediaImageCell": break;
+            case "addMeaningCell": break;
+            case "addSynonymCell": break;
+            case "addAntonymCell": break;
+            case "setCellContent": break;
+            case "setCellData": break;
+        }
+    }
+
     render() {
         return (
-            <div className="notebook">
+            <div className="notebook" id="notebook">
                 {this.state.notebook.pages.map((page) => <Page
                     key={page.id}
                     id={page.id}

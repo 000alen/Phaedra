@@ -10,7 +10,7 @@ class NotebookPage extends Component {
 
         this.showCommandBox = this.showCommandBox.bind(this);
         this.hideCommandBox = this.hideCommandBox.bind(this);
-
+        
         const { id, appController, notebook } = props;
 
         appController.setTabTitle(id, notebook.name);
@@ -20,7 +20,7 @@ class NotebookPage extends Component {
 
         const pageController = {
             showCommandBox: this.showCommandBox,
-            hideCommandBox: this.hideCommandBox
+            hideCommandBox: this.hideCommandBox,
         }
 
         this.state = {

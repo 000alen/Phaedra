@@ -3,8 +3,8 @@ import Ribbon from '../components/Ribbon/Ribbon';
 import Notebook from '../components/Notebook/Notebook';
 import CommandBox from '../components/CommandBox';
 import '../css/NotebookPage.css';
-import { MessageBar} from '@fluentui/react';
-import {v4 as uuidv4} from 'uuid';
+import { MessageBar } from '@fluentui/react';
+import { v4 as uuidv4 } from 'uuid';
 
 class NotebookPage extends Component {
     constructor(props) {
@@ -15,7 +15,7 @@ class NotebookPage extends Component {
         this.addMessageBar = this.addMessageBar.bind(this);
         this.removeMessageBar = this.removeMessageBar.bind(this);
 
-        const { id, appController, notebook } = props;
+        const { id, appController, notebook, statusBarRef } = props;
 
         appController.setTabTitle(id, notebook.name);
 
@@ -33,6 +33,7 @@ class NotebookPage extends Component {
             id: id,
             appController: appController,
             pageController: pageController,
+            statusBarRef: statusBarRef,
             commandBoxShown: false,
             messageBars: [],
         };
@@ -58,7 +59,7 @@ class NotebookPage extends Component {
             id={id}
             isMultiline={false}
             messageBarType={type}
-            onDismiss={() => {this.removeMessageBar(id)}}>
+            onDismiss={() => { this.removeMessageBar(id) }}>
             {text}
         </MessageBar>);
 
@@ -83,11 +84,12 @@ class NotebookPage extends Component {
 
         return (
             <div className="notebookPage">
-                <Ribbon 
-                    notebookRef={this.notebookRef} 
-                    commandBoxRef={this.commandBoxRef} 
+                <Ribbon
+                    notebookRef={this.notebookRef}
+                    commandBoxRef={this.commandBoxRef}
                     appController={this.state.appController}
-                    pageController={this.state.pageController} />
+                    pageController={this.state.pageController}
+                    statusBarRef={this.state.statusBarRef} />
 
                 <div>
                     {this.state.messageBars.map((messageBar) => {
@@ -101,12 +103,13 @@ class NotebookPage extends Component {
                         ref={this.notebookRef}
                         appController={this.state.appController}
                         pageController={this.state.pageController}
+                        statusBarRef={this.state.statusBarRef}
                         tabId={this.state.id}
                         notebook={this.props.notebook}
                         notebookPath={this.props.notebookPath} />
 
-                    {this.state.commandBoxShown && <CommandBox 
-                        ref={this.commandBoxRef} 
+                    {this.state.commandBoxShown && <CommandBox
+                        ref={this.commandBoxRef}
                         notebookRef={this.notebookRef} />}
                 </div>
             </div>

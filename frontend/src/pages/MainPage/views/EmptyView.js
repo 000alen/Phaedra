@@ -7,7 +7,7 @@ const newIcon = {
     iconName: 'FileTemplate',
 };
 
-export default function EmptyView({ appController }) {
+export default function EmptyView({ appController, statusBarRef }) {
     const handleNew = () => {
         const id = appController.getNextTabId();
         const notebook = createNotebook({name: `Unnamed Notebook ${id}`});
@@ -16,6 +16,7 @@ export default function EmptyView({ appController }) {
             key={id}
             id={id}
             appController={appController}
+            statusBarRef={statusBarRef}
             notebook={notebook} />
         );
     };

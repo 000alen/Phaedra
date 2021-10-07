@@ -14,11 +14,11 @@ function ViewItems({ notebookRef, commandBoxRef, appController, pageController }
     };
 
     const viewItems = [
-        {
-            key: 'reading',
-            name: 'Reading view',
-            iconProps: { iconName: 'ReadingMode' },
-        },
+        // {
+        //     key: 'reading',
+        //     name: 'Reading view',
+        //     iconProps: { iconName: 'ReadingMode' },
+        // },
         {
             key: 'export',
             name: 'Export',

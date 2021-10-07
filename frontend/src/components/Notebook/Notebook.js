@@ -77,7 +77,7 @@ class Notebook extends Component {
         this.undo = this.undo.bind(this);
         this.redo = this.redo.bind(this);
 
-        const { tabId, appController, pageController } = props;
+        const { tabId, appController, pageController, statusBarRef } = props;
         const { notebook, notebookPath } = props;
 
         const notebookController = {
@@ -115,6 +115,7 @@ class Notebook extends Component {
             appController: appController,
             pageController: pageController,
             notebookController: notebookController,
+            statusBarRef: statusBarRef,
             notebook: notebook,
             notebookPath: notebookPath,
             documentPath: notebook.document_path,
@@ -136,6 +137,7 @@ class Notebook extends Component {
             state.appController = this.state.appController;
             state.pageController = this.state.pageController;
             state.notebookController = this.state.notebookController;
+            state.statusBarRef = this.state.statusBarRef;
 
             if (state.documentPath && state.documentFile) {
                 state.documentFile.data = Uint8Array.from(state.documentFile.data);
@@ -146,7 +148,9 @@ class Notebook extends Component {
     }
 
     componentWillUnmount() {
-        window.localStorage.setItem(this.state.notebook.name, JSON.stringify(this.state));
+        let state = { ...this.state };
+        state.statusBarRef = null;
+        window.localStorage.setItem(this.state.notebook.name, JSON.stringify(state));
     }
 
     loadDocument() {
@@ -230,7 +234,7 @@ class Notebook extends Component {
 
     removePage(pageId, operation) {
         if (operation === undefined) operation = "do";
-        
+
         let notebook = { ...this.state.notebook };
         notebook.pages = notebook.pages.filter(page => page.id !== pageId);
 
@@ -276,7 +280,7 @@ class Notebook extends Component {
 
     addCell(pageId, cell, operation) {
         if (operation === undefined) operation = "do";
-        
+
         let notebook = { ...this.state.notebook };
         notebook.pages[this.indexPage(pageId)].cells.push(cell);
 
@@ -307,7 +311,7 @@ class Notebook extends Component {
 
     removeCell(pageId, cellId, operation) {
         if (operation === undefined) operation = "do";
-        
+
         const pageIndex = this.indexPage(pageId);
         let notebook = { ...this.state.notebook };
         notebook.pages[pageIndex].cells = notebook.pages[pageIndex].cells.filter(cell => cell.id !== cellId);
@@ -333,8 +337,14 @@ class Notebook extends Component {
 
     addEntitiesCell(pageId, operation) {
         if (operation === undefined) operation = "do";
-        
+
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addEntitiesCell(this.state.notebook, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addEntitiesCell',
                 pageId: pageId,
@@ -353,7 +363,13 @@ class Notebook extends Component {
     addQuestionCell(question, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addQuestionCell(this.state.notebook, question, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addQuestionCell',
                 question: question,
@@ -373,7 +389,13 @@ class Notebook extends Component {
     addSparseQuestionCell(question, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addSparseQuestionCell(this.state.notebook, question).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addSparseQuestionCell',
                 question: question,
@@ -392,7 +414,13 @@ class Notebook extends Component {
     addGenerateCell(prompt, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addGenerateCell(this.state.notebook, prompt, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addGenerateCell',
                 prompt: prompt,
@@ -412,7 +440,13 @@ class Notebook extends Component {
     addWikipediaSummaryCell(query, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addWikipediaSummaryCell(this.state.notebook, query, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addWikipediaSummaryCell',
                 query: query,
@@ -431,8 +465,14 @@ class Notebook extends Component {
 
     addWikipediaSuggestionsCell(query, pageId, operation) {
         if (operation === undefined) operation = "do";
-        
+
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addWikipediaSuggestionsCell(this.state.notebook, query, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addWikipediaSuggestionsCell',
                 query: query,
@@ -452,7 +492,13 @@ class Notebook extends Component {
     addWikipediaImageCell(query, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addWikipediaImageCell(this.state.notebook, query, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addWikipediaImageCell',
                 query: query,
@@ -472,7 +518,13 @@ class Notebook extends Component {
     addMeaningCell(word, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addMeaningCell(this.state.notebook, word, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addMeaningCell',
                 word: word,
@@ -492,7 +544,13 @@ class Notebook extends Component {
     addSynonymCell(word, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addSynonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addSynonymCell',
                 word: word,
@@ -512,7 +570,13 @@ class Notebook extends Component {
     addAntonymCell(word, pageId, operation) {
         if (operation === undefined) operation = "do";
 
+        const { statusBarController } = this.state.statusBarRef.current.state;
+
+        statusBarController.showLoading();
+
         addAntonymCell(this.state.notebook, word, pageId).then((notebook) => {
+            statusBarController.hideLoading();
+
             let history = this.handleHistory({
                 command: 'addAntonymCell',
                 word: word,
@@ -628,7 +692,7 @@ class Notebook extends Component {
     handleHistory(command, operation) {
         if (operation === undefined) operation = "do";
 
-        let history = [ ...this.state.history ];
+        let history = [...this.state.history];
         let historyPointer = this.state.historyPointer;
 
         if (operation === "do") {

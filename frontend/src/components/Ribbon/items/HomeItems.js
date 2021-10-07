@@ -1,8 +1,8 @@
 import React from 'react';
-import {CommandBar} from '@fluentui/react';
+import { CommandBar, MessageBarType } from '@fluentui/react';
 import { createPage } from '../../Notebook/Page';
 import { createCell } from '../../Notebook/Cell';
-import {v4 as uuidv4} from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 function HomeItems({ notebookRef, commandBoxRef, appController, pageController }) {
     const handleSave = () => {
@@ -13,23 +13,46 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
     const handleInsertPage = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const activePageIndex = notebookController.indexPage(activePage);
-        notebookController.insertPage(createPage(), activePageIndex + 1);
+
+        if (activePage) {
+            const activePageIndex = notebookController.indexPage(activePage);
+            notebookController.insertPage(createPage(), activePageIndex + 1);
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
-    
+
     const handleInsertCell = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
-        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
-        notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
+        if (activeCell) {
+            const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+            notebookController.insertCell(activePage, createCell(), activeCellIndex + 1);
+        } else {
+            pageController.addMessageBar(
+                "No cell selected",
+                MessageBarType.error
+            );
+        }
     };
 
     const handleDelete = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
-        const cell = notebookController.getCell(activePage, activeCell);
-        appController.setClipboard(cell);
-        notebookController.removeCell(activePage, activeCell);
+
+        if (activeCell) {
+            const cell = notebookController.getCell(activePage, activeCell);
+            appController.setClipboard(cell);
+            notebookController.removeCell(activePage, activeCell);
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
 
     const handleUndo = () => {
@@ -45,46 +68,93 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
     const handleCut = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
-        const cell = notebookController.getCell(activePage, activeCell);
-        appController.setClipboard(cell);
-        notebookController.removeCell(activePage, activeCell);
+
+        if (activeCell) {
+            const cell = notebookController.getCell(activePage, activeCell);
+            appController.setClipboard(cell);
+            notebookController.removeCell(activePage, activeCell);
+        } else {
+            pageController.addMessageBar(
+                "No cell selected",
+                MessageBarType.error
+            );
+        }
     };
-    
+
     const handleCopy = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
-        const cell = notebookController.getCell(activePage, activeCell);
-        appController.setClipboard(cell);
+
+        if (activeCell) {
+            const cell = notebookController.getCell(activePage, activeCell);
+            appController.setClipboard(cell);
+        } else {
+            pageController.addMessageBar(
+                "No cell selected",
+                MessageBarType.error
+            );
+        }
     };
-    
+
     const handlePaste = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage, activeCell } = notebookRef.current.state;
-        const activeCellIndex = notebookController.indexCell(activePage, activeCell);
-        let cell = { ...appController.getClipboard() };
-        cell.id = uuidv4();
-        notebookController.insertCell(activePage, cell, activeCellIndex + 1);
+        if (activeCell) {
+            const activeCellIndex = notebookController.indexCell(activePage, activeCell);
+            let cell = { ...appController.getClipboard() };
+            cell.id = uuidv4();
+            notebookController.insertCell(activePage, cell, activeCellIndex + 1);    
+        } else {
+            pageController.addMessageBar(
+                "No cell selected",
+                MessageBarType.error
+            );
+        }
     };
-    
+
     const handleEdit = () => {
         const { notebookController } = notebookRef.current.state;
         notebookController.toggleEditing();
     };
-    
+
     const handleQuestion = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addQuestionCell(command, activePage);
-        commandBoxRef.current.consume();
+        if (activePage && commandBoxRef.current) {
+            const { command } = commandBoxRef.current.state;
+            notebookController.addQuestionCell(command, activePage);
+            commandBoxRef.current.consume();
+        } else if (activePage) {
+            pageController.addMessageBar(
+                "No question",
+                MessageBarType.error
+            );
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
-    
+
     const handleGenerate = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addGenerateCell(command, activePage);
-        commandBoxRef.current.consume();    
+        if (activePage && commandBoxRef.current) {
+            const { command } = commandBoxRef.current.state;
+            notebookController.addGenerateCell(command, activePage);
+            commandBoxRef.current.consume();
+        } else if (activePage) {
+            pageController.addMessageBar(
+                "No prompt",
+                MessageBarType.error
+            );
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
 
     const homeItems = [
@@ -107,7 +177,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
                         key: 'insertCell',
                         text: 'Insert Cell',
                         onClick: handleInsertCell,
-                    },            
+                    },
                 ]
             }
         },
@@ -159,7 +229,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
                         iconProps: { iconName: 'Paste' },
                         onClick: handlePaste,
                     },
-            
+
                 ]
             }
         },
@@ -221,7 +291,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
         //     key: 'number',
         //     iconProps: { iconName: 'NumberedList' },
         // }
-    ];    
+    ];
 
     const homeFarItems = [
         {
@@ -242,7 +312,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
     ];
 
     return (
-        <CommandBar items={homeItems}  farItems={homeFarItems}/>
+        <CommandBar items={homeItems} farItems={homeFarItems} />
     )
 }
 

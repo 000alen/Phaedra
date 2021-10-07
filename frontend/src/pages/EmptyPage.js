@@ -34,6 +34,7 @@ function EmptyPage({ id, appController, statusBarRef }) {
                 key={id}
                 id={id}
                 appController={appController}
+                statusBarRef={statusBarRef}
                 notebook={notebook}
                 notebookPath={notebookPath} />
             );
@@ -47,6 +48,7 @@ function EmptyPage({ id, appController, statusBarRef }) {
             key={id}
             id={id}
             appController={appController}
+            statusBarRef={statusBarRef}
             notebook={notebook} />
         );
     };

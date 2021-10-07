@@ -3,7 +3,16 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-    display: none;
+    /* display: none; */
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    height: 56px;
+    border-radius: 8px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    background-color: #933bff;
 }
 
 .react-pdf__Page__svg {

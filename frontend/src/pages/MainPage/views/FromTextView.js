@@ -7,7 +7,7 @@ const openIcon = {
     iconName: 'OpenFile',
 };
 
-export default function FromTextView({ appController }) {
+export default function FromTextView({ appController, statusBarRef }) {
     const [dialogOpen, setDialogOpen] = useState(false);
 
     const handleOpen = () => {
@@ -23,6 +23,7 @@ export default function FromTextView({ appController }) {
                 key={id}
                 id={id}
                 appController={appController}
+                statusBarRef={statusBarRef}
                 notebook={notebook} />
             );
         });

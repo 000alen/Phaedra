@@ -1,35 +1,82 @@
 import React from 'react';
-import {CommandBar} from '@fluentui/react';
+import {CommandBar, MessageBarType} from '@fluentui/react';
 
 function InsertItems({ notebookRef, commandBoxRef, appController, pageController }) {
     const handleWikipediaSummary = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addWikipediaSummaryCell(command, activePage);
-        commandBoxRef.current.consume();
+
+        if (activePage && commandBoxRef.current) {
+            const { command } = commandBoxRef.current.state;
+            notebookController.addWikipediaSummaryCell(command, activePage);
+            commandBoxRef.current.consume();
+        } else if (activePage) {
+            pageController.addMessageBar(
+                "No query selected",
+                MessageBarType.error
+            );
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
     
     const handleWikipediaSuggestions = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addWikipediaSuggestionsCell(command, activePage);
-        commandBoxRef.current.consume();
+        
+        if (activePage && commandBoxRef.current) {
+            const { command } = commandBoxRef.current.state;
+            notebookController.addWikipediaSuggestionsCell(command, activePage);
+            commandBoxRef.current.consume();
+        } else if (activePage) {
+            pageController.addMessageBar(
+                "No query selected",
+                MessageBarType.error
+            );
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
     
     const handleWikipediaImage = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        const { command } = commandBoxRef.current.state;
-        notebookController.addWikipediaImageCell(command, activePage);
-        commandBoxRef.current.consume();
+
+        if (activePage && commandBoxRef.current) {
+            const { command } = commandBoxRef.current.state;
+            notebookController.addWikipediaImageCell(command, activePage);
+            commandBoxRef.current.consume();
+        } else if (activePage) {
+            pageController.addMessageBar(
+                "No query selected",
+                MessageBarType.error
+            );
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
     
     const handleEntities = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        notebookController.addEntitiesCell(activePage);
+        
+        if (activePage) {
+            notebookController.addEntitiesCell(activePage);
+        } else {
+            pageController.addMessageBar(
+                "No page selected",
+                MessageBarType.error
+            );
+        }
     };
     
     const insertItems = [

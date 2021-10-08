@@ -9,3 +9,4 @@ sentencepiece
 names-generator
 wikipedia
 pydictionary
+openai

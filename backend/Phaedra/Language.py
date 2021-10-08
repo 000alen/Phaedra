@@ -9,6 +9,7 @@ import transformers # type: ignore
 import logging
 
 from PyDictionary import PyDictionary # type: ignore
+import openai
 
 __all__ = (
     "summarizer",
@@ -43,6 +44,10 @@ def summarize(text: str) -> str:
     return summarizer(text)[0]["summary_text"]
 
 
+def summarize_openai(text: str) -> str:
+    raise NotImplementedError
+
+
 def batch_summarize(texts: List[str]) -> List[str]:
     logging.info(f"Batch summarizing: {len(texts)}")
     results = summarizer(texts)
@@ -52,6 +57,10 @@ def batch_summarize(texts: List[str]) -> List[str]:
 def answer(question: str, context: str) -> str:
     logging.info(f"Questioning: '{question[:5]}...', '{context[:5]}...'")
     return answerer(question=question, context=context)["answer"]
+
+
+def answer_openai(question: str, context: str) -> str:
+    raise NotImplementedError
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
@@ -73,6 +82,10 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 def generate(prompt: str) -> str:
     logging.info(f"Generating: '{prompt[:5]}...'")
     return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[0]["generated_text"]
+
+
+def generate_openai(prompt: str) -> str:
+    raise NotImplementedError
 
 
 def batch_generate(prompts: List[str]) -> List[str]:

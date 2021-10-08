@@ -42,7 +42,7 @@ tokenizer = None
 
 
 def load_summarizer():
-    global summarizer
+    global summarizer, tokenizer
     summarizer = transformers.pipeline("summarization", device=DEVICE)
     tokenizer = summarizer.tokenizer
 

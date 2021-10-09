@@ -1,3 +1,4 @@
+import pkg_resources  # type: ignore
 import json
 from typing import List
 
@@ -9,7 +10,7 @@ summarizer_tokenizer = _tokenizer
 answerer_tokenizer = _tokenizer
 generator_tokenizer = _tokenizer
 
-prompts = json.load(open("prompts.json"))
+prompts = json.loads(pkg_resources.resource_string("Phaedra.Language", "prompts.json"))
 summarize_prompt = prompts["summarize"]
 
 

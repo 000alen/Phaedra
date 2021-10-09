@@ -1,3 +1,2 @@
 autopep8
 mypy
-pre-commit

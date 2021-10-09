@@ -46,7 +46,7 @@ class Cell extends Component {
         const border = data.seamless ? "" : `1px solid ${borderColor}`;
         const shadow = data.seamless ? "" : "shadow-md";
 
-        const style = { 
+        const style = {
             backgroundColor: backgroundColor,
             border: border
         }
@@ -60,9 +60,9 @@ class Cell extends Component {
         });
 
         return (
-            <div 
-                className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`} 
-                style={style} 
+            <div
+                className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`}
+                style={style}
                 onClick={handleSelection}>
                     <ReactMarkdown
                         children={content}
@@ -71,7 +71,7 @@ class Cell extends Component {
         );
 
     }
-    
+
     renderEditing() {
         const {id, pageId, pageController, notebookController } = this.state;
         const { data, content, active, editing } = this.props;
@@ -90,14 +90,14 @@ class Cell extends Component {
 
         return (
             <div className="cell m-2 space-y-2">
-                <TextField 
-                    value={this.state.content} 
+                <TextField
+                    value={this.state.content}
                     onChange={handleChange}
-                    multiline 
+                    multiline
                     autoAdjustHeight />
-                <PrimaryButton 
+                <PrimaryButton
                     text="Set"
-                    onClick={handleSet} /> 
+                    onClick={handleSet} />
             </div>
         );
     }

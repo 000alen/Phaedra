@@ -22,7 +22,7 @@ function ReviewItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const handleSynonym = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
@@ -43,11 +43,11 @@ function ReviewItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const handleAntonym = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        
+
         if (activePage && commandBoxRef.current) {
             const { command } = commandBoxRef.current.state;
             notebookController.addAntonymCell(command, activePage);
@@ -64,7 +64,7 @@ function ReviewItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const reviewItems = [
         {
             key: 'dictionary',
@@ -86,12 +86,12 @@ function ReviewItems({ notebookRef, commandBoxRef, appController, pageController
                         key: 'antonyms',
                         text: 'Antonyms',
                         onClick: handleAntonym,
-                    },            
+                    },
                 ]
             }
         }
-    ];    
-    
+    ];
+
     return (
         <CommandBar items={reviewItems} />
     )

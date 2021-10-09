@@ -6,10 +6,7 @@ from typing import Any, Dict, Union
 
 import uuid
 
-__all__ = (
-    "Cell",
-    "CELL_JSON_TYPE"
-)
+__all__ = ("Cell", "CELL_JSON_TYPE")
 
 CELL_JSON_TYPE = Dict[str, Union[str, Dict[Any, Any]]]
 
@@ -34,7 +31,11 @@ class Cell:
         if type(other) is not Cell:
             return False
 
-        return self.id == other.id and self.content == other.content and self.data == other.data
+        return (
+            self.id == other.id
+            and self.content == other.content
+            and self.data == other.data
+        )
 
     @classmethod
     def from_json(self, _json: Dict) -> "Cell":
@@ -43,8 +44,4 @@ class Cell:
         return cell
 
     def json(self) -> CELL_JSON_TYPE:
-        return {
-            "id": self.id,
-            "content": self.content,
-            "data": self.data
-        }
+        return {"id": self.id, "content": self.content, "data": self.data}

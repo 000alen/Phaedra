@@ -52,7 +52,7 @@ class StatusBar extends Component {
         return (
             <div className="statusBar flex items-center pl-2 space-x-2" style={statusBarStyle}>
                 {loadingShown && <>
-                    <Spinner 
+                    <Spinner
                         size={SpinnerSize.xSmall} />
                     <Text variant="small">{loadingText}</Text>
                 </>}

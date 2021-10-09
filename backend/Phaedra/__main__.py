@@ -4,7 +4,7 @@ import json
 from Phaedra.Notebook import Notebook
 from Phaedra.API import run, run_remote
 
-parser = argparse.ArgumentParser(prog='Phaedra')
+parser = argparse.ArgumentParser(prog="Phaedra")
 parser.add_argument("-i", "--input")
 parser.add_argument("-o", "--output")
 parser.add_argument("--from-pdf", action="store_true")
@@ -15,7 +15,7 @@ parser.add_argument("--run-remote", action="store_true")
 
 args = parser.parse_args()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if args.from_pdf:
         notebook = Notebook.from_pdf(document_path=args.input)
         _json = json.dumps(notebook.json())

@@ -22,11 +22,11 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const handleWikipediaSuggestions = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        
+
         if (activePage && commandBoxRef.current) {
             const { command } = commandBoxRef.current.state;
             notebookController.addWikipediaSuggestionsCell(command, activePage);
@@ -43,7 +43,7 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const handleWikipediaImage = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
@@ -64,11 +64,11 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const handleEntities = () => {
         const { notebookController } = notebookRef.current.state;
         const { activePage } = notebookRef.current.state;
-        
+
         if (activePage) {
             notebookController.addEntitiesCell(activePage);
         } else {
@@ -78,7 +78,7 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
             );
         }
     };
-    
+
     const insertItems = [
         {
             key: 'entities',
@@ -106,7 +106,7 @@ function InsertItems({ notebookRef, commandBoxRef, appController, pageController
                         key: 'wikipediaImage',
                         text: 'Wikipedia Image',
                         onClick: handleWikipediaImage,
-                    }, 
+                    },
                 ]
             }
         }

@@ -10,14 +10,22 @@ import names_generator  # type: ignore
 import wikipedia  # type: ignore
 
 from Phaedra.Text import extract_text_from_pdf_to_pages, preprocess_text
-from Phaedra.Language import get_summarizer_tokenizer, entities, answer, generate, meaning, synonym, antonym, batch_summarize, batch_answer_same_question
+from Phaedra.Language import (
+    get_summarizer_tokenizer,
+    entities,
+    answer,
+    generate,
+    meaning,
+    synonym,
+    antonym,
+    batch_summarize,
+    batch_answer_same_question,
+)
 from Phaedra.Notebook.Page import Page, PAGE_JSON_TYPE
 from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
 
-__all__ = (
-    "Notebook",
-)
+__all__ = ("Notebook",)
 
 QUERY_SIZE = 20
 CHUNK_SIZE = 512 - QUERY_SIZE
@@ -36,8 +44,9 @@ def chunk_sources(sources: List[str]) -> Tuple[List[int], List[str]]:
         j = 0
         while j < len(tokenized_source):
             if j + (CHUNK_SIZE - len(current_chunk)) <= len(tokenized_source):
-                chunk_extension = tokenized_source[j: j +
-                                                   CHUNK_SIZE - len(current_chunk)]
+                chunk_extension = tokenized_source[
+                    j : j + CHUNK_SIZE - len(current_chunk)
+                ]
                 j += CHUNK_SIZE - len(current_chunk)
                 current_chunk.extend(chunk_extension)
 
@@ -74,10 +83,7 @@ class Notebook:
     document_path: Optional[str]
 
     def __init__(
-        self,
-        name: str = None,
-        document_path: str = None,
-        pages: List[Page] = None
+        self, name: str = None, document_path: str = None, pages: List[Page] = None
     ):
         if name is None:
             name = names_generator.generate_name()
@@ -94,7 +100,12 @@ class Notebook:
         if type(other) is not Notebook:
             return False
 
-        return self.id == other.id and self.name == other.name and self.document_path == other.document_path and self.pages == other.pages
+        return (
+            self.id == other.id
+            and self.name == other.name
+            and self.document_path == other.document_path
+            and self.pages == other.pages
+        )
 
     @classmethod
     def from_pdf(
@@ -102,7 +113,7 @@ class Notebook:
         document_stream=None,
         document_path: str = None,
         name: str = None,
-        do_preprocessing: bool = True
+        do_preprocessing: bool = True,
     ) -> "Notebook":
         if document_stream is None:
             assert type(document_path) is str
@@ -113,8 +124,10 @@ class Notebook:
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 
-        pages = [Page(data={"source": source, "document_page_number": i + 1})
-                 for i, source in enumerate(sources)]
+        pages = [
+            Page(data={"source": source, "document_page_number": i + 1})
+            for i, source in enumerate(sources)
+        ]
 
         indexes, sources = chunk_sources(sources)
 
@@ -127,15 +140,16 @@ class Notebook:
         return cls(pages=pages, name=name, document_path=document_path)
 
     @classmethod
-    def from_text(cls, text: str, name: str = None, do_preprocessing: bool = True) -> "Notebook":
+    def from_text(
+        cls, text: str, name: str = None, do_preprocessing: bool = True
+    ) -> "Notebook":
         sources = [text]
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 
         indexes, sources = chunk_sources(sources)
 
-        pages = [Page(data={"source": source})
-                 for source in sources]
+        pages = [Page(data={"source": source}) for source in sources]
 
         summaries = batch_summarize(sources)
 
@@ -151,12 +165,16 @@ class Notebook:
 
         if file_path is not None:
             import json
+
             _json = json.load(open(file_path))
 
         assert type(_json) is dict
 
-        notebook = cls(name=_json["name"], document_path=_json["document_path"], pages=[
-                       Page.from_json(page_json) for page_json in _json["pages"]])
+        notebook = cls(
+            name=_json["name"],
+            document_path=_json["document_path"],
+            pages=[Page.from_json(page_json) for page_json in _json["pages"]],
+        )
         notebook.id = _json["id"]
         return notebook
 
@@ -259,11 +277,13 @@ class Notebook:
             source = page.data["source"]
             contexts.append(source)
             if i != 0:
-                previous_source = tokenizer(
-                    self.pages[i - 1].data["source"])["input_ids"]
+                previous_source = tokenizer(self.pages[i - 1].data["source"])[
+                    "input_ids"
+                ]
                 source = tokenizer(source)["input_ids"]
-                new_source = previous_source[-CHUNK_SIZE //
-                                             2:] + source[:CHUNK_SIZE // 2]
+                new_source = (
+                    previous_source[-CHUNK_SIZE // 2 :] + source[: CHUNK_SIZE // 2]
+                )
                 contexts.append(tokenizer.decode(new_source))
 
         answers = batch_answer_same_question(question, contexts)
@@ -276,15 +296,14 @@ class Notebook:
         assert page is not None
 
         source = page.data["source"]
-        return generate(f"context: \"{source}\"\n\nprompt: \"{prompt}\"\n\n text: ")
+        return generate(f'context: "{source}"\n\nprompt: "{prompt}"\n\n text: ')
 
     def add_entities_cell(self, page_id: str):
         page = self.get_page(page_id)
 
         assert page is not None
 
-        content = titled_text(
-            "Entities", ordered_list(self._entities(page_id)))
+        content = titled_text("Entities", ordered_list(self._entities(page_id)))
         page.add_cell(Cell(content=content))
 
     def add_question_cell(self, question: str, page_id: str):
@@ -296,8 +315,7 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_sparse_question_cell(self, question: str):
-        content = titled_text(question, ordered_list(
-            self._sparse_question(question)))
+        content = titled_text(question, ordered_list(self._sparse_question(question)))
         self.pages[-1].add_cell(Cell(content=content))
 
     def add_generate_cell(self, prompt: str, page_id: str):
@@ -313,8 +331,7 @@ class Notebook:
 
         assert page is not None
 
-        content = titled_text(
-            f"Wikipedia summary: {query}", wikipedia.summary(query))
+        content = titled_text(f"Wikipedia summary: {query}", wikipedia.summary(query))
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_suggestions_cell(self, query: str, page_id: str):
@@ -323,11 +340,11 @@ class Notebook:
         assert page is not None
 
         suggestions, _ = wikipedia.search(query, results=5, suggestion=True)
-        _links = {suggestion: wikipedia.page(
-            suggestion).url for suggestion in suggestions}
+        _links = {
+            suggestion: wikipedia.page(suggestion).url for suggestion in suggestions
+        }
         links = [link(text, url) for text, url in _links.items()]
-        content = titled_text(
-            f"Wikipedia suggestions: {query}", ordered_list(links))
+        content = titled_text(f"Wikipedia suggestions: {query}", ordered_list(links))
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_image_cell(self, query: str, page_id: str):
@@ -347,13 +364,13 @@ class Notebook:
 
         _meaning = meaning(word)
 
-        content = titled_text(f"Meaning: {word}",
-                              "\n\n".join(
-                                  titled_text(
-                                      f"Type: {word_type}", ordered_list(meaning))
-                                  for word_type, meaning in _meaning.items()
-                              )
-                              )
+        content = titled_text(
+            f"Meaning: {word}",
+            "\n\n".join(
+                titled_text(f"Type: {word_type}", ordered_list(meaning))
+                for word_type, meaning in _meaning.items()
+            ),
+        )
 
         page.add_cell(Cell(content=content))
 

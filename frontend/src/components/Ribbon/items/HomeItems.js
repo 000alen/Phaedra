@@ -103,7 +103,7 @@ function HomeItems({ notebookRef, commandBoxRef, appController, pageController }
             const activeCellIndex = notebookController.indexCell(activePage, activeCell);
             let cell = { ...appController.getClipboard() };
             cell.id = uuidv4();
-            notebookController.insertCell(activePage, cell, activeCellIndex + 1);    
+            notebookController.insertCell(activePage, cell, activeCellIndex + 1);
         } else {
             pageController.addMessageBar(
                 "No cell selected",

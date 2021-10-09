@@ -16,28 +16,28 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
 
     return (
         <div className="ribbon" style={ribbonStyle}>
-            <Pivot 
+            <Pivot
                 aria-label="Ribbon"
                 defaultSelectedKey="home">
-                    
+
                 <PivotItem headerText="File" itemKey="file">
                     <FileItems
                         notebookRef={notebookRef}
                         commandBoxRef={commandBoxRef}
                         appController={appController}
-                        pageController={pageController} />            
+                        pageController={pageController} />
                 </PivotItem>
 
                 <PivotItem headerText="Home" itemKey="home">
-                    <HomeItems 
+                    <HomeItems
                         notebookRef={notebookRef}
                         commandBoxRef={commandBoxRef}
                         appController={appController}
                         pageController={pageController} />
-                </PivotItem>    
+                </PivotItem>
 
-                <PivotItem headerText="Insert" itemKey="insert">            
-                    <InsertItems 
+                <PivotItem headerText="Insert" itemKey="insert">
+                    <InsertItems
                         notebookRef={notebookRef}
                         commandBoxRef={commandBoxRef}
                         appController={appController}
@@ -45,15 +45,15 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
                 </PivotItem>
 
                 <PivotItem headerText="Review" itemKey="review">
-                    <ReviewItems 
+                    <ReviewItems
                         notebookRef={notebookRef}
                         commandBoxRef={commandBoxRef}
                         appController={appController}
                         pageController={pageController} />
                 </PivotItem>
 
-                <PivotItem headerText="View" itemKey="view">               
-                    <ViewItems 
+                <PivotItem headerText="View" itemKey="view">
+                    <ViewItems
                         notebookRef={notebookRef}
                         commandBoxRef={commandBoxRef}
                         appController={appController}

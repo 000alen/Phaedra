@@ -24,7 +24,7 @@ def summarize(text: str) -> str:
         top_p=1,
         frequency_penalty=0.2,
         presence_penalty=0,
-        stop=["\"\"\""]
+        stop=['"""'],
     )
 
     return response["choices"][0]["text"]

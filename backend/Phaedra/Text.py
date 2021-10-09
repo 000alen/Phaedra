@@ -8,15 +8,11 @@ import logging
 
 from typing import List, Union, BinaryIO
 
-import pdfplumber # type: ignore
+import pdfplumber  # type: ignore
 
-from nltk import word_tokenize, corpus # type: ignore
+from nltk import word_tokenize, corpus  # type: ignore
 
-__all__ = (
-    "extract_text_from_pdf", 
-    "extract_text_from_pdf_to_pages", 
-    "preprocess_text"
-)
+__all__ = ("extract_text_from_pdf", "extract_text_from_pdf_to_pages", "preprocess_text")
 
 STOP_WORDS = corpus.stopwords.words("english")
 TITLE_EXPRESSION = re.compile(r"[0-9]+\.(\w|\s)+")
@@ -28,15 +24,19 @@ def extract_text_from_pdf(file_path_or_stream: Union[str, BinaryIO]) -> str:
     else:
         logging.info(f"Extracting text from: {file_path_or_stream}")
 
-    return "".join(page.extract_text() for page in pdfplumber.open(file_path_or_stream).pages)
+    return "".join(
+        page.extract_text() for page in pdfplumber.open(file_path_or_stream).pages
+    )
 
 
-def extract_text_from_pdf_to_pages(file_path_or_stream: Union[str, BinaryIO]) -> List[str]:
+def extract_text_from_pdf_to_pages(
+    file_path_or_stream: Union[str, BinaryIO]
+) -> List[str]:
     if type(file_path_or_stream) is str:
         logging.info(f"Extracting text (to pages): '{file_path_or_stream[:5]}...'")
     else:
         logging.info(f"Extracting text (to pages) from: {file_path_or_stream}")
-        
+
     return [page.extract_text() for page in pdfplumber.open(file_path_or_stream).pages]
 
 
@@ -66,7 +66,7 @@ def preprocess_text(text: str) -> str:
         if "[" in line.split(" ")[0] and "]" in line.split(" ")[0]:
             acceptable_word = True
 
-        if line.count(" ") > len(line)/5:
+        if line.count(" ") > len(line) / 5:
             acceptable_word = False
 
         if acceptable_word:

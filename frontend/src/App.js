@@ -142,7 +142,7 @@ class App extends Component {
     setClipboard(content) {
         this.setState((state) => {
             return {
-                ...state, 
+                ...state,
                 clipboard: content
             };
         });
@@ -161,14 +161,14 @@ class App extends Component {
                         onSelect={this.selectTab}
                         onClose={this.closeTab} />
                 </TopBar>
-                
+
                 <div className="appContent">
-                    {selectedTab ? this.getTabContent(selectedTab) : <MainPage 
+                    {selectedTab ? this.getTabContent(selectedTab) : <MainPage
                         appController={this.state.appController}
                         statusBarRef={this.statusBarRef} />}
                 </div>
 
-                <StatusBar 
+                <StatusBar
                     ref={this.statusBarRef} />
             </div>
         );

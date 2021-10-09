@@ -8,12 +8,12 @@ export function openPdf() {
             { name: 'Notebooks', extensions: ['pdf'] }
         ]
     };
-    
+
     return new Promise((resolve, reject) => {
         openDialog(openDialogOptions).then((results) => {
             if (!results.canceled) {
                 const path = results.filePaths[0];
-    
+
                 readFile(path).then((content) => {
                     base64encode(content).then((base64) => {
                         notebookFromPdf(path, base64).then((notebook) => {
@@ -33,19 +33,19 @@ export function openJson() {
             { name: 'Notebooks', extensions: ["json"] }
         ]
     };
-    
+
     return new Promise((resolve, reject) => {
         openDialog(openDialogOptions).then((results) => {
             if (!results.canceled) {
                 const path = results.filePaths[0];
-    
+
                 readFile(path, 'utf-8').then((notebook) => {
                     resolve({notebook: JSON.parse(notebook), notebookPath: path});
                 });
             }
         });
-    
-    });    
+
+    });
 }
 
 export function openText() {
@@ -54,7 +54,7 @@ export function openText() {
         filters: [
             { name: 'Notebooks', extensions: ["txt"] }
         ]
-    };    
+    };
 
     return new Promise((resolve, reject) => {
         openDialog(openDialogOptions).then((results) => {
@@ -66,8 +66,8 @@ export function openText() {
                     });
                 });
             }
-        });    
-    
+        });
+
     });
 }
 
@@ -87,7 +87,7 @@ export function openFile() {
                         resolve({notebook: notebook, notebookPath: null});
                     });
                 });
-            });    
+            });
         });
    };
 
@@ -96,17 +96,17 @@ export function openFile() {
             readFile(path, "utf-8").then((content) => {
                 resolve({notebook: JSON.parse(content), notebookPath: path});
             });
-    
+
         });
     };
-    
+
     const handleOpenText = (path) => {
         return new Promise((resolve, reject) => {
             readFile(path, "utf-8").then((text) => {
                 notebookFromText(text).then((notebook) => {
                     resolve({notebook: notebook, notebookPath: null});
                 });
-            });    
+            });
         });
     };
 
@@ -115,7 +115,7 @@ export function openFile() {
             if (!results.canceled) {
                 const path = results.filePaths[0];
                 const extension = path.split('.').pop().toLowerCase();
-    
+
                 let handler;
                 if (extension === 'pdf') {
                     handler = handleOpenPdf(path);
@@ -127,8 +127,8 @@ export function openFile() {
 
                 handler.then((results) => {
                     resolve(results);
-                });   
+                });
             }
-        });    
+        });
     });
 }

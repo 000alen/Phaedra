@@ -28,7 +28,7 @@ function ViewItems({ notebookRef, commandBoxRef, appController, pageController }
     ];
 
     return (
-        <CommandBar items={viewItems} />                
+        <CommandBar items={viewItems} />
     )
 }
 

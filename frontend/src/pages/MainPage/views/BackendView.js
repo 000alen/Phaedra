@@ -35,10 +35,10 @@ export default function BackendView({ statusBarRef }) {
                 defaultValue={url.slice(7)} />
 
             <div className="flex flex-row align-top space-x-2">
-                <PrimaryButton 
+                <PrimaryButton
                     text="Set"
                     onClick={handleSetUrl} />
-                <DefaultButton 
+                <DefaultButton
                     text="Ping API (beacon)" />
             </div>
         </div>

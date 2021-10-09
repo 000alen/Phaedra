@@ -19,7 +19,7 @@ __all__ = (
     "entities",
     "meaning",
     "synonym",
-    "antonym"
+    "antonym",
 )
 
 
@@ -38,7 +38,7 @@ def set_mode(mode: Mode):
 
 _get_summarizer_tokenizer = {
     Mode.LOCAL: Local.summarizer_tokenizer,
-    Mode.REMOTE: Remote.summarizer_tokenizer
+    Mode.REMOTE: Remote.summarizer_tokenizer,
 }
 
 
@@ -46,10 +46,7 @@ def get_summarizer_tokenizer():
     return _get_summarizer_tokenizer[MODE]
 
 
-_summarize = {
-    Mode.LOCAL: Local.summarize,
-    Mode.REMOTE: Remote.summarize
-}
+_summarize = {Mode.LOCAL: Local.summarize, Mode.REMOTE: Remote.summarize}
 
 
 def summarize(text: str) -> str:
@@ -58,7 +55,7 @@ def summarize(text: str) -> str:
 
 _batch_summarize = {
     Mode.LOCAL: Local.batch_summarize,
-    Mode.REMOTE: Remote.batch_summarize
+    Mode.REMOTE: Remote.batch_summarize,
 }
 
 
@@ -68,7 +65,7 @@ def batch_summarize(texts: List[str]) -> List[str]:
 
 _get_answerer_tokenizer = {
     Mode.LOCAL: Local.answerer_tokenizer,
-    Mode.REMOTE: Remote.answerer_tokenizer
+    Mode.REMOTE: Remote.answerer_tokenizer,
 }
 
 
@@ -76,20 +73,14 @@ def get_answerer_tokenizer():
     return _get_answerer_tokenizer[MODE]
 
 
-_answer = {
-    Mode.LOCAL: Local.answer,
-    Mode.REMOTE: Remote.answer
-}
+_answer = {Mode.LOCAL: Local.answer, Mode.REMOTE: Remote.answer}
 
 
 def answer(question: str, context: str) -> str:
     return _answer[MODE](question, context)
 
 
-_batch_answer = {
-    Mode.LOCAL: Local.batch_answer,
-    Mode.REMOTE: Remote.batch_answer
-}
+_batch_answer = {Mode.LOCAL: Local.batch_answer, Mode.REMOTE: Remote.batch_answer}
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
@@ -98,7 +89,7 @@ def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
 
 _batch_answer_same_context = {
     Mode.LOCAL: Local.batch_answer_same_context,
-    Mode.REMOTE: Remote.batch_answer_same_context
+    Mode.REMOTE: Remote.batch_answer_same_context,
 }
 
 
@@ -108,7 +99,7 @@ def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
 
 _batch_answer_same_question = {
     Mode.LOCAL: Local.batch_answer_same_question,
-    Mode.REMOTE: Remote.batch_answer_same_question
+    Mode.REMOTE: Remote.batch_answer_same_question,
 }
 
 
@@ -118,7 +109,7 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 
 _get_generator_tokenizer = {
     Mode.LOCAL: Local.generator_tokenizer,
-    Mode.REMOTE: Remote.generator_tokenizer
+    Mode.REMOTE: Remote.generator_tokenizer,
 }
 
 
@@ -126,70 +117,49 @@ def get_generator_tokenizer():
     return _get_generator_tokenizer[MODE]
 
 
-_generate = {
-    Mode.LOCAL: Local.generate,
-    Mode.REMOTE: Remote.generate
-}
+_generate = {Mode.LOCAL: Local.generate, Mode.REMOTE: Remote.generate}
 
 
 def generate(prompt: str) -> str:
     return _generate[MODE](prompt)
 
 
-_batch_generate = {
-    Mode.LOCAL: Local.batch_generate,
-    Mode.REMOTE: Remote.batch_generate
-}
+_batch_generate = {Mode.LOCAL: Local.batch_generate, Mode.REMOTE: Remote.batch_generate}
 
 
 def batch_generate(prompts: List[str]) -> List[str]:
     return _batch_generate[MODE](prompts)
 
 
-_get_ner_tokenizer = {
-    Mode.LOCAL: Local.ner_tokenizer,
-    Mode.REMOTE: Local.ner_tokenizer
-}
+_get_ner_tokenizer = {Mode.LOCAL: Local.ner_tokenizer, Mode.REMOTE: Local.ner_tokenizer}
 
 
 def get_ner_tokenizer():
     return _get_ner_tokenizer[MODE]
 
 
-_entities = {
-    Mode.LOCAL: Local.entities,
-    Mode.REMOTE: Local.entities
-}
+_entities = {Mode.LOCAL: Local.entities, Mode.REMOTE: Local.entities}
 
 
 def entities(text: str) -> List[str]:
     return _entities[MODE](text)
 
 
-_meaning = {
-    Mode.LOCAL: Local.meaning,
-    Mode.REMOTE: Local.meaning
-}
+_meaning = {Mode.LOCAL: Local.meaning, Mode.REMOTE: Local.meaning}
 
 
 def meaning(word: str) -> Dict[str, List[str]]:
     return _meaning[MODE](word)
 
 
-_synonym = {
-    Mode.LOCAL: Local.synonym,
-    Mode.REMOTE: Local.synonym
-}
+_synonym = {Mode.LOCAL: Local.synonym, Mode.REMOTE: Local.synonym}
 
 
 def synonym(word: str) -> List[str]:
     return _synonym[MODE](word)
 
 
-_antonym = {
-    Mode.LOCAL: Local.antonym,
-    Mode.REMOTE: Local.antonym
-}
+_antonym = {Mode.LOCAL: Local.antonym, Mode.REMOTE: Local.antonym}
 
 
 def antonym(word: str) -> List[str]:

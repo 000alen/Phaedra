@@ -6,17 +6,15 @@ from typing import Any, List, Dict, Optional, Union
 
 import uuid
 
-from wikipedia.wikipedia import page # type: ignore
+from wikipedia.wikipedia import page  # type: ignore
 
 from Phaedra.Notebook.Cell import Cell, CELL_JSON_TYPE
 
-__all__ = (
-    "Page",
-    "PAGE_JSON_TYPE"
-)
+__all__ = ("Page", "PAGE_JSON_TYPE")
 
 
 PAGE_JSON_TYPE = Dict[str, Union[str, List[CELL_JSON_TYPE], Dict[Any, Any]]]
+
 
 class Page:
     id: str
@@ -38,12 +36,18 @@ class Page:
         if type(other) is not Page:
             return False
 
-        return self.id == other.id and self.cells == other.cells and self.data == other.data
+        return (
+            self.id == other.id
+            and self.cells == other.cells
+            and self.data == other.data
+        )
 
     @classmethod
     def from_json(cls, _json: Dict) -> "Page":
-        page = cls(cells=[Cell.from_json(cell_json)
-                   for cell_json in _json["cells"]], data=_json["data"])
+        page = cls(
+            cells=[Cell.from_json(cell_json) for cell_json in _json["cells"]],
+            data=_json["data"],
+        )
         page.id = _json["id"]
         return page
 

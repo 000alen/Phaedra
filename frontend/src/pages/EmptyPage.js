@@ -29,7 +29,7 @@ function EmptyPage({ id, appController, statusBarRef }) {
             setDialogOpen(false);
 
             if (!notebook) return;
-            
+
             appController.setTabContent(id, <NotebookPage
                 key={id}
                 id={id}

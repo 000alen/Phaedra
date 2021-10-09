@@ -3,7 +3,7 @@ import {CommandBar, MessageBarType } from '@fluentui/react';
 
 function FileItems({ notebookRef, commandBoxRef, appController, pageController }) {
     const handleTest = () => {};
-    
+
     const fileItems = [
         {
             key: 'test',
@@ -11,12 +11,12 @@ function FileItems({ notebookRef, commandBoxRef, appController, pageController }
             iconProps: {
                 iconName: 'TestCase'
             },
-            onClick: handleTest 
+            onClick: handleTest
         }
     ];
 
     return (
-        <CommandBar items={fileItems} />                
+        <CommandBar items={fileItems} />
     )
 }
 

@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-import transformers # type: ignore
+import transformers  # type: ignore
 import logging
 
 from PyDictionary import PyDictionary  # type: ignore
@@ -125,7 +125,9 @@ def generate(prompt: str) -> str:
 
     assert generator is not None
 
-    return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[0]["generated_text"]
+    return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[
+        0
+    ]["generated_text"]
 
 
 def batch_generate(prompts: List[str]) -> List[str]:

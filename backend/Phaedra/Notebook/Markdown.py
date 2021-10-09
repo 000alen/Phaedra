@@ -4,14 +4,7 @@ Markdown wrapper for Phaedra Notebook.
 
 from typing import List
 
-__all__ = (
-    "text",
-    "titled_text",
-    "ordered_list",
-    "unordered_list",
-    "link",
-    "image"
-)
+__all__ = ("text", "titled_text", "ordered_list", "unordered_list", "link", "image")
 
 
 def text(text: str) -> str:

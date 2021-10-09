@@ -17,7 +17,7 @@ export default function NotebookView({ appController, statusBarRef }) {
         openJson().then(({notebook, notebookPath}) => {
             setDialogOpen(false);
             if (!notebook) return;
-            
+
             const id = appController.getNextTabId();
             appController.addTab(<NotebookPage
                 key={id}
@@ -30,7 +30,7 @@ export default function NotebookView({ appController, statusBarRef }) {
 
         });
     };
-    
+
     return (
         <div className="flex items-center justify-center">
             <div className="flex flex-row space-x-1">

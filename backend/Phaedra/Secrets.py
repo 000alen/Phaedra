@@ -11,7 +11,7 @@ def get_secrets() -> Dict[str, str]:
 
 
 def get_secrets_remote() -> Dict[str, str]:
-    from google.colab import drive
+    from google.colab import drive # type: ignore
     drive.mount("/content/drive")
     with open("/content/drive/MyDrive/secrets.json") as file:
         secrets = json.load(file)

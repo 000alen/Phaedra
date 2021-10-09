@@ -7,10 +7,12 @@ import base64
 import io
 
 from flask import Flask, request, jsonify
+from flask.json import load
 from flask_cors import CORS # type: ignore
 from flask_ngrok import run_with_ngrok # type: ignore
 
 from Phaedra.Notebook import Notebook
+from Phaedra.Secrets import get_secrets, get_secrets_remote, load_secrets
 
 __all__ = (
     "run",
@@ -136,8 +138,18 @@ def kill():
     return jsonify(True)
 
 
+def authenticate():
+    secrets = get_secrets()
+    load_secrets(secrets)
+
+
 def run():
     app.run()
+
+
+def authenticate_remote():
+    secrets = get_secrets_remote()
+    load_secrets(secrets)
 
 
 def run_remote():

@@ -10,7 +10,7 @@ import names_generator  # type: ignore
 import wikipedia  # type: ignore
 
 from Phaedra.Text import extract_text_from_pdf_to_pages, preprocess_text
-from Phaedra.Language import tokenizer, load_summarizer, entities, answer, generate, meaning, synonym, antonym, batch_summarize, batch_answer_same_question
+from Phaedra.Language import get_summarizer_tokenizer, entities, answer, generate, meaning, synonym, antonym, batch_summarize, batch_answer_same_question
 from Phaedra.Notebook.Page import Page, PAGE_JSON_TYPE
 from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
@@ -24,9 +24,7 @@ CHUNK_SIZE = 512 - QUERY_SIZE
 
 
 def chunk_sources(sources: List[str]) -> Tuple[List[int], List[str]]:
-    if tokenizer is None:
-        load_summarizer()
-
+    tokenizer = get_summarizer_tokenizer()
     tokenized_sources = [tokenizer(source)["input_ids"] for source in sources]
 
     indexes = []
@@ -254,8 +252,7 @@ class Notebook:
         return answer(question, page.data["source"])
 
     def _sparse_question(self, question: str) -> List[str]:
-        if tokenizer is None:
-            load_summarizer()
+        tokenizer = get_summarizer_tokenizer()
 
         contexts = []
         for i, page in enumerate(self.pages):

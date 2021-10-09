@@ -1,74 +1,50 @@
-"""
-Phaedra's Language operations module.
-"""
-
-
 from typing import List, Dict
 
-import transformers  # type: ignore
+import transformers # type: ignore
 import logging
 
 from PyDictionary import PyDictionary  # type: ignore
-import openai
-
-__all__ = (
-    "summarizer",
-    "load_summarizer",
-    "tokenizer",
-    "answerer",
-    "load_answerer",
-    "generator"
-    "load_generator",
-    "ner",
-    "load_ner",
-    "dictionary",
-    "load_dictionary",
-    "summarize",
-    "batch_summarize",
-    "answer",
-    "batch_answer",
-    "batch_answer_same_context",
-    "batch_answer_same_question",
-    "entities",
-    "meaning",
-    "synonym",
-    "antonym"
-)
 
 DEVICE = 0
 
 summarizer = None
-tokenizer = None
+summarizer_tokenizer = None
 
 
 def load_summarizer():
-    global summarizer, tokenizer
+    global summarizer, summarizer_tokenizer
     summarizer = transformers.pipeline("summarization", device=DEVICE)
-    tokenizer = summarizer.tokenizer
+    summarizer_tokenizer = summarizer.tokenizer
 
 
 answerer = None
+answerer_tokenizer = None
 
 
 def load_answerer():
-    global answerer
+    global answerer, answerer_tokenizer
     answerer = transformers.pipeline("question-answering", device=DEVICE)
+    answerer_tokenizer = answerer.tokenizer
 
 
 generator = None
+generator_tokenizer = None
 
 
 def load_generator():
-    global generator
+    global generator, generator_tokenizer
     generator = transformers.pipeline("text-generation", device=DEVICE)
+    generator_tokenizer = generator.tokenizer
 
 
 ner = None
+ner_tokenizer = None
 
 
 def load_ner():
-    global ner
+    global ner, ner_tokenizer
     ner = transformers.pipeline("ner", grouped_entities=True, device=DEVICE)
+    ner_tokenizer = ner.tokenizer
 
 
 dictionary = None
@@ -84,25 +60,10 @@ def summarize(text: str) -> str:
         load_summarizer()
 
     logging.info(f"Summarizing: '{text[:5]}...'")
+
+    assert summarizer is not None
+
     return summarizer(text)[0]["summary_text"]
-
-
-def summarize_openai(text: str) -> str:
-    prompt_template = "My second grader asked me what this passage means:\n\"\"\"\n{text}\n\"\"\"\nI rephrase it for him, in plain language a second grader can understand:\n\"\"\"\n"
-    prompt = prompt_template.format(text=text)
-
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt=prompt,
-        temperature=0.5,
-        max_tokens=100,
-        top_p=1,
-        frequency_penalty=0.2,
-        presence_penalty=0,
-        stop=["\"\"\""]
-    )
-
-    return response["choices"][0]["text"]
 
 
 def batch_summarize(texts: List[str]) -> List[str]:
@@ -110,6 +71,9 @@ def batch_summarize(texts: List[str]) -> List[str]:
         load_summarizer()
 
     logging.info(f"Batch summarizing: {len(texts)}")
+
+    assert summarizer is not None
+
     results = summarizer(texts)
     return [result["summary_text"] for result in results]
 
@@ -119,11 +83,10 @@ def answer(question: str, context: str) -> str:
         load_answerer()
 
     logging.info(f"Questioning: '{question[:5]}...', '{context[:5]}...'")
+
+    assert answerer is not None
+
     return answerer(question=question, context=context)["answer"]
-
-
-def answer_openai(question: str, context: str) -> str:
-    raise NotImplementedError
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
@@ -131,6 +94,9 @@ def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
         load_answerer()
 
     logging.info(f"Batch questioning: {len(questions)}")
+
+    assert answerer is not None
+
     results = answerer(question=questions, context=contexts)
     return [result["answer"] for result in results]
 
@@ -156,11 +122,10 @@ def generate(prompt: str) -> str:
         load_generator()
 
     logging.info(f"Generating: '{prompt[:5]}...'")
+
+    assert generator is not None
+
     return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[0]["generated_text"]
-
-
-def generate_openai(prompt: str) -> str:
-    raise NotImplementedError
 
 
 def batch_generate(prompts: List[str]) -> List[str]:
@@ -168,16 +133,21 @@ def batch_generate(prompts: List[str]) -> List[str]:
         load_generator()
 
     logging.info(f"Batch generating: {len(prompts)}")
+
+    assert generator is not None
+
     results = generator(prompts)
     return [result["generated_text"] for result in results]
 
 
-# XXX: Not working properly
 def entities(text: str) -> List[str]:
     if ner is None:
         load_ner()
 
     logging.info(f"Extracting NE: '{text[:5]}...'")
+
+    assert ner is not None
+
     entities = ner(text)
     return [entity["word"] for entity in entities]
 
@@ -185,6 +155,8 @@ def entities(text: str) -> List[str]:
 def meaning(word: str) -> Dict[str, List[str]]:
     if dictionary is None:
         load_dictionary()
+
+    assert dictionary is not None
 
     return dictionary.meaning(word)
 
@@ -194,6 +166,8 @@ def synonym(word: str) -> List[str]:
     if dictionary is None:
         load_dictionary()
 
+    assert dictionary is not None
+
     return dictionary.synonym(word)
 
 
@@ -201,5 +175,7 @@ def synonym(word: str) -> List[str]:
 def antonym(word: str) -> List[str]:
     if dictionary is None:
         load_dictionary()
+
+    assert dictionary is not None
 
     return dictionary.antonym(word)

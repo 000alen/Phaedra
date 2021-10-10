@@ -1,0 +1,3 @@
+My second grader asked me what this passage means: """{text}"""
+
+I rephrase it for him, in plain language a second grader can understand: """

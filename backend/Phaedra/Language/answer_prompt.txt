@@ -1,0 +1,22 @@
+Context: """Jupiter is primarily composed of hydrogen, but helium constitutes one quarter of its mass and one tenth of its volume. It likely has a rocky core of heavier elements, but like the other giant planets, Jupiter lacks a well-defined solid surface. The on-going contraction of its interior generates heat greater than the amount received from the Sun. Because of its rapid rotation, the planet's shape is that of an oblate spheroid; it has a slight but noticeable bulge around the equator. The outer atmosphere is visibly segregated into several bands at different latitudes, with turbulence and storms along their interacting boundaries. A prominent result of this is the Great Red Spot, a giant storm that is known to have existed since at least the 17th century, when it was first seen by telescope."""
+
+Question: """What shape does Jupiter have?"""
+
+Answer: """Jupiter has an oblate spheroidal shape, similar to the shape of the Earth. The maximum radius of this ellipsoid is about 33% greater than the minimum radius (equator to poles). The polar flattening of Jupiter is less than that of the Earth, but greater than that of the other planets. This is largely a result of Jupiter's rapid rotation, which causes it to bulge out at its equator."""
+
+---
+
+Context: """Bitcoin is a decentralized digital currency, without a central bank or single administrator, that can be sent from user to user on the peer-to-peer bitcoin network without the need for intermediaries. Transactions are verified by network nodes through cryptography and recorded in a public distributed ledger called a blockchain. The cryptocurrency was invented in 2008 by an unknown person or group of people using the name Satoshi Nakamoto.[10] The currency began use in 2009 when its implementation was released as open-source software.
+Bitcoin has been criticized for its use in illegal transactions, the large amount of electricity (and thus carbon footprint) used by mining, price volatility, and thefts from exchanges. Some economists and commentators have characterized it as a speculative bubble at various times. Bitcoin has also been used as an investment, although several regulatory agencies have issued investor alerts about bitcoin. """
+
+Question: """How can transactions be verified?"""
+
+Answer: """To verify a transaction, a node must compute a cryptographic hash. For example, SHA-256 is used for Bitcoin. The node must then compare the computed hash with a reference hash of all previous transactions stored in the blockchain. If the computed hash is different from the stored hash, the transaction is considered to have happened in the past. The transaction's time attribute holds the timestamp of the transaction. If the transaction happened in the past, the node will also check the transaction's output - which is stored in the blockchain - to make sure it hasn't been spent already."""
+
+---
+
+Context: """{context}"""
+
+Question: """{question}"""
+
+Answer: """

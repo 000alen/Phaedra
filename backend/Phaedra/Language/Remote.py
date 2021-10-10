@@ -1,5 +1,4 @@
 import pkg_resources  # type: ignore
-import json
 from typing import List
 
 import openai
@@ -27,8 +26,10 @@ def get_generator_tokenizer():
     return generator_tokenizer
 
 
-prompts = json.loads(pkg_resources.resource_string("Phaedra.Language", "prompts.json"))
-summarize_prompt = prompts["summarize"]
+summarize_prompt = pkg_resources.resource_string(
+    "Phaedra.Language", "summarize_prompt.txt"
+)
+answer_prompt = pkg_resources.resource_string("Phaedra.Language", "answer_prompt.txt")
 
 
 def summarize(text: str) -> str:
@@ -53,7 +54,19 @@ def batch_summarize(texts: List[str]) -> List[str]:
 
 
 def answer(question: str, context: str) -> str:
-    raise NotImplementedError
+    prompt = answer_prompt.format(question=question, context=context)
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt=prompt,
+        temperature=0.75,
+        max_tokens=120,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop=['"""'],
+    )
+
+    return response["choices"][0]["text"]
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:

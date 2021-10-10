@@ -40,9 +40,9 @@ def chop(texts: List[str], tokenizer, size: int) -> Tuple[List[int], List[str]]:
     return indexes, [tokenizer.decode(chunk) for chunk in chunks]
 
 
-def format_parameters_to_local(parameters):
+def format_parameters_to_local(parameters, information):
     formatted_parameters = {
-        "max_length": parameters["max_tokens"],
+        "max_length": parameters["max_tokens"] + information["prompt_length"],
         "temperature": parameters["temperature"],
         "top_p": parameters["top_p"],
         "frequency_penalty": parameters["frequency_penalty"],

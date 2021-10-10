@@ -117,8 +117,10 @@ def summarize(text: str) -> str:
 
     assert _summarizer is not None
 
-    parameters = format_parameters_to_local(summarizer_parameters)
+    tokenizer = get_summarizer_tokenizer()
     prompt = summarizer_prompt.format(text=text)
+    information = {"prompt_length": len(tokenizer.encode(prompt))}
+    parameters = format_parameters_to_local(summarizer_parameters, information)
 
     response = _summarizer(prompt, **parameters)
 
@@ -131,8 +133,12 @@ def batch_summarize(texts: List[str]) -> List[str]:
 
     assert _summarizer is not None
 
-    parameters = format_parameters_to_local(summarizer_parameters)
+    tokenizer = get_summarizer_tokenizer()
     prompts = [summarizer_prompt.format(text=text) for text in texts]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(summarizer_parameters, information)
 
     response = _summarizer(prompts, **parameters)
 
@@ -148,8 +154,10 @@ def answer(question: str, context: str) -> str:
 
     assert _answerer is not None
 
-    parameters = format_parameters_to_local(answerer_parameters)
+    tokenizer = get_answerer_tokenizer()
     prompt = answerer_prompt.format(question=question, context=context)
+    information = {"prompt_length": len(tokenizer.encode(prompt))}
+    parameters = format_parameters_to_local(answerer_parameters, information)
 
     response = _answerer(prompt, **parameters)
 
@@ -162,11 +170,15 @@ def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
 
     assert _answerer is not None
 
-    parameters = format_parameters_to_local(answerer_parameters)
+    tokenizer = get_answerer_tokenizer()
     prompts = [
         answerer_prompt.format(question=question, context=context)
         for question, context in zip(questions, contexts)
     ]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(answerer_parameters, information)
 
     response = _answerer(prompts, **parameters)
 
@@ -182,11 +194,15 @@ def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
 
     assert _answerer is not None
 
-    parameters = format_parameters_to_local(answerer_parameters)
+    tokenizer = get_answerer_tokenizer()
     prompts = [
         answerer_prompt.format(question=question, context=context)
         for question in questions
     ]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(answerer_parameters, information)
 
     response = _answerer(prompts, **parameters)
 
@@ -202,11 +218,15 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 
     assert _answerer is not None
 
-    parameters = format_parameters_to_local(answerer_parameters)
+    tokenizer = get_answerer_tokenizer()
     prompts = [
         answerer_prompt.format(question=question, context=context)
         for context in contexts
     ]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(answerer_parameters, information)
 
     response = _answerer(prompts, **parameters)
 
@@ -222,8 +242,10 @@ def generate(prompt: str) -> str:
 
     assert _generator is not None
 
-    parameters = format_parameters_to_local(generator_parameters)
+    tokenizer = get_generator_tokenizer()
     prompt = generator_prompt.format(prompt=prompt)
+    information = {"prompt_length": len(tokenizer.encode(prompt))}
+    parameters = format_parameters_to_local(generator_parameters, information)
 
     response = _generator(prompt, **parameters)
 
@@ -236,8 +258,12 @@ def batch_generate(prompts: List[str]) -> List[str]:
 
     assert _generator is not None
 
-    parameters = format_parameters_to_local(generator_parameters)
+    tokenizer = get_generator_tokenizer()
     prompts = [generator_prompt.format(prompt=prompt) for prompt in prompts]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(generator_parameters, information)
 
     response = _generator(prompts, **parameters)
 

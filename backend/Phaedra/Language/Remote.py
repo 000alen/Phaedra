@@ -1,8 +1,9 @@
-import pkg_resources  # type: ignore
 from typing import List
 
 import openai
 import transformers  # type: ignore
+
+from Phaedra.Language import summarize_prompt, answer_prompt
 
 _tokenizer = transformers.AutoTokenizer.from_pretrained("gpt2")
 summarizer_tokenizer = _tokenizer
@@ -24,12 +25,6 @@ generator_tokenizer = _tokenizer
 
 def get_generator_tokenizer():
     return generator_tokenizer
-
-
-summarize_prompt = pkg_resources.resource_string(
-    "Phaedra.Language", "summarize_prompt.txt"
-)
-answer_prompt = pkg_resources.resource_string("Phaedra.Language", "answer_prompt.txt")
 
 
 def summarize(text: str) -> str:

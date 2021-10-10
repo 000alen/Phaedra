@@ -43,7 +43,7 @@ _get_summarizer_tokenizer = {
 
 
 def get_summarizer_tokenizer():
-    return _get_summarizer_tokenizer[MODE]
+    return _get_summarizer_tokenizer[MODE]()
 
 
 _summarize = {Mode.LOCAL: Local.summarize, Mode.REMOTE: Remote.summarize}

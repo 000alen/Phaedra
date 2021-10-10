@@ -7,8 +7,25 @@ import transformers  # type: ignore
 
 _tokenizer = transformers.AutoTokenizer.from_pretrained("gpt2")
 summarizer_tokenizer = _tokenizer
+
+
+def get_summarizer_tokenizer():
+    return summarizer_tokenizer
+
+
 answerer_tokenizer = _tokenizer
+
+
+def get_answerer_tokenizer():
+    return answerer_tokenizer
+
+
 generator_tokenizer = _tokenizer
+
+
+def get_generator_tokenizer():
+    return generator_tokenizer
+
 
 prompts = json.loads(pkg_resources.resource_string("Phaedra.Language", "prompts.json"))
 summarize_prompt = prompts["summarize"]

@@ -17,6 +17,15 @@ def load_summarizer():
     summarizer_tokenizer = summarizer.tokenizer
 
 
+def get_summarizer_tokenizer():
+    if summarizer_tokenizer is None:
+        load_summarizer()
+
+    assert summarizer_tokenizer is not None
+
+    return summarizer_tokenizer
+
+
 answerer = None
 answerer_tokenizer = None
 
@@ -25,6 +34,15 @@ def load_answerer():
     global answerer, answerer_tokenizer
     answerer = transformers.pipeline("question-answering", device=DEVICE)
     answerer_tokenizer = answerer.tokenizer
+
+
+def get_answerer_tokenizer():
+    if answerer_tokenizer is None:
+        load_answerer()
+
+    assert answerer_tokenizer is not None
+
+    return answerer_tokenizer
 
 
 generator = None
@@ -37,6 +55,15 @@ def load_generator():
     generator_tokenizer = generator.tokenizer
 
 
+def get_generator_tokenizer():
+    if generator_tokenizer is None:
+        load_generator()
+
+    assert generator_tokenizer is not None
+
+    return generator_tokenizer
+
+
 ner = None
 ner_tokenizer = None
 
@@ -45,6 +72,15 @@ def load_ner():
     global ner, ner_tokenizer
     ner = transformers.pipeline("ner", grouped_entities=True, device=DEVICE)
     ner_tokenizer = ner.tokenizer
+
+
+def get_ner_tokenizer():
+    if ner_tokenizer is None:
+        load_ner()
+
+    assert ner_tokenizer is not None
+
+    return ner_tokenizer
 
 
 dictionary = None

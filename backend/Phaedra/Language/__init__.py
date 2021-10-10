@@ -37,8 +37,8 @@ def set_mode(mode: Mode):
 
 
 _get_summarizer_tokenizer = {
-    Mode.LOCAL: Local.summarizer_tokenizer,
-    Mode.REMOTE: Remote.summarizer_tokenizer,
+    Mode.LOCAL: Local.get_summarizer_tokenizer,
+    Mode.REMOTE: Remote.get_summarizer_tokenizer,
 }
 
 
@@ -64,8 +64,8 @@ def batch_summarize(texts: List[str]) -> List[str]:
 
 
 _get_answerer_tokenizer = {
-    Mode.LOCAL: Local.answerer_tokenizer,
-    Mode.REMOTE: Remote.answerer_tokenizer,
+    Mode.LOCAL: Local.get_answerer_tokenizer,
+    Mode.REMOTE: Remote.get_answerer_tokenizer,
 }
 
 
@@ -108,8 +108,8 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 
 
 _get_generator_tokenizer = {
-    Mode.LOCAL: Local.generator_tokenizer,
-    Mode.REMOTE: Remote.generator_tokenizer,
+    Mode.LOCAL: Local.get_generator_tokenizer,
+    Mode.REMOTE: Remote.get_generator_tokenizer,
 }
 
 
@@ -131,7 +131,10 @@ def batch_generate(prompts: List[str]) -> List[str]:
     return _batch_generate[MODE](prompts)
 
 
-_get_ner_tokenizer = {Mode.LOCAL: Local.ner_tokenizer, Mode.REMOTE: Local.ner_tokenizer}
+_get_ner_tokenizer = {
+    Mode.LOCAL: Local.get_ner_tokenizer,
+    Mode.REMOTE: Local.get_ner_tokenizer,
+}
 
 
 def get_ner_tokenizer():

@@ -8,7 +8,6 @@
 python -m venv env
 ./env/Scripts/activate
 pip install -r requirements.txt
-python install_nltk_data.py
 ```
 
 ### Running terminal interface

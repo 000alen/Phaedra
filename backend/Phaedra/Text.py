@@ -9,7 +9,10 @@ from typing import List, Union, BinaryIO
 
 import pdfplumber  # type: ignore
 
-from nltk import word_tokenize, corpus  # type: ignore
+from nltk import word_tokenize, corpus, download  # type: ignore
+
+download("punkt")
+download("stopwords")
 
 __all__ = ("extract_text_from_pdf", "extract_text_from_pdf_to_pages", "preprocess_text")
 

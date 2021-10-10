@@ -5,6 +5,8 @@ import logging
 
 from PyDictionary import PyDictionary  # type: ignore
 
+from Phaedra.Language.Base import summarize_prompt, answer_prompt
+
 DEVICE = 0
 
 summarizer = None
@@ -91,6 +93,7 @@ def load_dictionary():
     dictionary = PyDictionary()
 
 
+# XXX: Testing
 def summarize(text: str) -> str:
     if summarizer is None:
         load_summarizer()
@@ -99,7 +102,9 @@ def summarize(text: str) -> str:
 
     assert summarizer is not None
 
-    return summarizer(text)[0]["summary_text"]
+    prompt = summarize_prompt.format(text=text)
+
+    return summarizer(prompt)[0]["summary_text"]
 
 
 def batch_summarize(texts: List[str]) -> List[str]:

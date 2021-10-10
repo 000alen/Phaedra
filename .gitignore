@@ -1,3 +1,4 @@
 .vscode/
 experiments/
 secrets.json
+env/

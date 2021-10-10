@@ -29,9 +29,7 @@ _dictionary = None
 
 def load_model():
     global _model
-    _model = transformers.pipelines(
-        "text-generation", model=_model_name, device=_device
-    )
+    _model = transformers.pipeline("text-generation", model=_model_name, device=_device)
 
 
 def load_summarizer():

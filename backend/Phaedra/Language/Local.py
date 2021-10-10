@@ -93,7 +93,6 @@ def load_dictionary():
     dictionary = PyDictionary()
 
 
-# XXX: Testing
 def summarize(text: str) -> str:
     if summarizer is None:
         load_summarizer()
@@ -102,9 +101,7 @@ def summarize(text: str) -> str:
 
     assert summarizer is not None
 
-    prompt = summarize_prompt.format(text=text)
-
-    return summarizer(prompt)[0]["summary_text"]
+    return summarizer(text)[0]["summary_text"]
 
 
 def batch_summarize(texts: List[str]) -> List[str]:

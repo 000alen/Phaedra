@@ -2,8 +2,6 @@
 Phaedra's Language operations module.
 """
 
-
-import pkg_resources  # type: ignore
 from enum import Enum, auto
 from typing import List, Dict
 
@@ -22,11 +20,6 @@ __all__ = (
     "synonym",
     "antonym",
 )
-
-summarize_prompt = pkg_resources.resource_string(
-    "Phaedra.Language", "summarize_prompt.txt"
-)
-answer_prompt = pkg_resources.resource_string("Phaedra.Language", "answer_prompt.txt")
 
 
 class Mode(Enum):

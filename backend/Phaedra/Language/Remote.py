@@ -3,7 +3,7 @@ from typing import List
 import openai
 import transformers  # type: ignore
 
-from Phaedra.Language import summarize_prompt, answer_prompt
+from Phaedra.Language.Base import summarize_prompt, answer_prompt
 
 _tokenizer = transformers.AutoTokenizer.from_pretrained("gpt2")
 summarizer_tokenizer = _tokenizer

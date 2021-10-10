@@ -4,7 +4,7 @@ Main dataclass for Phaedra Notebook.
 
 import uuid
 
-from typing import List, Optional, Tuple, Dict, Union
+from typing import List, Optional, Dict, Union
 
 import names_generator  # type: ignore
 import wikipedia  # type: ignore
@@ -21,15 +21,16 @@ from Phaedra.Language import (
     batch_summarize,
     batch_answer_same_question,
 )
-from Phaedra.Language.Base import chunk_sources, CHUNK_SIZE
-from Phaedra.Notebook.Page import Page, PAGE_JSON_TYPE
+from Phaedra.Language.Base import summarizer_input_size, answerer_input_size
+from Phaedra.Language.Utils import chop
+from Phaedra.Notebook.Page import Page, PageJson
 from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
 
 __all__ = ("Notebook",)
 
 
-NOTEBOOK_JSON_TYPE = Dict[str, Union[Optional[str], List[PAGE_JSON_TYPE]]]
+NotebookJson = Dict[str, Union[Optional[str], List[PageJson]]]
 
 
 class Notebook:
@@ -85,7 +86,9 @@ class Notebook:
             for i, source in enumerate(sources)
         ]
 
-        indexes, sources = chunk_sources(sources)
+        indexes, sources = chop(
+            sources, get_summarizer_tokenizer(), summarizer_input_size
+        )
 
         summaries = batch_summarize(sources)
 
@@ -103,7 +106,9 @@ class Notebook:
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
 
-        indexes, sources = chunk_sources(sources)
+        indexes, sources = chop(
+            sources, get_summarizer_tokenizer(), summarizer_input_size
+        )
 
         pages = [Page(data={"source": source}) for source in sources]
 
@@ -149,8 +154,8 @@ class Notebook:
 
         return string
 
-    def json(self) -> NOTEBOOK_JSON_TYPE:
-        json: NOTEBOOK_JSON_TYPE = {}
+    def json(self) -> NotebookJson:
+        json: NotebookJson = {}
         json["id"] = self.id
         json["name"] = self.name
         json["document_path"] = self.document_path
@@ -238,7 +243,8 @@ class Notebook:
                 ]
                 source = tokenizer(source)["input_ids"]
                 new_source = (
-                    previous_source[-CHUNK_SIZE // 2 :] + source[: CHUNK_SIZE // 2]
+                    previous_source[-answerer_input_size // 2 :]
+                    + source[: answerer_input_size // 2]
                 )
                 contexts.append(tokenizer.decode(new_source))
 

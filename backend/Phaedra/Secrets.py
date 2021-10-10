@@ -19,5 +19,5 @@ def get_secrets_remote() -> Dict[str, str]:
     return secrets
 
 
-def load_secrets(secrets):
+def set_secrets(secrets):
     openai.api_key = secrets["KEY"]

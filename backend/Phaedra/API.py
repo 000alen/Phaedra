@@ -12,7 +12,7 @@ from flask_cors import CORS  # type: ignore
 from flask_ngrok import run_with_ngrok  # type: ignore
 
 from Phaedra.Notebook import Notebook
-from Phaedra.Secrets import get_secrets, get_secrets_remote, load_secrets
+from Phaedra.Secrets import get_secrets, get_secrets_remote, set_secrets
 
 __all__ = ("run", "run_remote")
 
@@ -134,7 +134,7 @@ def kill():
 
 def authenticate():
     secrets = get_secrets()
-    load_secrets(secrets)
+    set_secrets(secrets)
 
 
 def run():
@@ -143,7 +143,7 @@ def run():
 
 def authenticate_remote():
     secrets = get_secrets_remote()
-    load_secrets(secrets)
+    set_secrets(secrets)
 
 
 def run_remote():

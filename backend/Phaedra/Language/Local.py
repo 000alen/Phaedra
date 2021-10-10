@@ -1,221 +1,288 @@
 from typing import List, Dict
 
 import transformers  # type: ignore
-import logging
 
 from PyDictionary import PyDictionary  # type: ignore
 
-from Phaedra.Language.Base import summarize_prompt, answer_prompt
+from Phaedra.Language.Base import (
+    summarizer_parameters,
+    summarizer_prompt,
+    answerer_parameters,
+    answerer_prompt,
+    generator_parameters,
+    generator_prompt,
+)
 
-DEVICE = 0
+from Phaedra.Language.Utils import format_parameters_to_local, cut_on_stop
 
-summarizer = None
-summarizer_tokenizer = None
+_device = 0
+
+_model_name = "EleutherAI/gpt-neo-1.3B"
+_model = None
+
+_summarizer = None
+_answerer = None
+_generator = None
+_ner = None
+_dictionary = None
+
+
+def load_model():
+    global _model
+    _model = transformers.pipelines(
+        "text-generation", model=_model_name, device=_device
+    )
 
 
 def load_summarizer():
-    global summarizer, summarizer_tokenizer
-    summarizer = transformers.pipeline("summarization", device=DEVICE)
-    summarizer_tokenizer = summarizer.tokenizer
+    global _summarizer
 
+    # _summarizer = transformers.pipeline("summarization", device=_device)
 
-def get_summarizer_tokenizer():
-    if summarizer_tokenizer is None:
-        load_summarizer()
+    if _model is None:
+        load_model()
 
-    assert summarizer_tokenizer is not None
-
-    return summarizer_tokenizer
-
-
-answerer = None
-answerer_tokenizer = None
+    _summarizer = _model
 
 
 def load_answerer():
-    global answerer, answerer_tokenizer
-    answerer = transformers.pipeline("question-answering", device=DEVICE)
-    answerer_tokenizer = answerer.tokenizer
+    global _answerer
 
+    # _answerer = transformers.pipeline("question-answering", device=_device)
 
-def get_answerer_tokenizer():
-    if answerer_tokenizer is None:
-        load_answerer()
+    if _model is None:
+        load_model()
 
-    assert answerer_tokenizer is not None
-
-    return answerer_tokenizer
-
-
-generator = None
-generator_tokenizer = None
+    _answerer = _model
 
 
 def load_generator():
-    global generator, generator_tokenizer
-    generator = transformers.pipeline("text-generation", device=DEVICE)
-    generator_tokenizer = generator.tokenizer
+    global _generator
 
+    # _generator = transformers.pipeline("text-generation", device=_device)
 
-def get_generator_tokenizer():
-    if generator_tokenizer is None:
-        load_generator()
+    if _model is None:
+        load_model()
 
-    assert generator_tokenizer is not None
-
-    return generator_tokenizer
-
-
-ner = None
-ner_tokenizer = None
+    _generator = _model
 
 
 def load_ner():
-    global ner, ner_tokenizer
-    ner = transformers.pipeline("ner", grouped_entities=True, device=DEVICE)
-    ner_tokenizer = ner.tokenizer
-
-
-def get_ner_tokenizer():
-    if ner_tokenizer is None:
-        load_ner()
-
-    assert ner_tokenizer is not None
-
-    return ner_tokenizer
-
-
-dictionary = None
+    global _ner
+    _ner = transformers.pipeline("ner", grouped_entities=True, device=_device)
 
 
 def load_dictionary():
-    global dictionary
-    dictionary = PyDictionary()
+    global _dictionary
+    _dictionary = PyDictionary()
+
+
+def get_summarizer_tokenizer():
+    if _summarizer is None:
+        load_summarizer()
+
+    assert _summarizer is not None
+
+    return _summarizer.tokenizer
+
+
+def get_answerer_tokenizer():
+    if _answerer is None:
+        load_answerer()
+
+    assert _answerer is not None
+
+    return _answerer.tokenizer
+
+
+def get_generator_tokenizer():
+    if _generator is None:
+        load_generator()
+
+    assert _generator is not None
+
+    return _generator.tokenizer
+
+
+def get_ner_tokenizer():
+    if _ner is None:
+        load_ner()
+
+    assert _ner is not None
+
+    return _ner.tokenizer
 
 
 def summarize(text: str) -> str:
-    if summarizer is None:
+    if _summarizer is None:
         load_summarizer()
 
-    logging.info(f"Summarizing: '{text[:5]}...'")
+    assert _summarizer is not None
 
-    assert summarizer is not None
+    parameters = format_parameters_to_local(summarizer_parameters)
+    prompt = summarizer_prompt.format(text=text)
 
-    return summarizer(text)[0]["summary_text"]
+    response = _summarizer(prompt, **parameters)
+
+    return cut_on_stop(response[0]["generated_text"], summarizer_parameters["stop"])
 
 
 def batch_summarize(texts: List[str]) -> List[str]:
-    if summarizer is None:
+    if _summarizer is None:
         load_summarizer()
 
-    logging.info(f"Batch summarizing: {len(texts)}")
+    assert _summarizer is not None
 
-    assert summarizer is not None
+    parameters = format_parameters_to_local(summarizer_parameters)
+    prompts = [summarizer_prompt.format(text=text) for text in texts]
 
-    results = summarizer(texts)
-    return [result["summary_text"] for result in results]
+    response = _summarizer(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], summarizer_parameters["stop"])
+        for choice in response
+    ]
 
 
 def answer(question: str, context: str) -> str:
-    if answerer is None:
+    if _answerer is None:
         load_answerer()
 
-    logging.info(f"Questioning: '{question[:5]}...', '{context[:5]}...'")
+    assert _answerer is not None
 
-    assert answerer is not None
+    parameters = format_parameters_to_local(answerer_parameters)
+    prompt = answerer_prompt.format(question=question, context=context)
 
-    return answerer(question=question, context=context)["answer"]
+    response = _answerer(prompt, **parameters)
+
+    return cut_on_stop(response[0]["generated_text"], answerer_parameters["stop"])
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
-    if answerer is None:
+    if _answerer is None:
         load_answerer()
 
-    logging.info(f"Batch questioning: {len(questions)}")
+    assert _answerer is not None
 
-    assert answerer is not None
+    parameters = format_parameters_to_local(answerer_parameters)
+    prompts = [
+        answerer_prompt.format(question=question, context=context)
+        for question, context in zip(questions, contexts)
+    ]
 
-    results = answerer(question=questions, context=contexts)
-    return [result["answer"] for result in results]
+    response = _answerer(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
+        for choice in response
+    ]
 
 
 def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
-    if answerer is None:
+    if _answerer is None:
         load_answerer()
 
-    logging.info(f"Batch questioning (same context): {len(questions)}")
-    return batch_answer(questions, [context] * len(questions))
+    assert _answerer is not None
+
+    parameters = format_parameters_to_local(answerer_parameters)
+    prompts = [
+        answerer_prompt.format(question=question, context=context)
+        for question in questions
+    ]
+
+    response = _answerer(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
+        for choice in response
+    ]
 
 
 def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
-    if answerer is None:
+    if _answerer is None:
         load_answerer()
 
-    logging.info(f"Batch questioning (same question): {len(contexts)}")
-    return batch_answer([question] * len(contexts), contexts)
+    assert _answerer is not None
+
+    parameters = format_parameters_to_local(answerer_parameters)
+    prompts = [
+        answerer_prompt.format(question=question, context=context)
+        for context in contexts
+    ]
+
+    response = _answerer(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
+        for choice in response
+    ]
 
 
 def generate(prompt: str) -> str:
-    if generator is None:
+    if _generator is None:
         load_generator()
 
-    logging.info(f"Generating: '{prompt[:5]}...'")
+    assert _generator is not None
 
-    assert generator is not None
+    parameters = format_parameters_to_local(generator_parameters)
+    prompt = generator_prompt.format(prompt=prompt)
 
-    return generator(prompt, return_full_text=False, temperature=0.4, max_length=1000)[
-        0
-    ]["generated_text"]
+    response = _generator(prompt, **parameters)
+
+    return cut_on_stop(response[0]["generated_text"], generator_parameters["stop"])
 
 
 def batch_generate(prompts: List[str]) -> List[str]:
-    if generator is None:
+    if _generator is None:
         load_generator()
 
-    logging.info(f"Batch generating: {len(prompts)}")
+    assert _generator is not None
 
-    assert generator is not None
+    parameters = format_parameters_to_local(generator_parameters)
+    prompts = [generator_prompt.format(prompt=prompt) for prompt in prompts]
 
-    results = generator(prompts)
-    return [result["generated_text"] for result in results]
+    response = _generator(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
+        for choice in response
+    ]
 
 
 def entities(text: str) -> List[str]:
-    if ner is None:
+    if _ner is None:
         load_ner()
 
-    logging.info(f"Extracting NE: '{text[:5]}...'")
+    assert _ner is not None
 
-    assert ner is not None
-
-    entities = ner(text)
+    entities = _ner(text)
     return [entity["word"] for entity in entities]
 
 
 def meaning(word: str) -> Dict[str, List[str]]:
-    if dictionary is None:
+    if _dictionary is None:
         load_dictionary()
 
-    assert dictionary is not None
+    assert _dictionary is not None
 
-    return dictionary.meaning(word)
+    return _dictionary.meaning(word)
 
 
 # XXX: Not working properly
 def synonym(word: str) -> List[str]:
-    if dictionary is None:
+    if _dictionary is None:
         load_dictionary()
 
-    assert dictionary is not None
+    assert _dictionary is not None
 
-    return dictionary.synonym(word)
+    return _dictionary.synonym(word)
 
 
 # XXX: Not working properly
 def antonym(word: str) -> List[str]:
-    if dictionary is None:
+    if _dictionary is None:
         load_dictionary()
 
-    assert dictionary is not None
+    assert _dictionary is not None
 
-    return dictionary.antonym(word)
+    return _dictionary.antonym(word)

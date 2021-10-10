@@ -8,12 +8,12 @@ import uuid
 
 from wikipedia.wikipedia import page  # type: ignore
 
-from Phaedra.Notebook.Cell import Cell, CELL_JSON_TYPE
+from Phaedra.Notebook.Cell import Cell, CellJson
 
-__all__ = ("Page", "PAGE_JSON_TYPE")
+__all__ = ("Page", "PageJson")
 
 
-PAGE_JSON_TYPE = Dict[str, Union[str, List[CELL_JSON_TYPE], Dict[Any, Any]]]
+PageJson = Dict[str, Union[str, List[CellJson], Dict[Any, Any]]]
 
 
 class Page:
@@ -51,8 +51,8 @@ class Page:
         page.id = _json["id"]
         return page
 
-    def json(self) -> PAGE_JSON_TYPE:
-        json: PAGE_JSON_TYPE = {}
+    def json(self) -> PageJson:
+        json: PageJson = {}
         json["id"] = self.id
         json["cells"] = [cell.json() for cell in self.cells]
         json["data"] = self.data

@@ -6,9 +6,9 @@ from typing import Any, Dict, Union
 
 import uuid
 
-__all__ = ("Cell", "CELL_JSON_TYPE")
+__all__ = ("Cell", "CellJson")
 
-CELL_JSON_TYPE = Dict[str, Union[str, Dict[Any, Any]]]
+CellJson = Dict[str, Union[str, Dict[Any, Any]]]
 
 
 class Cell:
@@ -43,5 +43,5 @@ class Cell:
         cell.id = _json["id"]
         return cell
 
-    def json(self) -> CELL_JSON_TYPE:
+    def json(self) -> CellJson:
         return {"id": self.id, "content": self.content, "data": self.data}

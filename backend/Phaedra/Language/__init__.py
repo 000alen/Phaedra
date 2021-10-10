@@ -27,142 +27,114 @@ class Mode(Enum):
     REMOTE = auto()
 
 
-MODE = Mode.LOCAL
-
-
-def set_mode(mode: Mode):
-    global MODE
-    MODE = mode
-
-
+_mode = Mode.LOCAL
 _get_summarizer_tokenizer = {
     Mode.LOCAL: Local.get_summarizer_tokenizer,
     Mode.REMOTE: Remote.get_summarizer_tokenizer,
 }
-
-
-def get_summarizer_tokenizer():
-    return _get_summarizer_tokenizer[MODE]()
-
-
 _summarize = {Mode.LOCAL: Local.summarize, Mode.REMOTE: Remote.summarize}
-
-
-def summarize(text: str) -> str:
-    return _summarize[MODE](text)
-
-
 _batch_summarize = {
     Mode.LOCAL: Local.batch_summarize,
     Mode.REMOTE: Remote.batch_summarize,
 }
-
-
-def batch_summarize(texts: List[str]) -> List[str]:
-    return _batch_summarize[MODE](texts)
-
-
 _get_answerer_tokenizer = {
     Mode.LOCAL: Local.get_answerer_tokenizer,
     Mode.REMOTE: Remote.get_answerer_tokenizer,
 }
-
-
-def get_answerer_tokenizer():
-    return _get_answerer_tokenizer[MODE]
-
-
 _answer = {Mode.LOCAL: Local.answer, Mode.REMOTE: Remote.answer}
-
-
-def answer(question: str, context: str) -> str:
-    return _answer[MODE](question, context)
-
-
 _batch_answer = {Mode.LOCAL: Local.batch_answer, Mode.REMOTE: Remote.batch_answer}
-
-
-def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
-    return _batch_answer[MODE](questions, contexts)
-
-
 _batch_answer_same_context = {
     Mode.LOCAL: Local.batch_answer_same_context,
     Mode.REMOTE: Remote.batch_answer_same_context,
 }
-
-
-def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
-    return _batch_answer_same_context[MODE](questions, context)
-
-
 _batch_answer_same_question = {
     Mode.LOCAL: Local.batch_answer_same_question,
     Mode.REMOTE: Remote.batch_answer_same_question,
 }
-
-
-def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
-    return _batch_answer_same_question[MODE](question, contexts)
-
-
 _get_generator_tokenizer = {
     Mode.LOCAL: Local.get_generator_tokenizer,
     Mode.REMOTE: Remote.get_generator_tokenizer,
 }
-
-
-def get_generator_tokenizer():
-    return _get_generator_tokenizer[MODE]
-
-
 _generate = {Mode.LOCAL: Local.generate, Mode.REMOTE: Remote.generate}
-
-
-def generate(prompt: str) -> str:
-    return _generate[MODE](prompt)
-
-
 _batch_generate = {Mode.LOCAL: Local.batch_generate, Mode.REMOTE: Remote.batch_generate}
-
-
-def batch_generate(prompts: List[str]) -> List[str]:
-    return _batch_generate[MODE](prompts)
-
-
 _get_ner_tokenizer = {
     Mode.LOCAL: Local.get_ner_tokenizer,
     Mode.REMOTE: Local.get_ner_tokenizer,
 }
-
-
-def get_ner_tokenizer():
-    return _get_ner_tokenizer[MODE]
-
-
 _entities = {Mode.LOCAL: Local.entities, Mode.REMOTE: Local.entities}
-
-
-def entities(text: str) -> List[str]:
-    return _entities[MODE](text)
-
-
 _meaning = {Mode.LOCAL: Local.meaning, Mode.REMOTE: Local.meaning}
-
-
-def meaning(word: str) -> Dict[str, List[str]]:
-    return _meaning[MODE](word)
-
-
 _synonym = {Mode.LOCAL: Local.synonym, Mode.REMOTE: Local.synonym}
-
-
-def synonym(word: str) -> List[str]:
-    return _synonym[MODE](word)
-
-
 _antonym = {Mode.LOCAL: Local.antonym, Mode.REMOTE: Local.antonym}
 
 
+def get_mode() -> Mode:
+    return _mode
+
+
+def set_mode(mode: Mode):
+    global _mode
+    _mode = mode
+
+
+def get_summarizer_tokenizer():
+    return _get_summarizer_tokenizer[get_mode()]()
+
+
+def summarize(text: str) -> str:
+    return _summarize[get_mode()](text)
+
+
+def batch_summarize(texts: List[str]) -> List[str]:
+    return _batch_summarize[get_mode()](texts)
+
+
+def get_answerer_tokenizer():
+    return _get_answerer_tokenizer[get_mode()]
+
+
+def answer(question: str, context: str) -> str:
+    return _answer[get_mode()](question, context)
+
+
+def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
+    return _batch_answer[get_mode()](questions, contexts)
+
+
+def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
+    return _batch_answer_same_context[get_mode()](questions, context)
+
+
+def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
+    return _batch_answer_same_question[get_mode()](question, contexts)
+
+
+def get_generator_tokenizer():
+    return _get_generator_tokenizer[get_mode()]
+
+
+def generate(prompt: str) -> str:
+    return _generate[get_mode()](prompt)
+
+
+def batch_generate(prompts: List[str]) -> List[str]:
+    return _batch_generate[get_mode()](prompts)
+
+
+def get_ner_tokenizer():
+    return _get_ner_tokenizer[get_mode()]
+
+
+def entities(text: str) -> List[str]:
+    return _entities[get_mode()](text)
+
+
+def meaning(word: str) -> Dict[str, List[str]]:
+    return _meaning[get_mode()](word)
+
+
+def synonym(word: str) -> List[str]:
+    return _synonym[get_mode()](word)
+
+
 def antonym(word: str) -> List[str]:
-    return _antonym[MODE](word)
+    return _antonym[get_mode()](word)

@@ -24,4 +24,6 @@ generator_input_size = input_size - query_size
 generator_parameters = json.loads(
     pkg_resources.resource_string(__name__, "generator_parameters.json").decode()
 )
-generator_prompt = pkg_resources.resource_string(__name__, "generator_prompt.txt")
+generator_prompt = pkg_resources.resource_string(
+    __name__, "generator_prompt.txt"
+).decode()

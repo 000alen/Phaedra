@@ -236,14 +236,14 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
     ]
 
 
-def generate(prompt: str) -> str:
+def generate(prompt: str, context: str) -> str:
     if _generator is None:
         load_generator()
 
     assert _generator is not None
 
     tokenizer = get_generator_tokenizer()
-    prompt = generator_prompt.format(prompt=prompt)
+    prompt = generator_prompt.format(prompt=prompt, context=context)
     information = {"prompt_length": len(tokenizer.encode(prompt))}
     parameters = format_parameters_to_local(generator_parameters, information)
 
@@ -252,14 +252,63 @@ def generate(prompt: str) -> str:
     return cut_on_stop(response[0]["generated_text"], generator_parameters["stop"])
 
 
-def batch_generate(prompts: List[str]) -> List[str]:
+def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
     if _generator is None:
         load_generator()
 
     assert _generator is not None
 
     tokenizer = get_generator_tokenizer()
-    prompts = [generator_prompt.format(prompt=prompt) for prompt in prompts]
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context)
+        for prompt, context in zip(prompts, contexts)
+    ]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(generator_parameters, information)
+
+    response = _generator(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
+        for choice in response
+    ]
+
+
+def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
+    if _generator is None:
+        load_generator()
+
+    assert _generator is not None
+
+    tokenizer = get_generator_tokenizer()
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context) for prompt in prompts
+    ]
+    information = {
+        "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
+    }
+    parameters = format_parameters_to_local(generator_parameters, information)
+
+    response = _generator(prompts, **parameters)
+
+    return [
+        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
+        for choice in response
+    ]
+
+
+def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
+    if _generator is None:
+        load_generator()
+
+    assert _generator is not None
+
+    tokenizer = get_generator_tokenizer()
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context) for context in contexts
+    ]
     information = {
         "prompt_length": max(len(tokenizer.encode(prompt)) for prompt in prompts)
     }

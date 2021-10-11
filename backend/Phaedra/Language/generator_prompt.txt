@@ -1,1 +1,5 @@
-{prompt}
+Context: """{context}"""
+
+Prompt: """{prompt}"""
+
+Answer: """

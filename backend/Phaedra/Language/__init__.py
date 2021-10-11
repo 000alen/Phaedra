@@ -57,6 +57,14 @@ _get_generator_tokenizer = {
 }
 _generate = {Mode.LOCAL: Local.generate, Mode.REMOTE: Remote.generate}
 _batch_generate = {Mode.LOCAL: Local.batch_generate, Mode.REMOTE: Remote.batch_generate}
+_batch_generate_same_context = {
+    Mode.LOCAL: Local.batch_generate_same_context,
+    Mode.REMOTE: Remote.batch_generate_same_context,
+}
+_batch_generate_same_prompt = {
+    Mode.LOCAL: Local.batch_generate_same_prompt,
+    Mode.REMOTE: Remote.batch_generate_same_prompt,
+}
 _get_ner_tokenizer = {
     Mode.LOCAL: Local.get_ner_tokenizer,
     Mode.REMOTE: Local.get_ner_tokenizer,
@@ -112,12 +120,20 @@ def get_generator_tokenizer():
     return _get_generator_tokenizer[get_mode()]
 
 
-def generate(prompt: str) -> str:
-    return _generate[get_mode()](prompt)
+def generate(prompt: str, context: str) -> str:
+    return _generate[get_mode()](prompt, context)
 
 
-def batch_generate(prompts: List[str]) -> List[str]:
-    return _batch_generate[get_mode()](prompts)
+def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
+    return _batch_generate[get_mode()](prompts, contexts)
+
+
+def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
+    return _batch_generate_same_context[get_mode()](prompts, context)
+
+
+def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
+    return _batch_generate_same_prompt[get_mode()](prompt, contexts)
 
 
 def get_ner_tokenizer():

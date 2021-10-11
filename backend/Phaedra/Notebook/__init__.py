@@ -258,7 +258,7 @@ class Notebook:
         assert page is not None
 
         source = page.data["source"]
-        return generate(f'context: "{source}"\n\nprompt: "{prompt}"\n\n text: ')
+        return generate(prompt, source)
 
     def add_entities_cell(self, page_id: str):
         page = self.get_page(page_id)

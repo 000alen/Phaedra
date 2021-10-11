@@ -90,18 +90,43 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
     return [choice["text"] for choice in response["choices"]]
 
 
-def generate(prompt: str) -> str:
+def generate(prompt: str, context: str) -> str:
     parameters = generator_parameters
-    prompt = generator_prompt.format(prompt=prompt)
+    prompt = generator_prompt.format(prompt=prompt, context=context)
 
     response = openai.Completion.create(**parameters, prompt=prompt)
 
     return response["choices"][0]["text"]
 
 
-def batch_generate(prompts: List[str]) -> List[str]:
+def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
     parameters = generator_parameters
-    prompts = [generator_prompt.format(prompt=prompt) for prompt in prompts]
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context)
+        for prompt, context in zip(prompts, contexts)
+    ]
+
+    response = openai.Completion.create(**parameters, prompt=prompts)
+
+    return [choice["text"] for choice in response["choices"]]
+
+
+def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
+    parameters = generator_parameters
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context) for prompt in prompts
+    ]
+
+    response = openai.Completion.create(**parameters, prompt=prompts)
+
+    return [choice["text"] for choice in response["choices"]]
+
+
+def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
+    parameters = generator_parameters
+    prompts = [
+        generator_prompt.format(prompt=prompt, context=context) for context in contexts
+    ]
 
     response = openai.Completion.create(**parameters, prompt=prompts)
 

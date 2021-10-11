@@ -103,6 +103,7 @@ class Cell extends Component {
           onChange={handleChange}
           multiline
           autoAdjustHeight
+          resizable={false}
         />
         <PrimaryButton text="Set" onClick={handleSet} />
       </div>

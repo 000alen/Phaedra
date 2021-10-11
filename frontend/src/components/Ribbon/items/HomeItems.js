@@ -109,11 +109,6 @@ function HomeItems({
     }
   };
 
-  const handleEdit = () => {
-    const { notebookController } = notebookRef.current.state;
-    notebookController.toggleEditing();
-  };
-
   const handleQuestion = () => {
     const { notebookController } = notebookRef.current.state;
     const { activePage } = notebookRef.current.state;
@@ -217,64 +212,6 @@ function HomeItems({
         ],
       },
     },
-    // {
-    //     key: 'bold',
-    //     iconProps: { iconName: 'Bold' },
-    // },
-    // {
-    //     key: 'italic',
-    //     iconProps: { iconName: 'Italic' },
-    // },
-    // {
-    //     key: 'underline',
-    //     iconProps: { iconName: 'Underline' },
-    // },
-    // {
-    //     key: 'moreFontOptions',
-    //     iconProps: { iconName: 'More' },
-    //     subMenuProps: {
-    //         items: [
-    //             {
-    //                 key: 'strikethrough',
-    //                 text: 'Strikethrough',
-    //                 iconProps: { iconName: 'Strikethrough' },
-    //             },
-    //             {
-    //                 key: 'subscript',
-    //                 text: 'Subscript',
-    //                 iconProps: { iconName: 'Subscript' },
-    //             },
-    //             {
-    //                 key: 'superscript',
-    //                 text: 'Superscript',
-    //                 iconProps: { iconName: 'Superscript' },
-    //             },
-    //             {
-    //                 key: 'fontColor',
-    //                 text: 'Font Color',
-    //                 iconProps: { iconName: 'FontColor' },
-    //             },
-    //             {
-    //                 key: 'highlight',
-    //                 text: 'Highlight',
-    //                 iconProps: { iconName: 'Highlight' },
-    //             },
-    //             {
-    //                 key: 'clearFormatting',
-    //                 text: 'Clear Formatting',
-    //                 iconProps: { iconName: 'ClearFormatting' },
-    //             }
-    //         ]
-    //     }
-    // },
-    // {
-    //     key: 'bullet',
-    //     iconProps: { iconName: 'BulletedList' },
-    // },
-    // {
-    //     key: 'number',
-    //     iconProps: { iconName: 'NumberedList' },
-    // }
   ];
 
   const homeFarItems = [
@@ -287,11 +224,6 @@ function HomeItems({
       key: "question",
       iconProps: { iconName: "Search" },
       onClick: handleQuestion,
-    },
-    {
-      key: "edit",
-      iconProps: { iconName: "Edit" },
-      onClick: handleEdit,
     },
   ];
 

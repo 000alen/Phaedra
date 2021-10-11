@@ -8,6 +8,7 @@ import ReviewItems from "./items/ReviewItems";
 import ViewItems from "./items/ViewItems";
 
 import "../../css/Ribbon.css";
+import EditItems from "./items/EditItems";
 
 function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
   const ribbonStyle = {
@@ -28,6 +29,15 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
 
         <PivotItem headerText="Home" itemKey="home">
           <HomeItems
+            notebookRef={notebookRef}
+            commandBoxRef={commandBoxRef}
+            appController={appController}
+            pageController={pageController}
+          />
+        </PivotItem>
+
+        <PivotItem headerText="Edit" itemKey="edit">
+          <EditItems
             notebookRef={notebookRef}
             commandBoxRef={commandBoxRef}
             appController={appController}

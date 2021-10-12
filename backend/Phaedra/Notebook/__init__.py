@@ -19,6 +19,7 @@ from Phaedra.Language import (
     batch_summarize,
     batch_answer_same_question,
 )
+from Phaedra.Knowledge import wikipedia_summary, wikipedia_suggestions, wikipedia_image
 from Phaedra.Language.Base import summarizer_input_size, answerer_input_size
 from Phaedra.Language.Utils import chop
 from Phaedra.Notebook.Page import Page, PageJson
@@ -517,7 +518,7 @@ class Notebook:
 
         assert page is not None
 
-        content = titled_text(f"Wikipedia summary: {query}", wikipedia.summary(query))
+        content = titled_text(f"Wikipedia summary: {query}", wikipedia_summary(query))
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_suggestions_cell(self, query: str, page_id: str):
@@ -534,11 +535,8 @@ class Notebook:
 
         assert page is not None
 
-        suggestions, _ = wikipedia.search(query, results=5, suggestion=True)
-        _links = {
-            suggestion: wikipedia.page(suggestion).url for suggestion in suggestions
-        }
-        links = [link(text, url) for text, url in _links.items()]
+        suggestions = wikipedia_suggestions(query)
+        links = [link(text, url) for text, url in suggestions.items()]
         content = titled_text(f"Wikipedia suggestions: {query}", ordered_list(links))
         page.add_cell(Cell(content=content))
 
@@ -556,8 +554,7 @@ class Notebook:
 
         assert page is not None
 
-        wikipedia_page = wikipedia.page(query)
-        url = wikipedia_page.images[0]
+        url = wikipedia_image(query)
         content = image(query, url)
         page.add_cell(Cell(content=content))
 

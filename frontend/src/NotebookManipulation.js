@@ -93,7 +93,11 @@ export function undoRemovePage(notebook, { page, index }) {
 }
 
 export function insertCell(notebook, { pageId, cell, index }) {
-  notebook.pages[indexPage(notebook, pageId)].cells.splice(index, 0, cell);
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.splice(
+    index,
+    0,
+    cell
+  );
   return notebook;
 }
 
@@ -102,7 +106,7 @@ export function undoInsertCell(notebook, { pageId, cell }) {
 }
 
 export function addCell(notebook, { pageId, cell }) {
-  notebook.pages[indexPage(notebook, pageId)].cells.push(cell);
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.push(cell);
   return notebook;
 }
 
@@ -111,21 +115,22 @@ export function undoAddCell(notebook, { pageId, cell }) {
 }
 
 export function indexCell(notebook, { pageId, cellId }) {
-  return notebook.pages[indexPage(notebook, pageId)].cells.findIndex(
-    (cell) => cell.id === cellId
-  );
+  return notebook.pages[
+    indexPage(notebook, { pageId: pageId })
+  ].cells.findIndex((cell) => cell.id === cellId);
 }
 
 export function getCell(notebook, { pageId, cellId }) {
-  return notebook.pages[indexPage(notebook, pageId)].cells.find(
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells.find(
     (cell) => cell.id === cellId
   );
 }
 
 export function removeCell(notebook, { pageId, cellId }) {
-  notebook.pages[indexPage(notebook, pageId)].cells = notebook.pages[
-    indexPage(notebook, pageId)
-  ].cells.filter((cell) => cell.id !== cellId);
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells =
+    notebook.pages[indexPage(notebook, { pageId: pageId })].cells.filter(
+      (cell) => cell.id !== cellId
+    );
   return notebook;
 }
 
@@ -254,14 +259,14 @@ export function undoAddAntonymCell(notebook, { pageId, cellId }) {
 }
 
 export function getCellContent(notebook, { pageId, cellId }) {
-  return notebook.pages[indexPage(notebook, pageId)].cells[
-    indexCell(notebook, pageId, cellId)
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
   ].content;
 }
 
 export function setCellContent(notebook, { pageId, cellId, content }) {
-  notebook.pages[indexPage(notebook, pageId)].cells[
-    indexCell(notebook, pageId, cellId)
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
   ].content = content;
   return notebook;
 }
@@ -278,14 +283,14 @@ export function undoSetCellContent(
 }
 
 export function getCellData(notebook, { pageId, cellId }) {
-  return notebook.pages[indexPage(notebook, pageId)].cells[
-    indexCell(notebook, pageId, cellId)
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
   ].data;
 }
 
 export function setCellData(notebook, { pageId, cellId, data }) {
-  notebook.pages[indexPage(notebook, pageId)].cells[
-    indexCell(notebook, pageId, cellId)
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
   ].data = data;
   return notebook;
 }

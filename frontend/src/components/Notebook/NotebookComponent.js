@@ -185,34 +185,35 @@ export default class NotebookComponent extends Component {
   }
 
   do(action, args) {
+    let notebook = this.state.notebook;
     switch (action.name) {
       case "removePage":
-        const page = getPage(this.state.notebook, { pageId: args.pageId });
-        const pageIndex = indexPage(this.state.notebook, {
+        const page = getPage(notebook, { pageId: args.pageId });
+        const pageIndex = indexPage(notebook, {
           pageId: args.pageId,
         });
         args = { ...args, page: page, pageIndex: pageIndex };
         break;
       case "removeCell":
-        const cell = getCell(this.state.notebook, {
+        const cell = getCell(notebook, {
           pageId: args.pageId,
           cellId: args.cellId,
         });
-        const cellIndex = indexCell(this.state.notebook, {
+        const cellIndex = indexCell(notebook, {
           pageId: args.pageId,
           cellId: args.cellId,
         });
         args = { ...args, cell: cell, cellIndex: cellIndex };
         break;
       case "setCellContent":
-        const previousContent = getCellContent(this.state.notebook, {
+        const previousContent = getCellContent(notebook, {
           pageId: args.pageId,
           cellId: args.cellId,
         });
         args = { ...args, previousContent: previousContent };
         break;
       case "setCellData":
-        const previousData = getCellData(this.state.notebook, {
+        const previousData = getCellData(notebook, {
           pageId: args.pageId,
           cellId: args.cellId,
         });
@@ -220,7 +221,6 @@ export default class NotebookComponent extends Component {
         break;
     }
 
-    let notebook;
     switch (action.name) {
       case "addEntitiesCell":
       case "addQuestionCell":

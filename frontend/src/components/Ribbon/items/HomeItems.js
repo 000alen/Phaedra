@@ -10,6 +10,7 @@ import {
   removeCell,
   addQuestionCell,
   addGenerateCell,
+  getCell,
 } from "../../../NotebookManipulation";
 import { v4 as uuidv4 } from "uuid";
 

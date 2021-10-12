@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
 import { theme } from "../../index";
+import { setCellContent } from "../../NotebookManipulation";
 import {
   PrimaryButton,
   Shimmer,
@@ -80,7 +81,11 @@ export default class CellComponent extends Component {
     };
 
     const handleSet = () => {
-      notebookController.setCellContent(pageId, id, this.state.content, true);
+      notebookController.do(setCellContent, {
+        pageId: pageId,
+        cellId: id,
+        content: this.state.content,
+      });
     };
 
     return (

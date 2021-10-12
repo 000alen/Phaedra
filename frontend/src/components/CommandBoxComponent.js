@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { TextField } from "@fluentui/react";
-import "../css/CommandBox.css";
+import "../css/components/CommandBoxComponent.css";
 
-class CommandBox extends Component {
+export default class CommandBoxComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -41,5 +41,3 @@ class CommandBox extends Component {
     );
   }
 }
-
-export default CommandBox;

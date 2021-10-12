@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { IconButton } from "@fluentui/react";
 import { ipcRenderer, theme } from "../index";
 
-import "../css/TopBar.css";
+import "../css/components/TopBarComponent.css";
 
-function TopBar({ children }) {
+export default function TopBarComponent({ children }) {
   const [showMaximize, setShowMaximize] = useState(true);
 
   const changeMaximizeRestoreButton = (isMaximizedApp) => {
@@ -86,5 +86,3 @@ function TopBar({ children }) {
     </div>
   );
 }
-
-export default TopBar;

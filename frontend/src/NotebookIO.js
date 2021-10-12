@@ -1,5 +1,11 @@
 import { notebookFromPdf, notebookFromText } from "./API";
-import { openDialog, readFile, base64encode } from "./ElectronAPI";
+import {
+  openDialog,
+  saveDialog,
+  writeFile,
+  readFile,
+  base64encode,
+} from "./ElectronAPI";
 
 export function openPdf() {
   const openDialogOptions = {
@@ -119,5 +125,26 @@ export function openFile() {
         });
       }
     });
+  });
+}
+
+export function saveNotebook(notebook, notebookPath) {
+  const saveDialogOptions = {
+    filters: [{ name: "Notebooks", extensions: ["json"] }],
+  };
+
+  return new Promise((resolve, reject) => {
+    if (notebookPath === undefined) {
+      saveDialog(saveDialogOptions).then((results) => {
+        if (!results.canceled) {
+          const path = results.filePath;
+          writeFile(path, JSON.stringify(notebook));
+          resolve(path);
+        }
+      });
+    } else {
+      writeFile(notebookPath, JSON.stringify(notebook));
+      resolve(notebookPath);
+    }
   });
 }

@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import Ribbon from "../components/Ribbon/Ribbon";
-import Notebook from "../components/Notebook/Notebook";
-import CommandBox from "../components/CommandBox";
-import "../css/NotebookPage.css";
+import RibbonComponent from "../components/Ribbon/RibbonComponent";
+import NotebookComponent from "../components/Notebook/NotebookComponent";
+import CommandBoxComponent from "../components/CommandBoxComponent";
+import "../css/pages/NotebookPage.css";
 import { MessageBar } from "@fluentui/react";
 import { v4 as uuidv4 } from "uuid";
 
-class NotebookPage extends Component {
+export default class NotebookPage extends Component {
   constructor(props) {
     super(props);
 
@@ -91,7 +91,7 @@ class NotebookPage extends Component {
 
     return (
       <div className="notebookPage">
-        <Ribbon
+        <RibbonComponent
           notebookRef={this.notebookRef}
           commandBoxRef={this.commandBoxRef}
           appController={this.state.appController}
@@ -106,7 +106,7 @@ class NotebookPage extends Component {
         </div>
 
         <div className="notebookPageContent" style={notebookPageContentStyle}>
-          <Notebook
+          <NotebookComponent
             key={this.state.id}
             ref={this.notebookRef}
             appController={this.state.appController}
@@ -118,7 +118,7 @@ class NotebookPage extends Component {
           />
 
           {this.state.commandBoxShown && (
-            <CommandBox
+            <CommandBoxComponent
               ref={this.commandBoxRef}
               notebookRef={this.notebookRef}
             />
@@ -128,5 +128,3 @@ class NotebookPage extends Component {
     );
   }
 }
-
-export default NotebookPage;

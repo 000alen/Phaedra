@@ -1,10 +1,19 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
-import { createPage } from "../../Notebook/Page";
-import { createCell } from "../../Notebook/Cell";
+import {
+  createPage,
+  createCell,
+  indexPage,
+  insertPage,
+  indexCell,
+  insertCell,
+  removeCell,
+  addQuestionCell,
+  addGenerateCell,
+} from "../../../NotebookManipulation";
 import { v4 as uuidv4 } from "uuid";
 
-function HomeItems({
+export default function HomeItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -20,8 +29,13 @@ function HomeItems({
     const { activePage } = notebookRef.current.state;
 
     if (activePage) {
-      const activePageIndex = notebookController.indexPage(activePage);
-      notebookController.insertPage(createPage(), activePageIndex + 1);
+      const activePageIndex = notebookController.do(indexPage, {
+        pageId: activePage,
+      });
+      notebookController.do(insertPage, {
+        page: createPage(),
+        index: activePageIndex + 1,
+      });
     } else {
       pageController.addMessageBar("No page selected", MessageBarType.error);
     }
@@ -31,15 +45,15 @@ function HomeItems({
     const { notebookController } = notebookRef.current.state;
     const { activePage, activeCell } = notebookRef.current.state;
     if (activeCell) {
-      const activeCellIndex = notebookController.indexCell(
-        activePage,
-        activeCell
-      );
-      notebookController.insertCell(
-        activePage,
-        createCell(),
-        activeCellIndex + 1
-      );
+      const activeCellIndex = notebookController.do(indexCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
+      notebookController.do(insertCell, {
+        pageId: activePage.id,
+        cell: createCell(),
+        index: activeCellIndex + 1,
+      });
     } else {
       pageController.addMessageBar("No cell selected", MessageBarType.error);
     }
@@ -50,9 +64,10 @@ function HomeItems({
     const { activePage, activeCell } = notebookRef.current.state;
 
     if (activeCell) {
-      const cell = notebookController.getCell(activePage, activeCell);
-      appController.setClipboard(cell);
-      notebookController.removeCell(activePage, activeCell);
+      notebookController.do(removeCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
     } else {
       pageController.addMessageBar("No page selected", MessageBarType.error);
     }
@@ -73,9 +88,15 @@ function HomeItems({
     const { activePage, activeCell } = notebookRef.current.state;
 
     if (activeCell) {
-      const cell = notebookController.getCell(activePage, activeCell);
+      const cell = notebookController.do(getCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
       appController.setClipboard(cell);
-      notebookController.removeCell(activePage, activeCell);
+      notebookController.do(removeCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
     } else {
       pageController.addMessageBar("No cell selected", MessageBarType.error);
     }
@@ -86,7 +107,10 @@ function HomeItems({
     const { activePage, activeCell } = notebookRef.current.state;
 
     if (activeCell) {
-      const cell = notebookController.getCell(activePage, activeCell);
+      const cell = notebookController.do(getCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
       appController.setClipboard(cell);
     } else {
       pageController.addMessageBar("No cell selected", MessageBarType.error);
@@ -97,13 +121,17 @@ function HomeItems({
     const { notebookController } = notebookRef.current.state;
     const { activePage, activeCell } = notebookRef.current.state;
     if (activeCell) {
-      const activeCellIndex = notebookController.indexCell(
-        activePage,
-        activeCell
-      );
+      const activeCellIndex = notebookController.do(indexCell, {
+        pageId: activePage,
+        cellId: activeCell,
+      });
       let cell = { ...appController.getClipboard() };
       cell.id = uuidv4();
-      notebookController.insertCell(activePage, cell, activeCellIndex + 1);
+      notebookController.do(insertCell, {
+        pageId: activePage,
+        cell: cell,
+        index: activeCellIndex + 1,
+      });
     } else {
       pageController.addMessageBar("No cell selected", MessageBarType.error);
     }
@@ -114,7 +142,10 @@ function HomeItems({
     const { activePage } = notebookRef.current.state;
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addQuestionCell(command, activePage);
+      notebookController.do(addQuestionCell, {
+        question: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No question", MessageBarType.error);
@@ -128,7 +159,10 @@ function HomeItems({
     const { activePage } = notebookRef.current.state;
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addGenerateCell(command, activePage);
+      notebookController.do(addGenerateCell, {
+        prompt: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No prompt", MessageBarType.error);
@@ -229,5 +263,3 @@ function HomeItems({
 
   return <CommandBar items={homeItems} farItems={homeFarItems} />;
 }
-
-export default HomeItems;

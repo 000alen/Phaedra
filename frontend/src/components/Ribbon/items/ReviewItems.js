@@ -1,7 +1,9 @@
+// TODO: refactor
+
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
 
-function ReviewItems({
+export default function ReviewItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -81,5 +83,3 @@ function ReviewItems({
 
   return <CommandBar items={reviewItems} />;
 }
-
-export default ReviewItems;

@@ -1,7 +1,9 @@
+// TODO: refactor
+
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
 
-function InsertItems({
+export default function InsertItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -106,5 +108,3 @@ function InsertItems({
 
   return <CommandBar items={insertItems} farItems={insertFarItems} />;
 }
-
-export default InsertItems;

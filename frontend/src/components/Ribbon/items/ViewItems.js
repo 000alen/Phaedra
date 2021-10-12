@@ -1,8 +1,10 @@
+// TODO: refactor
+
 import React from "react";
 import { CommandBar } from "@fluentui/react";
 import html2canvas from "html2canvas";
 
-function ViewItems({
+export default function ViewItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -19,11 +21,6 @@ function ViewItems({
   };
 
   const viewItems = [
-    // {
-    //     key: 'reading',
-    //     name: 'Reading view',
-    //     iconProps: { iconName: 'ReadingMode' },
-    // },
     {
       key: "export",
       name: "Export",
@@ -34,5 +31,3 @@ function ViewItems({
 
   return <CommandBar items={viewItems} />;
 }
-
-export default ViewItems;

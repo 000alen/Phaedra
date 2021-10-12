@@ -1,7 +1,7 @@
 import React from "react";
-import Card from "../../../components/Card";
+import CardComponent from "../../../components/CardComponent";
 import NotebookPage from "../../../pages/NotebookPage";
-import { createNotebook } from "../../../components/Notebook/Notebook";
+import { createNotebook } from "../../../NotebookManipulation";
 
 const newIcon = {
   iconName: "FileTemplate",
@@ -26,7 +26,7 @@ export default function EmptyView({ appController, statusBarRef }) {
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-row space-x-1">
-        <Card
+        <CardComponent
           iconProps={newIcon}
           title="Create Notebook"
           subtitle="Create a JSON Notebook"

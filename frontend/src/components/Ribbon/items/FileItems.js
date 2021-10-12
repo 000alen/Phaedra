@@ -1,7 +1,7 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
 
-function FileItems({
+export default function FileItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -22,5 +22,3 @@ function FileItems({
 
   return <CommandBar items={fileItems} />;
 }
-
-export default FileItems;

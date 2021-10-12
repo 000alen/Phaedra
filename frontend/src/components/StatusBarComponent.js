@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 import { theme } from "../index";
-import "../css/StatusBar.css";
+import "../css/components/StatusBarComponent.css";
 
-class StatusBar extends Component {
+export default class StatusBarComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -64,5 +64,3 @@ class StatusBar extends Component {
     );
   }
 }
-
-export default StatusBar;

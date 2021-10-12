@@ -1,7 +1,8 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
+import { setCellData } from "../../../NotebookManipulation";
 
-function EditItems({
+export default function EditItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -10,8 +11,11 @@ function EditItems({
   const handleSeamless = () => {
     const { notebookController } = notebookRef.current.state;
     const { activePage, activeCell } = notebookRef.current.state;
-
-    notebookController.setCellData(activePage, activeCell, { seamless: true });
+    notebookController.do(setCellData, {
+      pageId: activePage,
+      cellId: activeCell,
+      data: { seamless: true },
+    });
   };
 
   const handleEdit = () => {
@@ -37,5 +41,3 @@ function EditItems({
 
   return <CommandBar items={editItems} farItems={editFarItems} />;
 }
-
-export default EditItems;

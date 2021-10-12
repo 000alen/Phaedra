@@ -6,11 +6,15 @@ import HomeItems from "./items/HomeItems";
 import InsertItems from "./items/InsertItems";
 import ReviewItems from "./items/ReviewItems";
 import ViewItems from "./items/ViewItems";
-
-import "../../css/Ribbon.css";
 import EditItems from "./items/EditItems";
+import "../../css/components/RibbonComponent.css";
 
-function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
+export default function RibbonComponent({
+  notebookRef,
+  commandBoxRef,
+  appController,
+  pageController,
+}) {
   const ribbonStyle = {
     backgroundColor: theme.palette.white,
   };
@@ -75,5 +79,3 @@ function Ribbon({ notebookRef, commandBoxRef, appController, pageController }) {
     </div>
   );
 }
-
-export default Ribbon;

@@ -1,0 +1,10 @@
+.notebookPage {
+  height: 100%;
+  width: 100%;
+}
+
+.notebookPageContent {
+  width: 100%;
+  overflow: scroll;
+  overflow-x: hidden;
+}

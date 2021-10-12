@@ -1,6 +1,4 @@
-"""
-Phaedra's text operations module.
-"""
+"""Phaedra's text operations module."""
 
 import re
 import string
@@ -21,6 +19,15 @@ title_expression = re.compile(r"[0-9]+\.(\w|\s)+")
 
 
 def extract_text_from_pdf(file_path_or_stream: Union[str, BinaryIO]) -> str:
+    """Extracts text from a PDF file.
+
+    :param file_path_or_stream: The path to the PDF file or a file-like object.
+    :type file_path_or_stream: str | BinaryIO
+    :return: The extracted text.
+    :rtype: str
+
+    """
+
     return "".join(
         page.extract_text() for page in pdfplumber.open(file_path_or_stream).pages
     )
@@ -29,11 +36,29 @@ def extract_text_from_pdf(file_path_or_stream: Union[str, BinaryIO]) -> str:
 def extract_text_from_pdf_to_pages(
     file_path_or_stream: Union[str, BinaryIO]
 ) -> List[str]:
+    """Extracts text from a PDF file and separates it into pages.
+
+    :param file_path_or_stream: The path to the PDF file or a file-like object.
+    :type file_path_or_stream: str | BinaryIO
+    :return: The extracted text separated into pages.
+    :rtype: list[str]
+
+    """
+
     return [page.extract_text() for page in pdfplumber.open(file_path_or_stream).pages]
 
 
 # XXX: Hacky
 def preprocess_text(text: str) -> str:
+    """Preprocesses text (tries to remove useless text).
+
+    :param text: The text to preprocess.
+    :type text: str
+    :return: The preprocessed text.
+    :rtype: str
+    
+    """
+
     response_text: str = ""
 
     for line in text.split("\n"):

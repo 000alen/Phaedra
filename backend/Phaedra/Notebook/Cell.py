@@ -1,6 +1,4 @@
-"""
-Cell dataclass for Phaedra Notebook.
-"""
+"""Cell dataclass for Phaedra Notebook."""
 
 from typing import Any, Dict, Union
 
@@ -12,6 +10,15 @@ CellJson = Dict[str, Union[str, Dict[Any, Any]]]
 
 
 class Cell:
+    """Cell dataclass for Phaedra Notebook.
+
+    :param content: The content of the cell.
+    :type content: str
+    :param data: The data of the cell.
+    :type data: Dict
+
+    """
+
     id: str
     content: str
     data: Dict
@@ -39,9 +46,25 @@ class Cell:
 
     @classmethod
     def from_json(self, _json: Dict) -> "Cell":
+        """Creates a Cell from a JSON dictionary.
+
+        :param _json: The JSON dictionary.
+        :type _json: Dict
+        :return: Cell object.
+        :rtype: Cell
+
+        """
+
         cell = Cell(content=_json["content"], data=_json["data"])
         cell.id = _json["id"]
         return cell
 
     def json(self) -> CellJson:
+        """Converts the Cell to a JSON dictionary.
+
+        :return: The JSON dictionary.
+        :rtype: Dict
+
+        """
+
         return {"id": self.id, "content": self.content, "data": self.data}

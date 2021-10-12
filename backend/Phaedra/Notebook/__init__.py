@@ -1,10 +1,8 @@
-"""
-Main dataclass for Phaedra Notebook.
-"""
+"""Dataclass for Phaedra Notebook."""
 
 import uuid
 
-from typing import List, Optional, Dict, Union
+from typing import BinaryIO, List, Optional, Dict, Union
 
 import names_generator  # type: ignore
 import wikipedia  # type: ignore
@@ -34,6 +32,17 @@ NotebookJson = Dict[str, Union[Optional[str], List[PageJson]]]
 
 
 class Notebook:
+    """Dataclass for Phaedra Notebook.
+
+    :param name: Name of the notebook.
+    :type name: str
+    :param document_path: Path to the document.
+    :type document_path: str
+    :param pages: List of pages.
+    :type pages: List[Page]
+
+    """
+
     id: str
     name: str
     pages: List[Page]
@@ -67,11 +76,26 @@ class Notebook:
     @classmethod
     def from_pdf(
         cls,
-        document_stream=None,
+        document_stream: BinaryIO = None,
         document_path: str = None,
         name: str = None,
         do_preprocessing: bool = True,
     ) -> "Notebook":
+        """Creates a Notebook from a PDF document.
+
+        :param document_stream: Stream of the document.
+        :type document_stream: BinaryIO
+        :param document_path: Path to the document.
+        :type document_path: str
+        :param name: Name of the Notebook.
+        :type name: str
+        :param do_preprocessing: Whether to preprocess the text.
+        :type do_preprocessing: bool
+        :return: Notebook object.
+        :rtype: Notebook
+
+        """
+
         if document_stream is None:
             assert type(document_path) is str
             document_stream = open(document_path, "rb")
@@ -102,6 +126,19 @@ class Notebook:
     def from_text(
         cls, text: str, name: str = None, do_preprocessing: bool = True
     ) -> "Notebook":
+        """Creates a Notebook from text
+
+        :param text: Text of the document.
+        :type text: str 
+        :param name: Name of the Notebook.
+        :type name: str
+        :param do_preprocessing: Whether to preprocess the text.
+        :type do_preprocessing: bool
+        :return: Notebook object.
+        :rtype: Notebook
+
+        """
+
         sources = [text]
         if do_preprocessing:
             sources = list(preprocess_text(source) for source in sources)
@@ -122,6 +159,17 @@ class Notebook:
 
     @classmethod
     def from_json(cls, file_path: str = None, _json: Dict = None) -> "Notebook":
+        """Creates a Notebook from a JSON dictionary.
+
+        :param file_path: Path to the JSON file.
+        :type file_path: str
+        :param _json: JSON dictionary.
+        :type _json: Dict
+        :return: Notebook object.
+        :rtype: Notebook
+
+        """
+
         assert file_path is not None or _json is not None
 
         if file_path is not None:
@@ -140,6 +188,13 @@ class Notebook:
         return notebook
 
     def markdown(self) -> str:
+        """Returns the Notebook as Markdown.
+
+        :return: Markdown string.
+        :rtype: str
+
+        """
+
         string = ""
         string += f"# {self.name} ({self.document_path})\n\n"
 
@@ -155,6 +210,13 @@ class Notebook:
         return string
 
     def json(self) -> NotebookJson:
+        """Returns the Notebook as a JSON dictionary.
+
+        :return: JSON dictionary.
+        :rtype: Dict
+
+        """
+
         json: NotebookJson = {}
         json["id"] = self.id
         json["name"] = self.name
@@ -163,24 +225,65 @@ class Notebook:
         return json
 
     def insert_page(self, page: Page, index: int):
+        """Inserts a page into the Notebook.
+
+        :param page: Page to insert.
+        :type page: Page
+        :param index: Index to insert the page.
+        :type index: int
+
+        """
+
         self.pages.insert(index, page)
 
     def add_page(self, page: Page):
+        """Adds a page to the Notebook.
+
+        :param page: Page to add.
+        :type page: Page
+        
+        """
+
         self.pages.append(page)
 
     def get_page(self, page_id: str) -> Optional[Page]:
+        """Returns a page from the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+        :return: Page object.
+        :rtype: Optional[Page]
+
+        """
+
         for page in self.pages:
             if page.id == page_id:
                 return page
         return None
 
     def get_page_index(self, page_id: str) -> Optional[int]:
+        """Indexes a page from the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+        :return: Index of the page.
+        :rtype: Optional[int]
+
+        """
+
         for i, page in enumerate(self.pages):
             if page.id == page_id:
                 return i
         return None
 
     def remove_page(self, page_id: str):
+        """Removes a page from the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -188,6 +291,17 @@ class Notebook:
         self.pages.remove(page)
 
     def insert_cell(self, page_id: str, cell: Cell, index: int):
+        """Inserts a cell into the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+        :param cell: Cell to insert.
+        :type cell: Cell
+        :param index: Index to insert the cell.
+        :type index: int
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -195,6 +309,15 @@ class Notebook:
         page.insert_cell(cell, index)
 
     def add_cell(self, page_id: str, cell: Cell):
+        """Adds a cell to the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+        :param cell: Cell to add.
+        :type cell: Cell
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -202,6 +325,17 @@ class Notebook:
         page.add_cell(cell)
 
     def get_cell(self, page_id: str, cell_id: str) -> Optional[Cell]:
+        """Returns a cell from the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+        :param cell_id: ID of the cell.
+        :type cell_id: str
+        :return: Cell object.
+        :rtype: Optional[Cell]
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -209,6 +343,15 @@ class Notebook:
         return page.get_cell(cell_id)
 
     def remove_cell(self, page_id: str, cell_id: str):
+        """Removes a cell from the Notebook.
+        
+        :param page_id: ID of the page.
+        :type page_id: str
+        :param cell_id: ID of the cell.
+        :type cell_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -216,6 +359,15 @@ class Notebook:
         page.remove_cell(cell_id)
 
     def _entities(self, page_id: str) -> List[str]:
+        """Returns the entities of a page (from page.data["source"]).
+        
+        :param page_id: ID of the page.
+        :type page_id: str
+        :return: List of entities.
+        :rtype: List[str]
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -224,6 +376,17 @@ class Notebook:
         return entities(source)
 
     def _question(self, question: str, page_id: str) -> str:
+        """Answers a question in a page (from page.data["source"]).
+
+        :param question: Question to answer.
+        :type question: str
+        :param page_id: ID of the page.
+        :type page_id: str
+        :return: Answer.
+        :rtype: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -231,6 +394,15 @@ class Notebook:
         return answer(question, page.data["source"])
 
     def _sparse_question(self, question: str) -> List[str]:
+        """Answers a question in all pages (from page.data["source"]).
+
+        :param question: Question to answer.
+        :type question: str
+        :return: Answers.
+        :rtype: List[str]
+
+        """
+
         tokenizer = get_summarizer_tokenizer()
 
         contexts = []
@@ -253,6 +425,17 @@ class Notebook:
         return answers
 
     def _generate(self, prompt: str, page_id: str) -> str:
+        """Generates text from a given prompt with context (from page.data["source"]).
+
+        :param prompt: Prompt to generate text from.
+        :type prompt: str
+        :param page_id: ID of the page.
+        :type page_id: str
+        :return: Generated text.
+        :rtype: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -261,6 +444,13 @@ class Notebook:
         return generate(prompt, source)
 
     def add_entities_cell(self, page_id: str):
+        """Adds entities cell to the Notebook.
+
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -269,6 +459,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_question_cell(self, question: str, page_id: str):
+        """Adds question cell to the Notebook.
+
+        :param question: Question to answer.
+        :type question: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -277,10 +476,26 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_sparse_question_cell(self, question: str):
+        """Adds sparse question cell to the Notebook.
+
+        :param question: Question to answer.
+        :type question: str
+
+        """
+
         content = titled_text(question, ordered_list(self._sparse_question(question)))
         self.pages[-1].add_cell(Cell(content=content))
 
     def add_generate_cell(self, prompt: str, page_id: str):
+        """Adds generate cell to the Notebook.
+
+        :param prompt: Prompt to generate text from.
+        :type prompt: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -289,6 +504,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_summary_cell(self, query: str, page_id: str):
+        """Adds Wikipedia summary cell to the Notebook.
+
+        :param query: Query to search Wikipedia for.
+        :type query: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -297,6 +521,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_suggestions_cell(self, query: str, page_id: str):
+        """Adds Wikipedia suggestions cell to the Notebook.
+
+        :param query: Query to search Wikipedia for.
+        :type query: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -310,6 +543,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_wikipedia_image_cell(self, query: str, page_id: str):
+        """Adds Wikipedia image cell to the Notebook.
+
+        :param query: Query to search Wikipedia for.
+        :type query: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -320,6 +562,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_meaning_cell(self, word: str, page_id: str):
+        """Adds meaning cell to the Notebook.
+        
+        :param word: Word to get meaning of.
+        :type word: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -337,6 +588,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_synonym_cell(self, word: str, page_id: str):
+        """Adds synonym cell to the Notebook.
+
+        :param word: Word to get synonyms of.
+        :type word: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None
@@ -345,6 +605,15 @@ class Notebook:
         page.add_cell(Cell(content=content))
 
     def add_antonym_cell(self, word: str, page_id: str):
+        """Adds antonym cell to the Notebook.
+
+        :param word: Word to get antonyms of.
+        :type word: str
+        :param page_id: ID of the page.
+        :type page_id: str
+
+        """
+
         page = self.get_page(page_id)
 
         assert page is not None

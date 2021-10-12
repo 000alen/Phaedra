@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import TopBar from "./components/TopBar";
-import Tabs from "./components/Tabs";
+import TopBarComponent from "./components/TopBarComponent";
+import TabsComponent from "./components/TabsComponent";
 import EmptyPage from "./pages/EmptyPage";
 import MainPage from "./pages/MainPage/MainPage";
 import { v4 as uuidv4 } from "uuid";
 import "./css/App.css";
-import StatusBar from "./components/StatusBar";
+import StatusBarComponent from "./components/StatusBarComponent";
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
 
@@ -164,15 +164,15 @@ class App extends Component {
 
     return (
       <div className="app">
-        <TopBar>
-          <Tabs
+        <TopBarComponent>
+          <TabsComponent
             tabs={tabs}
             selectedTab={selectedTab}
             onAdd={this.addTab}
             onSelect={this.selectTab}
             onClose={this.closeTab}
           />
-        </TopBar>
+        </TopBarComponent>
 
         <div className="appContent">
           {selectedTab ? (
@@ -185,10 +185,8 @@ class App extends Component {
           )}
         </div>
 
-        <StatusBar ref={this.statusBarRef} />
+        <StatusBarComponent ref={this.statusBarRef} />
       </div>
     );
   }
 }
-
-export default App;

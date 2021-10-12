@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
 import { theme } from "../../index";
-import { v4 as uuidv4 } from "uuid";
+import { setCellContent } from "../../NotebookManipulation";
 import {
   PrimaryButton,
   Shimmer,
@@ -9,19 +9,7 @@ import {
   mergeStyles,
 } from "@fluentui/react";
 
-export function createCell(id, data, content) {
-  if (!id) id = uuidv4();
-  if (!data) data = {};
-  if (!content) content = "";
-
-  return {
-    id: id,
-    data: data,
-    content: content,
-  };
-}
-
-class Cell extends Component {
+export default class CellComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -93,7 +81,11 @@ class Cell extends Component {
     };
 
     const handleSet = () => {
-      notebookController.setCellContent(pageId, id, this.state.content, true);
+      notebookController.do(setCellContent, {
+        pageId: pageId,
+        cellId: id,
+        content: this.state.content,
+      });
     };
 
     return (
@@ -120,5 +112,3 @@ class Cell extends Component {
     }
   }
 }
-
-export default Cell;

@@ -1,24 +1,11 @@
 import React, { Component } from "react";
 import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
-import Cell from "./Cell";
+import CellComponent from "./CellComponent";
 import { theme } from "../../index";
-import { v4 as uuidv4 } from "uuid";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export function createPage(id, data, cells) {
-  if (!id) id = uuidv4();
-  if (!data) data = {};
-  if (!cells) cells = [];
-
-  return {
-    id: id,
-    data: data,
-    cells: cells,
-  };
-}
-
-class Page extends Component {
+export default class PageComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -64,7 +51,7 @@ class Page extends Component {
           onClick={this.handleSelection}
         >
           {cells.map((cell) => (
-            <Cell
+            <CellComponent
               key={cell.id}
               id={cell.id}
               pageController={pageController}
@@ -114,7 +101,7 @@ class Page extends Component {
         >
           <div>
             {cells.map((cell) => (
-              <Cell
+              <CellComponent
                 key={cell.id}
                 id={cell.id}
                 pageController={pageController}
@@ -142,5 +129,3 @@ class Page extends Component {
     }
   }
 }
-
-export default Page;

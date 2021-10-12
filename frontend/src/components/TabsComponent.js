@@ -11,7 +11,7 @@ const iconButtonStyles = {
   },
 };
 
-function Tab({ id, title, active, onSelect, onClose }) {
+function TabComponent({ id, title, active, onSelect, onClose }) {
   const handleSelect = () => {
     onSelect(id);
   };
@@ -59,7 +59,13 @@ function Tab({ id, title, active, onSelect, onClose }) {
   );
 }
 
-function Tabs({ tabs, selectedTab, onSelect, onAdd, onClose }) {
+export default function TabsComponent({
+  tabs,
+  selectedTab,
+  onSelect,
+  onAdd,
+  onClose,
+}) {
   const handleAdd = () => {
     onAdd();
   };
@@ -74,7 +80,7 @@ function Tabs({ tabs, selectedTab, onSelect, onAdd, onClose }) {
   return (
     <div className="flex flex-row items-center ml-2 mt-2 space-x-2">
       {tabs.map((tab) => (
-        <Tab
+        <TabComponent
           key={tab.id}
           id={tab.id}
           title={tab.title}
@@ -91,5 +97,3 @@ function Tabs({ tabs, selectedTab, onSelect, onAdd, onClose }) {
     </div>
   );
 }
-
-export default Tabs;

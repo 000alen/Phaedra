@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Card from "../components/Card";
+import CardComponent from "../components/CardComponent";
 import NotebookPage from "./NotebookPage";
-import { openFile } from "../NotebookFS";
-import { createNotebook } from "../components/Notebook/Notebook";
-import "../css/EmptyPage.css";
+import { openFile } from "../NotebookIO";
+import { createNotebook } from "../NotebookManipulation";
+import "../css/pages/EmptyPage.css";
 
 const openIcon = {
   iconName: "OpenFile",
@@ -13,7 +13,7 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-function EmptyPage({ id, appController, statusBarRef }) {
+export default function EmptyPage({ id, appController, statusBarRef }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -62,14 +62,14 @@ function EmptyPage({ id, appController, statusBarRef }) {
   return (
     <div className="emptyPage flex items-center justify-center">
       <div className="flex flex-row space-x-1">
-        <Card
+        <CardComponent
           iconProps={openIcon}
           title="Open file"
           subtitle="Open a PDF document or a JSON notebook"
           onClick={handleOpen}
         />
 
-        <Card
+        <CardComponent
           iconProps={newIcon}
           title="Create new file"
           subtitle="Create a JSON notebook"
@@ -79,5 +79,3 @@ function EmptyPage({ id, appController, statusBarRef }) {
     </div>
   );
 }
-
-export default EmptyPage;

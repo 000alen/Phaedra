@@ -6,7 +6,7 @@ import {
 } from "@fluentui/react";
 import { mergeStyles } from "@fluentui/react/lib/Styling";
 
-function Card({ iconProps, title, subtitle, onClick }) {
+export default function CardComponent({ iconProps, title, subtitle, onClick }) {
   const conversationTileClass = mergeStyles({
     height: "auto",
     paddingBottom: "10px",
@@ -32,5 +32,3 @@ function Card({ iconProps, title, subtitle, onClick }) {
     </div>
   );
 }
-
-export default Card;

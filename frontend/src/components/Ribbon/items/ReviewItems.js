@@ -1,7 +1,12 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
+import {
+  addMeaningCell,
+  addSynonymCell,
+  addAntonymCell,
+} from "../../../NotebookManipulation";
 
-function ReviewItems({
+export default function ReviewItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -13,7 +18,10 @@ function ReviewItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addMeaningCell(command, activePage);
+      notebookController.do(addMeaningCell, {
+        word: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No word selected", MessageBarType.error);
@@ -28,7 +36,10 @@ function ReviewItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addSynonymCell(command, activePage);
+      notebookController.do(addSynonymCell, {
+        word: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No word selected", MessageBarType.error);
@@ -43,7 +54,10 @@ function ReviewItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addAntonymCell(command, activePage);
+      notebookController.do(addAntonymCell, {
+        word: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No word selected", MessageBarType.error);
@@ -81,5 +95,3 @@ function ReviewItems({
 
   return <CommandBar items={reviewItems} />;
 }
-
-export default ReviewItems;

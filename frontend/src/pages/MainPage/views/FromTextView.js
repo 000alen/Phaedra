@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Card from "../../../components/Card";
+import CardComponent from "../../../components/CardComponent";
 import NotebookPage from "../../../pages/NotebookPage";
-import { openText } from "../../../NotebookFS";
+import { openText } from "../../../NotebookIO";
 
 const openIcon = {
   iconName: "OpenFile",
@@ -34,7 +34,7 @@ export default function FromTextView({ appController, statusBarRef }) {
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-row space-x-1">
-        <Card
+        <CardComponent
           iconProps={openIcon}
           title="Open text file"
           subtitle="Create a Notebook from a text file"

@@ -8,7 +8,7 @@ import PinnedView from "./views/PinnedView";
 import RecentView from "./views/RecentView";
 import EmptyView from "./views/EmptyView";
 
-import "../../css/MainPage.css";
+import "../../css/pages/MainPage.css";
 
 const navLinkGroups = [
   {
@@ -36,7 +36,7 @@ const navLinkGroups = [
   },
 ];
 
-function MainPage({ id, appController, statusBarRef }) {
+export default function MainPage({ id, appController, statusBarRef }) {
   const [selectedKey, setSelectedKey] = useState("backend");
 
   const navLinkContents = {
@@ -106,5 +106,3 @@ function MainPage({ id, appController, statusBarRef }) {
     </div>
   );
 }
-
-export default MainPage;

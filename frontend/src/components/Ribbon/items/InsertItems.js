@@ -1,7 +1,13 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
+import {
+  addWikipediaSummaryCell,
+  addWikipediaSuggestionsCell,
+  addWikipediaImageCell,
+  addEntitiesCell,
+} from "../../../NotebookManipulation";
 
-function InsertItems({
+export default function InsertItems({
   notebookRef,
   commandBoxRef,
   appController,
@@ -13,7 +19,10 @@ function InsertItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addWikipediaSummaryCell(command, activePage);
+      notebookController.do(addWikipediaSummaryCell, {
+        query: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No query selected", MessageBarType.error);
@@ -28,7 +37,10 @@ function InsertItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addWikipediaSuggestionsCell(command, activePage);
+      notebookController.do(addWikipediaSuggestionsCell, {
+        query: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No query selected", MessageBarType.error);
@@ -43,7 +55,10 @@ function InsertItems({
 
     if (activePage && commandBoxRef.current) {
       const { command } = commandBoxRef.current.state;
-      notebookController.addWikipediaImageCell(command, activePage);
+      notebookController.do(addWikipediaImageCell, {
+        query: command,
+        pageId: activePage,
+      });
       commandBoxRef.current.consume();
     } else if (activePage) {
       pageController.addMessageBar("No query selected", MessageBarType.error);
@@ -57,7 +72,7 @@ function InsertItems({
     const { activePage } = notebookRef.current.state;
 
     if (activePage) {
-      notebookController.addEntitiesCell(activePage);
+      notebookController.do(addEntitiesCell, { pageId: activePage });
     } else {
       pageController.addMessageBar("No page selected", MessageBarType.error);
     }
@@ -106,5 +121,3 @@ function InsertItems({
 
   return <CommandBar items={insertItems} farItems={insertFarItems} />;
 }
-
-export default InsertItems;

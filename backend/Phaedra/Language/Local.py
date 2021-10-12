@@ -28,14 +28,16 @@ _dictionary = None
 
 
 def load_model():
+    """Loads the main model."""
+
     global _model
     _model = transformers.pipeline("text-generation", model=_model_name, device=_device)
 
 
 def load_summarizer():
-    global _summarizer
+    """Loads the summarizer model."""
 
-    # _summarizer = transformers.pipeline("summarization", device=_device)
+    global _summarizer
 
     if _model is None:
         load_model()
@@ -44,9 +46,9 @@ def load_summarizer():
 
 
 def load_answerer():
-    global _answerer
+    """Loads the answerer model."""
 
-    # _answerer = transformers.pipeline("question-answering", device=_device)
+    global _answerer
 
     if _model is None:
         load_model()
@@ -55,9 +57,9 @@ def load_answerer():
 
 
 def load_generator():
-    global _generator
+    """Loads the generator model."""
 
-    # _generator = transformers.pipeline("text-generation", device=_device)
+    global _generator
 
     if _model is None:
         load_model()
@@ -66,16 +68,26 @@ def load_generator():
 
 
 def load_ner():
+    """loads the Named Entities Recognizer model."""
+
     global _ner
     _ner = transformers.pipeline("ner", grouped_entities=True, device=_device)
 
 
 def load_dictionary():
+    """Loads the dictionary."""
+
     global _dictionary
     _dictionary = PyDictionary()
 
 
 def get_summarizer_tokenizer():
+    """Returns the summarizer tokenizer.
+
+    :return: The summarizer tokenizer.
+
+    """
+
     if _summarizer is None:
         load_summarizer()
 
@@ -85,6 +97,12 @@ def get_summarizer_tokenizer():
 
 
 def get_answerer_tokenizer():
+    """Returns the answerer tokenizer.
+
+    :return: The answerer tokenizer.
+
+    """
+
     if _answerer is None:
         load_answerer()
 
@@ -94,6 +112,12 @@ def get_answerer_tokenizer():
 
 
 def get_generator_tokenizer():
+    """Returns the generator tokenizer.
+
+    :return: The generator tokenizer.
+
+    """
+
     if _generator is None:
         load_generator()
 
@@ -103,6 +127,12 @@ def get_generator_tokenizer():
 
 
 def get_ner_tokenizer():
+    """Returns the Named Entities Recognizer tokenizer.
+
+    :return: The Named Entities Recognizer tokenizer.
+
+    """
+
     if _ner is None:
         load_ner()
 
@@ -112,6 +142,15 @@ def get_ner_tokenizer():
 
 
 def summarize(text: str) -> str:
+    """Summarizes the text (local mode).
+
+    :param text: The text to summarize.
+    :type text: str
+    :return: The summarized text.
+    :rtype: str
+
+    """
+
     if _summarizer is None:
         load_summarizer()
 
@@ -128,6 +167,15 @@ def summarize(text: str) -> str:
 
 
 def batch_summarize(texts: List[str]) -> List[str]:
+    """Summarizes the texts (local mode).
+
+    :param texts: The texts to summarize.
+    :type texts: List[str]
+    :return: The summarized texts.
+    :rtype: List[str]
+
+    """
+
     if _summarizer is None:
         load_summarizer()
 
@@ -149,6 +197,17 @@ def batch_summarize(texts: List[str]) -> List[str]:
 
 
 def answer(question: str, context: str) -> str:
+    """Answers the question with the given context (local mode).
+
+    :param question: The question to answer.
+    :type question: str
+    :param context: The context to answer the question with.
+    :type context: str
+    :return: The answer.
+    :rtype: str
+
+    """
+
     if _answerer is None:
         load_answerer()
 
@@ -165,6 +224,17 @@ def answer(question: str, context: str) -> str:
 
 
 def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
+    """Answers the questions with the given contexts (local mode).
+
+    :param questions: The questions to answer.
+    :type questions: List[str]
+    :param contexts: The contexts to answer the questions with.
+    :type contexts: List[str]
+    :return: The answers.
+    :rtype: List[str]
+
+    """
+
     if _answerer is None:
         load_answerer()
 
@@ -189,6 +259,17 @@ def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
 
 
 def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
+    """Answers the questions with the given context (local mode).
+
+    :param questions: The questions to answer.
+    :type questions: List[str]
+    :param context: The context to answer the questions with.
+    :type context: str
+    :return: The answers.
+    :rtype: List[str]
+
+    """
+
     if _answerer is None:
         load_answerer()
 
@@ -213,6 +294,17 @@ def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
 
 
 def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
+    """Answers the question with the given contexts (local mode).
+
+    :param question: The question to answer.
+    :type question: str
+    :param contexts: The contexts to answer the question with.
+    :type contexts: List[str]
+    :return: The answers.
+    :rtype: List[str]
+
+    """
+
     if _answerer is None:
         load_answerer()
 
@@ -237,6 +329,17 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
 
 
 def generate(prompt: str, context: str) -> str:
+    """Generates a response for the given prompt and context (local mode).
+
+    :param prompt: The prompt to generate a response for.
+    :type prompt: str
+    :param context: The context to generate a response for.
+    :type context: str
+    :return: The generated response.
+    :rtype: str
+
+    """
+
     if _generator is None:
         load_generator()
 
@@ -253,6 +356,17 @@ def generate(prompt: str, context: str) -> str:
 
 
 def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
+    """Generates responses for the given prompts and contexts (local mode).
+    
+    :param prompts: The prompts to generate responses for.
+    :type prompts: List[str]
+    :param contexts: The contexts to generate responses for.
+    :type contexts: List[str]
+    :return: The generated responses.
+    :rtype: List[str]
+
+    """
+
     if _generator is None:
         load_generator()
 
@@ -277,6 +391,17 @@ def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
 
 
 def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
+    """Generates responses for the given prompts and context (local mode).
+
+    :param prompts: The prompts to generate responses for.
+    :type prompts: List[str]
+    :param context: The context to generate responses for.
+    :type context: str
+    :return: The generated responses.
+    :rtype: List[str]
+
+    """
+
     if _generator is None:
         load_generator()
 
@@ -300,6 +425,17 @@ def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
 
 
 def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
+    """Generates responses for the given prompt and contexts (local mode).
+
+    :param prompt: The prompt to generate responses for.
+    :type prompt: str
+    :param contexts: The contexts to generate responses for.
+    :type contexts: List[str]
+    :return: The generated responses.
+    :rtype: List[str]
+
+    """
+
     if _generator is None:
         load_generator()
 
@@ -323,6 +459,15 @@ def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
 
 
 def entities(text: str) -> List[str]:
+    """Returns the entities in the given text (local mode).
+
+    :param text: The text to get the entities of.
+    :type text: str
+    :return: The entities in the given text.
+    :rtype: List[str]
+
+    """
+
     if _ner is None:
         load_ner()
 
@@ -333,6 +478,15 @@ def entities(text: str) -> List[str]:
 
 
 def meaning(word: str) -> Dict[str, List[str]]:
+    """Returns the meanings of the given word (local mode).
+
+    :param word: The word to get the meanings of.
+    :type word: str
+    :return: The meanings of the given word.
+    :rtype: Dict[str, List[str]]
+
+    """
+
     if _dictionary is None:
         load_dictionary()
 
@@ -343,6 +497,15 @@ def meaning(word: str) -> Dict[str, List[str]]:
 
 # XXX: Not working properly
 def synonym(word: str) -> List[str]:
+    """Returns the synonyms of the given word (local mode).
+
+    :param word: The word to get the synonyms of.
+    :type word: str
+    :return: The synonyms of the given word.
+    :rtype: List[str]
+
+    """
+
     if _dictionary is None:
         load_dictionary()
 
@@ -353,6 +516,15 @@ def synonym(word: str) -> List[str]:
 
 # XXX: Not working properly
 def antonym(word: str) -> List[str]:
+    """Returns the antonyms of the given word (local mode).
+
+    :param word: The word to get the antonyms of.
+    :type word: str
+    :return: The antonyms of the given word.
+    :rtype: List[str]
+
+    """
+
     if _dictionary is None:
         load_dictionary()
 

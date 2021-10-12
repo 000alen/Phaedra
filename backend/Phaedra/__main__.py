@@ -1,5 +1,7 @@
+import sys
 import argparse
 import json
+from typing import List
 
 from Phaedra.Notebook import Notebook
 from Phaedra.API import run, run_remote
@@ -13,9 +15,16 @@ parser.add_argument("--to-markdown", action="store_true")
 parser.add_argument("--run", action="store_true")
 parser.add_argument("--run-remote", action="store_true")
 
-args = parser.parse_args()
 
-if __name__ == "__main__":
+def main(_args: List[str]):
+    """Command line interface for Phaedra.
+
+    :param args: Command line arguments.
+    :type args: List[str]
+    
+    """
+
+    args = parser.parse_args(_args)
     if args.from_pdf:
         notebook = Notebook.from_pdf(document_path=args.input)
         _json = json.dumps(notebook.json())
@@ -45,3 +54,7 @@ if __name__ == "__main__":
         run()
     elif args.run_remote:
         run_remote()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

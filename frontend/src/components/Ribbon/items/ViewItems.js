@@ -1,5 +1,3 @@
-// TODO: refactor
-
 import React from "react";
 import { CommandBar } from "@fluentui/react";
 import html2canvas from "html2canvas";

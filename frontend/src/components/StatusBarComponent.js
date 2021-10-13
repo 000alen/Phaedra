@@ -24,18 +24,28 @@ export default class StatusBarComponent extends Component {
     };
   }
 
+  /**
+   *
+   * @param {*} text
+   */
   setLoadingText(text) {
     this.setState({
       loadingText: text,
     });
   }
 
+  /**
+   *
+   */
   showLoading() {
     this.setState({
       loadingShown: true,
     });
   }
 
+  /**
+   *
+   */
   hideLoading() {
     this.setState({
       loadingShown: false,

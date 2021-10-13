@@ -17,12 +17,19 @@ export default class CommandBoxComponent extends Component {
     };
   }
 
+  /**
+   *
+   * @param {*} event
+   */
   handleChange = (event) => {
     this.setState((state) => {
       return { ...state, command: event.target.value };
     });
   };
 
+  /**
+   *
+   */
   consume() {
     this.setState((state) => {
       return { ...state, command: "" };

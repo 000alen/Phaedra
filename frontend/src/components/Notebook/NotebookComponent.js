@@ -93,6 +93,9 @@ export default class NotebookComponent extends Component {
     );
   }
 
+  /**
+   *
+   */
   loadDocument() {
     readFile(this.state.documentPath).then((documentContent) => {
       this.setState((state) => {
@@ -105,6 +108,9 @@ export default class NotebookComponent extends Component {
     });
   }
 
+  /**
+   *
+   */
   save() {
     saveNotebook(this.state.notebook, this.state.notebookPath).then(
       (notebookPath) => {
@@ -115,6 +121,11 @@ export default class NotebookComponent extends Component {
     );
   }
 
+  /**
+   *
+   * @param {*} pageId
+   * @param {*} cellId
+   */
   handleSelection(pageId, cellId) {
     if (this.state.activePage === pageId && this.state.activeCell === cellId) {
       this.state.pageController.hideCommandBox();
@@ -137,6 +148,9 @@ export default class NotebookComponent extends Component {
     }
   }
 
+  /**
+   *
+   */
   toggleEditing() {
     this.setState((state) => {
       return {
@@ -146,6 +160,11 @@ export default class NotebookComponent extends Component {
     });
   }
 
+  /**
+   *
+   * @param {*} command
+   * @returns
+   */
   historyDo(command) {
     let history = [...this.state.history];
     let historyIndex = this.state.historyIndex;
@@ -164,6 +183,10 @@ export default class NotebookComponent extends Component {
     };
   }
 
+  /**
+   *
+   * @returns
+   */
   historyUndo() {
     let history = [...this.state.history];
     let historyIndex = this.state.historyIndex;
@@ -174,6 +197,10 @@ export default class NotebookComponent extends Component {
     return [command, { history: history, historyIndex: historyIndex }];
   }
 
+  /**
+   *
+   * @returns
+   */
   historyRedo() {
     let history = [...this.state.history];
     let historyIndex = this.state.historyIndex;
@@ -184,6 +211,11 @@ export default class NotebookComponent extends Component {
     return [command, { history: history, historyIndex: historyIndex }];
   }
 
+  /**
+   *
+   * @param {*} action
+   * @param {*} args
+   */
   do(action, args) {
     let notebook = this.state.notebook;
     switch (action.name) {
@@ -260,6 +292,9 @@ export default class NotebookComponent extends Component {
     });
   }
 
+  /**
+   *
+   */
   undo() {
     const [command, history] = this.historyUndo();
     const notebook = undo(notebook, command);
@@ -273,6 +308,9 @@ export default class NotebookComponent extends Component {
     });
   }
 
+  /**
+   *
+   */
   redo() {
     const [command, history] = this.historyRedo();
     const notebook = redo(notebook, command);

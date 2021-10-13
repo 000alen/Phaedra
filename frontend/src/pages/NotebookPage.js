@@ -39,18 +39,29 @@ export default class NotebookPage extends Component {
     };
   }
 
+  /**
+   *
+   */
   showCommandBox() {
     this.setState((state) => {
       return { ...state, commandBoxShown: true };
     });
   }
 
+  /**
+   *
+   */
   hideCommandBox() {
     this.setState((state) => {
       return { ...state, commandBoxShown: false };
     });
   }
 
+  /**
+   *
+   * @param {*} text
+   * @param {*} type
+   */
   addMessageBar(text, type) {
     const id = uuidv4();
     let messageBars = [...this.state.messageBars];
@@ -73,6 +84,10 @@ export default class NotebookPage extends Component {
     });
   }
 
+  /**
+   *
+   * @param {*} id
+   */
   removeMessageBar(id) {
     let messageBars = [...this.state.messageBars];
     messageBars = messageBars.filter(

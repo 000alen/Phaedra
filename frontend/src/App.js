@@ -42,18 +42,36 @@ export default class App extends Component {
     };
   }
 
+  /**
+   *
+   * @returns
+   */
   getNextTabId() {
     return this.state.tabs.length + 1;
   }
 
+  /**
+   *
+   * @param {*} id
+   * @returns
+   */
   getTabIndex(id) {
     return this.state.tabs.findIndex((tab) => tab.id === id);
   }
 
+  /**
+   *
+   * @param {*} index
+   * @returns
+   */
   getTabId(index) {
     return this.state.tabs[index].id;
   }
 
+  /**
+   *
+   * @returns
+   */
   createEmptyTab() {
     const id = uuidv4();
 
@@ -71,10 +89,18 @@ export default class App extends Component {
     };
   }
 
+  /**
+   *
+   * @param {*} id
+   */
   selectTab(id) {
     this.setState({ ...this.state, selectedTab: id });
   }
 
+  /**
+   *
+   * @param {*} content
+   */
   addTab(content) {
     let newTab;
     if (!content) {
@@ -102,6 +128,10 @@ export default class App extends Component {
     });
   }
 
+  /**
+   *
+   * @param {*} id
+   */
   closeTab(id) {
     const newTabs = this.state.tabs.filter((tab) => tab.id !== id);
 
@@ -127,11 +157,21 @@ export default class App extends Component {
     });
   }
 
+  /**
+   *
+   * @param {*} id
+   * @returns
+   */
   getTabContent(id) {
     if (!id) return null;
     return this.state.tabs.find((tab) => tab.id === id).content;
   }
 
+  /**
+   *
+   * @param {*} id
+   * @param {*} newTitle
+   */
   setTabTitle(id, newTitle) {
     const index = this.getTabIndex(id);
     let newTabs = [...this.state.tabs];
@@ -139,6 +179,11 @@ export default class App extends Component {
     this.setState({ ...this.state, tabs: newTabs });
   }
 
+  /**
+   *
+   * @param {*} id
+   * @param {*} newContent
+   */
   setTabContent(id, newContent) {
     const index = this.getTabIndex(id);
     let newTabs = [...this.state.tabs];
@@ -146,10 +191,18 @@ export default class App extends Component {
     this.setState({ ...this.state, tabs: newTabs });
   }
 
+  /**
+   *
+   * @returns
+   */
   getClipboard() {
     return this.state.clipboard;
   }
 
+  /**
+   *
+   * @param {*} content
+   */
   setClipboard(content) {
     this.setState((state) => {
       return {

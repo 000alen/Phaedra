@@ -7,6 +7,10 @@ import {
   base64encode,
 } from "./ElectronAPI";
 
+/**
+ *
+ * @returns
+ */
 export function openPdf() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -30,6 +34,10 @@ export function openPdf() {
   });
 }
 
+/**
+ *
+ * @returns
+ */
 export function openJson() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -49,6 +57,10 @@ export function openJson() {
   });
 }
 
+/**
+ *
+ * @returns
+ */
 export function openText() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -69,6 +81,10 @@ export function openText() {
   });
 }
 
+/**
+ *
+ * @returns
+ */
 export function openFile() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -128,6 +144,12 @@ export function openFile() {
   });
 }
 
+/**
+ *
+ * @param {*} notebook
+ * @param {*} notebookPath
+ * @returns
+ */
 export function saveNotebook(notebook, notebookPath) {
   const saveDialogOptions = {
     filters: [{ name: "Notebooks", extensions: ["json"] }],

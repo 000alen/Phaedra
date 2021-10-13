@@ -20,6 +20,11 @@ export default class PageComponent extends Component {
     };
   }
 
+  /**
+   *
+   * @param {*} event
+   * @returns
+   */
   handleSelection(event) {
     const { active, editing } = this.props;
     if (active && editing) return;

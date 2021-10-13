@@ -1,19 +1,25 @@
 # To do list
 
+- [ ] Launch a release
+
+## Backend
+
+- [ ] Add a reliable source for vocabulary
+- [ ] Provide examples for generation (backend with GPT)
+- [ ] Sphinx documentation
+- [x] Implement generative text models on backend
+
+## Frontend
+
 - [ ] Error handling
 - [ ] Loading screens
 - [ ] Shimmer
-- [x] Implement vocabulary functionality on frontend
 - [ ] HoverCard
 - [ ] Tabs overflow
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
-- [x] Implement generative text models on backend
-- [ ] Launch a release
-- [ ] Add a reliable source for vocabulary
 - [ ] Key bindings
 - [ ] History
-- [ ] Provide examples for generation (backend with GPT)
 - [ ] Fill JSDocs
-- [ ] Sphinx documentation
+- [x] Implement vocabulary functionality on frontend

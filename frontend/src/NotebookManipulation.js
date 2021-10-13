@@ -172,6 +172,7 @@ export function undoRemovePage(notebook, { page, index }) {
  * @returns
  */
 export function insertCell(notebook, { pageId, cell, index }) {
+  console.log(pageId, cell, index);
   notebook.pages[indexPage(notebook, { pageId: pageId })].cells.splice(
     index,
     0,

@@ -51,7 +51,7 @@ export default function HomeItems({
         cellId: activeCell,
       });
       notebookController.do(insertCell, {
-        pageId: activePage.id,
+        pageId: activePage,
         cell: createCell(),
         index: activeCellIndex + 1,
       });

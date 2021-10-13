@@ -15,3 +15,5 @@
 - [ ] Key bindings
 - [ ] History
 - [ ] Provide examples for generation (backend with GPT)
+- [ ] Fill JSDocs
+- [ ] Sphinx documentation

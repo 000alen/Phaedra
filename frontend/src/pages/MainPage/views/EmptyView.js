@@ -1,7 +1,12 @@
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import CardComponent from "../../../components/CardComponent";
+
 import NotebookPage from "../../../pages/NotebookPage";
-import { createNotebook } from "../../../NotebookManipulation";
+
+import { createNotebook } from "../../../manipulation/NotebookManipulation";
+import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 
 const newIcon = {
   iconName: "FileTemplate",
@@ -9,18 +14,22 @@ const newIcon = {
 
 export default function EmptyView({ appController, statusBarRef }) {
   const handleNew = () => {
-    const id = appController.getNextTabId();
+    const id = uuidv4();
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });
 
-    appController.addTab(
-      <NotebookPage
-        key={id}
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-        notebook={notebook}
-      />
-    );
+    appController.tabsDo(addTab, {
+      tab: createTab({
+        content: (
+          <NotebookPage
+            key={id}
+            id={id}
+            appController={appController}
+            statusBarRef={statusBarRef}
+            notebook={notebook}
+          />
+        ),
+      }),
+    });
   };
 
   return (

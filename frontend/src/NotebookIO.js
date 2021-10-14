@@ -1,11 +1,11 @@
-import { notebookFromPdf, notebookFromText } from "./API";
+import { notebookFromPdf, notebookFromText } from "./API/PhaedraAPI";
 import {
   openDialog,
   saveDialog,
   writeFile,
   readFile,
   base64encode,
-} from "./ElectronAPI";
+} from "./API/ElectronAPI";
 
 /**
  *

@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import {
   addEntitiesCell as _addEntitiesCell,
   addQuestionCell as _addQuestionCell,
@@ -9,8 +11,7 @@ import {
   addMeaningCell as _addMeaningCell,
   addSynonymCell as _addSynonymCell,
   addAntonymCell as _addAntonymCell,
-} from "./API";
-import { v4 as uuidv4 } from "uuid";
+} from "../API/PhaedraAPI";
 
 /**
  * Creates a Notebook

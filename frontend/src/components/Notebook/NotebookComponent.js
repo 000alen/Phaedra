@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { saveNotebook } from "../../NotebookIO";
+
+import { readFile } from "../../API/ElectronAPI";
+
+import PageComponent from "./PageComponent";
+
+import {
+  historyDo,
+  historyRedo,
+  historyUndo,
+} from "../../manipulation/HistoryManipulation";
 import {
   undo,
   redo,
@@ -9,9 +18,9 @@ import {
   indexCell,
   getCellContent,
   getCellData,
-} from "../../NotebookManipulation";
-import { readFile } from "../../ElectronAPI";
-import PageComponent from "./PageComponent";
+} from "../../manipulation/NotebookManipulation";
+
+import { saveNotebook } from "../../NotebookIO";
 
 export default class NotebookComponent extends Component {
   constructor(props) {
@@ -22,10 +31,6 @@ export default class NotebookComponent extends Component {
 
     this.handleSelection = this.handleSelection.bind(this);
     this.toggleEditing = this.toggleEditing.bind(this);
-
-    this.historyDo = this.historyDo.bind(this);
-    this.historyUndo = this.historyUndo.bind(this);
-    this.historyRedo = this.historyRedo.bind(this);
 
     this.do = this.do.bind(this);
     this.undo = this.undo.bind(this);
@@ -162,57 +167,6 @@ export default class NotebookComponent extends Component {
 
   /**
    *
-   * @param {*} command
-   * @returns
-   */
-  historyDo(command) {
-    let history = [...this.state.history];
-    let historyIndex = this.state.historyIndex;
-
-    if (historyIndex === history.length - 1) {
-      history.push(command);
-    } else {
-      history.splice(historyIndex, history.length - historyIndex, command);
-    }
-
-    historyIndex++;
-
-    return {
-      history: history,
-      historyIndex: historyIndex,
-    };
-  }
-
-  /**
-   *
-   * @returns
-   */
-  historyUndo() {
-    let history = [...this.state.history];
-    let historyIndex = this.state.historyIndex;
-    let command = history[historyIndex];
-
-    historyIndex--;
-
-    return [command, { history: history, historyIndex: historyIndex }];
-  }
-
-  /**
-   *
-   * @returns
-   */
-  historyRedo() {
-    let history = [...this.state.history];
-    let historyIndex = this.state.historyIndex;
-    let command = history[historyIndex];
-
-    historyIndex++;
-
-    return [command, { history: history, historyIndex: historyIndex }];
-  }
-
-  /**
-   *
    * @param {*} action
    * @param {*} args
    */
@@ -268,8 +222,7 @@ export default class NotebookComponent extends Component {
         statusBarController.showLoading();
         action(notebook, args).then((_notebook) => {
           statusBarController.hideLoading();
-          // XXX
-          args = { ...args, cellId: undefined };
+          args = { ...args, cellId: undefined }; // XXX
           notebook = _notebook;
         });
         break;
@@ -278,7 +231,9 @@ export default class NotebookComponent extends Component {
         break;
     }
 
-    const history = this.historyDo({
+    let { history, historyIndex } = this.state;
+
+    const newHistoryInformation = historyDo(history, historyIndex, {
       ...args,
       action: action.name,
     });
@@ -286,7 +241,7 @@ export default class NotebookComponent extends Component {
     this.setState((state) => {
       return {
         ...state,
-        ...history,
+        ...newHistoryInformation,
         notebook: notebook,
       };
     });
@@ -296,13 +251,14 @@ export default class NotebookComponent extends Component {
    *
    */
   undo() {
-    const [command, history] = this.historyUndo();
+    let { history, historyIndex } = this.state;
+    const [command, newHistoryInformation] = historyUndo(history, historyIndex);
     const notebook = undo(notebook, command);
 
     this.setState((state) => {
       return {
         ...state,
-        ...history,
+        ...newHistoryInformation,
         notebook: notebook,
       };
     });
@@ -312,13 +268,14 @@ export default class NotebookComponent extends Component {
    *
    */
   redo() {
-    const [command, history] = this.historyRedo();
+    let { history, historyIndex } = this.state;
+    const [command, newHistoryInformation] = historyRedo(history, historyIndex);
     const notebook = redo(notebook, command);
 
     this.setState((state) => {
       return {
         ...state,
-        ...history,
+        ...newHistoryInformation,
         notebook: notebook,
       };
     });

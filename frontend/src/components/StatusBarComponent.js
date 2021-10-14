@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Spinner, SpinnerSize, Text } from "@fluentui/react";
+
 import { theme } from "../index";
+
 import "../css/components/StatusBarComponent.css";
 
 export default class StatusBarComponent extends Component {

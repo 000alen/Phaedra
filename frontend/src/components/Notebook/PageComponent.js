@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
+
 import CellComponent from "./CellComponent";
+
 import { theme } from "../../index";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;

@@ -1,10 +1,11 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
+
 import {
   addMeaningCell,
   addSynonymCell,
   addAntonymCell,
-} from "../../../NotebookManipulation";
+} from "../../../manipulation/NotebookManipulation";
 
 export default function ReviewItems({
   notebookRef,

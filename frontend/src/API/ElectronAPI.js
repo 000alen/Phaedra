@@ -1,4 +1,4 @@
-import { ipcRenderer } from "./index";
+import { ipcRenderer } from "../index";
 
 /**
  *

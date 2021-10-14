@@ -1,10 +1,14 @@
 import React, { Component } from "react";
+import { MessageBar } from "@fluentui/react";
+import { v4 as uuidv4 } from "uuid";
+
 import RibbonComponent from "../components/Ribbon/RibbonComponent";
 import NotebookComponent from "../components/Notebook/NotebookComponent";
 import CommandBoxComponent from "../components/CommandBoxComponent";
+
+import { setTabTitle } from "../manipulation/TabsManipulation";
+
 import "../css/pages/NotebookPage.css";
-import { MessageBar } from "@fluentui/react";
-import { v4 as uuidv4 } from "uuid";
 
 export default class NotebookPage extends Component {
   constructor(props) {
@@ -17,7 +21,7 @@ export default class NotebookPage extends Component {
 
     const { id, appController, notebook, statusBarRef } = props;
 
-    appController.setTabTitle(id, notebook.name);
+    appController.tabsDo(setTabTitle, { id: id, title: notebook.name });
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
@@ -39,29 +43,18 @@ export default class NotebookPage extends Component {
     };
   }
 
-  /**
-   *
-   */
   showCommandBox() {
     this.setState((state) => {
       return { ...state, commandBoxShown: true };
     });
   }
 
-  /**
-   *
-   */
   hideCommandBox() {
     this.setState((state) => {
       return { ...state, commandBoxShown: false };
     });
   }
 
-  /**
-   *
-   * @param {*} text
-   * @param {*} type
-   */
   addMessageBar(text, type) {
     const id = uuidv4();
     let messageBars = [...this.state.messageBars];
@@ -84,10 +77,6 @@ export default class NotebookPage extends Component {
     });
   }
 
-  /**
-   *
-   * @param {*} id
-   */
   removeMessageBar(id) {
     let messageBars = [...this.state.messageBars];
     messageBars = messageBars.filter(

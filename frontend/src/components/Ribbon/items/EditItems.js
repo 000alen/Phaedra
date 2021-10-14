@@ -1,6 +1,7 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
-import { setCellData } from "../../../NotebookManipulation";
+
+import { setCellData } from "../../../manipulation/NotebookManipulation";
 
 export default function EditItems({
   notebookRef,

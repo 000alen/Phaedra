@@ -1,13 +1,15 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
-import { theme } from "../../index";
-import { setCellContent } from "../../NotebookManipulation";
 import {
   PrimaryButton,
   Shimmer,
   TextField,
   mergeStyles,
 } from "@fluentui/react";
+
+import { setCellContent } from "../../manipulation/NotebookManipulation";
+
+import { theme } from "../../index";
 
 export default class CellComponent extends Component {
   constructor(props) {

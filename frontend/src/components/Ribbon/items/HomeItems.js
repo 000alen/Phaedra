@@ -1,5 +1,11 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
+import { v4 as uuidv4 } from "uuid";
+
+import {
+  clipboardPush,
+  clipboardTop,
+} from "../../../manipulation/ClipboardManipulation";
 import {
   createPage,
   createCell,
@@ -11,8 +17,7 @@ import {
   addQuestionCell,
   addGenerateCell,
   getCell,
-} from "../../../NotebookManipulation";
-import { v4 as uuidv4 } from "uuid";
+} from "../../../manipulation/NotebookManipulation";
 
 export default function HomeItems({
   notebookRef,
@@ -93,7 +98,9 @@ export default function HomeItems({
         pageId: activePage,
         cellId: activeCell,
       });
-      appController.setClipboard(cell);
+
+      appController.clipboardDo(clipboardPush, { element: cell });
+
       notebookController.do(removeCell, {
         pageId: activePage,
         cellId: activeCell,
@@ -112,7 +119,8 @@ export default function HomeItems({
         pageId: activePage,
         cellId: activeCell,
       });
-      appController.setClipboard(cell);
+
+      appController.clipboardDo(clipboardPush, { element: cell });
     } else {
       pageController.addMessageBar("No cell selected", MessageBarType.error);
     }
@@ -126,7 +134,9 @@ export default function HomeItems({
         pageId: activePage,
         cellId: activeCell,
       });
-      let cell = { ...appController.getClipboard() };
+
+      let cell = { ...appController.clipboardDo(clipboardTop) };
+
       cell.id = uuidv4();
       notebookController.do(insertCell, {
         pageId: activePage,

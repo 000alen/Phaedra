@@ -1,6 +1,6 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
-import html2canvas from "html2canvas";
+import { useReactToPrint } from "react-to-print";
 
 export default function ViewItems({
   notebookRef,
@@ -8,14 +8,18 @@ export default function ViewItems({
   appController,
   pageController,
 }) {
+  const print = useReactToPrint({
+    content: () => notebookRef.current,
+    print: (htmlContentToPrint) => {
+      return new Promise((resolve, reject) => {
+        console.log(htmlContentToPrint);
+        resolve();
+      });
+    },
+  });
+
   const handleExport = () => {
-    html2canvas(document.getElementById("notebook")).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imgData;
-      link.download = "screenshot.png";
-      link.click();
-    });
+    print();
   };
 
   const viewItems = [

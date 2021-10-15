@@ -1,12 +1,15 @@
 import React from "react";
 import { Pivot, PivotItem } from "@fluentui/react";
-import { theme } from "../../index";
+
 import FileItems from "./items/FileItems";
 import HomeItems from "./items/HomeItems";
 import InsertItems from "./items/InsertItems";
 import ReviewItems from "./items/ReviewItems";
 import ViewItems from "./items/ViewItems";
 import EditItems from "./items/EditItems";
+
+import { theme } from "../../index";
+
 import "../../css/components/RibbonComponent.css";
 
 export default function RibbonComponent({
@@ -14,6 +17,7 @@ export default function RibbonComponent({
   commandBoxRef,
   appController,
   pageController,
+  statusBarRef,
 }) {
   const ribbonStyle = {
     backgroundColor: theme.palette.white,

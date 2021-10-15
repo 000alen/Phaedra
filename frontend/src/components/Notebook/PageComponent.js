@@ -1,9 +1,26 @@
 import React, { Component } from "react";
 import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
+
 import CellComponent from "./CellComponent";
+
 import { theme } from "../../index";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+/**
+ * @typedef {import("./NotebookComponent").NotebookController} NotebookController
+ */
+
+/**
+ * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ */
+
+/**
+ * @typedef {Object} PageState
+ * @property {string} id
+ * @property {NotebookController} notebookController
+ * @property {NotebookPageController} pageController
+ */
 
 export default class PageComponent extends Component {
   constructor(props) {
@@ -20,11 +37,6 @@ export default class PageComponent extends Component {
     };
   }
 
-  /**
-   *
-   * @param {*} event
-   * @returns
-   */
   handleSelection(event) {
     const { active, editing } = this.props;
     if (active && editing) return;
@@ -94,7 +106,7 @@ export default class PageComponent extends Component {
       width: "8.5in",
       minHeight: "11in",
       backgroundColor: theme.palette.white,
-      border: active ? `1px solid ${theme.palette.themePrimary}` : null,
+      border: active ? `1px solid ${theme.palette.themePrimary}` : undefined,
     };
 
     return (

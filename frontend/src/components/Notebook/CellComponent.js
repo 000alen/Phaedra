@@ -1,13 +1,32 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
-import { theme } from "../../index";
-import { setCellContent } from "../../NotebookManipulation";
 import {
   PrimaryButton,
   Shimmer,
   TextField,
   mergeStyles,
 } from "@fluentui/react";
+
+import { setCellContent } from "../../manipulation/NotebookManipulation";
+
+import { theme } from "../../index";
+
+/**
+ * @typedef {import("./NotebookComponent").NotebookController} NotebookController
+ */
+
+/**
+ * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ */
+
+/**
+ * @typedef {Object} CellState
+ * @property {string} id
+ * @property {string} pageId
+ * @property {NotebookPageController} pageController
+ * @property {NotebookController} notebookController
+ * @property {string} content
+ */
 
 export default class CellComponent extends Component {
   constructor(props) {
@@ -16,6 +35,9 @@ export default class CellComponent extends Component {
     const { id, pageId, pageController, notebookController } = props;
     const { content } = props;
 
+    /**
+     * @type {CellState}
+     */
     this.state = {
       id: id,
       pageId: pageId,

@@ -1,8 +1,11 @@
 import React from "react";
 import { IconButton } from "@fluentui/react";
-import { theme } from "../index";
 
-const iconButtonStyles = {
+import { removeTab, selectTab } from "../../manipulation/TabsManipulation";
+
+import { theme } from "../../index";
+
+export const iconButtonStyles = {
   rootHovered: {
     backgroundColor: "transparent",
   },
@@ -11,13 +14,13 @@ const iconButtonStyles = {
   },
 };
 
-function TabComponent({ id, title, active, onSelect, onClose }) {
+export function TabComponent({ id, title, active, onAction }) {
   const handleSelect = () => {
-    onSelect(id);
+    onAction(selectTab, { id: id });
   };
 
   const handleClose = () => {
-    onClose(id);
+    onAction(removeTab, { id: id });
   };
 
   const tabStyle = { backgroundColor: theme.palette.neutralPrimary };
@@ -54,45 +57,6 @@ function TabComponent({ id, title, active, onSelect, onClose }) {
         iconProps={active ? activeCancelIcon : cancelIcon}
         styles={iconButtonStyles}
         onClick={handleClose}
-      />
-    </div>
-  );
-}
-
-export default function TabsComponent({
-  tabs,
-  selectedTab,
-  onSelect,
-  onAdd,
-  onClose,
-}) {
-  const handleAdd = () => {
-    onAdd();
-  };
-
-  const addIcon = {
-    iconName: "Add",
-    styles: {
-      root: { color: theme.palette.neutralPrimary },
-    },
-  };
-
-  return (
-    <div className="flex flex-row items-center ml-2 mt-2 space-x-2">
-      {tabs.map((tab) => (
-        <TabComponent
-          key={tab.id}
-          id={tab.id}
-          title={tab.title}
-          active={tab.id === selectedTab}
-          onSelect={onSelect}
-          onClose={onClose}
-        />
-      ))}
-      <IconButton
-        iconProps={addIcon}
-        styles={iconButtonStyles}
-        onClick={handleAdd}
       />
     </div>
   );

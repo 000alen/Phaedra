@@ -1,15 +1,25 @@
-import { notebookFromPdf, notebookFromText } from "./API";
+import { notebookFromPdf, notebookFromText } from "./API/PhaedraAPI";
 import {
   openDialog,
   saveDialog,
   writeFile,
   readFile,
   base64encode,
-} from "./ElectronAPI";
+} from "./API/ElectronAPI";
 
 /**
- *
- * @returns
+ * @typedef {import("./manipulation/NotebookManipulation").Notebook} Notebook
+ */
+
+/**
+ * @typedef {Object} NotebookInformation
+ * @property {Notebook} notebook
+ * @property {string | undefined} notebookPath
+ */
+
+/**
+ * Creates a Notebook from a PDF file.
+ * @returns {Promise<NotebookInformation>}
  */
 export function openPdf() {
   const openDialogOptions = {
@@ -25,7 +35,7 @@ export function openPdf() {
         readFile(path).then((content) => {
           base64encode(content).then((base64) => {
             notebookFromPdf(path, base64).then((notebook) => {
-              resolve({ notebook: notebook, notebookPath: null });
+              resolve({ notebook: notebook, notebookPath: undefined });
             });
           });
         });
@@ -35,8 +45,8 @@ export function openPdf() {
 }
 
 /**
- *
- * @returns
+ * Opens a Notebook from a JSON file.
+ * @returns {Promise<NotebookInformation>}
  */
 export function openJson() {
   const openDialogOptions = {
@@ -58,8 +68,8 @@ export function openJson() {
 }
 
 /**
- *
- * @returns
+ * Creates a Notebook from a text file.
+ * @returns {Promise<NotebookInformation>}
  */
 export function openText() {
   const openDialogOptions = {
@@ -73,7 +83,7 @@ export function openText() {
         const path = results.filePaths[0];
         readFile(path, "utf-8").then((text) => {
           notebookFromText(text).then((notebook) => {
-            resolve({ notebook: notebook, notebookPath: null });
+            resolve({ notebook: notebook, notebookPath: undefined });
           });
         });
       }
@@ -82,8 +92,8 @@ export function openText() {
 }
 
 /**
- *
- * @returns
+ * Opens (and creates if needed) a Notebook.
+ * @returns {Promise<NotebookInformation>}
  */
 export function openFile() {
   const openDialogOptions = {
@@ -96,7 +106,7 @@ export function openFile() {
       readFile(path).then((content) => {
         base64encode(content).then((base64) => {
           notebookFromPdf(path, base64).then((notebook) => {
-            resolve({ notebook: notebook, notebookPath: null });
+            resolve({ notebook: notebook, notebookPath: undefined });
           });
         });
       });
@@ -115,7 +125,7 @@ export function openFile() {
     return new Promise((resolve, reject) => {
       readFile(path, "utf-8").then((text) => {
         notebookFromText(text).then((notebook) => {
-          resolve({ notebook: notebook, notebookPath: null });
+          resolve({ notebook: notebook, notebookPath: undefined });
         });
       });
     });
@@ -145,10 +155,9 @@ export function openFile() {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} notebookPath
- * @returns
+ * Saves a Notebook to a JSON file.
+ * @param {Notebook} notebook
+ * @param {string | undefined} notebookPath
  */
 export function saveNotebook(notebook, notebookPath) {
   const saveDialogOptions = {

@@ -1,11 +1,12 @@
 import React from "react";
 import { CommandBar, MessageBarType } from "@fluentui/react";
+
 import {
   addWikipediaSummaryCell,
   addWikipediaSuggestionsCell,
   addWikipediaImageCell,
   addEntitiesCell,
-} from "../../../NotebookManipulation";
+} from "../../../manipulation/NotebookManipulation";
 
 export default function InsertItems({
   notebookRef,

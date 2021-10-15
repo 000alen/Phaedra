@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { TextField } from "@fluentui/react";
+
 import "../css/components/CommandBoxComponent.css";
 
 export default class CommandBoxComponent extends Component {
@@ -17,19 +18,12 @@ export default class CommandBoxComponent extends Component {
     };
   }
 
-  /**
-   *
-   * @param {*} event
-   */
-  handleChange = (event) => {
+  handleChange(event) {
     this.setState((state) => {
       return { ...state, command: event.target.value };
     });
-  };
+  }
 
-  /**
-   *
-   */
   consume() {
     this.setState((state) => {
       return { ...state, command: "" };

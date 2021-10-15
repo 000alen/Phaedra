@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IconButton } from "@fluentui/react";
+
 import { ipcRenderer, theme } from "../index";
 
 import "../css/components/TopBarComponent.css";

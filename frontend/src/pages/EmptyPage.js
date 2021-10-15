@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+
 import CardComponent from "../components/CardComponent";
+
+import { createNotebook } from "../manipulation/NotebookManipulation";
+import { setTabContent } from "../manipulation/TabsManipulation";
+
 import NotebookPage from "./NotebookPage";
+
 import { openFile } from "../NotebookIO";
-import { createNotebook } from "../NotebookManipulation";
+
 import "../css/pages/EmptyPage.css";
 
 const openIcon = {
@@ -30,17 +36,19 @@ export default function EmptyPage({ id, appController, statusBarRef }) {
 
       if (!notebook) return;
 
-      appController.setTabContent(
-        id,
-        <NotebookPage
-          key={id}
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-          notebook={notebook}
-          notebookPath={notebookPath}
-        />
-      );
+      appController.tabsDo(setTabContent, {
+        id: id,
+        content: (
+          <NotebookPage
+            key={id}
+            id={id}
+            appController={appController}
+            statusBarRef={statusBarRef}
+            notebook={notebook}
+            notebookPath={notebookPath}
+          />
+        ),
+      });
     });
   };
 

@@ -26,7 +26,7 @@ const columns = [
   },
 ];
 
-export default function PinnedView() {
+export default function PinnedView({ id, appController, statusBarRef }) {
   return (
     <div>
       <DetailsList items={items} columns={columns} />

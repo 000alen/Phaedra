@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Nav } from "@fluentui/react";
+
 import BackendView from "./views/BackendView";
 import FromPdfView from "./views/FromPdfView";
 import FromTextView from "./views/FromTextView";
@@ -14,30 +15,34 @@ const navLinkGroups = [
   {
     name: "Home",
     links: [
-      { name: "Recent", key: "recent" },
-      { name: "Pinned", key: "pinned" },
+      { name: "Recent", key: "recent", url: "#" },
+      { name: "Pinned", key: "pinned", url: "#" },
     ],
   },
   {
     name: "New",
     links: [
-      { name: "Empty", key: "empty" },
-      { name: "From PDF", key: "from_pdf" },
-      { name: "From text", key: "from_text" },
+      { name: "Empty", key: "empty", url: "#" },
+      { name: "From PDF", key: "from_pdf", url: "#" },
+      { name: "From text", key: "from_text", url: "#" },
     ],
   },
   {
     name: "Open",
-    links: [{ name: "Notebook", key: "notebook" }],
+    links: [{ name: "Notebook", key: "notebook", url: "#" }],
   },
   {
     name: "Settings",
-    links: [{ name: "Connect to a backend", key: "backend" }],
+    links: [{ name: "Connect to a backend", key: "backend", url: "#" }],
   },
 ];
 
 export default function MainPage({ id, appController, statusBarRef }) {
   const [selectedKey, setSelectedKey] = useState("backend");
+
+  const onLinkClick = (event, item) => {
+    setSelectedKey(item.key);
+  };
 
   const navLinkContents = {
     recent: (
@@ -97,7 +102,7 @@ export default function MainPage({ id, appController, statusBarRef }) {
         <Nav
           ariaLabel="Nav example with custom group headers"
           groups={navLinkGroups}
-          onLinkClick={(e, item) => setSelectedKey(item.key)}
+          onLinkClick={onLinkClick}
           selectedKey={selectedKey}
         />
       </div>

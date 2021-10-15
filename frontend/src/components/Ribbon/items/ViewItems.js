@@ -13,12 +13,14 @@ export default function ViewItems({
     print: (htmlContentToPrint) => {
       return new Promise((resolve, reject) => {
         console.log(htmlContentToPrint);
-        resolve();
+        resolve(true);
       });
     },
   });
 
   const handleExport = () => {
+    if (print === undefined) throw new Error("print is undefined");
+
     print();
   };
 

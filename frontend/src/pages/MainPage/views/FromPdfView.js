@@ -1,13 +1,19 @@
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import CardComponent from "../../../components/CardComponent";
+
+import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+
 import NotebookPage from "../../NotebookPage";
+
 import { openPdf } from "../../../NotebookIO";
 
 const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function FromPdfView({ appController, statusBarRef }) {
+export default function FromPdfView({ id, appController, statusBarRef }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -18,16 +24,21 @@ export default function FromPdfView({ appController, statusBarRef }) {
       setDialogOpen(false);
       if (!notebook) return;
 
-      const id = appController.getNextTabId();
-      appController.addTab(
-        <NotebookPage
-          key={id}
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-          notebook={notebook}
-        />
-      );
+      const id = uuidv4();
+
+      appController.tabsDo(addTab, {
+        tab: createTab({
+          content: (
+            <NotebookPage
+              key={id}
+              id={id}
+              appController={appController}
+              statusBarRef={statusBarRef}
+              notebook={notebook}
+            />
+          ),
+        }),
+      });
     });
   };
 

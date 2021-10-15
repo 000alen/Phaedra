@@ -1,9 +1,13 @@
+/**
+ * @typedef {import("../manipulation/NotebookManipulation").Notebook} Notebook
+ */
+
 const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };
 
 /**
- *
- * @returns
+ * Returns the API URL.
+ * @returns {string}
  */
 export function getApiUrl() {
   let apiUrl = window.localStorage.getItem("apiUrl");
@@ -13,18 +17,18 @@ export function getApiUrl() {
 }
 
 /**
- *
- * @param {*} url
+ * Sets the API URL.
+ * @param {string} url
  */
 export function setApiUrl(url) {
   window.localStorage.setItem("apiUrl", url);
 }
 
 /**
- *
- * @param {*} path
- * @param {*} base64
- * @returns
+ * Creates a Notebook from a PDF file.
+ * @param {string} path
+ * @param {string} base64
+ * @returns {Promise<Notebook>}
  */
 export async function notebookFromPdf(path, base64) {
   const response = await fetch(`${getApiUrl()}/notebook/from_pdf`, {
@@ -40,9 +44,9 @@ export async function notebookFromPdf(path, base64) {
 }
 
 /**
- *
- * @param {*} text
- * @returns
+ * Creates a Notebook from text.
+ * @param {string} text
+ * @returns {Promise<Notebook>}
  */
 export async function notebookFromText(text) {
   const response = await fetch(`${getApiUrl()}/notebook/from_text`, {
@@ -58,9 +62,9 @@ export async function notebookFromText(text) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addEntitiesCell(notebook_json, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/entities`, {
@@ -77,10 +81,10 @@ export async function addEntitiesCell(notebook_json, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} question
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} question
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addQuestionCell(notebook_json, question, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/question`, {
@@ -98,8 +102,8 @@ export async function addQuestionCell(notebook_json, question, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} question
+ * @param {Notebook} notebook_json
+ * @param {string} question
  * @returns
  */
 export async function addSparseQuestionCell(notebook_json, question) {
@@ -117,10 +121,10 @@ export async function addSparseQuestionCell(notebook_json, question) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} prompt
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} prompt
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addGenerateCell(notebook_json, prompt, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/generate`, {
@@ -138,10 +142,10 @@ export async function addGenerateCell(notebook_json, prompt, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} query
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} query
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addWikipediaSummaryCell(notebook_json, query, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
@@ -159,10 +163,10 @@ export async function addWikipediaSummaryCell(notebook_json, query, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} query
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} query
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addWikipediaSuggestionsCell(
   notebook_json,
@@ -187,10 +191,10 @@ export async function addWikipediaSuggestionsCell(
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} query
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} query
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addWikipediaImageCell(notebook_json, query, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/wikipedia_image`, {
@@ -208,10 +212,10 @@ export async function addWikipediaImageCell(notebook_json, query, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} word
- * @param {*} page_id
- * @returns
+ * @param {Notebook} notebook_json
+ * @param {string} word
+ * @param {string} page_id
+ * @returns {Promise<Notebook>}
  */
 export async function addMeaningCell(notebook_json, word, page_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/meaning`, {
@@ -229,9 +233,9 @@ export async function addMeaningCell(notebook_json, word, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} word
- * @param {*} page_id
+ * @param {Notebook} notebook_json
+ * @param {string} word
+ * @param {string} page_id
  * @returns
  */
 export async function addSynonymCell(notebook_json, word, page_id) {
@@ -250,9 +254,9 @@ export async function addSynonymCell(notebook_json, word, page_id) {
 
 /**
  *
- * @param {*} notebook_json
- * @param {*} word
- * @param {*} page_id
+ * @param {Notebook} notebook_json
+ * @param {string} word
+ * @param {string} page_id
  * @returns
  */
 export async function addAntonymCell(notebook_json, word, page_id) {
@@ -269,10 +273,6 @@ export async function addAntonymCell(notebook_json, word, page_id) {
   return response.json();
 }
 
-/**
- *
- * @returns
- */
 export async function kill() {
   return await fetch(`${getApiUrl()}/kill`);
 }

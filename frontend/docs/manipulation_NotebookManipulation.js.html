@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JSDoc: Source: manipulation/NotebookManipulation.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="styles/prettify-tomorrow.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css" />
+  </head>
+
+  <body>
+    <div id="main">
+      <h1 class="page-title">Source: manipulation/NotebookManipulation.js</h1>
+
+      <section>
+        <article>
+          <pre
+            class="prettyprint source linenums"
+          ><code>import { v4 as uuidv4 } from "uuid";
+
+import {
+  addEntitiesCell as _addEntitiesCell,
+  addQuestionCell as _addQuestionCell,
+  addSparseQuestionCell as _addSparseQuestionCell,
+  addGenerateCell as _addGenerateCell,
+  addWikipediaSummaryCell as _addWikipediaSummaryCell,
+  addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
+  addWikipediaImageCell as _addWikipediaImageCell,
+  addMeaningCell as _addMeaningCell,
+  addSynonymCell as _addSynonymCell,
+  addAntonymCell as _addAntonymCell,
+} from "../API/PhaedraAPI";
+
+/**
+ * @typedef {Object} Cell
+ * @property {string} id
+ * @property {Object} data
+ * @property {string} content
+ */
+
+/**
+ * @typedef {Object} Page
+ * @property {string} id
+ * @property {Object} data
+ * @property {Cell[]} cells
+ */
+
+/**
+ * @typedef {Object} Notebook
+ * @property {string} id
+ * @property {string} name
+ * @property {string} [document_path]
+ * @property {Page[]} pages
+ */
+
+/**
+ * @typedef {Object} Command
+ * @property {Function} [action]
+ * @property {Page} [page]
+ * @property {string} [pageId]
+ * @property {Cell} [cell]
+ * @property {string} [cellId]
+ * @property {number} [index]
+ * @property {string} [question]
+ * @property {string} [prompt]
+ * @property {string} [query]
+ * @property {string} [content]
+ * @property {string} [previousContent]
+ * @property {Object} [data]
+ * @property {Object} [previousData]
+ * @property {string} [word]
+ */
+
+/**
+ * Creates a Notebook.
+ * @param {Object} args
+ * @param {string} [args.id]
+ * @param {string} [args.name]
+ * @param {string} [args.document_path]
+ * @param {Page[]} [args.pages]
+ * @returns {Notebook}
+ */
+export function createNotebook({ id, name, document_path, pages }) {
+  if (id === undefined) id = uuidv4();
+  if (name === undefined) name = "Untitled";
+  if (document_path === undefined) document_path = undefined;
+  if (pages === undefined)
+    pages = [
+      {
+        id: uuidv4(),
+        data: {},
+        cells: [],
+      },
+    ];
+
+  return {
+    id: id,
+    name: name,
+    document_path: document_path,
+    pages: pages,
+  };
+}
+
+/**
+ * Creates a Page.
+ * @param {Object} args
+ * @param {string} [args.id]
+ * @param {Object} [args.data]
+ * @param {Cell[]} [args.cells]
+ * @returns {Page}
+ */
+export function createPage({ id, data, cells }) {
+  if (id === undefined) id = uuidv4();
+  if (data === undefined) data = {};
+  if (cells === undefined) cells = [];
+
+  return {
+    id: id,
+    data: data,
+    cells: cells,
+  };
+}
+
+/**
+ * Creates a Cell.
+ * @param {Object} args
+ * @param {string} [args.id]
+ * @param {Object} [args.data]
+ * @param {string} [args.content]
+ * @returns {Cell}
+ */
+export function createCell({ id, data, content }) {
+  if (id === undefined) id = uuidv4();
+  if (data === undefined) data = {};
+  if (content === undefined) content = "";
+
+  return {
+    id: id,
+    data: data,
+    content: content,
+  };
+}
+
+/**
+ * Creates a Command.
+ *
+ * @param {Object} args
+ * @param {Function} [args.action]
+ * @param {Page} [args.page]
+ * @param {string} [args.pageId]
+ * @param {Cell} [args.cell]
+ * @param {string} [args.cellId]
+ * @param {number} [args.index]
+ * @param {string} [args.question]
+ * @param {string} [args.prompt]
+ * @param {string} [args.query]
+ * @param {string} [args.content]
+ * @param {string} [args.previousContent]
+ * @param {Object} [args.data]
+ * @param {Object} [args.previousData]
+ * @param {string} [args.word]
+ * @returns {Command}
+ */
+export function createCommand({
+  action,
+  page,
+  pageId,
+  cell,
+  cellId,
+  index,
+  question,
+  prompt,
+  query,
+  content,
+  previousContent,
+  data,
+  previousData,
+  word,
+}) {
+  return {
+    action: action,
+    page: page,
+    pageId: pageId,
+    cell: cell,
+    cellId: cellId,
+    index: index,
+    question: question,
+    prompt: prompt,
+    query: query,
+    content: content,
+    previousContent: previousContent,
+    data: data,
+    previousData: previousData,
+    word: word,
+  };
+}
+
+/**
+ * Inserts a Page into the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function insertPage(notebook, { page, index }) {
+  if (page === undefined) throw new Error("Page is undefined.");
+  if (index === undefined) throw new Error("Index is undefined.");
+
+  notebook.pages.splice(index, 0, page);
+  return notebook;
+}
+
+/**
+ * Undoes a Page insertion.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoInsertPage(notebook, { page }) {
+  if (page === undefined) throw new Error("Page is undefined.");
+
+  return removePage(notebook, { pageId: page.id });
+}
+
+/**
+ * Adds a page to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function addPage(notebook, { page }) {
+  if (page === undefined) throw new Error("Page is undefined.");
+
+  notebook.pages.push(page);
+  return notebook;
+}
+
+/**
+ * Undoes a Page addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddPage(notebook, { page }) {
+  if (page === undefined) throw new Error("Page is undefined.");
+
+  return removePage(notebook, { pageId: page.id });
+}
+
+/**
+ * Indexes a Page in the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {number}
+ */
+export function indexPage(notebook, { pageId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return notebook.pages.findIndex((page) => page.id === pageId);
+}
+
+/**
+ * Returns a Page from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Page | undefined}
+ */
+export function getPage(notebook, { pageId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return notebook.pages.find((page) => page.id === pageId);
+}
+
+/**
+ * Removes a Page from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function removePage(notebook, { pageId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  notebook.pages = notebook.pages.filter((page) => page.id !== pageId);
+  return notebook;
+}
+
+/**
+ * Undoes a Page removal.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoRemovePage(notebook, { page, index }) {
+  if (page === undefined) throw new Error("Page is undefined.");
+  if (index === undefined) throw new Error("Index is undefined.");
+
+  return insertPage(notebook, { page, index });
+}
+
+/**
+ * Inserts a Cell into the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function insertCell(notebook, { pageId, cell, index }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cell === undefined) throw new Error("Cell is undefined.");
+  if (index === undefined) throw new Error("Index is undefined.");
+
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.splice(
+    index,
+    0,
+    cell
+  );
+  return notebook;
+}
+
+/**
+ * Undoes a Cell insertion.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoInsertCell(notebook, { pageId, cell }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cell === undefined) throw new Error("Cell is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cell.id });
+}
+
+/**
+ * Adds a Cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function addCell(notebook, { pageId, cell }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cell === undefined) throw new Error("Cell is undefined.");
+
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.push(cell);
+  return notebook;
+}
+
+/**
+ * Undoes a Cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddCell(notebook, { pageId, cell }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cell === undefined) throw new Error("Cell is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cell.id });
+}
+
+/**
+ * Indexes a Cell in the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {number}
+ */
+export function indexCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return notebook.pages[
+    indexPage(notebook, { pageId: pageId })
+  ].cells.findIndex((cell) => cell.id === cellId);
+}
+
+/**
+ * Returns a Cell from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Cell | undefined}
+ */
+export function getCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells.find(
+    (cell) => cell.id === cellId
+  );
+}
+
+/**
+ * Removes a Cell from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function removeCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells =
+    notebook.pages[indexPage(notebook, { pageId: pageId })].cells.filter(
+      (cell) => cell.id !== cellId
+    );
+  return notebook;
+}
+
+/**
+ * Undoes a Cell removal.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoRemoveCell(notebook, { pageId, cell, index }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cell === undefined) throw new Error("Cell is undefined.");
+  if (index === undefined) throw new Error("Index is undefined.");
+
+  return insertCell(notebook, { pageId: pageId, cell: cell, index: index });
+}
+
+/**
+ * Adds entities cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addEntitiesCell(notebook, { pageId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addEntitiesCell(notebook, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a entities cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddEntitiesCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a question cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addQuestionCell(notebook, { question, pageId }) {
+  if (question === undefined) throw new Error("Question is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addQuestionCell(notebook, question, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a question cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddQuestionCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a sparse question cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addSparseQuestionCell(notebook, { question }) {
+  if (question === undefined) throw new Error("Question is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addSparseQuestionCell(notebook, question).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes sparse question cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddSparseQuestionCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a generate cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addGenerateCell(notebook, { prompt, pageId }) {
+  if (prompt === undefined) throw new Error("Prompt is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addGenerateCell(notebook, prompt, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a generate cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddGenerateCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a Wikipedia summary cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addWikipediaSummaryCell(notebook, { query, pageId }) {
+  if (query === undefined) throw new Error("Query is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addWikipediaSummaryCell(notebook, query, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a Wikipedia summary cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddWikipediaSummaryCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a Wikipedia suggestions cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addWikipediaSuggestionsCell(notebook, { query, pageId }) {
+  if (query === undefined) throw new Error("Query is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addWikipediaSuggestionsCell(notebook, query, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a Wikipedia suggestions cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddWikipediaSuggestionsCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds Wikipedia image cell to Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addWikipediaImageCell(notebook, { query, pageId }) {
+  if (query === undefined) throw new Error("Query is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addWikipediaImageCell(notebook, query, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a Wikipedia image cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns
+ */
+export function undoAddWikipediaImageCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a meaning cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addMeaningCell(notebook, { word, pageId }) {
+  if (word === undefined) throw new Error("Word is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addMeaningCell(notebook, word, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a meaning cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddMeaningCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds a synonym cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addSynonymCell(notebook, { word, pageId }) {
+  if (word === undefined) throw new Error("Word is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addSynonymCell(notebook, word, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes a synonym cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddSynonymCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Adds an antonym cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Promise&lt;Notebook>}
+ */
+export function addAntonymCell(notebook, { word, pageId }) {
+  if (word === undefined) throw new Error("Word is undefined.");
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  return new Promise((resolve, reject) => {
+    _addAntonymCell(notebook, word, pageId).then((notebook) => {
+      resolve(notebook);
+    });
+  });
+}
+
+/**
+ * Undoes an antonym cell addition.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoAddAntonymCell(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return removeCell(notebook, { pageId: pageId, cellId: cellId });
+}
+
+/**
+ * Returns the content of a cell.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {string}
+ */
+export function getCellContent(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  ].content;
+}
+
+/**
+ * Changes the content of a cell
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function setCellContent(notebook, { pageId, cellId, content }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+  if (content === undefined) throw new Error("Content is undefined.");
+
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  ].content = content;
+  return notebook;
+}
+
+/**
+ * Undoes the content change of a cell.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoSetCellContent(
+  notebook,
+  { pageId, cellId, previousContent }
+) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+  if (previousContent === undefined)
+    throw new Error("PreviousContent is undefined.");
+
+  return setCellContent(notebook, {
+    pageId: pageId,
+    cellId: cellId,
+    content: previousContent,
+  });
+}
+
+/**
+ * Returns the data of a cell.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Object}
+ */
+export function getCellData(notebook, { pageId, cellId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+
+  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  ].data;
+}
+
+/**
+ * Changes the data of a cell.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function setCellData(notebook, { pageId, cellId, data }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+  if (data === undefined) throw new Error("Data is undefined.");
+
+  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
+    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  ].data = data;
+  return notebook;
+}
+
+/**
+ * Undoes the change of data of a cell.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook}
+ */
+export function undoSetCellData(notebook, { pageId, cellId, previousData }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (cellId === undefined) throw new Error("CellId is undefined.");
+  if (previousData === undefined) throw new Error("PreviousData is undefined.");
+
+  return setCellData(notebook, {
+    pageId: pageId,
+    cellId: cellId,
+    data: previousData,
+  });
+}
+
+/**
+ * Undoes an command.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook | undefined}
+ */
+export function undo(notebook, command) {
+  if (command.action === undefined) throw new Error("Action is undefined.");
+
+  switch (command.action.name) {
+    case "insertPage":
+      return undoInsertPage(notebook, command);
+    case "addPage":
+      return undoAddPage(notebook, command);
+    case "removePage":
+      return undoRemovePage(notebook, command);
+    case "insertCell":
+      return undoInsertCell(notebook, command);
+    case "addCell":
+      return undoAddCell(notebook, command);
+    case "removeCell":
+      return undoRemoveCell(notebook, command);
+    case "addEntitiesCell":
+      return undoAddEntitiesCell(notebook, command);
+    case "addQuestionCell":
+      return undoAddQuestionCell(notebook, command);
+    case "addSparseQuestionCell":
+      return undoAddSparseQuestionCell(notebook, command);
+    case "addGenerateCell":
+      return undoAddGenerateCell(notebook, command);
+    case "addWikipediaSummaryCell":
+      return undoAddWikipediaSummaryCell(notebook, command);
+    case "addWikipediaSuggestionsCell":
+      return undoAddWikipediaSuggestionsCell(notebook, command);
+    case "addWikipediaImageCell":
+      return undoAddWikipediaImageCell(notebook, command);
+    case "addMeaningCell":
+      return undoAddMeaningCell(notebook, command);
+    case "addSynonymCell":
+      return undoAddSynonymCell(notebook, command);
+    case "addAntonymCell":
+      return undoAddAntonymCell(notebook, command);
+    case "setCellContent":
+      return undoSetCellContent(notebook, command);
+    case "setCellData":
+      return undoSetCellData(notebook, command);
+  }
+}
+
+/**
+ * Redoes an command.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook | Promise&lt;Notebook> | undefined}
+ */
+export function redo(notebook, command) {
+  if (command.action === undefined) throw new Error("Action is undefined.");
+
+  switch (command.action.name) {
+    case "insertPage":
+      return insertPage(notebook, command);
+    case "addPage":
+      return addPage(notebook, command);
+    case "removePage":
+      return removePage(notebook, command);
+    case "insertCell":
+      return insertCell(notebook, command);
+    case "addCell":
+      return addCell(notebook, command);
+    case "removeCell":
+      return removeCell(notebook, command);
+    case "addEntitiesCell":
+      return addEntitiesCell(notebook, command);
+    case "addQuestionCell":
+      return addQuestionCell(notebook, command);
+    case "addSparseQuestionCell":
+      return addSparseQuestionCell(notebook, command);
+    case "addGenerateCell":
+      return addGenerateCell(notebook, command);
+    case "addWikipediaSummaryCell":
+      return addWikipediaSummaryCell(notebook, command);
+    case "addWikipediaSuggestionsCell":
+      return addWikipediaSuggestionsCell(notebook, command);
+    case "addWikipediaImageCell":
+      return addWikipediaImageCell(notebook, command);
+    case "addMeaningCell":
+      return addMeaningCell(notebook, command);
+    case "addSynonymCell":
+      return addSynonymCell(notebook, command);
+    case "addAntonymCell":
+      return addAntonymCell(notebook, command);
+    case "setCellContent":
+      return setCellContent(notebook, command);
+    case "setCellData":
+      return setCellData(notebook, command);
+  }
+}
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <nav>
+      <h2><a href="index.html">Home</a></h2>
+      <h3>Global</h3>
+      <ul>
+        <li><a href="global.html#addAntonymCell">addAntonymCell</a></li>
+        <li><a href="global.html#addCell">addCell</a></li>
+        <li><a href="global.html#addEntitiesCell">addEntitiesCell</a></li>
+        <li><a href="global.html#addGenerateCell">addGenerateCell</a></li>
+        <li><a href="global.html#addMeaningCell">addMeaningCell</a></li>
+        <li><a href="global.html#addMessageBar">addMessageBar</a></li>
+        <li><a href="global.html#addPage">addPage</a></li>
+        <li><a href="global.html#addQuestionCell">addQuestionCell</a></li>
+        <li>
+          <a href="global.html#addSparseQuestionCell">addSparseQuestionCell</a>
+        </li>
+        <li><a href="global.html#addSynonymCell">addSynonymCell</a></li>
+        <li><a href="global.html#addTab">addTab</a></li>
+        <li>
+          <a href="global.html#addWikipediaImageCell">addWikipediaImageCell</a>
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSuggestionsCell"
+            >addWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSummaryCell"
+            >addWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#base64encode">base64encode</a></li>
+        <li><a href="global.html#clipboardDo">clipboardDo</a></li>
+        <li><a href="global.html#clipboardPop">clipboardPop</a></li>
+        <li><a href="global.html#clipboardPush">clipboardPush</a></li>
+        <li><a href="global.html#clipboardTop">clipboardTop</a></li>
+        <li><a href="global.html#createCell">createCell</a></li>
+        <li><a href="global.html#createCommand">createCommand</a></li>
+        <li><a href="global.html#createNotebook">createNotebook</a></li>
+        <li><a href="global.html#createPage">createPage</a></li>
+        <li><a href="global.html#createTab">createTab</a></li>
+        <li><a href="global.html#do">do</a></li>
+        <li><a href="global.html#getApiUrl">getApiUrl</a></li>
+        <li><a href="global.html#getCell">getCell</a></li>
+        <li><a href="global.html#getCellContent">getCellContent</a></li>
+        <li><a href="global.html#getCellData">getCellData</a></li>
+        <li><a href="global.html#getPage">getPage</a></li>
+        <li><a href="global.html#getTab">getTab</a></li>
+        <li><a href="global.html#getTabContent">getTabContent</a></li>
+        <li><a href="global.html#getTabTitle">getTabTitle</a></li>
+        <li><a href="global.html#handleSelection">handleSelection</a></li>
+        <li><a href="global.html#historyDo">historyDo</a></li>
+        <li><a href="global.html#historyRedo">historyRedo</a></li>
+        <li><a href="global.html#historyUndo">historyUndo</a></li>
+        <li><a href="global.html#indexCell">indexCell</a></li>
+        <li><a href="global.html#indexPage">indexPage</a></li>
+        <li><a href="global.html#indexTab">indexTab</a></li>
+        <li><a href="global.html#insertCell">insertCell</a></li>
+        <li><a href="global.html#insertPage">insertPage</a></li>
+        <li><a href="global.html#insertTab">insertTab</a></li>
+        <li><a href="global.html#notebookFromPdf">notebookFromPdf</a></li>
+        <li><a href="global.html#notebookFromText">notebookFromText</a></li>
+        <li><a href="global.html#openDialog">openDialog</a></li>
+        <li><a href="global.html#openFile">openFile</a></li>
+        <li><a href="global.html#openJson">openJson</a></li>
+        <li><a href="global.html#openPdf">openPdf</a></li>
+        <li><a href="global.html#openText">openText</a></li>
+        <li><a href="global.html#readFile">readFile</a></li>
+        <li><a href="global.html#redo">redo</a></li>
+        <li><a href="global.html#removeCell">removeCell</a></li>
+        <li><a href="global.html#removeMessageBar">removeMessageBar</a></li>
+        <li><a href="global.html#removePage">removePage</a></li>
+        <li><a href="global.html#removeTab">removeTab</a></li>
+        <li><a href="global.html#saveDialog">saveDialog</a></li>
+        <li><a href="global.html#saveNotebook">saveNotebook</a></li>
+        <li><a href="global.html#selectTab">selectTab</a></li>
+        <li><a href="global.html#setApiUrl">setApiUrl</a></li>
+        <li><a href="global.html#setCellContent">setCellContent</a></li>
+        <li><a href="global.html#setCellData">setCellData</a></li>
+        <li><a href="global.html#setLoadingText">setLoadingText</a></li>
+        <li><a href="global.html#setTabContent">setTabContent</a></li>
+        <li><a href="global.html#setTabTitle">setTabTitle</a></li>
+        <li><a href="global.html#tabsDo">tabsDo</a></li>
+        <li><a href="global.html#undo">undo</a></li>
+        <li><a href="global.html#undoAddAntonymCell">undoAddAntonymCell</a></li>
+        <li><a href="global.html#undoAddCell">undoAddCell</a></li>
+        <li>
+          <a href="global.html#undoAddEntitiesCell">undoAddEntitiesCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddGenerateCell">undoAddGenerateCell</a>
+        </li>
+        <li><a href="global.html#undoAddMeaningCell">undoAddMeaningCell</a></li>
+        <li><a href="global.html#undoAddPage">undoAddPage</a></li>
+        <li>
+          <a href="global.html#undoAddQuestionCell">undoAddQuestionCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddSparseQuestionCell"
+            >undoAddSparseQuestionCell</a
+          >
+        </li>
+        <li><a href="global.html#undoAddSynonymCell">undoAddSynonymCell</a></li>
+        <li>
+          <a href="global.html#undoAddWikipediaImageCell"
+            >undoAddWikipediaImageCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSuggestionsCell"
+            >undoAddWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSummaryCell"
+            >undoAddWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#undoInsertCell">undoInsertCell</a></li>
+        <li><a href="global.html#undoInsertPage">undoInsertPage</a></li>
+        <li><a href="global.html#undoRemoveCell">undoRemoveCell</a></li>
+        <li><a href="global.html#undoRemovePage">undoRemovePage</a></li>
+        <li><a href="global.html#undoSetCellContent">undoSetCellContent</a></li>
+        <li><a href="global.html#undoSetCellData">undoSetCellData</a></li>
+        <li><a href="global.html#writeFile">writeFile</a></li>
+      </ul>
+    </nav>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by
+      <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 15
+      2021 19:50:48 GMT-0300 (Chile Summer Time)
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
+</html>

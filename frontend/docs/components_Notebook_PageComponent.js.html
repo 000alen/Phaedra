@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JSDoc: Source: components/Notebook/PageComponent.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="styles/prettify-tomorrow.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css" />
+  </head>
+
+  <body>
+    <div id="main">
+      <h1 class="page-title">Source: components/Notebook/PageComponent.js</h1>
+
+      <section>
+        <article>
+          <pre
+            class="prettyprint source linenums"
+          ><code>import React, { Component } from "react";
+import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
+
+import CellComponent from "./CellComponent";
+
+import { theme } from "../../index";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+/**
+ * @typedef {import("./NotebookComponent").NotebookController} NotebookController
+ */
+
+/**
+ * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ */
+
+/**
+ * @typedef {Object} PageState
+ * @property {string} id
+ * @property {NotebookController} notebookController
+ * @property {NotebookPageController} pageController
+ */
+
+export default class PageComponent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.handleSelection = this.handleSelection.bind(this);
+
+    const { id, notebookController, pageController } = props;
+
+    this.state = {
+      id: id,
+      notebookController: notebookController,
+      pageController: pageController,
+    };
+  }
+
+  handleSelection(event) {
+    const { active, editing } = this.props;
+    if (active &amp;&amp; editing) return;
+
+    const { notebookController, id } = this.state;
+    notebookController.handleSelection(id);
+  }
+
+  renderWithDocument() {
+    const { id, notebookController, pageController } = this.state;
+    const { data, cells, active, activeCell, document, editing } = this.props;
+
+    const containerStyle = {
+      backgroundColor: theme.palette.neutralLight,
+    };
+
+    const paperStyle = {
+      backgroundColor: theme.palette.white,
+      border: active
+        ? `1px solid ${theme.palette.themePrimary}`
+        : `1px solid ${theme.palette.white}`,
+    };
+
+    return (
+      &lt;div className="page grid grid-cols-2" style={containerStyle}>
+        &lt;div
+          className="m-2 p-2 rounded-md shadow-md"
+          style={paperStyle}
+          onClick={this.handleSelection}
+        >
+          {cells.map((cell) => (
+            &lt;CellComponent
+              key={cell.id}
+              id={cell.id}
+              pageController={pageController}
+              notebookController={notebookController}
+              data={cell.data}
+              content={cell.content}
+              pageId={id}
+              active={active ? activeCell === cell.id : null}
+              editing={editing}
+            />
+          ))}
+        &lt;/div>
+
+        &lt;div className="m-2">
+          &lt;Document file={document} renderMode="svg">
+            &lt;DocumentPage
+              pageNumber={data.document_page_number}
+              renderTextLayer={false}
+            />
+          &lt;/Document>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+
+  renderWithoutDocument() {
+    const { id, notebookController, pageController } = this.state;
+    const { cells, active, activeCell, editing } = this.props;
+
+    const containerStyle = {
+      backgroundColor: theme.palette.neutralLight,
+    };
+
+    const pageStyle = {
+      width: "8.5in",
+      minHeight: "11in",
+      backgroundColor: theme.palette.white,
+      border: active ? `1px solid ${theme.palette.themePrimary}` : undefined,
+    };
+
+    return (
+      &lt;div className="flex items-center justify-center" style={containerStyle}>
+        &lt;div
+          className="page p-2 m-2 rounded-md shadow-md"
+          style={pageStyle}
+          onClick={this.handleSelection}
+        >
+          &lt;div>
+            {cells.map((cell) => (
+              &lt;CellComponent
+                key={cell.id}
+                id={cell.id}
+                pageController={pageController}
+                notebookController={notebookController}
+                data={cell.data}
+                content={cell.content}
+                pageId={id}
+                active={active ? activeCell === cell.id : null}
+                editing={editing}
+              />
+            ))}
+          &lt;/div>
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+
+  render() {
+    const { document, data } = this.props;
+
+    if (document &amp;&amp; data.document_page_number) {
+      return this.renderWithDocument();
+    } else {
+      return this.renderWithoutDocument();
+    }
+  }
+}
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <nav>
+      <h2><a href="index.html">Home</a></h2>
+      <h3>Global</h3>
+      <ul>
+        <li><a href="global.html#addAntonymCell">addAntonymCell</a></li>
+        <li><a href="global.html#addCell">addCell</a></li>
+        <li><a href="global.html#addEntitiesCell">addEntitiesCell</a></li>
+        <li><a href="global.html#addGenerateCell">addGenerateCell</a></li>
+        <li><a href="global.html#addMeaningCell">addMeaningCell</a></li>
+        <li><a href="global.html#addMessageBar">addMessageBar</a></li>
+        <li><a href="global.html#addPage">addPage</a></li>
+        <li><a href="global.html#addQuestionCell">addQuestionCell</a></li>
+        <li>
+          <a href="global.html#addSparseQuestionCell">addSparseQuestionCell</a>
+        </li>
+        <li><a href="global.html#addSynonymCell">addSynonymCell</a></li>
+        <li><a href="global.html#addTab">addTab</a></li>
+        <li>
+          <a href="global.html#addWikipediaImageCell">addWikipediaImageCell</a>
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSuggestionsCell"
+            >addWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSummaryCell"
+            >addWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#base64encode">base64encode</a></li>
+        <li><a href="global.html#clipboardDo">clipboardDo</a></li>
+        <li><a href="global.html#clipboardPop">clipboardPop</a></li>
+        <li><a href="global.html#clipboardPush">clipboardPush</a></li>
+        <li><a href="global.html#clipboardTop">clipboardTop</a></li>
+        <li><a href="global.html#createCell">createCell</a></li>
+        <li><a href="global.html#createCommand">createCommand</a></li>
+        <li><a href="global.html#createNotebook">createNotebook</a></li>
+        <li><a href="global.html#createPage">createPage</a></li>
+        <li><a href="global.html#createTab">createTab</a></li>
+        <li><a href="global.html#do">do</a></li>
+        <li><a href="global.html#getApiUrl">getApiUrl</a></li>
+        <li><a href="global.html#getCell">getCell</a></li>
+        <li><a href="global.html#getCellContent">getCellContent</a></li>
+        <li><a href="global.html#getCellData">getCellData</a></li>
+        <li><a href="global.html#getPage">getPage</a></li>
+        <li><a href="global.html#getTab">getTab</a></li>
+        <li><a href="global.html#getTabContent">getTabContent</a></li>
+        <li><a href="global.html#getTabTitle">getTabTitle</a></li>
+        <li><a href="global.html#handleSelection">handleSelection</a></li>
+        <li><a href="global.html#historyDo">historyDo</a></li>
+        <li><a href="global.html#historyRedo">historyRedo</a></li>
+        <li><a href="global.html#historyUndo">historyUndo</a></li>
+        <li><a href="global.html#indexCell">indexCell</a></li>
+        <li><a href="global.html#indexPage">indexPage</a></li>
+        <li><a href="global.html#indexTab">indexTab</a></li>
+        <li><a href="global.html#insertCell">insertCell</a></li>
+        <li><a href="global.html#insertPage">insertPage</a></li>
+        <li><a href="global.html#insertTab">insertTab</a></li>
+        <li><a href="global.html#notebookFromPdf">notebookFromPdf</a></li>
+        <li><a href="global.html#notebookFromText">notebookFromText</a></li>
+        <li><a href="global.html#openDialog">openDialog</a></li>
+        <li><a href="global.html#openFile">openFile</a></li>
+        <li><a href="global.html#openJson">openJson</a></li>
+        <li><a href="global.html#openPdf">openPdf</a></li>
+        <li><a href="global.html#openText">openText</a></li>
+        <li><a href="global.html#readFile">readFile</a></li>
+        <li><a href="global.html#redo">redo</a></li>
+        <li><a href="global.html#removeCell">removeCell</a></li>
+        <li><a href="global.html#removeMessageBar">removeMessageBar</a></li>
+        <li><a href="global.html#removePage">removePage</a></li>
+        <li><a href="global.html#removeTab">removeTab</a></li>
+        <li><a href="global.html#saveDialog">saveDialog</a></li>
+        <li><a href="global.html#saveNotebook">saveNotebook</a></li>
+        <li><a href="global.html#selectTab">selectTab</a></li>
+        <li><a href="global.html#setApiUrl">setApiUrl</a></li>
+        <li><a href="global.html#setCellContent">setCellContent</a></li>
+        <li><a href="global.html#setCellData">setCellData</a></li>
+        <li><a href="global.html#setLoadingText">setLoadingText</a></li>
+        <li><a href="global.html#setTabContent">setTabContent</a></li>
+        <li><a href="global.html#setTabTitle">setTabTitle</a></li>
+        <li><a href="global.html#tabsDo">tabsDo</a></li>
+        <li><a href="global.html#undo">undo</a></li>
+        <li><a href="global.html#undoAddAntonymCell">undoAddAntonymCell</a></li>
+        <li><a href="global.html#undoAddCell">undoAddCell</a></li>
+        <li>
+          <a href="global.html#undoAddEntitiesCell">undoAddEntitiesCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddGenerateCell">undoAddGenerateCell</a>
+        </li>
+        <li><a href="global.html#undoAddMeaningCell">undoAddMeaningCell</a></li>
+        <li><a href="global.html#undoAddPage">undoAddPage</a></li>
+        <li>
+          <a href="global.html#undoAddQuestionCell">undoAddQuestionCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddSparseQuestionCell"
+            >undoAddSparseQuestionCell</a
+          >
+        </li>
+        <li><a href="global.html#undoAddSynonymCell">undoAddSynonymCell</a></li>
+        <li>
+          <a href="global.html#undoAddWikipediaImageCell"
+            >undoAddWikipediaImageCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSuggestionsCell"
+            >undoAddWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSummaryCell"
+            >undoAddWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#undoInsertCell">undoInsertCell</a></li>
+        <li><a href="global.html#undoInsertPage">undoInsertPage</a></li>
+        <li><a href="global.html#undoRemoveCell">undoRemoveCell</a></li>
+        <li><a href="global.html#undoRemovePage">undoRemovePage</a></li>
+        <li><a href="global.html#undoSetCellContent">undoSetCellContent</a></li>
+        <li><a href="global.html#undoSetCellData">undoSetCellData</a></li>
+        <li><a href="global.html#writeFile">writeFile</a></li>
+      </ul>
+    </nav>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by
+      <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 15
+      2021 19:50:48 GMT-0300 (Chile Summer Time)
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
+</html>

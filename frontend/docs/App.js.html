@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JSDoc: Source: App.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="styles/prettify-tomorrow.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css" />
+  </head>
+
+  <body>
+    <div id="main">
+      <h1 class="page-title">Source: App.js</h1>
+
+      <section>
+        <article>
+          <pre
+            class="prettyprint source linenums"
+          ><code>import React, { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import StatusBarComponent from "./components/StatusBarComponent";
+import TabsComponent from "./components/Tabs/TabsComponent";
+import TopBarComponent from "./components/TopBarComponent";
+
+import { getTabContent, createTab } from "./manipulation/TabsManipulation";
+
+import EmptyPage from "./pages/EmptyPage";
+import MainPage from "./pages/MainPage/MainPage";
+
+import "./css/App.css";
+
+/**
+ * @typedef {import("./manipulation/ClipboardManipulation").Clipboard} Clipboard
+ */
+
+/**
+ * @typedef {import("./manipulation/TabsManipulation").Tab} Tab
+ */
+
+/**
+ * @typedef {Object} AppController
+ * @property {Function} tabsDo
+ * @property {Function} clipboardDo
+ */
+
+/**
+ * @typedef AppState
+ * @property {AppController} appController
+ * @property {Tab[]} tabs
+ * @property {string | undefined} activeTab
+ * @property {Clipboard} clipboard
+ */
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.tabsDo = this.tabsDo.bind(this);
+    this.clipboardDo = this.clipboardDo.bind(this);
+
+    this.statusBarRef = React.createRef();
+
+    /**
+     * @type {AppController}
+     */
+    const appController = {
+      tabsDo: this.tabsDo,
+      clipboardDo: this.clipboardDo,
+    };
+
+    /**
+     * @type {AppState}
+     */
+    this.state = {
+      appController: appController,
+      tabs: [],
+      activeTab: undefined,
+      clipboard: [],
+    };
+  }
+
+  /**
+   * Does an action on the tabs
+   * @param {Function} action
+   * @param {Object} args
+   */
+  tabsDo(action, args) {
+    let { tabs, activeTab } = this.state;
+
+    switch (action.name) {
+      case "addTab":
+        const id = uuidv4();
+        const tab = createTab({
+          id: id,
+          content: (
+            &lt;EmptyPage
+              key={id}
+              id={id}
+              appController={this.state.appController}
+              statusBarRef={this.statusBarRef}
+            />
+          ),
+        });
+        args = { ...args, tab: tab };
+        break;
+    }
+
+    let tabsInformation = action(tabs, activeTab, args);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        ...tabsInformation,
+      };
+    });
+  }
+
+  /**
+   * Does an action on the clipboard.
+   * @param {Function} action
+   * @param {Object} args
+   */
+  clipboardDo(action, args) {
+    let clipboard = this.state.clipboard;
+
+    let currentClipboard;
+    switch (action.name) {
+      default:
+        currentClipboard = action(clipboard, args);
+    }
+
+    this.setState((state) => {
+      return {
+        ...state,
+        clipboard: currentClipboard,
+      };
+    });
+  }
+
+  render() {
+    const { tabs, activeTab } = this.state;
+
+    let content;
+    if (activeTab === undefined) {
+      content = (
+        &lt;MainPage
+          id={uuidv4()}
+          appController={this.state.appController}
+          statusBarRef={this.statusBarRef}
+        />
+      );
+    } else {
+      content = getTabContent(tabs, { id: activeTab });
+    }
+
+    return (
+      &lt;div className="app">
+        &lt;TopBarComponent>
+          &lt;TabsComponent
+            tabs={tabs}
+            activeTab={activeTab}
+            onAction={this.tabsDo}
+          />
+        &lt;/TopBarComponent>
+
+        &lt;div className="appContent">{content}&lt;/div>
+
+        &lt;StatusBarComponent ref={this.statusBarRef} />
+      &lt;/div>
+    );
+  }
+}
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <nav>
+      <h2><a href="index.html">Home</a></h2>
+      <h3>Global</h3>
+      <ul>
+        <li><a href="global.html#addAntonymCell">addAntonymCell</a></li>
+        <li><a href="global.html#addCell">addCell</a></li>
+        <li><a href="global.html#addEntitiesCell">addEntitiesCell</a></li>
+        <li><a href="global.html#addGenerateCell">addGenerateCell</a></li>
+        <li><a href="global.html#addMeaningCell">addMeaningCell</a></li>
+        <li><a href="global.html#addMessageBar">addMessageBar</a></li>
+        <li><a href="global.html#addPage">addPage</a></li>
+        <li><a href="global.html#addQuestionCell">addQuestionCell</a></li>
+        <li>
+          <a href="global.html#addSparseQuestionCell">addSparseQuestionCell</a>
+        </li>
+        <li><a href="global.html#addSynonymCell">addSynonymCell</a></li>
+        <li><a href="global.html#addTab">addTab</a></li>
+        <li>
+          <a href="global.html#addWikipediaImageCell">addWikipediaImageCell</a>
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSuggestionsCell"
+            >addWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSummaryCell"
+            >addWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#base64encode">base64encode</a></li>
+        <li><a href="global.html#clipboardDo">clipboardDo</a></li>
+        <li><a href="global.html#clipboardPop">clipboardPop</a></li>
+        <li><a href="global.html#clipboardPush">clipboardPush</a></li>
+        <li><a href="global.html#clipboardTop">clipboardTop</a></li>
+        <li><a href="global.html#createCell">createCell</a></li>
+        <li><a href="global.html#createCommand">createCommand</a></li>
+        <li><a href="global.html#createNotebook">createNotebook</a></li>
+        <li><a href="global.html#createPage">createPage</a></li>
+        <li><a href="global.html#createTab">createTab</a></li>
+        <li><a href="global.html#do">do</a></li>
+        <li><a href="global.html#getApiUrl">getApiUrl</a></li>
+        <li><a href="global.html#getCell">getCell</a></li>
+        <li><a href="global.html#getCellContent">getCellContent</a></li>
+        <li><a href="global.html#getCellData">getCellData</a></li>
+        <li><a href="global.html#getPage">getPage</a></li>
+        <li><a href="global.html#getTab">getTab</a></li>
+        <li><a href="global.html#getTabContent">getTabContent</a></li>
+        <li><a href="global.html#getTabTitle">getTabTitle</a></li>
+        <li><a href="global.html#handleSelection">handleSelection</a></li>
+        <li><a href="global.html#historyDo">historyDo</a></li>
+        <li><a href="global.html#historyRedo">historyRedo</a></li>
+        <li><a href="global.html#historyUndo">historyUndo</a></li>
+        <li><a href="global.html#indexCell">indexCell</a></li>
+        <li><a href="global.html#indexPage">indexPage</a></li>
+        <li><a href="global.html#indexTab">indexTab</a></li>
+        <li><a href="global.html#insertCell">insertCell</a></li>
+        <li><a href="global.html#insertPage">insertPage</a></li>
+        <li><a href="global.html#insertTab">insertTab</a></li>
+        <li><a href="global.html#notebookFromPdf">notebookFromPdf</a></li>
+        <li><a href="global.html#notebookFromText">notebookFromText</a></li>
+        <li><a href="global.html#openDialog">openDialog</a></li>
+        <li><a href="global.html#openFile">openFile</a></li>
+        <li><a href="global.html#openJson">openJson</a></li>
+        <li><a href="global.html#openPdf">openPdf</a></li>
+        <li><a href="global.html#openText">openText</a></li>
+        <li><a href="global.html#readFile">readFile</a></li>
+        <li><a href="global.html#redo">redo</a></li>
+        <li><a href="global.html#removeCell">removeCell</a></li>
+        <li><a href="global.html#removeMessageBar">removeMessageBar</a></li>
+        <li><a href="global.html#removePage">removePage</a></li>
+        <li><a href="global.html#removeTab">removeTab</a></li>
+        <li><a href="global.html#saveDialog">saveDialog</a></li>
+        <li><a href="global.html#saveNotebook">saveNotebook</a></li>
+        <li><a href="global.html#selectTab">selectTab</a></li>
+        <li><a href="global.html#setApiUrl">setApiUrl</a></li>
+        <li><a href="global.html#setCellContent">setCellContent</a></li>
+        <li><a href="global.html#setCellData">setCellData</a></li>
+        <li><a href="global.html#setLoadingText">setLoadingText</a></li>
+        <li><a href="global.html#setTabContent">setTabContent</a></li>
+        <li><a href="global.html#setTabTitle">setTabTitle</a></li>
+        <li><a href="global.html#tabsDo">tabsDo</a></li>
+        <li><a href="global.html#undo">undo</a></li>
+        <li><a href="global.html#undoAddAntonymCell">undoAddAntonymCell</a></li>
+        <li><a href="global.html#undoAddCell">undoAddCell</a></li>
+        <li>
+          <a href="global.html#undoAddEntitiesCell">undoAddEntitiesCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddGenerateCell">undoAddGenerateCell</a>
+        </li>
+        <li><a href="global.html#undoAddMeaningCell">undoAddMeaningCell</a></li>
+        <li><a href="global.html#undoAddPage">undoAddPage</a></li>
+        <li>
+          <a href="global.html#undoAddQuestionCell">undoAddQuestionCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddSparseQuestionCell"
+            >undoAddSparseQuestionCell</a
+          >
+        </li>
+        <li><a href="global.html#undoAddSynonymCell">undoAddSynonymCell</a></li>
+        <li>
+          <a href="global.html#undoAddWikipediaImageCell"
+            >undoAddWikipediaImageCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSuggestionsCell"
+            >undoAddWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSummaryCell"
+            >undoAddWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#undoInsertCell">undoInsertCell</a></li>
+        <li><a href="global.html#undoInsertPage">undoInsertPage</a></li>
+        <li><a href="global.html#undoRemoveCell">undoRemoveCell</a></li>
+        <li><a href="global.html#undoRemovePage">undoRemovePage</a></li>
+        <li><a href="global.html#undoSetCellContent">undoSetCellContent</a></li>
+        <li><a href="global.html#undoSetCellData">undoSetCellData</a></li>
+        <li><a href="global.html#writeFile">writeFile</a></li>
+      </ul>
+    </nav>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by
+      <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 15
+      2021 19:50:48 GMT-0300 (Chile Summer Time)
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
+</html>

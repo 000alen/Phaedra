@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>JSDoc: Source: pages/NotebookPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="styles/prettify-tomorrow.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css" />
+  </head>
+
+  <body>
+    <div id="main">
+      <h1 class="page-title">Source: pages/NotebookPage.js</h1>
+
+      <section>
+        <article>
+          <pre
+            class="prettyprint source linenums"
+          ><code>import React, { Component } from "react";
+import { MessageBar, MessageBarType } from "@fluentui/react";
+import { v4 as uuidv4 } from "uuid";
+
+import RibbonComponent from "../components/Ribbon/RibbonComponent";
+import NotebookComponent from "../components/Notebook/NotebookComponent";
+import CommandBoxComponent from "../components/CommandBoxComponent";
+
+import { setTabTitle } from "../manipulation/TabsManipulation";
+
+import "../css/pages/NotebookPage.css";
+
+/**
+ * @typedef {import("../App").AppController} AppController
+ */
+
+/**
+ * @typedef {Object} NotebookPageController
+ * @property {Function} showCommandBox
+ * @property {Function} hideCommandBox
+ * @property {Function} addMessageBar
+ * @property {Function} removeMessageBar
+ */
+
+/**
+ * @typedef {Object} NotebookPageState
+ * @property {string} id
+ * @property {AppController} appController
+ * @property {NotebookPageController} pageController
+ * @property {React.RefObject} statusBarRef
+ * @property {boolean} commandBoxShown
+ * @property {JSX.Element[]} messageBars
+ */
+
+export default class NotebookPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.showCommandBox = this.showCommandBox.bind(this);
+    this.hideCommandBox = this.hideCommandBox.bind(this);
+    this.addMessageBar = this.addMessageBar.bind(this);
+    this.removeMessageBar = this.removeMessageBar.bind(this);
+
+    const { id, appController, notebook, statusBarRef } = props;
+
+    appController.tabsDo(setTabTitle, { id: id, title: notebook.name });
+
+    this.notebookRef = React.createRef();
+    this.commandBoxRef = React.createRef();
+
+    /**
+     * @type {NotebookPageController}
+     */
+    const pageController = {
+      showCommandBox: this.showCommandBox,
+      hideCommandBox: this.hideCommandBox,
+      addMessageBar: this.addMessageBar,
+      removeMessageBar: this.removeMessageBar,
+    };
+
+    /**
+     * @type {NotebookPageState}
+     */
+    this.state = {
+      id: id,
+      appController: appController,
+      pageController: pageController,
+      statusBarRef: statusBarRef,
+      commandBoxShown: false,
+      messageBars: [],
+    };
+  }
+
+  showCommandBox() {
+    this.setState((state) => {
+      return { ...state, commandBoxShown: true };
+    });
+  }
+
+  hideCommandBox() {
+    this.setState((state) => {
+      return { ...state, commandBoxShown: false };
+    });
+  }
+
+  /**
+   * Adds a message bar to the page.
+   * @param {string} text
+   * @param {MessageBarType} type
+   */
+  addMessageBar(text, type) {
+    const id = uuidv4();
+    let messageBars = [...this.state.messageBars];
+    messageBars.push(
+      &lt;MessageBar
+        key={id}
+        id={id}
+        isMultiline={false}
+        messageBarType={type}
+        onDismiss={() => {
+          this.removeMessageBar(id);
+        }}
+      >
+        {text}
+      &lt;/MessageBar>
+    );
+
+    this.setState((state) => {
+      return { ...state, messageBars: messageBars };
+    });
+  }
+
+  /**
+   * Removes a message Bar.
+   * @param {string} id
+   */
+  removeMessageBar(id) {
+    let messageBars = [...this.state.messageBars];
+    messageBars = messageBars.filter(
+      (messageBar) => messageBar.props.id !== id
+    );
+
+    this.setState((state) => {
+      return { ...state, messageBars: messageBars };
+    });
+  }
+
+  render() {
+    const notebookPageContentStyle = {
+      height: `calc(100% - 88px - ${this.state.messageBars.length * 32}px)`,
+    };
+
+    return (
+      &lt;div className="notebookPage">
+        &lt;RibbonComponent
+          notebookRef={this.notebookRef}
+          commandBoxRef={this.commandBoxRef}
+          appController={this.state.appController}
+          pageController={this.state.pageController}
+          statusBarRef={this.state.statusBarRef}
+        />
+
+        &lt;div>
+          {this.state.messageBars.map((messageBar) => {
+            return messageBar;
+          })}
+        &lt;/div>
+
+        &lt;div className="notebookPageContent" style={notebookPageContentStyle}>
+          &lt;NotebookComponent
+            key={this.state.id}
+            ref={this.notebookRef}
+            appController={this.state.appController}
+            pageController={this.state.pageController}
+            statusBarRef={this.state.statusBarRef}
+            tabId={this.state.id}
+            notebook={this.props.notebook}
+            notebookPath={this.props.notebookPath}
+          />
+
+          {this.state.commandBoxShown &amp;&amp; (
+            &lt;CommandBoxComponent
+              ref={this.commandBoxRef}
+              notebookRef={this.notebookRef}
+            />
+          )}
+        &lt;/div>
+      &lt;/div>
+    );
+  }
+}
+</code></pre>
+        </article>
+      </section>
+    </div>
+
+    <nav>
+      <h2><a href="index.html">Home</a></h2>
+      <h3>Global</h3>
+      <ul>
+        <li><a href="global.html#addAntonymCell">addAntonymCell</a></li>
+        <li><a href="global.html#addCell">addCell</a></li>
+        <li><a href="global.html#addEntitiesCell">addEntitiesCell</a></li>
+        <li><a href="global.html#addGenerateCell">addGenerateCell</a></li>
+        <li><a href="global.html#addMeaningCell">addMeaningCell</a></li>
+        <li><a href="global.html#addMessageBar">addMessageBar</a></li>
+        <li><a href="global.html#addPage">addPage</a></li>
+        <li><a href="global.html#addQuestionCell">addQuestionCell</a></li>
+        <li>
+          <a href="global.html#addSparseQuestionCell">addSparseQuestionCell</a>
+        </li>
+        <li><a href="global.html#addSynonymCell">addSynonymCell</a></li>
+        <li><a href="global.html#addTab">addTab</a></li>
+        <li>
+          <a href="global.html#addWikipediaImageCell">addWikipediaImageCell</a>
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSuggestionsCell"
+            >addWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#addWikipediaSummaryCell"
+            >addWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#base64encode">base64encode</a></li>
+        <li><a href="global.html#clipboardDo">clipboardDo</a></li>
+        <li><a href="global.html#clipboardPop">clipboardPop</a></li>
+        <li><a href="global.html#clipboardPush">clipboardPush</a></li>
+        <li><a href="global.html#clipboardTop">clipboardTop</a></li>
+        <li><a href="global.html#createCell">createCell</a></li>
+        <li><a href="global.html#createCommand">createCommand</a></li>
+        <li><a href="global.html#createNotebook">createNotebook</a></li>
+        <li><a href="global.html#createPage">createPage</a></li>
+        <li><a href="global.html#createTab">createTab</a></li>
+        <li><a href="global.html#do">do</a></li>
+        <li><a href="global.html#getApiUrl">getApiUrl</a></li>
+        <li><a href="global.html#getCell">getCell</a></li>
+        <li><a href="global.html#getCellContent">getCellContent</a></li>
+        <li><a href="global.html#getCellData">getCellData</a></li>
+        <li><a href="global.html#getPage">getPage</a></li>
+        <li><a href="global.html#getTab">getTab</a></li>
+        <li><a href="global.html#getTabContent">getTabContent</a></li>
+        <li><a href="global.html#getTabTitle">getTabTitle</a></li>
+        <li><a href="global.html#handleSelection">handleSelection</a></li>
+        <li><a href="global.html#historyDo">historyDo</a></li>
+        <li><a href="global.html#historyRedo">historyRedo</a></li>
+        <li><a href="global.html#historyUndo">historyUndo</a></li>
+        <li><a href="global.html#indexCell">indexCell</a></li>
+        <li><a href="global.html#indexPage">indexPage</a></li>
+        <li><a href="global.html#indexTab">indexTab</a></li>
+        <li><a href="global.html#insertCell">insertCell</a></li>
+        <li><a href="global.html#insertPage">insertPage</a></li>
+        <li><a href="global.html#insertTab">insertTab</a></li>
+        <li><a href="global.html#notebookFromPdf">notebookFromPdf</a></li>
+        <li><a href="global.html#notebookFromText">notebookFromText</a></li>
+        <li><a href="global.html#openDialog">openDialog</a></li>
+        <li><a href="global.html#openFile">openFile</a></li>
+        <li><a href="global.html#openJson">openJson</a></li>
+        <li><a href="global.html#openPdf">openPdf</a></li>
+        <li><a href="global.html#openText">openText</a></li>
+        <li><a href="global.html#readFile">readFile</a></li>
+        <li><a href="global.html#redo">redo</a></li>
+        <li><a href="global.html#removeCell">removeCell</a></li>
+        <li><a href="global.html#removeMessageBar">removeMessageBar</a></li>
+        <li><a href="global.html#removePage">removePage</a></li>
+        <li><a href="global.html#removeTab">removeTab</a></li>
+        <li><a href="global.html#saveDialog">saveDialog</a></li>
+        <li><a href="global.html#saveNotebook">saveNotebook</a></li>
+        <li><a href="global.html#selectTab">selectTab</a></li>
+        <li><a href="global.html#setApiUrl">setApiUrl</a></li>
+        <li><a href="global.html#setCellContent">setCellContent</a></li>
+        <li><a href="global.html#setCellData">setCellData</a></li>
+        <li><a href="global.html#setLoadingText">setLoadingText</a></li>
+        <li><a href="global.html#setTabContent">setTabContent</a></li>
+        <li><a href="global.html#setTabTitle">setTabTitle</a></li>
+        <li><a href="global.html#tabsDo">tabsDo</a></li>
+        <li><a href="global.html#undo">undo</a></li>
+        <li><a href="global.html#undoAddAntonymCell">undoAddAntonymCell</a></li>
+        <li><a href="global.html#undoAddCell">undoAddCell</a></li>
+        <li>
+          <a href="global.html#undoAddEntitiesCell">undoAddEntitiesCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddGenerateCell">undoAddGenerateCell</a>
+        </li>
+        <li><a href="global.html#undoAddMeaningCell">undoAddMeaningCell</a></li>
+        <li><a href="global.html#undoAddPage">undoAddPage</a></li>
+        <li>
+          <a href="global.html#undoAddQuestionCell">undoAddQuestionCell</a>
+        </li>
+        <li>
+          <a href="global.html#undoAddSparseQuestionCell"
+            >undoAddSparseQuestionCell</a
+          >
+        </li>
+        <li><a href="global.html#undoAddSynonymCell">undoAddSynonymCell</a></li>
+        <li>
+          <a href="global.html#undoAddWikipediaImageCell"
+            >undoAddWikipediaImageCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSuggestionsCell"
+            >undoAddWikipediaSuggestionsCell</a
+          >
+        </li>
+        <li>
+          <a href="global.html#undoAddWikipediaSummaryCell"
+            >undoAddWikipediaSummaryCell</a
+          >
+        </li>
+        <li><a href="global.html#undoInsertCell">undoInsertCell</a></li>
+        <li><a href="global.html#undoInsertPage">undoInsertPage</a></li>
+        <li><a href="global.html#undoRemoveCell">undoRemoveCell</a></li>
+        <li><a href="global.html#undoRemovePage">undoRemovePage</a></li>
+        <li><a href="global.html#undoSetCellContent">undoSetCellContent</a></li>
+        <li><a href="global.html#undoSetCellData">undoSetCellData</a></li>
+        <li><a href="global.html#writeFile">writeFile</a></li>
+      </ul>
+    </nav>
+
+    <br class="clear" />
+
+    <footer>
+      Documentation generated by
+      <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Oct 15
+      2021 19:50:48 GMT-0300 (Chile Summer Time)
+    </footer>
+
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
+</html>

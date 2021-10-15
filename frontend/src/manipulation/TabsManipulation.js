@@ -1,5 +1,20 @@
 import { v4 as uuidv4 } from "uuid";
 
+/**
+ * @typedef {Object} Tab
+ * @property {string} id
+ * @property {string} title
+ * @property {JSX.Element | null} content
+ */
+
+/**
+ * Creates a tab.
+ * @param {Object} args
+ * @param {String | undefined} args.id
+ * @param {String | undefined} args.title
+ * @param {JSX.Element | undefined | null} args.content
+ * @returns {Tab}
+ */
 export function createTab({ id, title, content }) {
   if (!id) id = uuidv4();
   if (!title) title = "New Tab";

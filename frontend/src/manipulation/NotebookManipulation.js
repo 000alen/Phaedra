@@ -14,12 +14,53 @@ import {
 } from "../API/PhaedraAPI";
 
 /**
- * Creates a Notebook
- * @param {string} id
- * @param {string} name
- * @param {string} document_path
- * @param {object} pages
- * @returns {object}
+ * @typedef {Object} Cell
+ * @property {string} id
+ * @property {Object} data
+ * @property {string} content
+ */
+
+/**
+ * @typedef {Object} Page
+ * @property {string} id
+ * @property {Object} data
+ * @property {Cell[]} cells
+ */
+
+/**
+ * @typedef {Object} Notebook
+ * @property {string} id
+ * @property {string} name
+ * @property {string | null} document_path
+ * @property {Page[]} pages
+ */
+
+/**
+ * @typedef {Object} Command
+ * @property {Function} action
+ * @property {Page} page
+ * @property {string} pageId
+ * @property {Cell} cell
+ * @property {string} cellId
+ * @property {number} index
+ * @property {string} question
+ * @property {string} prompt
+ * @property {string} query
+ * @property {string} content
+ * @property {string} previousContent
+ * @property {Object} data
+ * @property {Object} previousData
+ * @property {string} word
+ */
+
+/**
+ * Creates a Notebook.
+ * @param {Object} args
+ * @param {string} args.id
+ * @param {string} args.name
+ * @param {string | null} args.document_path
+ * @param {Page[]} args.pages
+ * @returns {Notebook}
  */
 export function createNotebook({ id, name, document_path, pages }) {
   if (!id) id = uuidv4();
@@ -43,11 +84,11 @@ export function createNotebook({ id, name, document_path, pages }) {
 }
 
 /**
- * Creates a Page
+ * Creates a Page.
  * @param {string} id
- * @param {object} data
- * @param {object} cells
- * @returns {object}
+ * @param {Object} data
+ * @param {Cell[]} cells
+ * @returns {Page}
  */
 export function createPage(id, data, cells) {
   if (!id) id = uuidv4();
@@ -62,11 +103,11 @@ export function createPage(id, data, cells) {
 }
 
 /**
- * Creates a Cell
+ * Creates a Cell.
  * @param {string} id
- * @param {object} data
+ * @param {Object} data
  * @param {string} content
- * @returns {object}
+ * @returns {Cell}
  */
 export function createCell(id, data, content) {
   if (!id) id = uuidv4();
@@ -81,12 +122,12 @@ export function createCell(id, data, content) {
 }
 
 /**
- * Inserts a Page into the Notebook
- * @param {object} notebook
- * @param {object} obj
- * @param {object} obj.page
- * @param {number} obj.index
- * @returns {object}
+ * Inserts a Page into the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {Page} args.page
+ * @param {number} args.index
+ * @returns {Notebook}
  */
 export function insertPage(notebook, { page, index }) {
   notebook.pages.splice(index, 0, page);
@@ -94,21 +135,22 @@ export function insertPage(notebook, { page, index }) {
 }
 
 /**
- * Undoes a Page insertion
- * @param {object} notebook
- * @param {object} obj
- * @param {object} obj.page
- * @returns
+ * Undoes a Page insertion.
+ * @param {Notebook} notebook
+ * @param {object} args
+ * @param {Page} args.page
+ * @returns {Notebook}
  */
 export function undoInsertPage(notebook, { page }) {
   return removePage(notebook, { pageId: page.id });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a page to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {Page} args.page
+ * @returns {Notebook}
  */
 export function addPage(notebook, { page }) {
   notebook.pages.push(page);
@@ -116,40 +158,44 @@ export function addPage(notebook, { page }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Page addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {Page} args.page
+ * @returns {Notebook}
  */
 export function undoAddPage(notebook, { page }) {
   return removePage(notebook, { pageId: page.id });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Indexes a Page in the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @returns {number}
  */
 export function indexPage(notebook, { pageId }) {
   return notebook.pages.findIndex((page) => page.id === pageId);
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Returns a Page from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @returns {Page | undefined}
  */
 export function getPage(notebook, { pageId }) {
   return notebook.pages.find((page) => page.id === pageId);
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Removes a Page from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @returns {Notebook}
  */
 export function removePage(notebook, { pageId }) {
   notebook.pages = notebook.pages.filter((page) => page.id !== pageId);
@@ -157,20 +203,25 @@ export function removePage(notebook, { pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Page removal.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {Page} args.page
+ * @param {number} args.index
+ * @returns {Notebook}
  */
 export function undoRemovePage(notebook, { page, index }) {
   return insertPage(notebook, { page, index });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Inserts a Cell into the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {Cell} args.cell
+ * @param {number} args.index
+ * @returns {Notebook}
  */
 export function insertCell(notebook, { pageId, cell, index }) {
   console.log(pageId, cell, index);
@@ -183,20 +234,24 @@ export function insertCell(notebook, { pageId, cell, index }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Cell insertion.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {Cell} args.cell
+ * @returns {Notebook}
  */
 export function undoInsertCell(notebook, { pageId, cell }) {
   return removeCell(notebook, { pageId: pageId, cellId: cell.id });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a Cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {Cell} args.cell
+ * @returns {Notebook}
  */
 export function addCell(notebook, { pageId, cell }) {
   notebook.pages[indexPage(notebook, { pageId: pageId })].cells.push(cell);
@@ -204,20 +259,24 @@ export function addCell(notebook, { pageId, cell }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {Cell} args.cell
+ * @returns {Notebook}
  */
 export function undoAddCell(notebook, { pageId, cell }) {
   return removeCell(notebook, { pageId: pageId, cellId: cell.id });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Indexes a Cell in the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {number}
  */
 export function indexCell(notebook, { pageId, cellId }) {
   return notebook.pages[
@@ -226,10 +285,12 @@ export function indexCell(notebook, { pageId, cellId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Returns a Cell from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Cell | undefined}
  */
 export function getCell(notebook, { pageId, cellId }) {
   return notebook.pages[indexPage(notebook, { pageId: pageId })].cells.find(
@@ -238,10 +299,12 @@ export function getCell(notebook, { pageId, cellId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Removes a Cell from the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function removeCell(notebook, { pageId, cellId }) {
   notebook.pages[indexPage(notebook, { pageId: pageId })].cells =
@@ -252,20 +315,24 @@ export function removeCell(notebook, { pageId, cellId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Cell removal.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {Cell} args.cell
+ * @param {number} args.index
+ * @returns {Notebook}
  */
 export function undoRemoveCell(notebook, { pageId, cell, index }) {
   return insertCell(notebook, { pageId: pageId, cell: cell, index: index });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds entities cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {object} args
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addEntitiesCell(notebook, { pageId }) {
   return new Promise((resolve, reject) => {
@@ -276,20 +343,24 @@ export function addEntitiesCell(notebook, { pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a entities cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddEntitiesCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a question cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.question
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addQuestionCell(notebook, { question, pageId }) {
   return new Promise((resolve, reject) => {
@@ -300,20 +371,23 @@ export function addQuestionCell(notebook, { question, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a question cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddQuestionCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a sparse question cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.question
+ * @returns {Promise<Notebook>}
  */
 export function addSparseQuestionCell(notebook, { question }) {
   return new Promise((resolve, reject) => {
@@ -324,20 +398,24 @@ export function addSparseQuestionCell(notebook, { question }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes sparse question cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddSparseQuestionCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a generate cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.prompt
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addGenerateCell(notebook, { prompt, pageId }) {
   return new Promise((resolve, reject) => {
@@ -348,20 +426,24 @@ export function addGenerateCell(notebook, { prompt, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a generate cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddGenerateCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a Wikipedia summary cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {object} args
+ * @param {string} args.query
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addWikipediaSummaryCell(notebook, { query, pageId }) {
   return new Promise((resolve, reject) => {
@@ -372,20 +454,24 @@ export function addWikipediaSummaryCell(notebook, { query, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Wikipedia summary cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddWikipediaSummaryCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a Wikipedia suggestions cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.query
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addWikipediaSuggestionsCell(notebook, { query, pageId }) {
   return new Promise((resolve, reject) => {
@@ -396,20 +482,22 @@ export function addWikipediaSuggestionsCell(notebook, { query, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a Wikipedia suggestions cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddWikipediaSuggestionsCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds Wikipedia image cell to Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @returns {Promise<Notebook>}
  */
 export function addWikipediaImageCell(notebook, { query, pageId }) {
   return new Promise((resolve, reject) => {
@@ -420,9 +508,11 @@ export function addWikipediaImageCell(notebook, { query, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
+ * Undoes a Wikipedia image cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
  * @returns
  */
 export function undoAddWikipediaImageCell(notebook, { pageId, cellId }) {
@@ -430,10 +520,12 @@ export function undoAddWikipediaImageCell(notebook, { pageId, cellId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a meaning cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.word
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addMeaningCell(notebook, { word, pageId }) {
   return new Promise((resolve, reject) => {
@@ -444,20 +536,24 @@ export function addMeaningCell(notebook, { word, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a meaning cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddMeaningCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds a synonym cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.word
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addSynonymCell(notebook, { word, pageId }) {
   return new Promise((resolve, reject) => {
@@ -468,20 +564,24 @@ export function addSynonymCell(notebook, { word, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes a synonym cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddSynonymCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Adds an antonym cell to the Notebook.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.word
+ * @param {string} args.pageId
+ * @returns {Promise<Notebook>}
  */
 export function addAntonymCell(notebook, { word, pageId }) {
   return new Promise((resolve, reject) => {
@@ -492,20 +592,24 @@ export function addAntonymCell(notebook, { word, pageId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes an antonym cell addition.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Notebook}
  */
 export function undoAddAntonymCell(notebook, { pageId, cellId }) {
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Returns the content of a cell.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {string}
  */
 export function getCellContent(notebook, { pageId, cellId }) {
   return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
@@ -514,10 +618,13 @@ export function getCellContent(notebook, { pageId, cellId }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Changes the content of a cell
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @param {string} args.content
+ * @returns {Notebook}
  */
 export function setCellContent(notebook, { pageId, cellId, content }) {
   notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
@@ -527,10 +634,13 @@ export function setCellContent(notebook, { pageId, cellId, content }) {
 }
 
 /**
- *
+ * Undoes the content change of a cell.
  * @param {*} notebook
- * @param {*} param1
- * @returns
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @param {string} args.previousContent
+ * @returns {Notebook}
  */
 export function undoSetCellContent(
   notebook,
@@ -544,10 +654,12 @@ export function undoSetCellContent(
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Returns the data of a cell.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @returns {Object}
  */
 export function getCellData(notebook, { pageId, cellId }) {
   return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
@@ -556,10 +668,13 @@ export function getCellData(notebook, { pageId, cellId }) {
 }
 
 /**
- *
+ * Changes the data of a cell.
  * @param {*} notebook
- * @param {*} param1
- * @returns
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @param {Object} args.data
+ * @returns {Notebook}
  */
 export function setCellData(notebook, { pageId, cellId, data }) {
   notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
@@ -569,10 +684,13 @@ export function setCellData(notebook, { pageId, cellId, data }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} param1
- * @returns
+ * Undoes the change of data of a cell.
+ * @param {Notebook} notebook
+ * @param {Object} args
+ * @param {string} args.pageId
+ * @param {string} args.cellId
+ * @param {Object} args.previousData
+ * @returns {Notebook}
  */
 export function undoSetCellData(notebook, { pageId, cellId, previousData }) {
   return setCellData(notebook, {
@@ -583,13 +701,13 @@ export function undoSetCellData(notebook, { pageId, cellId, previousData }) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} command
- * @returns
+ * Undoes an command.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook | undefined}
  */
 export function undo(notebook, command) {
-  switch (command.action) {
+  switch (command.action.name) {
     case "insertPage":
       return undoInsertPage(notebook, command);
     case "addPage":
@@ -630,13 +748,13 @@ export function undo(notebook, command) {
 }
 
 /**
- *
- * @param {*} notebook
- * @param {*} command
- * @returns
+ * Redoes an command.
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {Notebook | Promise<Notebook> | undefined}
  */
 export function redo(notebook, command) {
-  switch (command.action) {
+  switch (command.action.name) {
     case "insertPage":
       return insertPage(notebook, command);
     case "addPage":

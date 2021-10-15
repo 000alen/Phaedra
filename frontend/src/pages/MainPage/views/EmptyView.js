@@ -12,7 +12,7 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-export default function EmptyView({ appController, statusBarRef }) {
+export default function EmptyView({ id, appController, statusBarRef }) {
   const handleNew = () => {
     const id = uuidv4();
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });

@@ -22,6 +22,50 @@ import {
 
 import { saveNotebook } from "../../NotebookIO";
 
+/**
+ * @typedef {import("../../App").AppController} AppController
+ */
+
+/**
+ * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ */
+
+/**
+ * @typedef {import("../../manipulation/NotebookManipulation").Notebook} Notebook
+ */
+
+/**
+ * @typedef {import("../../manipulation/NotebookManipulation").Command} Command
+ */
+
+/**
+ * @typedef {Object} NotebookController
+ * @property {Function} save
+ * @property {Function} handleSelection
+ * @property {Function} toggleEditing
+ * @property {Function} undo
+ * @property {Function} redo
+ * @property {Function} do
+ */
+
+/**
+ * @typedef {Object} NotebookState
+ * @property {string} tabId
+ * @property {AppController} appController
+ * @property {NotebookPageController} pageController
+ * @property {NotebookController} notebookController
+ * @property {React.RefObject | undefined} statusBarRef
+ * @property {Notebook} notebook
+ * @property {string | undefined} notebookPath
+ * @property {string | undefined} documentPath
+ * @property {any | undefined} documentFile
+ * @property {string | undefined} activePage
+ * @property {string | undefined} activeCell
+ * @property {boolean} editing
+ * @property {Command[]} history
+ * @property {number} historyIndex
+ */
+
 export default class NotebookComponent extends Component {
   constructor(props) {
     super(props);
@@ -39,6 +83,9 @@ export default class NotebookComponent extends Component {
     const { tabId, appController, pageController, statusBarRef } = props;
     const { notebook, notebookPath } = props;
 
+    /**
+     * @type {NotebookController}
+     */
     const notebookController = {
       save: this.save,
       handleSelection: this.handleSelection,
@@ -49,6 +96,9 @@ export default class NotebookComponent extends Component {
       do: this.do,
     };
 
+    /**
+     * @type {NotebookState}
+     */
     this.state = {
       tabId: tabId,
       appController: appController,
@@ -58,9 +108,9 @@ export default class NotebookComponent extends Component {
       notebook: notebook,
       notebookPath: notebookPath,
       documentPath: notebook.document_path,
-      documentFile: null,
-      activePage: null,
-      activeCell: null,
+      documentFile: undefined,
+      activePage: undefined,
+      activeCell: undefined,
       editing: false,
       history: [],
       historyIndex: -1,
@@ -71,11 +121,10 @@ export default class NotebookComponent extends Component {
     if (this.state.documentPath && !this.state.documentFile)
       this.loadDocument();
 
-    let state = JSON.parse(
-      window.localStorage.getItem(this.state.notebook.name)
-    );
+    let unparsedState = window.localStorage.getItem(this.state.notebook.name);
 
-    if (state !== null) {
+    if (unparsedState !== null) {
+      let state = JSON.parse(unparsedState);
       state.appController = this.state.appController;
       state.pageController = this.state.pageController;
       state.notebookController = this.state.notebookController;
@@ -91,16 +140,13 @@ export default class NotebookComponent extends Component {
 
   componentWillUnmount() {
     let state = { ...this.state };
-    state.statusBarRef = null;
+    state.statusBarRef = undefined;
     window.localStorage.setItem(
       this.state.notebook.name,
       JSON.stringify(state)
     );
   }
 
-  /**
-   *
-   */
   loadDocument() {
     readFile(this.state.documentPath).then((documentContent) => {
       this.setState((state) => {
@@ -113,9 +159,6 @@ export default class NotebookComponent extends Component {
     });
   }
 
-  /**
-   *
-   */
   save() {
     saveNotebook(this.state.notebook, this.state.notebookPath).then(
       (notebookPath) => {
@@ -128,8 +171,8 @@ export default class NotebookComponent extends Component {
 
   /**
    *
-   * @param {*} pageId
-   * @param {*} cellId
+   * @param {string} pageId
+   * @param {string} cellId
    */
   handleSelection(pageId, cellId) {
     if (this.state.activePage === pageId && this.state.activeCell === cellId) {
@@ -153,9 +196,6 @@ export default class NotebookComponent extends Component {
     }
   }
 
-  /**
-   *
-   */
   toggleEditing() {
     this.setState((state) => {
       return {
@@ -167,8 +207,8 @@ export default class NotebookComponent extends Component {
 
   /**
    *
-   * @param {*} action
-   * @param {*} args
+   * @param {Function} action
+   * @param {Object} args
    */
   do(action, args) {
     let notebook = this.state.notebook;
@@ -218,6 +258,9 @@ export default class NotebookComponent extends Component {
       case "addMeaningCell":
       case "addSynonymCell":
       case "addAntonymCell":
+        if (this.state.statusBarRef === undefined)
+          throw new Error("StatusBarRef is undefined.");
+
         const { statusBarController } = this.state.statusBarRef.current.state;
         statusBarController.showLoading();
         action(notebook, args).then((_notebook) => {
@@ -247,36 +290,30 @@ export default class NotebookComponent extends Component {
     });
   }
 
-  /**
-   *
-   */
   undo() {
-    let { history, historyIndex } = this.state;
+    let { notebook, history, historyIndex } = this.state;
     const [command, newHistoryInformation] = historyUndo(history, historyIndex);
-    const notebook = undo(notebook, command);
+    const newNotebook = undo(notebook, command);
 
     this.setState((state) => {
       return {
         ...state,
         ...newHistoryInformation,
-        notebook: notebook,
+        notebook: newNotebook,
       };
     });
   }
 
-  /**
-   *
-   */
   redo() {
-    let { history, historyIndex } = this.state;
+    let { notebook, history, historyIndex } = this.state;
     const [command, newHistoryInformation] = historyRedo(history, historyIndex);
-    const notebook = redo(notebook, command);
+    const newNotebook = redo(notebook, command);
 
     this.setState((state) => {
       return {
         ...state,
         ...newHistoryInformation,
-        notebook: notebook,
+        notebook: newNotebook,
       };
     });
   }

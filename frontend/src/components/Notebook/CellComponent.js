@@ -11,6 +11,23 @@ import { setCellContent } from "../../manipulation/NotebookManipulation";
 
 import { theme } from "../../index";
 
+/**
+ * @typedef {import("./NotebookComponent").NotebookController} NotebookController
+ */
+
+/**
+ * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ */
+
+/**
+ * @typedef {Object} CellState
+ * @property {string} id
+ * @property {string} pageId
+ * @property {NotebookPageController} pageController
+ * @property {NotebookController} notebookController
+ * @property {string} content
+ */
+
 export default class CellComponent extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +35,9 @@ export default class CellComponent extends Component {
     const { id, pageId, pageController, notebookController } = props;
     const { content } = props;
 
+    /**
+     * @type {CellState}
+     */
     this.state = {
       id: id,
       pageId: pageId,

@@ -12,6 +12,28 @@ import MainPage from "./pages/MainPage/MainPage";
 
 import "./css/App.css";
 
+/**
+ * @typedef {import("./manipulation/ClipboardManipulation").Clipboard} Clipboard
+ */
+
+/**
+ * @typedef {import("./manipulation/TabsManipulation").Tab} Tab
+ */
+
+/**
+ * @typedef {Object} AppController
+ * @property {Function} tabsDo
+ * @property {Function} clipboardDo
+ */
+
+/**
+ * @typedef AppState
+ * @property {AppController} appController
+ * @property {Tab[]} tabs
+ * @property {string | undefined} activeTab
+ * @property {Clipboard} clipboard
+ */
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -21,19 +43,30 @@ export default class App extends Component {
 
     this.statusBarRef = React.createRef();
 
+    /**
+     * @type {AppController}
+     */
     const appController = {
       tabsDo: this.tabsDo,
       clipboardDo: this.clipboardDo,
     };
 
+    /**
+     * @type {AppState}
+     */
     this.state = {
       appController: appController,
       tabs: [],
-      activeTab: null,
-      clipboard: null,
+      activeTab: undefined,
+      clipboard: [],
     };
   }
 
+  /**
+   * Does an action on the tabs
+   * @param {Function} action
+   * @param {Object} args
+   */
   tabsDo(action, args) {
     let { tabs, activeTab } = this.state;
 
@@ -65,6 +98,11 @@ export default class App extends Component {
     });
   }
 
+  /**
+   * Does an action on the clipboard.
+   * @param {Function} action
+   * @param {Object} args
+   */
   clipboardDo(action, args) {
     let clipboard = this.state.clipboard;
 
@@ -86,16 +124,16 @@ export default class App extends Component {
     const { tabs, activeTab } = this.state;
 
     let content;
-    if (activeTab) {
-      console.log(activeTab);
-      content = getTabContent(tabs, { id: activeTab });
-    } else {
+    if (activeTab === undefined) {
       content = (
         <MainPage
+          id={uuidv4()}
           appController={this.state.appController}
           statusBarRef={this.statusBarRef}
         />
       );
+    } else {
+      content = getTabContent(tabs, { id: activeTab });
     }
 
     return (

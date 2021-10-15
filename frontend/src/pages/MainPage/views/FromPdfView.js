@@ -13,7 +13,7 @@ const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function FromPdfView({ appController, statusBarRef }) {
+export default function FromPdfView({ id, appController, statusBarRef }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {

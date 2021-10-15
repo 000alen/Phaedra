@@ -26,7 +26,7 @@ const columns = [
   },
 ];
 
-export default function RecentView() {
+export default function RecentView({ id, appController, statusBarRef }) {
   return (
     <div>
       <DetailsList items={items} columns={columns} />

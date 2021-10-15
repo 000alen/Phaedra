@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { MessageBar } from "@fluentui/react";
+import { MessageBar, MessageBarType } from "@fluentui/react";
 import { v4 as uuidv4 } from "uuid";
 
 import RibbonComponent from "../components/Ribbon/RibbonComponent";
@@ -9,6 +9,28 @@ import CommandBoxComponent from "../components/CommandBoxComponent";
 import { setTabTitle } from "../manipulation/TabsManipulation";
 
 import "../css/pages/NotebookPage.css";
+
+/**
+ * @typedef {import("../App").AppController} AppController
+ */
+
+/**
+ * @typedef {Object} NotebookPageController
+ * @property {Function} showCommandBox
+ * @property {Function} hideCommandBox
+ * @property {Function} addMessageBar
+ * @property {Function} removeMessageBar
+ */
+
+/**
+ * @typedef {Object} NotebookPageState
+ * @property {string} id
+ * @property {AppController} appController
+ * @property {NotebookPageController} pageController
+ * @property {React.RefObject} statusBarRef
+ * @property {boolean} commandBoxShown
+ * @property {JSX.Element[]} messageBars
+ */
 
 export default class NotebookPage extends Component {
   constructor(props) {
@@ -26,6 +48,9 @@ export default class NotebookPage extends Component {
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
 
+    /**
+     * @type {NotebookPageController}
+     */
     const pageController = {
       showCommandBox: this.showCommandBox,
       hideCommandBox: this.hideCommandBox,
@@ -33,6 +58,9 @@ export default class NotebookPage extends Component {
       removeMessageBar: this.removeMessageBar,
     };
 
+    /**
+     * @type {NotebookPageState}
+     */
     this.state = {
       id: id,
       appController: appController,
@@ -55,6 +83,11 @@ export default class NotebookPage extends Component {
     });
   }
 
+  /**
+   * Adds a message bar to the page.
+   * @param {string} text
+   * @param {MessageBarType} type
+   */
   addMessageBar(text, type) {
     const id = uuidv4();
     let messageBars = [...this.state.messageBars];
@@ -77,6 +110,10 @@ export default class NotebookPage extends Component {
     });
   }
 
+  /**
+   * Removes a message Bar.
+   * @param {string} id
+   */
   removeMessageBar(id) {
     let messageBars = [...this.state.messageBars];
     messageBars = messageBars.filter(

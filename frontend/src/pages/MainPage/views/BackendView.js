@@ -8,7 +8,7 @@ import {
 
 import { getApiUrl, setApiUrl } from "../../../API/PhaedraAPI";
 
-export default function BackendView({ statusBarRef }) {
+export default function BackendView({ id, appController, statusBarRef }) {
   const [url, setUrl] = useState(getApiUrl());
 
   const handleUrlChange = (event) => {

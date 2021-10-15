@@ -5,6 +5,20 @@ import { theme } from "../index";
 
 import "../css/components/StatusBarComponent.css";
 
+/**
+ * @typedef {Object} StatusBarController
+ * @property {Function} setLoadingText
+ * @property {Function} showLoading
+ * @property {Function} hideLoading
+ */
+
+/**
+ * @typedef {Object} StatusBarState
+ * @property {StatusBarController} statusBarController
+ * @property {string} loadingText
+ * @property {boolean} loadingShown
+ */
+
 export default class StatusBarComponent extends Component {
   constructor(props) {
     super(props);
@@ -13,12 +27,18 @@ export default class StatusBarComponent extends Component {
     this.showLoading = this.showLoading.bind(this);
     this.hideLoading = this.hideLoading.bind(this);
 
+    /**
+     * @type {StatusBarController}
+     */
     const statusBarController = {
       setLoadingText: this.setLoadingText,
       showLoading: this.showLoading,
       hideLoading: this.hideLoading,
     };
 
+    /**
+     * @type {StatusBarState}
+     */
     this.state = {
       statusBarController: statusBarController,
       loadingText: "Loading",
@@ -27,8 +47,8 @@ export default class StatusBarComponent extends Component {
   }
 
   /**
-   *
-   * @param {*} text
+   * Sets the loading text.
+   * @param {string} text
    */
   setLoadingText(text) {
     this.setState({
@@ -36,18 +56,12 @@ export default class StatusBarComponent extends Component {
     });
   }
 
-  /**
-   *
-   */
   showLoading() {
     this.setState({
       loadingShown: true,
     });
   }
 
-  /**
-   *
-   */
   hideLoading() {
     this.setState({
       loadingShown: false,

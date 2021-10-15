@@ -39,7 +39,7 @@ export default function HomeItems({
         pageId: activePage,
       });
       notebookController.do(insertPage, {
-        page: createPage(),
+        page: createPage({}),
         index: activePageIndex + 1,
       });
     } else {
@@ -57,7 +57,7 @@ export default function HomeItems({
       });
       notebookController.do(insertCell, {
         pageId: activePage,
-        cell: createCell(),
+        cell: createCell({}),
         index: activeCellIndex + 1,
       });
     } else {

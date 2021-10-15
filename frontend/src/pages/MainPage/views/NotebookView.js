@@ -13,7 +13,7 @@ const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function NotebookView({ appController, statusBarRef }) {
+export default function NotebookView({ id, appController, statusBarRef }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {

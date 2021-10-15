@@ -17,6 +17,7 @@ export default function RibbonComponent({
   commandBoxRef,
   appController,
   pageController,
+  statusBarRef,
 }) {
   const ribbonStyle = {
     backgroundColor: theme.palette.white,

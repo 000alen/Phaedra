@@ -1,7 +1,6 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
-
-import { setCellData } from "../../../manipulation/NotebookManipulation";
+import { handleSeamless, handleEdit } from "../actions/EditAction";
 
 export default function EditItems({
   notebookRef,
@@ -9,26 +8,11 @@ export default function EditItems({
   appController,
   pageController,
 }) {
-  const handleSeamless = () => {
-    const { notebookController } = notebookRef.current.state;
-    const { activePage, activeCell } = notebookRef.current.state;
-    notebookController.do(setCellData, {
-      pageId: activePage,
-      cellId: activeCell,
-      data: { seamless: true },
-    });
-  };
-
-  const handleEdit = () => {
-    const { notebookController } = notebookRef.current.state;
-    notebookController.toggleEditing();
-  };
-
   const editItems = [
     {
       key: "Seamless",
       iconProps: { iconName: "AlignLeft" },
-      onClick: handleSeamless,
+      onClick: () => handleSeamless(notebookRef),
     },
   ];
 
@@ -36,7 +20,7 @@ export default function EditItems({
     {
       key: "edit",
       iconProps: { iconName: "Edit" },
-      onClick: handleEdit,
+      onClick: () => handleEdit(notebookRef),
     },
   ];
 

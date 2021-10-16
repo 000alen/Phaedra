@@ -1,5 +1,6 @@
 import React from "react";
-import { CommandBar, MessageBarType } from "@fluentui/react";
+import { CommandBar } from "@fluentui/react";
+import { handleTest } from "../actions/FileActions";
 
 export default function FileItems({
   notebookRef,
@@ -7,8 +8,6 @@ export default function FileItems({
   appController,
   pageController,
 }) {
-  const handleTest = () => {};
-
   const fileItems = [
     {
       key: "test",
@@ -16,7 +15,7 @@ export default function FileItems({
       iconProps: {
         iconName: "TestCase",
       },
-      onClick: handleTest,
+      onClick: () => handleTest(),
     },
   ];
 

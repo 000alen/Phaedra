@@ -8,6 +8,10 @@ import CommandBoxComponent from "../components/CommandBoxComponent";
 
 import { setTabTitle } from "../manipulation/TabsManipulation";
 
+import mousetrap from "mousetrap";
+
+import { handleSave } from "../components/Ribbon/actions/HomeActions";
+
 import "../css/pages/NotebookPage.css";
 
 /**
@@ -69,6 +73,20 @@ export default class NotebookPage extends Component {
       commandBoxShown: false,
       messageBars: [],
     };
+  }
+
+  componentDidMount() {
+    mousetrap.bind(
+      "ctrl+s",
+      () => {
+        handleSave(this.notebookRef);
+      },
+      "keyup"
+    );
+  }
+
+  componentWillUnmount() {
+    mousetrap.unbind("ctrl+s");
   }
 
   showCommandBox() {

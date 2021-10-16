@@ -55,16 +55,18 @@ export default function EmptyPage({ id, appController, statusBarRef }) {
   const handleNew = () => {
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });
 
-    appController.setTabContent(
-      id,
-      <NotebookPage
-        key={id}
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-        notebook={notebook}
-      />
-    );
+    appController.tabsDo(setTabContent, {
+      id: id,
+      content: (
+        <NotebookPage
+          key={id}
+          id={id}
+          appController={appController}
+          statusBarRef={statusBarRef}
+          notebook={notebook}
+        />
+      ),
+    });
   };
 
   return (

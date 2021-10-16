@@ -1,4 +1,4 @@
-import { setCellData } from "../../../manipulation/NotebookManipulation";
+import { setCellData } from "../manipulation/NotebookManipulation";
 
 export function handleSeamless(notebookRef) {
   const { notebookController } = notebookRef.current.state;

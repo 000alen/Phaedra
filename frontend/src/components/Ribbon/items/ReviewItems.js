@@ -4,7 +4,7 @@ import {
   handleMeaning,
   handleSynonym,
   handleAntonym,
-} from "../actions/ReviewActions";
+} from "../../../actions/ReviewActions";
 
 export default function ReviewItems({
   notebookRef,

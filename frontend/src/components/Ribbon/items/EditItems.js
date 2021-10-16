@@ -1,6 +1,6 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
-import { handleSeamless, handleEdit } from "../actions/EditAction";
+import { handleSeamless, handleEdit } from "../../../actions/EditAction";
 
 export default function EditItems({
   notebookRef,

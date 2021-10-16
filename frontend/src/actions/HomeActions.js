@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import {
   clipboardPush,
   clipboardTop,
-} from "../../../manipulation/ClipboardManipulation";
+} from "../manipulation/ClipboardManipulation";
 import {
   createPage,
   createCell,
@@ -18,7 +18,7 @@ import {
   addGenerateCell,
   getCell,
   addCell,
-} from "../../../manipulation/NotebookManipulation";
+} from "../manipulation/NotebookManipulation";
 
 export function handleSave(notebookRef) {
   const { notebookController } = notebookRef.current.state;

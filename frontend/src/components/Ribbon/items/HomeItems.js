@@ -12,7 +12,7 @@ import {
   handlePaste,
   handleGenerate,
   handleQuestion,
-} from "../actions/HomeActions";
+} from "../../../actions/HomeActions";
 
 export default function HomeItems({
   notebookRef,

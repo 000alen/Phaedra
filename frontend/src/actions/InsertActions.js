@@ -5,7 +5,7 @@ import {
   addWikipediaSuggestionsCell,
   addWikipediaImageCell,
   addEntitiesCell,
-} from "../../../manipulation/NotebookManipulation";
+} from "../manipulation/NotebookManipulation";
 
 export function handleWikipediaSummary(
   notebookRef,

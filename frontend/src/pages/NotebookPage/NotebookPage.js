@@ -2,20 +2,20 @@ import React, { Component } from "react";
 import { MessageBar, MessageBarType } from "@fluentui/react";
 import { v4 as uuidv4 } from "uuid";
 
-import RibbonComponent from "../components/Ribbon/RibbonComponent";
-import NotebookComponent from "../components/Notebook/NotebookComponent";
-import CommandBoxComponent from "../components/CommandBoxComponent";
+import RibbonComponent from "../../components/Ribbon/RibbonComponent";
+import NotebookComponent from "../../components/Notebook/NotebookComponent";
+import CommandBoxComponent from "../../components/CommandBoxComponent";
 
-import { setTabTitle } from "../manipulation/TabsManipulation";
+import { setTabTitle } from "../../manipulation/TabsManipulation";
 
 import mousetrap from "mousetrap";
 
-import { handleSave } from "../components/Ribbon/actions/HomeActions";
+import { NotebookPageShortcuts } from "./NotebookPageShortcuts";
 
-import "../css/pages/NotebookPage.css";
+import "../../css/pages/NotebookPage.css";
 
 /**
- * @typedef {import("../App").AppController} AppController
+ * @typedef {import("../../App").AppController} AppController
  */
 
 /**
@@ -76,17 +76,27 @@ export default class NotebookPage extends Component {
   }
 
   componentDidMount() {
-    mousetrap.bind(
-      "ctrl+s",
-      () => {
-        handleSave(this.notebookRef);
-      },
-      "keyup"
-    );
+    for (const shortcut of Object.entries(NotebookPageShortcuts)) {
+      const [keys, callback] = shortcut;
+      mousetrap.bind(
+        keys,
+        () =>
+          callback(
+            this.notebookRef,
+            this.commandBoxRef,
+            this.state.pageController,
+            this.state.appController
+          ),
+        "keyup"
+      );
+    }
   }
 
   componentWillUnmount() {
-    mousetrap.unbind("ctrl+s");
+    for (const shortcut of Object.entries(NotebookPageShortcuts)) {
+      const [keys, callback] = shortcut;
+      mousetrap.unbind(keys);
+    }
   }
 
   showCommandBox() {

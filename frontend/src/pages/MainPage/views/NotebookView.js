@@ -5,7 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 
-import NotebookPage from "../../../pages/NotebookPage";
+import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
 import { openJson } from "../../../NotebookIO";
 

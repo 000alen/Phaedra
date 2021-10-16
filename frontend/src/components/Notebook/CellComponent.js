@@ -16,7 +16,7 @@ import { theme } from "../../index";
  */
 
 /**
- * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
  */
 
 /**

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import CardComponent from "../../../components/CardComponent";
 
-import NotebookPage from "../../../pages/NotebookPage";
+import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";

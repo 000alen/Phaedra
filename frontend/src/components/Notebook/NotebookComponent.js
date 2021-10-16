@@ -27,7 +27,7 @@ import { saveNotebook } from "../../NotebookIO";
  */
 
 /**
- * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
  */
 
 /**

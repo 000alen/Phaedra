@@ -5,7 +5,7 @@ import CardComponent from "../components/CardComponent";
 import { createNotebook } from "../manipulation/NotebookManipulation";
 import { setTabContent } from "../manipulation/TabsManipulation";
 
-import NotebookPage from "./NotebookPage";
+import NotebookPage from "./NotebookPage/NotebookPage";
 
 import { openFile } from "../NotebookIO";
 

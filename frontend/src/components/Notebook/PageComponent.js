@@ -12,7 +12,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
  */
 
 /**
- * @typedef {import("../../pages/NotebookPage").NotebookPageController} NotebookPageController
+ * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
  */
 
 /**

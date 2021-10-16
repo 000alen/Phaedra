@@ -64,6 +64,7 @@ import { saveNotebook } from "../../NotebookIO";
  * @property {boolean} editing
  * @property {Command[]} history
  * @property {number} historyIndex
+ * @property {boolean} isSaved
  */
 
 export default class NotebookComponent extends Component {
@@ -114,6 +115,7 @@ export default class NotebookComponent extends Component {
       editing: false,
       history: [],
       historyIndex: -1,
+      isSaved: true,
     };
   }
 
@@ -163,7 +165,7 @@ export default class NotebookComponent extends Component {
     saveNotebook(this.state.notebook, this.state.notebookPath).then(
       (notebookPath) => {
         this.setState((state) => {
-          return { ...state, notebookPath: notebookPath };
+          return { ...state, notebookPath: notebookPath, isSaved: true };
         });
       }
     );
@@ -286,6 +288,7 @@ export default class NotebookComponent extends Component {
         ...state,
         ...newHistoryInformation,
         notebook: notebook,
+        isSaved: false,
       };
     });
   }
@@ -300,6 +303,7 @@ export default class NotebookComponent extends Component {
         ...state,
         ...newHistoryInformation,
         notebook: newNotebook,
+        isSaved: false,
       };
     });
   }
@@ -314,6 +318,7 @@ export default class NotebookComponent extends Component {
         ...state,
         ...newHistoryInformation,
         notebook: newNotebook,
+        isSaved: false,
       };
     });
   }

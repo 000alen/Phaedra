@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 
-import { theme } from "../index";
+import { StatusBarButtonComponent } from "./StatusBarButtonComponent";
+import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 
-import "../css/components/StatusBarComponent.css";
+import { theme } from "../../index";
+
+import "../../css/components/StatusBarComponent.css";
 
 /**
  * @typedef {Object} StatusBarController
@@ -77,15 +80,13 @@ export default class StatusBarComponent extends Component {
 
     return (
       <div
-        className="statusBar flex items-center pl-2 space-x-2"
+        className="statusBar flex items-center pl-2 space-x-2 select-none"
         style={statusBarStyle}
       >
-        {loadingShown && (
-          <>
-            <Spinner size={SpinnerSize.xSmall} />
-            <Text variant="small">{loadingText}</Text>
-          </>
-        )}
+        {loadingShown ? <StatusBarLoadingComponent text={loadingText} /> : null}
+
+        <StatusBarButtonComponent text="Test1" icon="Accept" />
+        <StatusBarButtonComponent text="Test2" icon="Accept" />
       </div>
     );
   }

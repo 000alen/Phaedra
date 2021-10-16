@@ -191,8 +191,8 @@ def batch_summarize(texts: List[str]) -> List[str]:
     response = _summarizer(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], summarizer_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], summarizer_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -253,8 +253,8 @@ def batch_answer(questions: List[str], contexts: List[str]) -> List[str]:
     response = _answerer(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], answerer_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -288,8 +288,8 @@ def batch_answer_same_context(questions: List[str], context: str) -> List[str]:
     response = _answerer(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], answerer_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -323,8 +323,8 @@ def batch_answer_same_question(question: str, contexts: List[str]) -> List[str]:
     response = _answerer(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], answerer_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], answerer_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -385,8 +385,8 @@ def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
     response = _generator(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], generator_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -419,8 +419,8 @@ def batch_generate_same_context(prompts: List[str], context: str) -> List[str]:
     response = _generator(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], generator_parameters["stop"])
+        for choices in response
     ]
 
 
@@ -453,8 +453,8 @@ def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
     response = _generator(prompts, **parameters)
 
     return [
-        cut_on_stop(choice["generated_text"], generator_parameters["stop"])
-        for choice in response
+        cut_on_stop(choices[0]["generated_text"], generator_parameters["stop"])
+        for choices in response
     ]
 
 

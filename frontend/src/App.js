@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import StatusBarComponent from "./components/StatusBarComponent";
+import StatusBarComponent from "./components/StatusBar/StatusBarComponent";
 import TabsComponent from "./components/Tabs/TabsComponent";
 import TopBarComponent from "./components/TopBarComponent";
 

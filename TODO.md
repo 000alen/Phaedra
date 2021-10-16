@@ -19,7 +19,9 @@
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
+
 - [ ] Key bindings
 - [ ] History
 - [ ] Fill JSDocs
+- [ ] Collaborative editing ([inspiration](https://www.youtube.com/watch?v=Exr0iY_D-vw))
 - [x] Implement vocabulary functionality on frontend

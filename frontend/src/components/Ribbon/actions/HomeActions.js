@@ -149,6 +149,8 @@ export function handlePaste(notebookRef, pageController, appController) {
 }
 
 export function handleQuestion(notebookRef, commandBoxRef, pageController) {
+  console.log("handleQuestion", notebookRef, commandBoxRef, pageController);
+
   const { notebookController } = notebookRef.current.state;
   const { activePage } = notebookRef.current.state;
   if (activePage && commandBoxRef.current) {

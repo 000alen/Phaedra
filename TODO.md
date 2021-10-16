@@ -19,6 +19,7 @@
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
+
 - [ ] Key bindings
 - [ ] History
 - [ ] Fill JSDocs

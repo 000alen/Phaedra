@@ -17,6 +17,7 @@ import {
   addQuestionCell,
   addGenerateCell,
   getCell,
+  addCell,
 } from "../../../manipulation/NotebookManipulation";
 
 export function handleSave(notebookRef) {
@@ -53,6 +54,11 @@ export function handleInsertCell(notebookRef, pageController) {
       pageId: activePage,
       cell: createCell({}),
       index: activeCellIndex + 1,
+    });
+  } else if (activePage) {
+    notebookController.do(addCell, {
+      pageId: activePage,
+      cell: createCell({}),
     });
   } else {
     pageController.addMessageBar("No cell selected", MessageBarType.error);

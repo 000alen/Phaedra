@@ -1,6 +1,7 @@
 # To do list
 
 - [ ] Launch a release
+- [ ] Create tests
 
 ## Backend
 

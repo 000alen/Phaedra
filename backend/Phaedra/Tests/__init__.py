@@ -3,6 +3,8 @@ import base64
 import json
 
 from Phaedra.Notebook import Notebook
+from Phaedra.Notebook.Page import Page
+from Phaedra.Notebook.Cell import Cell
 
 _jupiter_pdf = None
 _jupiter_base64 = None
@@ -13,6 +15,10 @@ _jupiter_pdf_path = None
 _jupiter_text_path = None
 _jupiter_json_path = None
 _jupiter_500_words_text = None
+_jupiter_json_page = None
+_jupiter_json_cell = None
+_jupiter_page = None
+_jupiter_cell = None
 
 
 def load_jupiter_pdf():
@@ -71,6 +77,34 @@ def load_jupiter_500_words_text():
     ).decode("utf-8")
 
 
+def load_jupiter_json_page():
+    global _jupiter_json_page
+    _jupiter_json_page = json.loads(
+        pkg_resources.resource_string(__name__, "jupiter_page.json").decode("utf-8")
+    )
+
+
+def load_jupiter_json_cell():
+    global _jupiter_json_cell
+    _jupiter_json_cell = json.loads(
+        pkg_resources.resource_string(__name__, "jupiter_cell.json").decode("utf-8")
+    )
+
+
+def load_jupiter_page():
+    if _jupiter_json_page is None:
+        load_jupiter_json_page()
+    global _jupiter_page
+    _jupiter_page = Page.from_json(_json=_jupiter_json_page)
+
+
+def load_jupiter_cell():
+    if _jupiter_json_cell is None:
+        load_jupiter_json_cell()
+    global _jupiter_cell
+    _jupiter_cell = Cell.from_json(_json=_jupiter_json_cell)
+
+
 def get_jupiter_pdf():
     if _jupiter_pdf is None:
         load_jupiter_pdf()
@@ -123,3 +157,27 @@ def get_jupiter_500_words_text():
     if _jupiter_500_words_text is None:
         load_jupiter_500_words_text()
     return _jupiter_500_words_text
+
+
+def get_jupiter_json_page():
+    if _jupiter_json_page is None:
+        load_jupiter_json_page()
+    return _jupiter_json_page
+
+
+def get_jupiter_json_cell():
+    if _jupiter_json_cell is None:
+        load_jupiter_json_cell()
+    return _jupiter_json_cell
+
+
+def get_jupiter_page():
+    if _jupiter_page is None:
+        load_jupiter_page()
+    return _jupiter_page
+
+
+def get_jupiter_cell():
+    if _jupiter_cell is None:
+        load_jupiter_cell()
+    return _jupiter_cell

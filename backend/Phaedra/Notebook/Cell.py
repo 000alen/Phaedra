@@ -23,14 +23,17 @@ class Cell:
     content: str
     data: Dict
 
-    def __init__(self, content: str = None, data: Dict = None):
+    def __init__(self, id: str = None, content: str = None, data: Dict = None):
+        if id is None:
+            id = str(uuid.uuid4())
+
         if content is None:
             content = ""
 
         if data is None:
             data = {}
 
-        self.id = str(uuid.uuid4())
+        self.id = id
         self.content = content
         self.data = data
 

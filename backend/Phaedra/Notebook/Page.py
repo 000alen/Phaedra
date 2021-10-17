@@ -28,14 +28,17 @@ class Page:
     cells: List[Cell]
     data: Dict
 
-    def __init__(self, cells: List[Cell] = None, data: Dict = None):
+    def __init__(self, id: str = None, cells: List[Cell] = None, data: Dict = None):
+        if id is None:
+            id = str(uuid.uuid4())
+
         if cells is None:
             cells = []
 
         if data is None:
             data = {}
 
-        self.id = str(uuid.uuid4())
+        self.id = id
         self.cells = cells
         self.data = data
 

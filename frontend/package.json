@@ -14,7 +14,6 @@
     "autoprefixer": "^9",
     "concurrently": "^6.2.1",
     "cross-env": "^7.0.3",
-    "html2canvas": "^1.3.2",
     "jsdoc": "^3.6.7",
     "mousetrap": "^1.6.5",
     "postcss": "^7",
@@ -53,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^27.0.2",
     "electron": "^15.0.0"
   }
 }

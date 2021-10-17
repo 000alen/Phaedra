@@ -38,7 +38,8 @@ class TestAPI(unittest.TestCase):
 
         with app.test_client() as c:
             response = c.post(
-                "/cell/add/entities", json={"notebook": notebook, "page_id": page_id}
+                "/cell/add/entities",
+                json={"notebook": notebook.json(), "page_id": page_id},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -54,7 +55,11 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/question",
-                json={"notebook": notebook, "page_id": page_id, "question": question},
+                json={
+                    "notebook": notebook.json(),
+                    "page_id": page_id,
+                    "question": question,
+                },
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -69,7 +74,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/sparse_question",
-                json={"notebook": notebook, "question": question},
+                json={"notebook": notebook.json(), "question": question},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -85,7 +90,11 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/generate",
-                json={"notebook": notebook, "page_id": page_id, "prompt": prompt},
+                json={
+                    "notebook": notebook.json(),
+                    "page_id": page_id,
+                    "prompt": prompt,
+                },
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -101,7 +110,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/wikipedia_summary",
-                json={"notebook": notebook, "page_id": page_id, "query": query},
+                json={"notebook": notebook.json(), "page_id": page_id, "query": query},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -117,7 +126,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/wikipedia_suggestions",
-                json={"notebook": notebook, "page_id": page_id, "query": query},
+                json={"notebook": notebook.json(), "page_id": page_id, "query": query},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -133,7 +142,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/wikipedia_image",
-                json={"notebook": notebook, "page_id": page_id, "query": query},
+                json={"notebook": notebook.json(), "page_id": page_id, "query": query},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -149,7 +158,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/meaning",
-                json={"notebook": notebook, "page_id": page_id, "word": word},
+                json={"notebook": notebook.json(), "page_id": page_id, "word": word},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -165,7 +174,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/synonym",
-                json={"notebook": notebook, "page_id": page_id, "word": word},
+                json={"notebook": notebook.json(), "page_id": page_id, "word": word},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)
@@ -181,7 +190,7 @@ class TestAPI(unittest.TestCase):
         with app.test_client() as c:
             response = c.post(
                 "/cell/add/antonym",
-                json={"notebook": notebook, "page_id": page_id, "word": word},
+                json={"notebook": notebook.json(), "page_id": page_id, "word": word},
             )
             self.assertIn("id", response.json)
             self.assertIn("name", response.json)

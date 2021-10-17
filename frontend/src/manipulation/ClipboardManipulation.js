@@ -1,3 +1,13 @@
+import { v4 as uuidv4 } from "uuid";
+
+/**
+ * @typedef {import("./NotebookManipulation").Cell} Cell
+ */
+
+/**
+ * @typedef {import("./NotebookManipulation").Page} Page
+ */
+
 /**
  * @typedef {Array} Clipboard
  */
@@ -29,4 +39,29 @@ export function clipboardTop(clipboard) {
  */
 export function clipboardPop(clipboard) {
   return clipboard.slice(0, -1);
+}
+
+/**
+ *
+ * @param {Cell} cell
+ * @returns {Cell}
+ */
+export function makeCellUnique(cell) {
+  return {
+    ...cell,
+    id: uuidv4(),
+  };
+}
+
+/**
+ *
+ * @param {Page} page
+ * @returns {Page}
+ */
+export function makePageUnique(page) {
+  return {
+    ...page,
+    id: uuidv4(),
+    cells: page.cells.map(makeCellUnique),
+  };
 }

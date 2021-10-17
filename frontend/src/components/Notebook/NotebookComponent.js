@@ -78,7 +78,7 @@ export default class NotebookComponent extends Component {
     this.toggleEditing = this.toggleEditing.bind(this);
 
     this.do = this.do.bind(this);
-    this.handleAsyncDo = this.handleAsyncDo.bind(this);
+    this.handleDo = this.handleDo.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
 
@@ -269,33 +269,16 @@ export default class NotebookComponent extends Component {
         action(notebook, args).then((_notebook) => {
           statusBarController.hideLoading();
           args = { ...args, cellId: undefined }; // XXX
-          this.handleAsyncDo(action, args, _notebook);
+          this.handleDo(action, args, _notebook);
         });
-        return;
         break;
       default:
-        notebook = action(notebook, args);
+        this.handleDo(action, args, action(notebook, args));
         break;
     }
-
-    let { history, historyIndex } = this.state;
-
-    const newHistoryInformation = historyDo(history, historyIndex, {
-      ...args,
-      action: action.name,
-    });
-
-    this.setState((state) => {
-      return {
-        ...state,
-        ...newHistoryInformation,
-        notebook: notebook,
-        isSaved: false,
-      };
-    });
   }
 
-  handleAsyncDo(action, args, notebook) {
+  handleDo(action, args, notebook) {
     let { history, historyIndex } = this.state;
 
     const newHistoryInformation = historyDo(history, historyIndex, {

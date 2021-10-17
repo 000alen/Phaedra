@@ -1,6 +1,6 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
-import { handleTest } from "../actions/FileActions";
+import { handleTest } from "../../../actions/FileActions";
 
 export default function FileItems({
   notebookRef,

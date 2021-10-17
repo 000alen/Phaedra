@@ -1,11 +1,11 @@
 import { MessageBarType } from "@fluentui/react";
 
-import { v4 as uuidv4 } from "uuid";
-
 import {
   clipboardPush,
   clipboardTop,
-} from "../../../manipulation/ClipboardManipulation";
+  makeCellUnique,
+  makePageUnique,
+} from "../manipulation/ClipboardManipulation";
 import {
   createPage,
   createCell,
@@ -18,7 +18,10 @@ import {
   addGenerateCell,
   getCell,
   addCell,
-} from "../../../manipulation/NotebookManipulation";
+  addPage,
+  removePage,
+  getPage,
+} from "../manipulation/NotebookManipulation";
 
 export function handleSave(notebookRef) {
   const { notebookController } = notebookRef.current.state;
@@ -38,7 +41,9 @@ export function handleInsertPage(notebookRef, pageController) {
       index: activePageIndex + 1,
     });
   } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
+    notebookController.do(addPage, {
+      page: createPage({}),
+    });
   }
 }
 
@@ -74,6 +79,10 @@ export function handleDelete(notebookRef, pageController) {
       pageId: activePage,
       cellId: activeCell,
     });
+  } else if (activePage) {
+    notebookController.do(removePage, {
+      pageId: activePage,
+    });
   } else {
     pageController.addMessageBar("No page selected", MessageBarType.error);
   }
@@ -90,11 +99,11 @@ export function handleRedo(notebookRef) {
 }
 
 export function handleCut(notebookRef, pageController, appController) {
-  const { notebookController } = notebookRef.current.state;
+  const { notebook, notebookController } = notebookRef.current.state;
   const { activePage, activeCell } = notebookRef.current.state;
 
   if (activeCell) {
-    const cell = notebookController.do(getCell, {
+    const cell = getCell(notebook, {
       pageId: activePage,
       cellId: activeCell,
     });
@@ -105,22 +114,41 @@ export function handleCut(notebookRef, pageController, appController) {
       pageId: activePage,
       cellId: activeCell,
     });
+  } else if (activePage) {
+    const page = getPage(notebook, {
+      pageId: activePage,
+    });
+
+    appController.clipboardDo(clipboardPush, { element: page });
+
+    notebookController.do(removePage, {
+      pageId: activePage,
+    });
   } else {
     pageController.addMessageBar("No cell selected", MessageBarType.error);
   }
 }
 
 export function handleCopy(notebookRef, pageController, appController) {
-  const { notebookController } = notebookRef.current.state;
+  const { notebook, notebookController } = notebookRef.current.state;
   const { activePage, activeCell } = notebookRef.current.state;
 
+  console.log(activePage, activeCell);
+
   if (activeCell) {
-    const cell = notebookController.do(getCell, {
+    const cell = getCell(notebook, {
       pageId: activePage,
       cellId: activeCell,
     });
-
     appController.clipboardDo(clipboardPush, { element: cell });
+  } else if (activePage) {
+    const page = getPage(notebook, {
+      pageId: activePage,
+    });
+
+    console.log(page);
+
+    appController.clipboardDo(clipboardPush, { element: page });
   } else {
     pageController.addMessageBar("No cell selected", MessageBarType.error);
   }
@@ -135,13 +163,22 @@ export function handlePaste(notebookRef, pageController, appController) {
       cellId: activeCell,
     });
 
-    let cell = { ...appController.clipboardDo(clipboardTop) };
-
-    cell.id = uuidv4();
+    let cell = makeCellUnique(appController.clipboardDo(clipboardTop));
     notebookController.do(insertCell, {
       pageId: activePage,
       cell: cell,
       index: activeCellIndex + 1,
+    });
+  } else if (activePage) {
+    const activePageIndex = notebookController.do(indexPage, {
+      pageId: activePage,
+    });
+
+    let page = makePageUnique(appController.clipboardDo(clipboardTop));
+
+    notebookController.do(insertPage, {
+      page: page,
+      index: activePageIndex + 1,
     });
   } else {
     pageController.addMessageBar("No cell selected", MessageBarType.error);
@@ -149,8 +186,6 @@ export function handlePaste(notebookRef, pageController, appController) {
 }
 
 export function handleQuestion(notebookRef, commandBoxRef, pageController) {
-  console.log("handleQuestion", notebookRef, commandBoxRef, pageController);
-
   const { notebookController } = notebookRef.current.state;
   const { activePage } = notebookRef.current.state;
   if (activePage && commandBoxRef.current) {

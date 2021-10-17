@@ -4,7 +4,7 @@ import {
   addMeaningCell,
   addSynonymCell,
   addAntonymCell,
-} from "../../../manipulation/NotebookManipulation";
+} from "../manipulation/NotebookManipulation";
 
 export function handleMeaning(notebookRef, commandBoxRef, pageController) {
   const { notebookController } = notebookRef.current.state;

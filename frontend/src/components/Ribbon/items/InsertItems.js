@@ -5,7 +5,7 @@ import {
   handleWikipediaSummary,
   handleWikipediaSuggestions,
   handleWikipediaImage,
-} from "../actions/InsertActions";
+} from "../../../actions/InsertActions";
 
 export default function InsertItems({
   notebookRef,

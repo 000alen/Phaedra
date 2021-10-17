@@ -1,4 +1,4 @@
-import { handleSave } from "../../components/Ribbon/actions/HomeActions";
+import { handleSave } from "../../actions/HomeActions";
 
 export const NotebookPageShortcuts = {
   "ctrl+s": (notebookRef, commandBoxRef, pageController, appController) =>

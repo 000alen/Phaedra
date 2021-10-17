@@ -1,0 +1,46 @@
+Jupiter is the fifth planet from the Sun and the largest in the Solar System. It is a gas giant with a mass more than two and a half times that of all the other planets in the Solar System combined, but slightly less than one-thousandth the mass of the Sun. Jupiter is the third-brightest natural object in the Earth's night sky after the Moon and Venus. It has been observed since pre-historic times and is named after the Roman god Jupiter, the king of the gods, because of its observed size.
+Jupiter is primarily composed of hydrogen, but helium constitutes one quarter of its mass and one tenth of its volume. It likely has a rocky core of heavier elements,[16] but like the other giant planets, Jupiter lacks a well-defined solid surface. The on-going contraction of its interior generates heat greater than the amount received from the Sun. Because of its rapid rotation, the planet's shape is that of an oblate spheroid; it has a slight but noticeable bulge around the equator. The outer atmosphere is visibly segregated into several bands at different latitudes, with turbulence and storms along their interacting boundaries. A prominent result of this is the Great Red Spot, a giant storm that is known to have existed since at least the 17th century, when it was first seen by telescope.
+Surrounding Jupiter is a faint planetary ring system and a powerful magnetosphere. Jupiter's magnetic tail is nearly 800 million km long, covering the entire distance to Saturn's orbit. Jupiter has 80 known moons and possibly many more,[6] including the four large Galilean moons discovered by Galileo Galilei in 1610. Ganymede, the largest of these, has a diameter greater than that of the planet Mercury.
+Pioneer 10 was the first spacecraft to visit Jupiter, making its closest approach to the planet in December 1973.[17] Jupiter has since been explored on a number of occasions by robotic spacecraft, beginning with the Pioneer and Voyager flyby missions from 1973 to 1979, and later by the Galileo orbiter, which arrived at Jupiter in 1995.[18] In 2007, Jupiter was visited by the New Horizons probe, which used Jupiter's gravity to increase its speed and bend its trajectory en route to Pluto. The latest probe to visit the planet, Juno, entered orbit around Jupiter in July 2016.[19][20] Future targets for exploration in the Jupiter system include the probable ice-covered liquid ocean of the moon Europa.[21]
+The planetary symbol for Jupiter, ♃,[22] descends from a Greek zeta with a horizontal stroke, ⟨Ƶ⟩, as an abbreviation for Zeus (the Greek name for the planet).[23]
+Formation and migration
+Jupiter is most likely the oldest planet in the Solar System.[24] Current models of Solar System formation suggest that Jupiter formed at or beyond the snow line; a distance from the early Sun where the temperature is sufficiently cold for volatiles such as water to condense into solids.[25] It first assembled a large solid core before accumulating its gaseous atmosphere. As a consequence, the core must have formed before the solar nebula began to dissipate after 10 million years. Formation models suggest Jupiter grew to 20 times the mass of the Earth in under a million years. The orbiting mass created a gap in the disk, thereafter slowly increasing to 50 Earth masses in 3–4 million years.[24]
+According to the "grand tack hypothesis", Jupiter would have begun to form at a distance of roughly 3.5 AU. As the young planet accreted mass, interaction with the gas disk orbiting the Sun and orbital resonances with Saturn[25] caused it to migrate inward.[26] This would have upset the orbits of what are believed to be super-Earths orbiting closer to the Sun, causing them to collide destructively. Saturn would later have begun to migrate inwards too, much faster than Jupiter, leading to the two planets becoming
+locked in a 3:2 mean motion resonance at approximately 1.5 AU. This in turn would have changed the
+direction of migration, causing them to migrate away from the Sun and out of the inner system to their
+current locations.[27] These migrations would have occurred over an 800,000 year time period,[26] with
+all of this happening over a time period of up to 6 million years after Jupiter began to form (3 million being
+a more likely figure).[28] This departure would have allowed the formation of the inner planets from the
+rubble, including Earth.[29]
+However, the formation timescales of terrestrial planets resulting from the grand tack hypothesis appear
+inconsistent with the measured terrestrial composition.[30] Moreover, the likelihood that the outward
+migration actually occurred in the solar nebula is very low.[31] In fact, some models predict the formation
+of Jupiter's analogues whose properties are close to those of the planet at the current epoch.[32]
+Other models have Jupiter forming at distances much further out, such as 18 AU.[33][34] In fact, based
+on Jupiter's composition, researchers have made the case for an initial formation outside the molecular
+nitrogen (N2) snowline, which is estimated at 20-30 AU,[35][36] and possibly even outside the argon
+snowline, which may be as far as 40 AU. Having formed at one of these extreme distances, Jupiter would
+then have migrated inwards to its current location. This inward migration would have occurred over a
+roughly 700,000 year time period,[33][34] during an epoch approximately 2–3 million years after the
+planet began to form. Saturn, Uranus and Neptune would have formed even further out than Jupiter, and
+Saturn would also have migrated inwards.
+Physical characteristics
+Jupiter is one of the two gas giants, being primarily composed of gas and liquid rather than solid matter.
+It is the largest planet in the Solar System, with a diameter of 142,984 km (88,846 mi) at its equator.[37]
+The average density of Jupiter, 1.326 g/cm3, is the second highest of the giant planets, but lower than
+those of the four terrestrial planets.[38]
+Composition
+Jupiter's upper atmosphere is about 90% hydrogen and 10% helium by volume. Since helium atoms are
+more massive than hydrogen molecules, Jupiter's atmosphere is approximately 75% hydrogen and 24%
+helium by mass, with the remaining one percent consisting of other elements. The atmosphere contains
+trace amounts of methane, water vapour, ammonia, and silicon-based compounds. There are also
+fractional amounts of carbon, ethane, hydrogen sulfide, neon, oxygen, phosphine, and sulfur. The
+outermost layer of the atmosphere contains crystals of frozen ammonia. Through infrared and ultraviolet
+measurements, trace amounts of benzene and other hydrocarbons have also been found.[39] The interior
+of Jupiter contains denser materials—by mass it is roughly 71% hydrogen, 24% helium, and 5% other
+elements.[40][41]
+The atmospheric proportions of hydrogen and helium are close to the theoretical composition of the
+primordial solar nebula. Neon in the upper atmosphere only consists of 20 parts per million by mass,
+which is about a tenth as abundant as in the Sun.[42] Helium is also depleted to about 80% of the Sun's
+helium composition. This depletion is a result of precipitation of these elements as helium-rich droplets deep in the interior of the planet.[43]
+Based on spectroscopy, Saturn is thought to be similar in composition to Jupiter, but the other giant planets Uranus and Neptune have relatively less hydrogen and helium and relatively more of the next most abundant elements, including oxygen, carbon, nitrogen, and sulfur.[44] As their volatile compounds are mainly in ice form, they are called ice giants.

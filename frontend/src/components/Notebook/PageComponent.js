@@ -1,11 +1,9 @@
 import React, { Component } from "react";
-import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
 
+import { PageDocumentComponent } from "./PageDocumentComponent";
 import CellComponent from "./CellComponent";
 
 import { theme } from "../../index";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 /**
  * @typedef {import("./NotebookComponent").NotebookController} NotebookController
@@ -83,12 +81,10 @@ export default class PageComponent extends Component {
         </div>
 
         <div className="m-2">
-          <Document file={document} renderMode="svg">
-            <DocumentPage
-              pageNumber={data.document_page_number}
-              renderTextLayer={false}
-            />
-          </Document>
+          <PageDocumentComponent
+            document={document}
+            pageNumber={data.document_page_number}
+          />
         </div>
       </div>
     );

@@ -80,13 +80,19 @@ export default class StatusBarComponent extends Component {
 
     return (
       <div
-        className="statusBar flex items-center pl-2 space-x-2 select-none"
+        className="statusBar flex flex-row items-center px-2 select-none"
         style={statusBarStyle}
       >
-        {loadingShown ? <StatusBarLoadingComponent text={loadingText} /> : null}
+        <div className="statusBarMessageSection">
+          {loadingShown ? (
+            <StatusBarLoadingComponent text={loadingText} />
+          ) : null}
+        </div>
 
-        <StatusBarButtonComponent text="Test1" icon="Accept" />
-        <StatusBarButtonComponent text="Test2" icon="Accept" />
+        <div className="statusBarButtonsSection flex flex-row-reverse space-x-2">
+          <StatusBarButtonComponent text="Test1" icon="Accept" />
+          <StatusBarButtonComponent text="Test2" icon="Accept" />
+        </div>
       </div>
     );
   }

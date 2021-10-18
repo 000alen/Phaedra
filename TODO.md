@@ -9,6 +9,7 @@
 - [ ] Provide examples for generation (backend with GPT)
 - [ ] Sphinx documentation
 - [x] Implement generative text models on backend
+- [ ] Add more control to "Add Cell" API calls (choose where to put cell)
 
 ## Frontend
 
@@ -20,6 +21,7 @@
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
+- [ ] Cache PageDocumentComponents for better performance
 
 - [ ] Key bindings
 - [ ] History

@@ -380,6 +380,7 @@ class Notebook:
         page = self.get_page(page_id)
 
         assert page is not None
+        assert "source" in page.data
 
         source = page.data["source"]
         return entities(source)
@@ -400,7 +401,9 @@ class Notebook:
 
         assert page is not None
 
-        return answer(question, page.data["source"])
+        context = page.data["source"] if "source" in page.data else ""
+
+        return answer(question, context)
 
     def _sparse_question(self, question: str) -> List[str]:
         """Answers a question in all pages (from page.data["source"]).
@@ -416,7 +419,7 @@ class Notebook:
 
         contexts = []
         for i, page in enumerate(self.pages):
-            source = page.data["source"]
+            source = page.data["source"] if "source" in page.data else ""
             contexts.append(source)
             if i != 0:
                 previous_source = tokenizer(self.pages[i - 1].data["source"])[
@@ -449,7 +452,8 @@ class Notebook:
 
         assert page is not None
 
-        source = page.data["source"]
+        source = page.data["source"] if "source" in page.data else ""
+
         return generate(prompt, source)
 
     def add_entities_cell(

@@ -64,15 +64,17 @@ export async function notebookFromText(text) {
  *
  * @param {Notebook} notebook_json
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addEntitiesCell(notebook_json, page_id) {
+export async function addEntitiesCell(notebook_json, page_id, cell_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/entities`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
       notebook: JSON.stringify(notebook_json),
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -84,9 +86,15 @@ export async function addEntitiesCell(notebook_json, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} question
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addQuestionCell(notebook_json, question, page_id) {
+export async function addQuestionCell(
+  notebook_json,
+  question,
+  page_id,
+  cell_id
+) {
   const response = await fetch(`${getApiUrl()}/cell/add/question`, {
     method: "POST",
     headers: headers,
@@ -94,6 +102,7 @@ export async function addQuestionCell(notebook_json, question, page_id) {
       notebook: JSON.stringify(notebook_json),
       question: question,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -104,15 +113,24 @@ export async function addQuestionCell(notebook_json, question, page_id) {
  *
  * @param {Notebook} notebook_json
  * @param {string} question
+ * @param {string} [page_id]
+ * @param {string} [cell_id]
  * @returns
  */
-export async function addSparseQuestionCell(notebook_json, question) {
+export async function addSparseQuestionCell(
+  notebook_json,
+  question,
+  page_id,
+  cell_id
+) {
   const response = await fetch(`${getApiUrl()}/cell/add/sparse_question`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
       notebook: JSON.stringify(notebook_json),
       question: question,
+      page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -124,9 +142,10 @@ export async function addSparseQuestionCell(notebook_json, question) {
  * @param {Notebook} notebook_json
  * @param {string} prompt
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addGenerateCell(notebook_json, prompt, page_id) {
+export async function addGenerateCell(notebook_json, prompt, page_id, cell_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/generate`, {
     method: "POST",
     headers: headers,
@@ -134,6 +153,7 @@ export async function addGenerateCell(notebook_json, prompt, page_id) {
       notebook: JSON.stringify(notebook_json),
       prompt: prompt,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -145,9 +165,15 @@ export async function addGenerateCell(notebook_json, prompt, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} query
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addWikipediaSummaryCell(notebook_json, query, page_id) {
+export async function addWikipediaSummaryCell(
+  notebook_json,
+  query,
+  page_id,
+  cell_id
+) {
   const response = await fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
     method: "POST",
     headers: headers,
@@ -155,6 +181,7 @@ export async function addWikipediaSummaryCell(notebook_json, query, page_id) {
       notebook: JSON.stringify(notebook_json),
       query: query,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -166,12 +193,14 @@ export async function addWikipediaSummaryCell(notebook_json, query, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} query
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
 export async function addWikipediaSuggestionsCell(
   notebook_json,
   query,
-  page_id
+  page_id,
+  cell_id
 ) {
   const response = await fetch(
     `${getApiUrl()}/cell/add/wikipedia_suggestions`,
@@ -182,6 +211,7 @@ export async function addWikipediaSuggestionsCell(
         notebook: JSON.stringify(notebook_json),
         query: query,
         page_id: page_id,
+        cell_id: cell_id,
       }),
     }
   );
@@ -194,9 +224,15 @@ export async function addWikipediaSuggestionsCell(
  * @param {Notebook} notebook_json
  * @param {string} query
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addWikipediaImageCell(notebook_json, query, page_id) {
+export async function addWikipediaImageCell(
+  notebook_json,
+  query,
+  page_id,
+  cell_id
+) {
   const response = await fetch(`${getApiUrl()}/cell/add/wikipedia_image`, {
     method: "POST",
     headers: headers,
@@ -204,6 +240,7 @@ export async function addWikipediaImageCell(notebook_json, query, page_id) {
       notebook: JSON.stringify(notebook_json),
       query: query,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -215,9 +252,10 @@ export async function addWikipediaImageCell(notebook_json, query, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} word
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns {Promise<Notebook>}
  */
-export async function addMeaningCell(notebook_json, word, page_id) {
+export async function addMeaningCell(notebook_json, word, page_id, cell_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/meaning`, {
     method: "POST",
     headers: headers,
@@ -225,6 +263,7 @@ export async function addMeaningCell(notebook_json, word, page_id) {
       notebook: JSON.stringify(notebook_json),
       word: word,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -236,9 +275,10 @@ export async function addMeaningCell(notebook_json, word, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} word
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns
  */
-export async function addSynonymCell(notebook_json, word, page_id) {
+export async function addSynonymCell(notebook_json, word, page_id, cell_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/synonym`, {
     method: "POST",
     headers: headers,
@@ -246,6 +286,7 @@ export async function addSynonymCell(notebook_json, word, page_id) {
       notebook: JSON.stringify(notebook_json),
       word: word,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 
@@ -257,9 +298,10 @@ export async function addSynonymCell(notebook_json, word, page_id) {
  * @param {Notebook} notebook_json
  * @param {string} word
  * @param {string} page_id
+ * @param {string} [cell_id]
  * @returns
  */
-export async function addAntonymCell(notebook_json, word, page_id) {
+export async function addAntonymCell(notebook_json, word, page_id, cell_id) {
   const response = await fetch(`${getApiUrl()}/cell/add/antonym`, {
     method: "POST",
     headers: headers,
@@ -267,6 +309,7 @@ export async function addAntonymCell(notebook_json, word, page_id) {
       notebook: JSON.stringify(notebook_json),
       word: word,
       page_id: page_id,
+      cell_id: cell_id,
     }),
   });
 

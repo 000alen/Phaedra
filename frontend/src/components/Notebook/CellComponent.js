@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
-import {
-  PrimaryButton,
-  Shimmer,
-  TextField,
-  mergeStyles,
-} from "@fluentui/react";
+import { Shimmer, TextField, mergeStyles } from "@fluentui/react";
 
 import { setCellContent } from "../../manipulation/NotebookManipulation";
 
@@ -64,6 +59,49 @@ export default class CellComponent extends Component {
     });
   }
 
+  renderLoading() {
+    const { data, content, active, loading } = this.props;
+
+    const backgroundColor = data.seamless
+      ? "transparent"
+      : theme.palette.neutralLight;
+
+    const borderColor = active
+      ? theme.palette.themePrimary
+      : data.seamless
+      ? "transparent"
+      : theme.palette.neutralLight;
+
+    const border = `1px solid ${borderColor}`;
+    const shadow = data.seamless ? "" : "shadow-md";
+
+    const style = {
+      backgroundColor: backgroundColor,
+      border: border,
+    };
+
+    const wrapperClass = mergeStyles({
+      padding: 2,
+      selectors: {
+        "& > .ms-Shimmer-container": {
+          margin: "10px 0",
+        },
+      },
+    });
+
+    return (
+      <div
+        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`}
+        style={style}
+        onClick={this.handleSelection}
+      >
+        <Shimmer />
+        <Shimmer />
+        <Shimmer />
+      </div>
+    );
+  }
+
   renderViewing() {
     const { data, content, active } = this.props;
 
@@ -113,9 +151,13 @@ export default class CellComponent extends Component {
   }
 
   render() {
-    const { active, editing } = this.props;
+    const { active, editing, data } = this.props;
 
-    if (active && editing) {
+    const loading = data.loading;
+
+    if (loading) {
+      return this.renderLoading();
+    } else if (active && editing) {
       return this.renderEditing();
     } else {
       return this.renderViewing();

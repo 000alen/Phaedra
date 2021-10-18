@@ -19,7 +19,7 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-export default function EmptyPage({ id, appController, statusBarRef }) {
+export function EmptyPage({ id, appController, statusBarRef }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {

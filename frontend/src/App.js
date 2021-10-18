@@ -7,8 +7,8 @@ import TopBarComponent from "./components/TopBarComponent";
 
 import { getTabContent, createTab } from "./manipulation/TabsManipulation";
 
-import EmptyPage from "./pages/EmptyPage";
-import MainPage from "./pages/MainPage/MainPage";
+import { EmptyPage } from "./pages/EmptyPage";
+import { MainPage } from "./pages/MainPage/MainPage";
 
 import "./css/App.css";
 

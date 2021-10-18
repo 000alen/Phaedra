@@ -276,3 +276,7 @@ export async function addAntonymCell(notebook_json, word, page_id) {
 export async function kill() {
   return await fetch(`${getApiUrl()}/kill`);
 }
+
+export async function beacon() {
+  return await fetch(`${getApiUrl()}/beacon`);
+}

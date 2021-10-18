@@ -156,6 +156,12 @@ def kill():
     return jsonify(True)
 
 
+@app.route("/beacon", methods=["GET"])
+def beacon():
+    """ Pings the API. """
+    return jsonify(True)
+
+
 def authenticate():
     """Gets and loads secrets from a local file (secrets.json)."""
 

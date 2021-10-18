@@ -18,9 +18,13 @@ import {
   indexCell,
   getCellContent,
   getCellData,
+  addCell,
+  createCell,
+  addPlaceholderCell,
 } from "../../manipulation/NotebookManipulation";
 
 import { saveNotebook } from "../../NotebookIO";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * @typedef {import("../../App").AppController} AppController
@@ -78,6 +82,7 @@ export default class NotebookComponent extends Component {
     this.toggleEditing = this.toggleEditing.bind(this);
 
     this.do = this.do.bind(this);
+    this.wrapDo = this.wrapDo.bind(this);
     this.handleDo = this.handleDo.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
@@ -261,21 +266,47 @@ export default class NotebookComponent extends Component {
       case "addMeaningCell":
       case "addSynonymCell":
       case "addAntonymCell":
-        if (this.state.statusBarRef === undefined)
-          throw new Error("StatusBarRef is undefined.");
-
-        const { statusBarController } = this.state.statusBarRef.current.state;
-        statusBarController.showLoading();
-        action(notebook, args).then((_notebook) => {
-          statusBarController.hideLoading();
-          args = { ...args, cellId: undefined }; // XXX
-          this.handleDo(action, args, _notebook);
-        });
+        this.wrapDo(action, args);
         break;
       default:
         this.handleDo(action, args, action(notebook, args));
         break;
     }
+  }
+
+  wrapDo(action, args) {
+    if (this.state.statusBarRef === undefined)
+      throw new Error("StatusBarRef is undefined.");
+
+    const { statusBarController } = this.state.statusBarRef.current.state;
+
+    let notebook = this.state.notebook;
+
+    let { pageId, cellId } = args;
+
+    if (pageId === undefined) {
+      const lastPage = notebook.pages.at(-1);
+      if (lastPage === undefined) throw new Error("No page.");
+      args.pageId = lastPage.id;
+    }
+
+    if (cellId === undefined) {
+      let [_notebook, id] = addPlaceholderCell(notebook, {
+        pageId: args.pageId,
+      });
+      notebook = _notebook;
+      args.cellId = id;
+    }
+
+    this.setState((state) => {
+      return { ...state, notebook: notebook };
+    });
+
+    statusBarController.showLoading();
+    action(notebook, args).then((_notebook) => {
+      statusBarController.hideLoading();
+      this.handleDo(action, args, _notebook);
+    });
   }
 
   handleDo(action, args, notebook) {
@@ -285,6 +316,8 @@ export default class NotebookComponent extends Component {
       ...args,
       action: action.name,
     });
+
+    console.log(notebook);
 
     this.setState((state) => {
       return {

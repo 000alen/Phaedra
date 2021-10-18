@@ -15,14 +15,13 @@
 
 - [ ] Error handling
 - [ ] Loading screens
-- [ ] Shimmer
+- [x] Shimmer
 - [ ] HoverCard
 - [ ] Tabs overflow
 - [ ] Status bar
 - [ ] Recent files
 - [ ] Pinned files
 - [ ] Cache PageDocumentComponents for better performance
-
 - [ ] Key bindings
 - [ ] History
 - [ ] Fill JSDocs

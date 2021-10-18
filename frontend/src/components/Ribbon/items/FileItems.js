@@ -15,7 +15,7 @@ export default function FileItems({
       iconProps: {
         iconName: "TestCase",
       },
-      onClick: () => handleTest(),
+      onClick: () => handleTest(notebookRef),
     },
   ];
 

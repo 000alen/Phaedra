@@ -31,6 +31,9 @@ export default class CellComponent extends Component {
   constructor(props) {
     super(props);
 
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+
     const { id, pageId, pageController, notebookController } = props;
 
     /**
@@ -44,22 +47,37 @@ export default class CellComponent extends Component {
     };
   }
 
-  renderViewing() {
+  handleSelection(event) {
     const { id, pageId, pageController, notebookController } = this.state;
-    const { data, content, active } = this.props;
 
-    const handleSelection = (event) => {
-      notebookController.handleSelection(pageId, id);
-      event.stopPropagation();
-    };
+    notebookController.handleSelection(pageId, id);
+    event.stopPropagation();
+  }
+
+  handleChange(event) {
+    const { id, pageId, pageController, notebookController } = this.state;
+
+    notebookController.do(setCellContent, {
+      pageId: pageId,
+      cellId: id,
+      content: event.target.value,
+    });
+  }
+
+  renderViewing() {
+    const { data, content, active } = this.props;
 
     const backgroundColor = data.seamless
       ? "transparent"
       : theme.palette.neutralLight;
+
     const borderColor = active
       ? theme.palette.themePrimary
+      : data.seamless
+      ? "transparent"
       : theme.palette.neutralLight;
-    const border = data.seamless ? "" : `1px solid ${borderColor}`;
+
+    const border = `1px solid ${borderColor}`;
     const shadow = data.seamless ? "" : "shadow-md";
 
     const style = {
@@ -67,19 +85,11 @@ export default class CellComponent extends Component {
       border: border,
     };
 
-    const wrapperClass = mergeStyles({
-      selectors: {
-        "& > .ms-Shimmer-container": {
-          margin: "10px 0",
-        },
-      },
-    });
-
     return (
       <div
-        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`}
+        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify`}
         style={style}
-        onClick={handleSelection}
+        onClick={this.handleSelection}
       >
         <ReactMarkdown children={content} linkTarget="_blank" />
       </div>
@@ -87,22 +97,13 @@ export default class CellComponent extends Component {
   }
 
   renderEditing() {
-    const { id, pageId, pageController, notebookController } = this.state;
     const { data, content, active, editing } = this.props;
-
-    const handleChange = (event) => {
-      notebookController.do(setCellContent, {
-        pageId: pageId,
-        cellId: id,
-        content: event.target.value,
-      });
-    };
 
     return (
       <div className="cell m-2 space-y-2">
         <TextField
           value={content}
-          onChange={handleChange}
+          onChange={this.handleChange}
           multiline
           autoAdjustHeight
           resizable={false}

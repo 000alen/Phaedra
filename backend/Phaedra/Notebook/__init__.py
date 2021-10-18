@@ -50,15 +50,22 @@ class Notebook:
     document_path: Optional[str]
 
     def __init__(
-        self, name: str = None, document_path: str = None, pages: List[Page] = None
+        self,
+        id: str = None,
+        name: str = None,
+        document_path: str = None,
+        pages: List[Page] = None,
     ):
+        if id is None:
+            id = str(uuid.uuid4())
+
         if name is None:
             name = names_generator.generate_name()
 
         if pages is None:
             pages = []
 
-        self.id = str(uuid.uuid4())
+        self.id = id
         self.name = name
         self.document_path = document_path
         self.pages = pages
@@ -181,11 +188,12 @@ class Notebook:
         assert type(_json) is dict
 
         notebook = cls(
+            id=_json["id"],
             name=_json["name"],
-            document_path=_json["document_path"],
+            document_path=_json["document_path"] if "document_path" in _json else None,
             pages=[Page.from_json(page_json) for page_json in _json["pages"]],
         )
-        notebook.id = _json["id"]
+
         return notebook
 
     def markdown(self) -> str:

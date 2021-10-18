@@ -636,6 +636,10 @@ class Notebook:
         else:
             cell = page.get_cell(cell_id)
             assert cell is not None
+
+            if "loading" in cell.data:
+                cell.data["loading"] = False
+
             cell.content = content
 
         return cell_id

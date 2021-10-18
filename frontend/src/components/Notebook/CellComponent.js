@@ -25,7 +25,6 @@ import { theme } from "../../index";
  * @property {string} pageId
  * @property {NotebookPageController} pageController
  * @property {NotebookController} notebookController
- * @property {string} content
  */
 
 export default class CellComponent extends Component {
@@ -33,7 +32,6 @@ export default class CellComponent extends Component {
     super(props);
 
     const { id, pageId, pageController, notebookController } = props;
-    const { content } = props;
 
     /**
      * @type {CellState}
@@ -43,7 +41,6 @@ export default class CellComponent extends Component {
       pageId: pageId,
       pageController: pageController,
       notebookController: notebookController,
-      content: content,
     };
   }
 
@@ -94,32 +91,22 @@ export default class CellComponent extends Component {
     const { data, content, active, editing } = this.props;
 
     const handleChange = (event) => {
-      this.setState((state) => {
-        return {
-          ...state,
-          content: event.target.value,
-        };
-      });
-    };
-
-    const handleSet = () => {
       notebookController.do(setCellContent, {
         pageId: pageId,
         cellId: id,
-        content: this.state.content,
+        content: event.target.value,
       });
     };
 
     return (
       <div className="cell m-2 space-y-2">
         <TextField
-          value={this.state.content}
+          value={content}
           onChange={handleChange}
           multiline
           autoAdjustHeight
           resizable={false}
         />
-        <PrimaryButton text="Set" onClick={handleSet} />
       </div>
     );
   }

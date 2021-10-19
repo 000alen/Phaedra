@@ -1,11 +1,6 @@
-import React from "react";
+import React, { Component } from "react";
 import { DetailsList } from "@fluentui/react";
-
-const items = [
-  { key: "a", name: "A", value: "value a" },
-  { key: "b", name: "B", value: "value b" },
-  { key: "c", name: "C", value: "value c" },
-];
+import { getPinned } from "../../../API/ElectronAPI";
 
 const columns = [
   {
@@ -17,19 +12,58 @@ const columns = [
     isResizable: true,
   },
   {
-    key: "value",
-    name: "Value",
-    fieldName: "value",
+    key: "path",
+    name: "Path",
+    fieldName: "path",
+    minWidth: 100,
+    maxWidth: 200,
+    isResizable: true,
+  },
+  {
+    key: "lastOpened",
+    name: "Last Opened",
+    fieldName: "lastOpened",
     minWidth: 100,
     maxWidth: 200,
     isResizable: true,
   },
 ];
 
-export default function PinnedView({ id, appController, statusBarRef }) {
-  return (
-    <div>
-      <DetailsList items={items} columns={columns} />
-    </div>
-  );
+export default class PinnedView extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      items: [],
+    };
+  }
+
+  componentDidMount() {
+    getPinned().then((items) => {
+      this.setState({
+        items: this.formatItems(items),
+      });
+    });
+  }
+
+  formatItems(items) {
+    return items.map((item) => {
+      return {
+        key: item.name,
+        name: item.name,
+        path: item.path,
+        lastOpened: item.lastOpened,
+      };
+    });
+  }
+
+  render() {
+    const { items } = this.state;
+
+    return (
+      <div>
+        <DetailsList items={items} columns={columns} />
+      </div>
+    );
+  }
 }

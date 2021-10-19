@@ -317,8 +317,6 @@ export default class NotebookComponent extends Component {
       action: action.name,
     });
 
-    console.log(notebook);
-
     this.setState((state) => {
       return {
         ...state,

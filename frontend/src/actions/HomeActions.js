@@ -133,8 +133,6 @@ export function handleCopy(notebookRef, pageController, appController) {
   const { notebook, notebookController } = notebookRef.current.state;
   const { activePage, activeCell } = notebookRef.current.state;
 
-  console.log(activePage, activeCell);
-
   if (activeCell) {
     const cell = getCell(notebook, {
       pageId: activePage,
@@ -145,8 +143,6 @@ export function handleCopy(notebookRef, pageController, appController) {
     const page = getPage(notebook, {
       pageId: activePage,
     });
-
-    console.log(page);
 
     appController.clipboardDo(clipboardPush, { element: page });
   } else {

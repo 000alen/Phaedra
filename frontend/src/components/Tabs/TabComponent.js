@@ -43,7 +43,7 @@ export function TabComponent({ id, title, active, onAction }) {
 
   return (
     <div
-      className={`pl-2 rounded-sm flex items-center`}
+      className={`pl-2 mr-2 rounded-sm flex items-center`}
       style={active ? activeTabStyle : tabStyle}
     >
       <div

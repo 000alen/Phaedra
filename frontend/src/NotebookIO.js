@@ -5,6 +5,7 @@ import {
   writeFile,
   readFile,
   base64encode,
+  addRecent,
 } from "./API/ElectronAPI";
 
 /**
@@ -59,8 +60,12 @@ export function openJson() {
       if (!results.canceled) {
         const path = results.filePaths[0];
 
-        readFile(path, "utf-8").then((notebook) => {
-          resolve({ notebook: JSON.parse(notebook), notebookPath: path });
+        readFile(path, "utf-8").then((_notebook) => {
+          let notebook = JSON.parse(_notebook);
+
+          addRecent(path, notebook.name);
+
+          resolve({ notebook: notebook, notebookPath: path });
         });
       }
     });
@@ -115,8 +120,12 @@ export function openFile() {
 
   const handleOpenJson = (path) => {
     return new Promise((resolve, reject) => {
-      readFile(path, "utf-8").then((content) => {
-        resolve({ notebook: JSON.parse(content), notebookPath: path });
+      readFile(path, "utf-8").then((_notebook) => {
+        let notebook = JSON.parse(_notebook);
+
+        addRecent(path, notebook.name);
+
+        resolve({ notebook: notebook, notebookPath: path });
       });
     });
   };

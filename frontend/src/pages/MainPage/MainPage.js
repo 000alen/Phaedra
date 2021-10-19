@@ -44,6 +44,7 @@ export class MainPage extends React.Component {
     super(props);
 
     this.setSelectedKey = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
     const { id, appController, statusBarRef } = props;
 

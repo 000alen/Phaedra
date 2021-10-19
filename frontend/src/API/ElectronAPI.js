@@ -69,3 +69,43 @@ export function base64encode(...args) {
     });
   });
 }
+
+export function getRecent() {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.invoke("getRecent").then((result) => {
+      resolve(result);
+    });
+  });
+}
+
+export function addRecent(path, name) {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.invoke("addRecent", path, name, Date()).then((result) => {
+      resolve(result);
+    });
+  });
+}
+
+export function clearRecent() {
+  ipcRenderer.invoke("clearRecent");
+}
+
+export function getPinned() {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.invoke("getPinned").then((result) => {
+      resolve(result);
+    });
+  });
+}
+
+export function addPinned(path, name) {
+  return new Promise((resolve, reject) => {
+    ipcRenderer.invoke("addPinned", path, name, Date()).then((result) => {
+      resolve(result);
+    });
+  });
+}
+
+export function clearPinned() {
+  ipcRenderer.invoke("clearPinned");
+}

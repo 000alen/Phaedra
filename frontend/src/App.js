@@ -68,23 +68,27 @@ export default class App extends Component {
    * @param {Object} args
    */
   tabsDo(action, args) {
+    if (args === undefined) args = {};
+
     let { tabs, activeTab } = this.state;
 
     switch (action.name) {
       case "addTab":
         const id = uuidv4();
-        const tab = createTab({
-          id: id,
-          content: (
-            <EmptyPage
-              key={id}
-              id={id}
-              appController={this.state.appController}
-              statusBarRef={this.statusBarRef}
-            />
-          ),
-        });
-        args = { ...args, tab: tab };
+        if (args.tab == undefined) {
+          const tab = createTab({
+            id: id,
+            content: (
+              <EmptyPage
+                key={id}
+                id={id}
+                appController={this.state.appController}
+                statusBarRef={this.statusBarRef}
+              />
+            ),
+          });
+          args = { ...args, tab: tab };
+        }
         break;
     }
 

@@ -10,7 +10,7 @@ A software that summarizes texts, selects key concepts and allows you to ask que
 
 ## Running (developing and testing)
 
-Run the backend locally (or host it from [Google Colaboratory](https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra.ipynb)):
+Run the backend locally (or host it from [Google Colaboratory](https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra_LocalMode.ipynb)):
 
 ```console
 foo@bar:~$ cd backend

@@ -6,97 +6,33 @@ import RibbonComponent from "../../components/Ribbon/RibbonComponent";
 import NotebookComponent from "../../components/Notebook/NotebookComponent";
 import CommandBoxComponent from "../../components/CommandBoxComponent";
 
-import { setTabTitle } from "../../manipulation/TabsManipulation";
-
-import mousetrap from "mousetrap";
-
-import { NotebookPageShortcuts } from "./NotebookPageShortcuts";
+import { AppController } from "../../AppController";
+import { NotebookPageController } from "./NotebookPageController";
 
 import "../../css/pages/NotebookPage.css";
 
-/**
- * @typedef {import("../../App").AppController} AppController
- */
-
-/**
- * @typedef {Object} NotebookPageController
- * @property {Function} showCommandBox
- * @property {Function} hideCommandBox
- * @property {Function} addMessageBar
- * @property {Function} removeMessageBar
- */
-
-/**
- * @typedef {Object} NotebookPageState
- * @property {string} id
- * @property {AppController} appController
- * @property {NotebookPageController} pageController
- * @property {React.RefObject} statusBarRef
- * @property {boolean} commandBoxShown
- * @property {JSX.Element[]} messageBars
- */
-
 export default class NotebookPage extends Component {
+  static contextType = AppController;
+
   constructor(props) {
     super(props);
+
+    const { id } = props;
 
     this.showCommandBox = this.showCommandBox.bind(this);
     this.hideCommandBox = this.hideCommandBox.bind(this);
     this.addMessageBar = this.addMessageBar.bind(this);
     this.removeMessageBar = this.removeMessageBar.bind(this);
-
-    const { id, appController, notebook, statusBarRef } = props;
-
-    appController.tabsDo(setTabTitle, { id: id, title: notebook.name });
+    this.getAppController = this.getAppController.bind(this);
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
 
-    /**
-     * @type {NotebookPageController}
-     */
-    const pageController = {
-      showCommandBox: this.showCommandBox,
-      hideCommandBox: this.hideCommandBox,
-      addMessageBar: this.addMessageBar,
-      removeMessageBar: this.removeMessageBar,
-    };
-
-    /**
-     * @type {NotebookPageState}
-     */
     this.state = {
       id: id,
-      appController: appController,
-      pageController: pageController,
-      statusBarRef: statusBarRef,
       commandBoxShown: false,
       messageBars: [],
     };
-  }
-
-  componentDidMount() {
-    for (const shortcut of Object.entries(NotebookPageShortcuts)) {
-      const [keys, callback] = shortcut;
-      mousetrap.bind(
-        keys,
-        () =>
-          callback(
-            this.notebookRef,
-            this.commandBoxRef,
-            this.state.pageController,
-            this.state.appController
-          ),
-        "keyup"
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    for (const shortcut of Object.entries(NotebookPageShortcuts)) {
-      const [keys, callback] = shortcut;
-      mousetrap.unbind(keys);
-    }
   }
 
   showCommandBox() {
@@ -111,11 +47,6 @@ export default class NotebookPage extends Component {
     });
   }
 
-  /**
-   * Adds a message bar to the page.
-   * @param {string} text
-   * @param {MessageBarType} type
-   */
   addMessageBar(text, type) {
     const id = uuidv4();
     let messageBars = [...this.state.messageBars];
@@ -138,10 +69,6 @@ export default class NotebookPage extends Component {
     });
   }
 
-  /**
-   * Removes a message Bar.
-   * @param {string} id
-   */
   removeMessageBar(id) {
     let messageBars = [...this.state.messageBars];
     messageBars = messageBars.filter(
@@ -153,47 +80,59 @@ export default class NotebookPage extends Component {
     });
   }
 
+  getNotebookRef() {
+    return this.notebookRef;
+  }
+
+  getCommandBoxRef() {
+    return this.commandBoxRef;
+  }
+
+  getAppController() {
+    return this.context;
+  }
+
   render() {
     const notebookPageContentStyle = {
       height: `calc(100% - 88px - ${this.state.messageBars.length * 32}px)`,
     };
 
     return (
-      <div className="notebookPage">
-        <RibbonComponent
-          notebookRef={this.notebookRef}
-          commandBoxRef={this.commandBoxRef}
-          appController={this.state.appController}
-          pageController={this.state.pageController}
-          statusBarRef={this.state.statusBarRef}
-        />
+      <NotebookPageController.Provider
+        value={{
+          showCommandBox: this.showCommandBox,
+          hideCommandBox: this.hideCommandBox,
+          addMessageBar: this.addMessageBar,
+          removeMessageBar: this.removeMessageBar,
+          getNotebookRef: this.getNotebookRef,
+          getCommandBoxRef: this.getCommandBoxRef,
+          getAppController: this.getAppController,
+        }}
+      >
+        <div className="notebookPage">
+          <RibbonComponent />
 
-        <div>
-          {this.state.messageBars.map((messageBar) => {
-            return messageBar;
-          })}
-        </div>
+          <div>
+            {this.state.messageBars.map((messageBar) => {
+              return messageBar;
+            })}
+          </div>
 
-        <div className="notebookPageContent" style={notebookPageContentStyle}>
-          <NotebookComponent
-            key={this.state.id}
-            ref={this.notebookRef}
-            appController={this.state.appController}
-            pageController={this.state.pageController}
-            statusBarRef={this.state.statusBarRef}
-            tabId={this.state.id}
-            notebook={this.props.notebook}
-            notebookPath={this.props.notebookPath}
-          />
-
-          {this.state.commandBoxShown && (
-            <CommandBoxComponent
-              ref={this.commandBoxRef}
-              notebookRef={this.notebookRef}
+          <div className="notebookPageContent" style={notebookPageContentStyle}>
+            <NotebookComponent
+              key={this.state.id}
+              ref={this.notebookRef}
+              tabId={this.state.id}
+              notebook={this.props.notebook}
+              notebookPath={this.props.notebookPath}
             />
-          )}
+
+            {this.state.commandBoxShown && (
+              <CommandBoxComponent ref={this.commandBoxRef} />
+            )}
+          </div>
         </div>
-      </div>
+      </NotebookPageController.Provider>
     );
   }
 }

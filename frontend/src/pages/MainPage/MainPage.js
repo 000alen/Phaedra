@@ -10,8 +10,6 @@ import RecentView from "./views/RecentView";
 import EmptyView from "./views/EmptyView";
 
 import "../../css/pages/MainPage.css";
-import mousetrap from "mousetrap";
-import { MainPageShortcuts } from "./MainPageShortcuts";
 
 const navLinkGroups = [
   {
@@ -46,82 +44,22 @@ export class MainPage extends React.Component {
     this.setSelectedKey = this.handleClick.bind(this);
     this.handleClick = this.handleClick.bind(this);
 
-    const { id, appController, statusBarRef } = props;
+    const { id } = props;
 
     const navLinkContents = {
-      recent: (
-        <RecentView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      pinned: (
-        <PinnedView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      empty: (
-        <EmptyView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      from_pdf: (
-        <FromPdfView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      from_text: (
-        <FromTextView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      notebook: (
-        <NotebookView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
-      backend: (
-        <BackendView
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-        />
-      ),
+      recent: <RecentView id={id} />,
+      pinned: <PinnedView id={id} />,
+      empty: <EmptyView id={id} />,
+      from_pdf: <FromPdfView id={id} />,
+      from_text: <FromTextView id={id} />,
+      notebook: <NotebookView id={id} />,
+      backend: <BackendView id={id} />,
     };
 
     this.state = {
       selectedKey: "backend",
       navLinkContents: navLinkContents,
     };
-  }
-
-  componentDidMount() {
-    for (const shortcut of Object.entries(MainPageShortcuts)) {
-      const [keys, callback] = shortcut;
-      mousetrap.bind(
-        keys,
-        () => callback(this.state.pageController, this.state.appController),
-        "keyup"
-      );
-    }
-  }
-
-  componentWillUnmount() {
-    for (const shortcut of Object.entries(MainPageShortcuts)) {
-      const [keys, callback] = shortcut;
-      mousetrap.unbind(keys);
-    }
   }
 
   handleClick(event, item) {

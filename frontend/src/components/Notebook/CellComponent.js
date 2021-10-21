@@ -5,52 +5,36 @@ import { Shimmer, TextField, mergeStyles } from "@fluentui/react";
 import { setCellContent } from "../../manipulation/NotebookManipulation";
 
 import { theme } from "../../index";
-
-/**
- * @typedef {import("./NotebookComponent").NotebookController} NotebookController
- */
-
-/**
- * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
- */
-
-/**
- * @typedef {Object} CellState
- * @property {string} id
- * @property {string} pageId
- * @property {NotebookPageController} pageController
- * @property {NotebookController} notebookController
- */
+import { NotebookController } from "./NotebookController";
 
 export default class CellComponent extends Component {
+  static contextType = NotebookController;
+
   constructor(props) {
     super(props);
 
     this.handleSelection = this.handleSelection.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
-    const { id, pageId, pageController, notebookController } = props;
+    const { id, pageId } = props;
 
-    /**
-     * @type {CellState}
-     */
     this.state = {
       id: id,
       pageId: pageId,
-      pageController: pageController,
-      notebookController: notebookController,
     };
   }
 
   handleSelection(event) {
-    const { id, pageId, pageController, notebookController } = this.state;
+    const notebookController = this.context;
+    const { id, pageId } = this.state;
 
     notebookController.handleSelection(pageId, id);
     event.stopPropagation();
   }
 
   handleChange(event) {
-    const { id, pageId, pageController, notebookController } = this.state;
+    const notebookController = this.context;
+    const { id, pageId } = this.state;
 
     notebookController.do(setCellContent, {
       pageId: pageId,
@@ -60,7 +44,7 @@ export default class CellComponent extends Component {
   }
 
   renderLoading() {
-    const { data, content, active, loading } = this.props;
+    const { data, active } = this.props;
 
     const backgroundColor = data.seamless
       ? "transparent"

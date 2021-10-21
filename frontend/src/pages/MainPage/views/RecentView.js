@@ -4,6 +4,7 @@ import { getRecent, readFile } from "../../../API/ElectronAPI";
 import { v4 as uuidv4 } from "uuid";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 import NotebookPage from "../../NotebookPage/NotebookPage";
+import { AppController } from "../../../AppController";
 
 const columns = [
   {
@@ -33,27 +34,37 @@ const columns = [
 ];
 
 export default class RecentView extends Component {
+  static contextType = AppController;
+
   constructor(props) {
     super(props);
 
     this.handleInvokedItem = this.handleInvokedItem.bind(this);
 
-    const { id, appController, statusBarRef } = props;
+    const { id } = props;
 
     this.state = {
       id: id,
-      appController: appController,
-      statusBarRef: statusBarRef,
+      appController: undefined,
       items: [],
     };
   }
 
   componentDidMount() {
-    getRecent().then((items) => {
-      this.setState({
-        items: this.formatItems(items),
-      });
+    const appController = this.context;
+
+    this.setState((state) => {
+      return {
+        ...state,
+        appController: appController,
+      };
     });
+
+    // getRecent().then((items) => {
+    //   this.setState({
+    //     items: this.formatItems(items),
+    //   });
+    // });
   }
 
   formatItems(items) {
@@ -68,7 +79,7 @@ export default class RecentView extends Component {
   }
 
   handleInvokedItem(item) {
-    const { id, appController, statusBarRef } = this.state;
+    const { id, appController } = this.state;
     const { path } = item;
 
     readFile(path, "utf-8").then((_notebook) => {
@@ -81,8 +92,6 @@ export default class RecentView extends Component {
             <NotebookPage
               key={id}
               id={id}
-              appController={appController}
-              statusBarRef={statusBarRef}
               notebook={notebook}
               notebookPath={path}
             />

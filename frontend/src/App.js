@@ -9,30 +9,9 @@ import { getTabContent, createTab } from "./manipulation/TabsManipulation";
 
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage/MainPage";
+import { AppController } from "./AppController";
 
 import "./css/App.css";
-
-/**
- * @typedef {import("./manipulation/ClipboardManipulation").Clipboard} Clipboard
- */
-
-/**
- * @typedef {import("./manipulation/TabsManipulation").Tab} Tab
- */
-
-/**
- * @typedef {Object} AppController
- * @property {Function} tabsDo
- * @property {Function} clipboardDo
- */
-
-/**
- * @typedef AppState
- * @property {AppController} appController
- * @property {Tab[]} tabs
- * @property {string | undefined} activeTab
- * @property {Clipboard} clipboard
- */
 
 export default class App extends Component {
   constructor(props) {
@@ -40,22 +19,11 @@ export default class App extends Component {
 
     this.tabsDo = this.tabsDo.bind(this);
     this.clipboardDo = this.clipboardDo.bind(this);
+    this.getStatusBarRef = this.getStatusBarRef.bind(this);
 
     this.statusBarRef = React.createRef();
 
-    /**
-     * @type {AppController}
-     */
-    const appController = {
-      tabsDo: this.tabsDo,
-      clipboardDo: this.clipboardDo,
-    };
-
-    /**
-     * @type {AppState}
-     */
     this.state = {
-      appController: appController,
       tabs: [],
       activeTab: undefined,
       clipboard: [],
@@ -78,14 +46,7 @@ export default class App extends Component {
         if (args.tab == undefined) {
           const tab = createTab({
             id: id,
-            content: (
-              <EmptyPage
-                key={id}
-                id={id}
-                appController={this.state.appController}
-                statusBarRef={this.statusBarRef}
-              />
-            ),
+            content: <EmptyPage key={id} id={id} />,
           });
           args = { ...args, tab: tab };
         }
@@ -124,36 +85,42 @@ export default class App extends Component {
     });
   }
 
+  getStatusBarRef() {
+    return this.statusBarRef;
+  }
+
   render() {
     const { tabs, activeTab } = this.state;
 
     let content;
     if (activeTab === undefined) {
-      content = (
-        <MainPage
-          id={uuidv4()}
-          appController={this.state.appController}
-          statusBarRef={this.statusBarRef}
-        />
-      );
+      content = <MainPage id={uuidv4()} />;
     } else {
       content = getTabContent(tabs, { id: activeTab });
     }
 
     return (
-      <div className="app">
-        <TopBarComponent>
-          <TabsComponent
-            tabs={tabs}
-            activeTab={activeTab}
-            onAction={this.tabsDo}
-          />
-        </TopBarComponent>
+      <AppController.Provider
+        value={{
+          tabsDo: this.tabsDo,
+          clipboardDo: this.clipboardDo,
+          getStatusBarRef: this.getStatusBarRef,
+        }}
+      >
+        <div className="app">
+          <TopBarComponent>
+            <TabsComponent
+              tabs={tabs}
+              activeTab={activeTab}
+              onAction={this.tabsDo}
+            />
+          </TopBarComponent>
 
-        <div className="appContent">{content}</div>
+          <div className="appContent">{content}</div>
 
-        <StatusBarComponent ref={this.statusBarRef} />
-      </div>
+          <StatusBarComponent ref={this.statusBarRef} />
+        </div>
+      </AppController.Provider>
     );
   }
 }

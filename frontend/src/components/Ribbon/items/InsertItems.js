@@ -6,19 +6,19 @@ import {
   handleWikipediaSuggestions,
   handleWikipediaImage,
 } from "../../../actions/InsertActions";
+import { NotebookPageController } from "../../../pages/NotebookPage/NotebookPageController";
 
-export default function InsertItems({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-}) {
+export default function InsertItems() {
+  const notebookPageController = React.useContext(NotebookPageController);
+  const notebookRef = notebookPageController.getNotebookRef();
+  const commandBoxRef = notebookPageController.getCommandBoxRef();
+
   const insertItems = [
     {
       key: "entities",
       text: "Entities",
       iconProps: { iconName: "People" },
-      onClick: () => handleEntities(notebookRef, pageController),
+      onClick: () => handleEntities(notebookRef, notebookPageController),
     },
     {
       key: "wikipedia",
@@ -33,7 +33,7 @@ export default function InsertItems({
               handleWikipediaSummary(
                 notebookRef,
                 commandBoxRef,
-                pageController
+                notebookPageController
               ),
           },
           {
@@ -43,14 +43,18 @@ export default function InsertItems({
               handleWikipediaSuggestions(
                 notebookRef,
                 commandBoxRef,
-                pageController
+                notebookPageController
               ),
           },
           {
             key: "wikipediaImage",
             text: "Wikipedia Image",
             onClick: () =>
-              handleWikipediaImage(notebookRef, commandBoxRef, pageController),
+              handleWikipediaImage(
+                notebookRef,
+                commandBoxRef,
+                notebookPageController
+              ),
           },
         ],
       },

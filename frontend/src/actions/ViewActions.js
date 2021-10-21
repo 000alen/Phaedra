@@ -1,6 +1,6 @@
 // import { useReactToPrint } from "react-to-print";
 
-export function handleExport(notebookRef) {
+export function handleExport(notebookPageController) {
   // const print = useReactToPrint({
   //   content: () => notebookRef.current,
   //   print: (htmlContentToPrint) => {

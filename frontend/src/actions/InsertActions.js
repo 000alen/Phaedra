@@ -1,4 +1,4 @@
-import { CommandBar, MessageBarType } from "@fluentui/react";
+import { MessageBarType } from "@fluentui/react";
 
 import {
   addWikipediaSummaryCell,
@@ -7,79 +7,63 @@ import {
   addEntitiesCell,
 } from "../manipulation/NotebookManipulation";
 
-export function handleWikipediaSummary(
-  notebookRef,
-  commandBoxRef,
-  pageController
-) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
-
-  if (activePage && commandBoxRef.current) {
-    const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaSummaryCell, {
-      query: command,
-      pageId: activePage,
-    });
-    commandBoxRef.current.consume();
-  } else if (activePage) {
-    pageController.addMessageBar("No query selected", MessageBarType.error);
-  } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
-  }
+export function handleWikipediaSummary(notebookPageController) {
+  // const { notebookController } = notebookRef.current.state;
+  // const { activePage } = notebookRef.current.state;
+  // if (activePage && commandBoxRef.current) {
+  //   const { command } = commandBoxRef.current.state;
+  //   notebookController.do(addWikipediaSummaryCell, {
+  //     query: command,
+  //     pageId: activePage,
+  //   });
+  //   commandBoxRef.current.consume();
+  // } else if (activePage) {
+  //   notebookPageController.addMessageBar("No query selected", MessageBarType.error);
+  // } else {
+  //   notebookPageController.addMessageBar("No page selected", MessageBarType.error);
+  // }
 }
 
-export function handleWikipediaSuggestions(
-  notebookRef,
-  commandBoxRef,
-  pageController
-) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
-
-  if (activePage && commandBoxRef.current) {
-    const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaSuggestionsCell, {
-      query: command,
-      pageId: activePage,
-    });
-    commandBoxRef.current.consume();
-  } else if (activePage) {
-    pageController.addMessageBar("No query selected", MessageBarType.error);
-  } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
-  }
+export function handleWikipediaSuggestions(notebookPageController) {
+  // const { notebookController } = notebookRef.current.state;
+  // const { activePage } = notebookRef.current.state;
+  // if (activePage && commandBoxRef.current) {
+  //   const { command } = commandBoxRef.current.state;
+  //   notebookController.do(addWikipediaSuggestionsCell, {
+  //     query: command,
+  //     pageId: activePage,
+  //   });
+  //   commandBoxRef.current.consume();
+  // } else if (activePage) {
+  //   notebookPageController.addMessageBar("No query selected", MessageBarType.error);
+  // } else {
+  //   notebookPageController.addMessageBar("No page selected", MessageBarType.error);
+  // }
 }
 
-export function handleWikipediaImage(
-  notebookRef,
-  commandBoxRef,
-  pageController
-) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
-
-  if (activePage && commandBoxRef.current) {
-    const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaImageCell, {
-      query: command,
-      pageId: activePage,
-    });
-    commandBoxRef.current.consume();
-  } else if (activePage) {
-    pageController.addMessageBar("No query selected", MessageBarType.error);
-  } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
-  }
+export function handleWikipediaImage(notebookPageController) {
+  // const { notebookController } = notebookRef.current.state;
+  // const { activePage } = notebookRef.current.state;
+  // if (activePage && commandBoxRef.current) {
+  //   const { command } = commandBoxRef.current.state;
+  //   notebookController.do(addWikipediaImageCell, {
+  //     query: command,
+  //     pageId: activePage,
+  //   });
+  //   commandBoxRef.current.consume();
+  // } else if (activePage) {
+  //   notebookPageController.addMessageBar("No query selected", MessageBarType.error);
+  // } else {
+  //   notebookPageController.addMessageBar("No page selected", MessageBarType.error);
+  // }
 }
 
-export function handleEntities(notebookRef, pageController) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
-
-  if (activePage) {
-    notebookController.do(addEntitiesCell, { pageId: activePage });
-  } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
-  }
+export function handleEntities(notebookPageController) {
+  // const { notebookController } = notebookRef.current.state;
+  // const { activePage } = notebookRef.current.state;
+  // if (activePage) {
+  //   notebookController.do(addEntitiesCell, { pageId: activePage });
+  // } else {
+  //   notebookPageController.addMessageBar("No page selected", MessageBarType.error);
+  // }
 }

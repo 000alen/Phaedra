@@ -8,12 +8,15 @@ import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
 import { openJson } from "../../../NotebookIO";
+import { AppController } from "../../../AppController";
 
 const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function NotebookView({ id, appController, statusBarRef }) {
+export default function NotebookView({ id }) {
+  const appController = React.useContext(AppController);
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -32,8 +35,6 @@ export default function NotebookView({ id, appController, statusBarRef }) {
             <NotebookPage
               key={id}
               id={id}
-              appController={appController}
-              statusBarRef={statusBarRef}
               notebook={notebook}
               notebookPath={notebookPath}
             />

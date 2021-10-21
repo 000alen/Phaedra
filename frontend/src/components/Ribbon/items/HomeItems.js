@@ -13,7 +13,7 @@ import {
   handleGenerate,
   handleQuestion,
 } from "../../../actions/HomeActions";
-import { NotebookPageController } from "../../../pages/NotebookPage/NotebookPageController";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
 export default function HomeItems() {
   const notebookPageController = React.useContext(NotebookPageController);

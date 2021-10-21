@@ -1,4 +1,4 @@
-import { notebookFromPdf, notebookFromText } from "./API/PhaedraAPI";
+import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
 import {
   openDialog,
   saveDialog,
@@ -6,7 +6,7 @@ import {
   readFile,
   base64encode,
   addRecent,
-} from "./API/ElectronAPI";
+} from "../API/ElectronAPI";
 
 export function openPdf() {
   const openDialogOptions = {

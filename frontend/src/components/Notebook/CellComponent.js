@@ -5,7 +5,7 @@ import { Shimmer, TextField, mergeStyles } from "@fluentui/react";
 import { setCellContent } from "../../manipulation/NotebookManipulation";
 
 import { theme } from "../../index";
-import { NotebookController } from "./NotebookController";
+import { NotebookController } from "../../contexts/NotebookController";
 
 export default class CellComponent extends Component {
   static contextType = NotebookController;
@@ -119,7 +119,7 @@ export default class CellComponent extends Component {
   }
 
   renderEditing() {
-    const { data, content, active, editing } = this.props;
+    const { content } = this.props;
 
     return (
       <div className="cell m-2 space-y-2">

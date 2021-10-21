@@ -4,7 +4,7 @@ import { getRecent, readFile } from "../../../API/ElectronAPI";
 import { v4 as uuidv4 } from "uuid";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 import NotebookPage from "../../NotebookPage/NotebookPage";
-import { AppController } from "../../../AppController";
+import { AppController } from "../../../contexts/AppController";
 
 const columns = [
   {
@@ -60,11 +60,11 @@ export default class RecentView extends Component {
       };
     });
 
-    // getRecent().then((items) => {
-    //   this.setState({
-    //     items: this.formatItems(items),
-    //   });
-    // });
+    getRecent().then((items) => {
+      this.setState({
+        items: this.formatItems(items),
+      });
+    });
   }
 
   formatItems(items) {

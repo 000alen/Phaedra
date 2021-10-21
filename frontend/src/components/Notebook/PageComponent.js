@@ -4,7 +4,7 @@ import { PageDocumentComponent } from "./PageDocumentComponent";
 import CellComponent from "./CellComponent";
 
 import { theme } from "../../index";
-import { NotebookController } from "./NotebookController";
+import { NotebookController } from "../../contexts/NotebookController";
 
 export default class PageComponent extends Component {
   static contextType = NotebookController;

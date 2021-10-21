@@ -5,12 +5,10 @@ import {
   handleSynonym,
   handleAntonym,
 } from "../../../actions/ReviewActions";
-import { NotebookPageController } from "../../../pages/NotebookPage/NotebookPageController";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
 export default function ReviewItems() {
   const notebookPageController = React.useContext(NotebookPageController);
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
 
   const reviewItems = [
     {
@@ -22,20 +20,17 @@ export default function ReviewItems() {
           {
             key: "meaning",
             text: "Meaning",
-            onClick: () =>
-              handleMeaning(notebookRef, commandBoxRef, notebookPageController),
+            onClick: () => handleMeaning(notebookPageController),
           },
           {
             key: "synonyms",
             text: "Synonyms",
-            onClick: () =>
-              handleSynonym(notebookRef, commandBoxRef, notebookPageController),
+            onClick: () => handleSynonym(notebookPageController),
           },
           {
             key: "antonyms",
             text: "Antonyms",
-            onClick: () =>
-              handleAntonym(notebookRef, commandBoxRef, notebookPageController),
+            onClick: () => handleAntonym(notebookPageController),
           },
         ],
       },

@@ -7,10 +7,10 @@ import { setTabContent } from "../manipulation/TabsManipulation";
 
 import NotebookPage from "./NotebookPage/NotebookPage";
 
-import { openFile } from "../NotebookIO";
+import { openFile } from "../IO/NotebookIO";
 
 import "../css/pages/EmptyPage.css";
-import { AppController } from "../AppController";
+import { AppController } from "../contexts/AppController";
 
 const openIcon = {
   iconName: "OpenFile",

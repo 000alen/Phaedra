@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { MessageBar, MessageBarType } from "@fluentui/react";
+import { MessageBar } from "@fluentui/react";
 import { v4 as uuidv4 } from "uuid";
 
 import RibbonComponent from "../../components/Ribbon/RibbonComponent";
 import NotebookComponent from "../../components/Notebook/NotebookComponent";
 import CommandBoxComponent from "../../components/CommandBoxComponent";
 
-import { AppController } from "../../AppController";
-import { NotebookPageController } from "./NotebookPageController";
+import { AppController } from "../../contexts/AppController";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
 
 import "../../css/pages/NotebookPage.css";
 
@@ -24,6 +24,7 @@ export default class NotebookPage extends Component {
     this.addMessageBar = this.addMessageBar.bind(this);
     this.removeMessageBar = this.removeMessageBar.bind(this);
     this.getAppController = this.getAppController.bind(this);
+    this.getNotebookRef = this.getNotebookRef.bind(this);
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();

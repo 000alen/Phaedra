@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 
 import { StatusBarButtonComponent } from "./StatusBarButtonComponent";
 import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";

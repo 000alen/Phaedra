@@ -6,19 +6,17 @@ import {
   handleWikipediaSuggestions,
   handleWikipediaImage,
 } from "../../../actions/InsertActions";
-import { NotebookPageController } from "../../../pages/NotebookPage/NotebookPageController";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
 export default function InsertItems() {
   const notebookPageController = React.useContext(NotebookPageController);
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
 
   const insertItems = [
     {
       key: "entities",
       text: "Entities",
       iconProps: { iconName: "People" },
-      onClick: () => handleEntities(notebookRef, notebookPageController),
+      onClick: () => handleEntities(notebookPageController),
     },
     {
       key: "wikipedia",
@@ -29,32 +27,17 @@ export default function InsertItems() {
           {
             key: "wikipediaSummary",
             text: "Wikipedia Summary",
-            onClick: () =>
-              handleWikipediaSummary(
-                notebookRef,
-                commandBoxRef,
-                notebookPageController
-              ),
+            onClick: () => handleWikipediaSummary(notebookPageController),
           },
           {
             key: "wikipediaSuggestions",
             text: "Wikipedia Suggestions",
-            onClick: () =>
-              handleWikipediaSuggestions(
-                notebookRef,
-                commandBoxRef,
-                notebookPageController
-              ),
+            onClick: () => handleWikipediaSuggestions(notebookPageController),
           },
           {
             key: "wikipediaImage",
             text: "Wikipedia Image",
-            onClick: () =>
-              handleWikipediaImage(
-                notebookRef,
-                commandBoxRef,
-                notebookPageController
-              ),
+            onClick: () => handleWikipediaImage(notebookPageController),
           },
         ],
       },

@@ -902,6 +902,8 @@ export function undo(notebook, command) {
       return undoSetCellContent(notebook, command);
     case "setCellData":
       return undoSetCellData(notebook, command);
+    default:
+      break;
   }
 }
 
@@ -951,5 +953,7 @@ export function redo(notebook, command) {
       return setCellContent(notebook, command);
     case "setCellData":
       return setCellData(notebook, command);
+    default:
+      break;
   }
 }

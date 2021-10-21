@@ -9,7 +9,7 @@ import { getTabContent, createTab } from "./manipulation/TabsManipulation";
 
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage/MainPage";
-import { AppController } from "./AppController";
+import { AppController } from "./contexts/AppController";
 
 import "./css/App.css";
 
@@ -43,13 +43,15 @@ export default class App extends Component {
     switch (action.name) {
       case "addTab":
         const id = uuidv4();
-        if (args.tab == undefined) {
+        if (args.tab === undefined) {
           const tab = createTab({
             id: id,
             content: <EmptyPage key={id} id={id} />,
           });
           args = { ...args, tab: tab };
         }
+        break;
+      default:
         break;
     }
 

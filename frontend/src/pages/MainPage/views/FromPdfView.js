@@ -7,8 +7,8 @@ import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 
 import NotebookPage from "../../NotebookPage/NotebookPage";
 
-import { openPdf } from "../../../NotebookIO";
-import { AppController } from "../../../AppController";
+import { openPdf } from "../../../IO/NotebookIO";
+import { AppController } from "../../../contexts/AppController";
 
 const openIcon = {
   iconName: "OpenFile",

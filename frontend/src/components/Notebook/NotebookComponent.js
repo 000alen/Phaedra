@@ -21,9 +21,9 @@ import {
   addPlaceholderCell,
 } from "../../manipulation/NotebookManipulation";
 
-import { saveNotebook } from "../../NotebookIO";
-import { NotebookPageController } from "../../pages/NotebookPage/NotebookPageController";
-import { NotebookController } from "./NotebookController";
+import { saveNotebook } from "../../IO/NotebookIO";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { NotebookController } from "./../../contexts/NotebookController";
 
 export default class NotebookComponent extends Component {
   static contextType = NotebookPageController;
@@ -173,6 +173,8 @@ export default class NotebookComponent extends Component {
           cellId: args.cellId,
         });
         args = { ...args, previousData: previousData };
+        break;
+      default:
         break;
     }
 

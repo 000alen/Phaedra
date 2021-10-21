@@ -7,7 +7,7 @@ import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import { AppController } from "../../../AppController";
+import { AppController } from "../../../contexts/AppController";
 
 const newIcon = {
   iconName: "FileTemplate",

@@ -1,8 +1,8 @@
+from nltk.corpus import wordnet
+
 from typing import List, Dict
 
 import transformers  # type: ignore
-
-from PyDictionary import PyDictionary  # type: ignore
 
 from Phaedra.Language.Base import (
     summarizer_parameters,
@@ -24,7 +24,6 @@ _summarizer = None
 _answerer = None
 _generator = None
 _ner = None
-_dictionary = None
 
 
 def load_model():
@@ -72,13 +71,6 @@ def load_ner():
 
     global _ner
     _ner = transformers.pipeline("ner", grouped_entities=True, device=_device)
-
-
-def load_dictionary():
-    """Loads the dictionary."""
-
-    global _dictionary
-    _dictionary = PyDictionary()
 
 
 def get_summarizer_tokenizer():
@@ -487,15 +479,15 @@ def meaning(word: str) -> Dict[str, List[str]]:
 
     """
 
-    if _dictionary is None:
-        load_dictionary()
+    syns = wordnet.synsets(word)
 
-    assert _dictionary is not None
+    return {
+        syn.lemmas()[0].name(): syn.definition()
+        for syn in syns
+        if len(syn.lemmas()) > 0
+    }
 
-    return _dictionary.meaning(word)
 
-
-# XXX: Not working properly
 def synonym(word: str) -> List[str]:
     """Returns the synonyms of the given word (local mode).
 
@@ -506,15 +498,11 @@ def synonym(word: str) -> List[str]:
 
     """
 
-    if _dictionary is None:
-        load_dictionary()
+    syns = wordnet.synsets(word)
 
-    assert _dictionary is not None
-
-    return _dictionary.synonym(word)
+    return list(set([lemma.name() for syn in syns for lemma in syn.lemmas()]))
 
 
-# XXX: Not working properly
 def antonym(word: str) -> List[str]:
     """Returns the antonyms of the given word (local mode).
 
@@ -525,9 +513,15 @@ def antonym(word: str) -> List[str]:
 
     """
 
-    if _dictionary is None:
-        load_dictionary()
+    syns = wordnet.synsets(word)
 
-    assert _dictionary is not None
-
-    return _dictionary.antonym(word)
+    return list(
+        set(
+            [
+                lemma.antonyms()[0].name()
+                for syn in syns
+                for lemma in syn.lemmas()
+                if len(lemma.antonyms()) > 0
+            ]
+        )
+    )

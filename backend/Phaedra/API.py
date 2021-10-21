@@ -45,7 +45,7 @@ def add_entities_cell():
     """Adds entities cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_entities_cell(request.json["page_id"])
+    notebook.add_entities_cell(request.json["page_id"], cell_id=request.json["cell_id"])
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -55,7 +55,11 @@ def add_question_cell():
     """Adds question cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_question_cell(request.json["question"], request.json["page_id"])
+    notebook.add_question_cell(
+        request.json["question"],
+        request.json["page_id"],
+        cell_id=request.json["cell_id"],
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -65,7 +69,11 @@ def add_sparse_question_cell():
     """Adds sparse question cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_sparse_question_cell(request.json["question"])
+    notebook.add_sparse_question_cell(
+        request.json["question"],
+        request.json["page_id"],
+        cell_id=request.json["cell_id"],
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -75,7 +83,9 @@ def add_generate_cell():
     """Adds a generate cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_generate_cell(request.json["prompt"], request.json["page_id"])
+    notebook.add_generate_cell(
+        request.json["prompt"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -85,7 +95,9 @@ def add_wikipedia_summary_cell():
     """Adds Wikipedia summary cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_summary_cell(request.json["query"], request.json["page_id"])
+    notebook.add_wikipedia_summary_cell(
+        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -96,7 +108,7 @@ def add_wikipedia_suggestions_cell():
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
     notebook.add_wikipedia_suggestions_cell(
-        request.json["query"], request.json["page_id"]
+        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
@@ -107,7 +119,9 @@ def add_wikipedia_image_cell():
     """Adds Wikipedia image cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_image_cell(request.json["query"], request.json["page_id"])
+    notebook.add_wikipedia_image_cell(
+        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -117,7 +131,9 @@ def add_meaning_cell():
     """Adds meaning cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_meaning_cell(request.json["word"], request.json["page_id"])
+    notebook.add_meaning_cell(
+        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -127,7 +143,9 @@ def add_synonym_cell():
     """Adds synonym cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_synonym_cell(request.json["word"], request.json["page_id"])
+    notebook.add_synonym_cell(
+        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -137,7 +155,9 @@ def add_antonym_cell():
     """Adds antonym cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_antonym_cell(request.json["word"], request.json["page_id"])
+    notebook.add_antonym_cell(
+        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
@@ -153,6 +173,12 @@ def kill():
         function()
 
     _kill()
+    return jsonify(True)
+
+
+@app.route("/beacon", methods=["GET"])
+def beacon():
+    """ Pings the API. """
     return jsonify(True)
 
 

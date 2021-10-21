@@ -7,13 +7,16 @@ import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 
 import NotebookPage from "../../NotebookPage/NotebookPage";
 
-import { openPdf } from "../../../NotebookIO";
+import { openPdf } from "../../../IO/NotebookIO";
+import { AppController } from "../../../contexts/AppController";
 
 const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function FromPdfView({ id, appController, statusBarRef }) {
+export default function FromPdfView({ id }) {
+  const appController = React.useContext(AppController);
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -28,15 +31,7 @@ export default function FromPdfView({ id, appController, statusBarRef }) {
 
       appController.tabsDo(addTab, {
         tab: createTab({
-          content: (
-            <NotebookPage
-              key={id}
-              id={id}
-              appController={appController}
-              statusBarRef={statusBarRef}
-              notebook={notebook}
-            />
-          ),
+          content: <NotebookPage key={id} id={id} notebook={notebook} />,
         }),
       });
     });

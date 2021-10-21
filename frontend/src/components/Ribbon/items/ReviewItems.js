@@ -5,13 +5,11 @@ import {
   handleSynonym,
   handleAntonym,
 } from "../../../actions/ReviewActions";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
-export default function ReviewItems({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-}) {
+export default function ReviewItems() {
+  const notebookPageController = React.useContext(NotebookPageController);
+
   const reviewItems = [
     {
       key: "dictionary",
@@ -22,20 +20,17 @@ export default function ReviewItems({
           {
             key: "meaning",
             text: "Meaning",
-            onClick: () =>
-              handleMeaning(notebookRef, commandBoxRef, pageController),
+            onClick: () => handleMeaning(notebookPageController),
           },
           {
             key: "synonyms",
             text: "Synonyms",
-            onClick: () =>
-              handleSynonym(notebookRef, commandBoxRef, pageController),
+            onClick: () => handleSynonym(notebookPageController),
           },
           {
             key: "antonyms",
             text: "Antonyms",
-            onClick: () =>
-              handleAntonym(notebookRef, commandBoxRef, pageController),
+            onClick: () => handleAntonym(notebookPageController),
           },
         ],
       },

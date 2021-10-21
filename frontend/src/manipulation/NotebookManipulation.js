@@ -399,16 +399,63 @@ export function undoRemoveCell(notebook, { pageId, cell, index }) {
 }
 
 /**
+ *
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {[Notebook, string]}
+ */
+export function insertPlaceholderCell(notebook, { pageId, index }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+  if (index === undefined) throw new Error("Index is undefined.");
+
+  const id = uuidv4();
+  const cell = createCell({
+    id: id,
+    data: {
+      loading: true,
+    },
+  });
+  const newNotebook = insertCell(notebook, {
+    pageId: pageId,
+    cell: cell,
+    index: index,
+  });
+
+  return [newNotebook, id];
+}
+
+/**
+ *
+ * @param {Notebook} notebook
+ * @param {Command} command
+ * @returns {[Notebook, string]}
+ */
+export function addPlaceholderCell(notebook, { pageId }) {
+  if (pageId === undefined) throw new Error("PageId is undefined.");
+
+  const id = uuidv4();
+  const cell = createCell({
+    id: id,
+    data: {
+      loading: true,
+    },
+  });
+  const newNotebook = addCell(notebook, { pageId: pageId, cell: cell });
+
+  return [newNotebook, id];
+}
+
+/**
  * Adds entities cell to the Notebook.
  * @param {Notebook} notebook
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addEntitiesCell(notebook, { pageId }) {
+export function addEntitiesCell(notebook, { pageId, cellId }) {
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addEntitiesCell(notebook, pageId).then((notebook) => {
+    _addEntitiesCell(notebook, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -433,12 +480,12 @@ export function undoAddEntitiesCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addQuestionCell(notebook, { question, pageId }) {
+export function addQuestionCell(notebook, { question, pageId, cellId }) {
   if (question === undefined) throw new Error("Question is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addQuestionCell(notebook, question, pageId).then((notebook) => {
+    _addQuestionCell(notebook, question, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -463,13 +510,15 @@ export function undoAddQuestionCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addSparseQuestionCell(notebook, { question }) {
+export function addSparseQuestionCell(notebook, { question, pageId, cellId }) {
   if (question === undefined) throw new Error("Question is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addSparseQuestionCell(notebook, question).then((notebook) => {
-      resolve(notebook);
-    });
+    _addSparseQuestionCell(notebook, question, pageId, cellId).then(
+      (notebook) => {
+        resolve(notebook);
+      }
+    );
   });
 }
 
@@ -492,12 +541,12 @@ export function undoAddSparseQuestionCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addGenerateCell(notebook, { prompt, pageId }) {
+export function addGenerateCell(notebook, { prompt, pageId, cellId }) {
   if (prompt === undefined) throw new Error("Prompt is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addGenerateCell(notebook, prompt, pageId).then((notebook) => {
+    _addGenerateCell(notebook, prompt, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -522,14 +571,16 @@ export function undoAddGenerateCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addWikipediaSummaryCell(notebook, { query, pageId }) {
+export function addWikipediaSummaryCell(notebook, { query, pageId, cellId }) {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addWikipediaSummaryCell(notebook, query, pageId).then((notebook) => {
-      resolve(notebook);
-    });
+    _addWikipediaSummaryCell(notebook, query, pageId, cellId).then(
+      (notebook) => {
+        resolve(notebook);
+      }
+    );
   });
 }
 
@@ -552,14 +603,19 @@ export function undoAddWikipediaSummaryCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addWikipediaSuggestionsCell(notebook, { query, pageId }) {
+export function addWikipediaSuggestionsCell(
+  notebook,
+  { query, pageId, cellId }
+) {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addWikipediaSuggestionsCell(notebook, query, pageId).then((notebook) => {
-      resolve(notebook);
-    });
+    _addWikipediaSuggestionsCell(notebook, query, pageId, cellId).then(
+      (notebook) => {
+        resolve(notebook);
+      }
+    );
   });
 }
 
@@ -582,12 +638,12 @@ export function undoAddWikipediaSuggestionsCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addWikipediaImageCell(notebook, { query, pageId }) {
+export function addWikipediaImageCell(notebook, { query, pageId, cellId }) {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addWikipediaImageCell(notebook, query, pageId).then((notebook) => {
+    _addWikipediaImageCell(notebook, query, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -612,12 +668,12 @@ export function undoAddWikipediaImageCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addMeaningCell(notebook, { word, pageId }) {
+export function addMeaningCell(notebook, { word, pageId, cellId }) {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addMeaningCell(notebook, word, pageId).then((notebook) => {
+    _addMeaningCell(notebook, word, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -642,12 +698,12 @@ export function undoAddMeaningCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addSynonymCell(notebook, { word, pageId }) {
+export function addSynonymCell(notebook, { word, pageId, cellId }) {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addSynonymCell(notebook, word, pageId).then((notebook) => {
+    _addSynonymCell(notebook, word, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -672,12 +728,12 @@ export function undoAddSynonymCell(notebook, { pageId, cellId }) {
  * @param {Command} command
  * @returns {Promise<Notebook>}
  */
-export function addAntonymCell(notebook, { word, pageId }) {
+export function addAntonymCell(notebook, { word, pageId, cellId }) {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
   return new Promise((resolve, reject) => {
-    _addAntonymCell(notebook, word, pageId).then((notebook) => {
+    _addAntonymCell(notebook, word, pageId, cellId).then((notebook) => {
       resolve(notebook);
     });
   });
@@ -846,6 +902,8 @@ export function undo(notebook, command) {
       return undoSetCellContent(notebook, command);
     case "setCellData":
       return undoSetCellData(notebook, command);
+    default:
+      break;
   }
 }
 
@@ -895,5 +953,7 @@ export function redo(notebook, command) {
       return setCellContent(notebook, command);
     case "setCellData":
       return setCellData(notebook, command);
+    default:
+      break;
   }
 }

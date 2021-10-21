@@ -1,13 +1,11 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
 import { handleTest } from "../../../actions/FileActions";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
-export default function FileItems({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-}) {
+export default function FileItems() {
+  const notebookPageController = React.useContext(NotebookPageController);
+
   const fileItems = [
     {
       key: "test",
@@ -15,7 +13,7 @@ export default function FileItems({
       iconProps: {
         iconName: "TestCase",
       },
-      onClick: () => handleTest(),
+      onClick: () => handleTest(notebookPageController),
     },
   ];
 

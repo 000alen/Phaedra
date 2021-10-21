@@ -1,26 +1,13 @@
-import { notebookFromPdf, notebookFromText } from "./API/PhaedraAPI";
+import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
 import {
   openDialog,
   saveDialog,
   writeFile,
   readFile,
   base64encode,
-} from "./API/ElectronAPI";
+  addRecent,
+} from "../API/ElectronAPI";
 
-/**
- * @typedef {import("./manipulation/NotebookManipulation").Notebook} Notebook
- */
-
-/**
- * @typedef {Object} NotebookInformation
- * @property {Notebook} notebook
- * @property {string | undefined} notebookPath
- */
-
-/**
- * Creates a Notebook from a PDF file.
- * @returns {Promise<NotebookInformation>}
- */
 export function openPdf() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -44,10 +31,6 @@ export function openPdf() {
   });
 }
 
-/**
- * Opens a Notebook from a JSON file.
- * @returns {Promise<NotebookInformation>}
- */
 export function openJson() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -59,8 +42,12 @@ export function openJson() {
       if (!results.canceled) {
         const path = results.filePaths[0];
 
-        readFile(path, "utf-8").then((notebook) => {
-          resolve({ notebook: JSON.parse(notebook), notebookPath: path });
+        readFile(path, "utf-8").then((_notebook) => {
+          let notebook = JSON.parse(_notebook);
+
+          addRecent(path, notebook.name);
+
+          resolve({ notebook: notebook, notebookPath: path });
         });
       }
     });
@@ -115,8 +102,12 @@ export function openFile() {
 
   const handleOpenJson = (path) => {
     return new Promise((resolve, reject) => {
-      readFile(path, "utf-8").then((content) => {
-        resolve({ notebook: JSON.parse(content), notebookPath: path });
+      readFile(path, "utf-8").then((_notebook) => {
+        let notebook = JSON.parse(_notebook);
+
+        addRecent(path, notebook.name);
+
+        resolve({ notebook: notebook, notebookPath: path });
       });
     });
   };

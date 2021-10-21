@@ -1,6 +1,6 @@
 # Phaedra-backend
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra_localMode.ipynb)
 
 ## Getting started
 

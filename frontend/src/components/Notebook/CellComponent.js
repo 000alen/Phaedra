@@ -1,68 +1,62 @@
 import React, { Component } from "react";
 import ReactMarkdown from "react-markdown";
-import {
-  PrimaryButton,
-  Shimmer,
-  TextField,
-  mergeStyles,
-} from "@fluentui/react";
+import { Shimmer, TextField, mergeStyles } from "@fluentui/react";
 
 import { setCellContent } from "../../manipulation/NotebookManipulation";
 
 import { theme } from "../../index";
-
-/**
- * @typedef {import("./NotebookComponent").NotebookController} NotebookController
- */
-
-/**
- * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
- */
-
-/**
- * @typedef {Object} CellState
- * @property {string} id
- * @property {string} pageId
- * @property {NotebookPageController} pageController
- * @property {NotebookController} notebookController
- * @property {string} content
- */
+import { NotebookController } from "../../contexts/NotebookController";
 
 export default class CellComponent extends Component {
+  static contextType = NotebookController;
+
   constructor(props) {
     super(props);
 
-    const { id, pageId, pageController, notebookController } = props;
-    const { content } = props;
+    this.handleSelection = this.handleSelection.bind(this);
+    this.handleChange = this.handleChange.bind(this);
 
-    /**
-     * @type {CellState}
-     */
+    const { id, pageId } = props;
+
     this.state = {
       id: id,
       pageId: pageId,
-      pageController: pageController,
-      notebookController: notebookController,
-      content: content,
     };
   }
 
-  renderViewing() {
-    const { id, pageId, pageController, notebookController } = this.state;
-    const { data, content, active } = this.props;
+  handleSelection(event) {
+    const notebookController = this.context;
+    const { id, pageId } = this.state;
 
-    const handleSelection = (event) => {
-      notebookController.handleSelection(pageId, id);
-      event.stopPropagation();
-    };
+    notebookController.handleSelection(pageId, id);
+    event.stopPropagation();
+  }
+
+  handleChange(event) {
+    const notebookController = this.context;
+    const { id, pageId } = this.state;
+
+    notebookController.do(setCellContent, {
+      pageId: pageId,
+      cellId: id,
+      content: event.target.value,
+    });
+  }
+
+  renderLoading() {
+    const { data, active } = this.props;
 
     const backgroundColor = data.seamless
       ? "transparent"
       : theme.palette.neutralLight;
+
     const borderColor = active
       ? theme.palette.themePrimary
+      : data.seamless
+      ? "transparent"
       : theme.palette.neutralLight;
-    const border = data.seamless ? "" : `1px solid ${borderColor}`;
+
+    const border = `1px solid ${borderColor}`;
     const shadow = data.seamless ? "" : "shadow-md";
 
     const style = {
@@ -71,6 +65,7 @@ export default class CellComponent extends Component {
     };
 
     const wrapperClass = mergeStyles({
+      padding: 2,
       selectors: {
         "& > .ms-Shimmer-container": {
           margin: "10px 0",
@@ -82,7 +77,41 @@ export default class CellComponent extends Component {
       <div
         className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`}
         style={style}
-        onClick={handleSelection}
+        onClick={this.handleSelection}
+      >
+        <Shimmer />
+        <Shimmer />
+        <Shimmer />
+      </div>
+    );
+  }
+
+  renderViewing() {
+    const { data, content, active } = this.props;
+
+    const backgroundColor = data.seamless
+      ? "transparent"
+      : theme.palette.neutralLight;
+
+    const borderColor = active
+      ? theme.palette.themePrimary
+      : data.seamless
+      ? "transparent"
+      : theme.palette.neutralLight;
+
+    const border = `1px solid ${borderColor}`;
+    const shadow = data.seamless ? "" : "shadow-md";
+
+    const style = {
+      backgroundColor: backgroundColor,
+      border: border,
+    };
+
+    return (
+      <div
+        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify`}
+        style={style}
+        onClick={this.handleSelection}
       >
         <ReactMarkdown children={content} linkTarget="_blank" />
       </div>
@@ -90,44 +119,29 @@ export default class CellComponent extends Component {
   }
 
   renderEditing() {
-    const { id, pageId, pageController, notebookController } = this.state;
-    const { data, content, active, editing } = this.props;
-
-    const handleChange = (event) => {
-      this.setState((state) => {
-        return {
-          ...state,
-          content: event.target.value,
-        };
-      });
-    };
-
-    const handleSet = () => {
-      notebookController.do(setCellContent, {
-        pageId: pageId,
-        cellId: id,
-        content: this.state.content,
-      });
-    };
+    const { content } = this.props;
 
     return (
       <div className="cell m-2 space-y-2">
         <TextField
-          value={this.state.content}
-          onChange={handleChange}
+          value={content}
+          onChange={this.handleChange}
           multiline
           autoAdjustHeight
           resizable={false}
         />
-        <PrimaryButton text="Set" onClick={handleSet} />
       </div>
     );
   }
 
   render() {
-    const { active, editing } = this.props;
+    const { active, editing, data } = this.props;
 
-    if (active && editing) {
+    const loading = data.loading;
+
+    if (loading) {
+      return this.renderLoading();
+    } else if (active && editing) {
       return this.renderEditing();
     } else {
       return this.renderViewing();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Nav } from "@fluentui/react";
 
 import BackendView from "./views/BackendView";
@@ -8,6 +8,8 @@ import NotebookView from "./views/NotebookView";
 import PinnedView from "./views/PinnedView";
 import RecentView from "./views/RecentView";
 import EmptyView from "./views/EmptyView";
+import { MainPageShortcuts } from "../../shortcuts/MainPageShortcuts";
+import Mousetrap from "mousetrap";
 
 import "../../css/pages/MainPage.css";
 
@@ -37,77 +39,65 @@ const navLinkGroups = [
   },
 ];
 
-export default function MainPage({ id, appController, statusBarRef }) {
-  const [selectedKey, setSelectedKey] = useState("backend");
+export class MainPage extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const onLinkClick = (event, item) => {
-    setSelectedKey(item.key);
-  };
+    this.setSelectedKey = this.handleClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
-  const navLinkContents = {
-    recent: (
-      <RecentView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    pinned: (
-      <PinnedView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    empty: (
-      <EmptyView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    from_pdf: (
-      <FromPdfView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    from_text: (
-      <FromTextView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    notebook: (
-      <NotebookView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-    backend: (
-      <BackendView
-        id={id}
-        appController={appController}
-        statusBarRef={statusBarRef}
-      />
-    ),
-  };
+    const { id } = props;
 
-  return (
-    <div className="mainPage">
-      <div className="mainPageSideBar">
-        <Nav
-          ariaLabel="Nav example with custom group headers"
-          groups={navLinkGroups}
-          onLinkClick={onLinkClick}
-          selectedKey={selectedKey}
-        />
+    const navLinkContents = {
+      recent: <RecentView id={id} />,
+      pinned: <PinnedView id={id} />,
+      empty: <EmptyView id={id} />,
+      from_pdf: <FromPdfView id={id} />,
+      from_text: <FromTextView id={id} />,
+      notebook: <NotebookView id={id} />,
+      backend: <BackendView id={id} />,
+    };
+
+    this.state = {
+      selectedKey: "backend",
+      navLinkContents: navLinkContents,
+    };
+  }
+
+  handleClick(event, item) {
+    this.setState((state) => {
+      return { ...state, selectedKey: item.key };
+    });
+  }
+
+  componentDidMount() {
+    for (const [keys, action] of Object.entries(MainPageShortcuts)) {
+      Mousetrap.bind(keys, action, "keyup");
+    }
+  }
+
+  componentWillUnmount() {
+    for (const keys of Object.keys(MainPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
+  }
+
+  render() {
+    const { selectedKey, navLinkContents } = this.state;
+
+    return (
+      <div className="mainPage">
+        <div className="mainPageSideBar">
+          <Nav
+            ariaLabel="Nav example with custom group headers"
+            groups={navLinkGroups}
+            onLinkClick={this.handleClick}
+            selectedKey={selectedKey}
+          />
+        </div>
+
+        <div className="mainPageContent">{navLinkContents[selectedKey]}</div>
       </div>
-
-      <div className="mainPageContent">{navLinkContents[selectedKey]}</div>
-    </div>
-  );
+    );
+  }
 }

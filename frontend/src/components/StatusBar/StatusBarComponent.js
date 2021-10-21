@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 
 import { StatusBarButtonComponent } from "./StatusBarButtonComponent";
 import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
@@ -7,20 +6,6 @@ import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 import { theme } from "../../index";
 
 import "../../css/components/StatusBarComponent.css";
-
-/**
- * @typedef {Object} StatusBarController
- * @property {Function} setLoadingText
- * @property {Function} showLoading
- * @property {Function} hideLoading
- */
-
-/**
- * @typedef {Object} StatusBarState
- * @property {StatusBarController} statusBarController
- * @property {string} loadingText
- * @property {boolean} loadingShown
- */
 
 export default class StatusBarComponent extends Component {
   constructor(props) {
@@ -30,18 +15,12 @@ export default class StatusBarComponent extends Component {
     this.showLoading = this.showLoading.bind(this);
     this.hideLoading = this.hideLoading.bind(this);
 
-    /**
-     * @type {StatusBarController}
-     */
     const statusBarController = {
       setLoadingText: this.setLoadingText,
       showLoading: this.showLoading,
       hideLoading: this.hideLoading,
     };
 
-    /**
-     * @type {StatusBarState}
-     */
     this.state = {
       statusBarController: statusBarController,
       loadingText: "Loading",
@@ -49,10 +28,6 @@ export default class StatusBarComponent extends Component {
     };
   }
 
-  /**
-   * Sets the loading text.
-   * @param {string} text
-   */
   setLoadingText(text) {
     this.setState({
       loadingText: text,
@@ -80,13 +55,19 @@ export default class StatusBarComponent extends Component {
 
     return (
       <div
-        className="statusBar flex items-center pl-2 space-x-2 select-none"
+        className="statusBar flex flex-row items-center px-2 select-none"
         style={statusBarStyle}
       >
-        {loadingShown ? <StatusBarLoadingComponent text={loadingText} /> : null}
+        <div className="statusBarMessageSection">
+          {loadingShown ? (
+            <StatusBarLoadingComponent text={loadingText} />
+          ) : null}
+        </div>
 
-        <StatusBarButtonComponent text="Test1" icon="Accept" />
-        <StatusBarButtonComponent text="Test2" icon="Accept" />
+        <div className="statusBarButtonsSection flex flex-row-reverse space-x-2">
+          <StatusBarButtonComponent text="Test1" icon="Accept" />
+          <StatusBarButtonComponent text="Test2" icon="Accept" />
+        </div>
       </div>
     );
   }

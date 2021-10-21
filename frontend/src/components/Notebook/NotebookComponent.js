@@ -18,56 +18,16 @@ import {
   indexCell,
   getCellContent,
   getCellData,
+  addPlaceholderCell,
 } from "../../manipulation/NotebookManipulation";
 
-import { saveNotebook } from "../../NotebookIO";
-
-/**
- * @typedef {import("../../App").AppController} AppController
- */
-
-/**
- * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
- */
-
-/**
- * @typedef {import("../../manipulation/NotebookManipulation").Notebook} Notebook
- */
-
-/**
- * @typedef {import("../../manipulation/NotebookManipulation").Command} Command
- */
-
-/**
- * @typedef {Object} NotebookController
- * @property {Function} save
- * @property {Function} handleSelection
- * @property {Function} toggleEditing
- * @property {Function} undo
- * @property {Function} redo
- * @property {Function} do
- */
-
-/**
- * @typedef {Object} NotebookState
- * @property {string} tabId
- * @property {AppController} appController
- * @property {NotebookPageController} pageController
- * @property {NotebookController} notebookController
- * @property {React.RefObject | undefined} statusBarRef
- * @property {Notebook} notebook
- * @property {string | undefined} notebookPath
- * @property {string | undefined} documentPath
- * @property {any | undefined} documentFile
- * @property {string | undefined} activePage
- * @property {string | undefined} activeCell
- * @property {boolean} editing
- * @property {Command[]} history
- * @property {number} historyIndex
- * @property {boolean} isSaved
- */
+import { saveNotebook } from "../../IO/NotebookIO";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { NotebookController } from "./../../contexts/NotebookController";
 
 export default class NotebookComponent extends Component {
+  static contextType = NotebookPageController;
+
   constructor(props) {
     super(props);
 
@@ -78,35 +38,16 @@ export default class NotebookComponent extends Component {
     this.toggleEditing = this.toggleEditing.bind(this);
 
     this.do = this.do.bind(this);
+    this.wrapDo = this.wrapDo.bind(this);
     this.handleDo = this.handleDo.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
+    this.getNotebookPageController = this.getNotebookPageController.bind(this);
 
-    const { tabId, appController, pageController, statusBarRef } = props;
-    const { notebook, notebookPath } = props;
+    const { tabId, notebook, notebookPath } = props;
 
-    /**
-     * @type {NotebookController}
-     */
-    const notebookController = {
-      save: this.save,
-      handleSelection: this.handleSelection,
-      toggleEditing: this.toggleEditing,
-
-      undo: this.undo,
-      redo: this.redo,
-      do: this.do,
-    };
-
-    /**
-     * @type {NotebookState}
-     */
     this.state = {
       tabId: tabId,
-      appController: appController,
-      pageController: pageController,
-      notebookController: notebookController,
-      statusBarRef: statusBarRef,
       notebook: notebook,
       notebookPath: notebookPath,
       documentPath: notebook.document_path,
@@ -128,10 +69,6 @@ export default class NotebookComponent extends Component {
 
     if (unparsedState !== null) {
       let state = JSON.parse(unparsedState);
-      state.appController = this.state.appController;
-      state.pageController = this.state.pageController;
-      state.notebookController = this.state.notebookController;
-      state.statusBarRef = this.state.statusBarRef;
 
       if (state.documentPath && state.documentFile) {
         state.documentFile.data = Uint8Array.from(state.documentFile.data);
@@ -143,7 +80,6 @@ export default class NotebookComponent extends Component {
 
   componentWillUnmount() {
     let state = { ...this.state };
-    state.statusBarRef = undefined;
     window.localStorage.setItem(
       this.state.notebook.name,
       JSON.stringify(state)
@@ -172,14 +108,9 @@ export default class NotebookComponent extends Component {
     );
   }
 
-  /**
-   *
-   * @param {string} pageId
-   * @param {string} cellId
-   */
   handleSelection(pageId, cellId) {
     if (this.state.activePage === pageId && this.state.activeCell === cellId) {
-      this.state.pageController.hideCommandBox();
+      this.context.hideCommandBox();
       this.setState((state) => {
         return { ...state, activePage: null, activeCell: null };
       });
@@ -187,12 +118,12 @@ export default class NotebookComponent extends Component {
       this.state.activePage === pageId &&
       this.state.activeCell !== cellId
     ) {
-      this.state.pageController.showCommandBox();
+      this.context.showCommandBox();
       this.setState((state) => {
         return { ...state, activePage: pageId, activeCell: cellId };
       });
     } else {
-      this.state.pageController.showCommandBox();
+      this.context.showCommandBox();
       this.setState((state) => {
         return { ...state, activePage: pageId, activeCell: cellId };
       });
@@ -208,11 +139,6 @@ export default class NotebookComponent extends Component {
     });
   }
 
-  /**
-   *
-   * @param {Function} action
-   * @param {Object} args
-   */
   do(action, args) {
     let notebook = this.state.notebook;
     switch (action.name) {
@@ -248,6 +174,8 @@ export default class NotebookComponent extends Component {
         });
         args = { ...args, previousData: previousData };
         break;
+      default:
+        break;
     }
 
     switch (action.name) {
@@ -261,21 +189,47 @@ export default class NotebookComponent extends Component {
       case "addMeaningCell":
       case "addSynonymCell":
       case "addAntonymCell":
-        if (this.state.statusBarRef === undefined)
-          throw new Error("StatusBarRef is undefined.");
-
-        const { statusBarController } = this.state.statusBarRef.current.state;
-        statusBarController.showLoading();
-        action(notebook, args).then((_notebook) => {
-          statusBarController.hideLoading();
-          args = { ...args, cellId: undefined }; // XXX
-          this.handleDo(action, args, _notebook);
-        });
+        this.wrapDo(action, args);
         break;
       default:
         this.handleDo(action, args, action(notebook, args));
         break;
     }
+  }
+
+  wrapDo(action, args) {
+    if (this.state.statusBarRef === undefined)
+      throw new Error("StatusBarRef is undefined.");
+
+    const { statusBarController } = this.state.statusBarRef.current.state;
+
+    let notebook = this.state.notebook;
+
+    let { pageId, cellId } = args;
+
+    if (pageId === undefined) {
+      const lastPage = notebook.pages.at(-1);
+      if (lastPage === undefined) throw new Error("No page.");
+      args.pageId = lastPage.id;
+    }
+
+    if (cellId === undefined) {
+      let [_notebook, id] = addPlaceholderCell(notebook, {
+        pageId: args.pageId,
+      });
+      notebook = _notebook;
+      args.cellId = id;
+    }
+
+    this.setState((state) => {
+      return { ...state, notebook: notebook };
+    });
+
+    statusBarController.showLoading();
+    action(notebook, args).then((_notebook) => {
+      statusBarController.hideLoading();
+      this.handleDo(action, args, _notebook);
+    });
   }
 
   handleDo(action, args, notebook) {
@@ -326,24 +280,38 @@ export default class NotebookComponent extends Component {
     });
   }
 
+  getNotebookPageController() {
+    return this.context;
+  }
+
   render() {
     return (
-      <div className="notebook" id="notebook">
-        {this.state.notebook.pages.map((page) => (
-          <PageComponent
-            key={page.id}
-            id={page.id}
-            pageController={this.state.pageController}
-            notebookController={this.state.notebookController}
-            data={page.data}
-            document={this.state.documentFile}
-            cells={page.cells}
-            active={this.state.activePage === page.id}
-            activeCell={this.state.activeCell}
-            editing={this.state.editing}
-          />
-        ))}
-      </div>
+      <NotebookController.Provider
+        value={{
+          save: this.save,
+          handleSelection: this.handleSelection,
+          toggleEditing: this.toggleEditing,
+          undo: this.undo,
+          redo: this.redo,
+          do: this.do,
+          getNotebookPageController: this.getNotebookPageController,
+        }}
+      >
+        <div className="notebook" id="notebook">
+          {this.state.notebook.pages.map((page) => (
+            <PageComponent
+              key={page.id}
+              id={page.id}
+              data={page.data}
+              document={this.state.documentFile}
+              cells={page.cells}
+              active={this.state.activePage === page.id}
+              activeCell={this.state.activeCell}
+              editing={this.state.editing}
+            />
+          ))}
+        </div>
+      </NotebookController.Provider>
     );
   }
 }

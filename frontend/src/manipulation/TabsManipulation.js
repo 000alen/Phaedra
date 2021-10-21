@@ -19,9 +19,9 @@ import { v4 as uuidv4 } from "uuid";
  * @returns {Tab}
  */
 export function createTab({ id, title, content }) {
-  if (!id) id = uuidv4();
-  if (!title) title = "New Tab";
-  if (!content) content = null;
+  if (id === undefined) id = uuidv4();
+  if (title === undefined) title = "New Tab";
+  if (content === undefined) content = null;
 
   return {
     id: id,

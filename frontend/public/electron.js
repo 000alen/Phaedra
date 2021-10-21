@@ -1,7 +1,24 @@
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const fs = require("fs");
+const Store = require("./store");
+
+const recent_store = new Store({
+  configName: "recent",
+  defaults: {
+    // path, name, lastOpened
+    files: [],
+  },
+});
+
+const pinned_store = new Store({
+  configName: "pinned",
+  defaults: {
+    // path, name, lastOpened
+    files: [],
+  },
+});
 
 let mainWindow;
 
@@ -21,7 +38,7 @@ function createWindow() {
     },
   });
 
-  if (app.isPacked) {
+  if (app.isPackaged) {
     mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
   } else {
     mainWindow.loadURL("http://localhost:3000");
@@ -90,4 +107,32 @@ ipcMain.handle("saveDialog", async (event, ...args) => {
 ipcMain.handle("base64encode", async (event, ...args) => {
   const result = Buffer.from(...args).toString("base64");
   return result;
+});
+
+ipcMain.handle("getRecent", (event) => {
+  return recent_store.get("files");
+});
+
+ipcMain.handle("addRecent", (event, path, name, lastOpened) => {
+  const file = { path: path, name: name, lastOpened: lastOpened };
+  const files = [file, ...recent_store.get("files")];
+  recent_store.set("files", files);
+});
+
+ipcMain.handle("clearRecent", (event) => {
+  recent_store.set("files", []);
+});
+
+ipcMain.handle("getPinned", (event) => {
+  return pinned_store.get("files");
+});
+
+ipcMain.handle("addPinned", (event, path, name, lastOpened) => {
+  const file = { path: path, name: name, lastOpened: lastOpened };
+  const files = [file, ...pinned_store.get("files")];
+  pinned_store.set("files", files);
+});
+
+ipcMain.handle("clearPinned", (event) => {
+  pinned_store.set("files", []);
 });

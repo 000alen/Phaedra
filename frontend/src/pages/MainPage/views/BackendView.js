@@ -8,7 +8,7 @@ import {
 
 import { getApiUrl, setApiUrl } from "../../../API/PhaedraAPI";
 
-export default function BackendView({ id, appController, statusBarRef }) {
+export default function BackendView({ id }) {
   const [url, setUrl] = useState(getApiUrl());
 
   const handleUrlChange = (event) => {
@@ -28,7 +28,7 @@ export default function BackendView({ id, appController, statusBarRef }) {
       <CompoundButton
         primary
         secondaryText="Serve Phaedra's backend from Google Colaboratory"
-        href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra.ipynb"
+        href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra_LocalMode.ipynb"
         target="_blank"
       >
         Create remote backend

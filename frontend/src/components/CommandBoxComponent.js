@@ -10,10 +10,7 @@ export default class CommandBoxComponent extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.consume = this.consume.bind(this);
 
-    const { notebookRef } = props;
-
     this.state = {
-      notebookRef: notebookRef,
       command: "",
     };
   }

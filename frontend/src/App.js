@@ -10,6 +10,8 @@ import { getTabContent, createTab } from "./manipulation/TabsManipulation";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage/MainPage";
 import { AppController } from "./contexts/AppController";
+import { AppShortcuts } from "./shortcuts/AppShortcuts";
+import Mousetrap from "mousetrap";
 
 import "./css/App.css";
 
@@ -28,6 +30,18 @@ export default class App extends Component {
       activeTab: undefined,
       clipboard: [],
     };
+  }
+
+  componentDidMount() {
+    for (const [keys, action] of Object.entries(AppShortcuts)) {
+      Mousetrap.bind(keys, action, "keyup");
+    }
+  }
+
+  componentWillUnmount() {
+    for (const keys of Object.keys(AppShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
   }
 
   /**

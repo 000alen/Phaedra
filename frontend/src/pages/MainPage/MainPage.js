@@ -8,6 +8,8 @@ import NotebookView from "./views/NotebookView";
 import PinnedView from "./views/PinnedView";
 import RecentView from "./views/RecentView";
 import EmptyView from "./views/EmptyView";
+import { MainPageShortcuts } from "../../shortcuts/MainPageShortcuts";
+import Mousetrap from "mousetrap";
 
 import "../../css/pages/MainPage.css";
 
@@ -66,6 +68,18 @@ export class MainPage extends React.Component {
     this.setState((state) => {
       return { ...state, selectedKey: item.key };
     });
+  }
+
+  componentDidMount() {
+    for (const [keys, action] of Object.entries(MainPageShortcuts)) {
+      Mousetrap.bind(keys, action, "keyup");
+    }
+  }
+
+  componentWillUnmount() {
+    for (const keys of Object.keys(MainPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
   }
 
   render() {

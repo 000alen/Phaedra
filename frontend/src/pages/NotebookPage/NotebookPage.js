@@ -8,6 +8,8 @@ import CommandBoxComponent from "../../components/CommandBoxComponent";
 
 import { AppController } from "../../contexts/AppController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
+import Mousetrap from "mousetrap";
 
 import "../../css/pages/NotebookPage.css";
 
@@ -34,6 +36,18 @@ export default class NotebookPage extends Component {
       commandBoxShown: false,
       messageBars: [],
     };
+  }
+
+  componentDidMount() {
+    for (const [keys, action] of Object.entries(NotebookPageShortcuts)) {
+      Mousetrap.bind(keys, () => action(this.context), "keyup");
+    }
+  }
+
+  componentWillUnmount() {
+    for (const keys of Object.keys(NotebookPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
   }
 
   showCommandBox() {

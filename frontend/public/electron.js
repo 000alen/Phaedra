@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+const icon = path.join(__dirname, "./icon.png");
 const fs = require("fs");
 const Store = require("./store");
 
@@ -28,6 +29,8 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 680,
     frame: false,
+    title: "Phaedra",
+    icon: icon,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

@@ -7,9 +7,10 @@ import { setTabContent } from "../manipulation/TabsManipulation";
 
 import NotebookPage from "./NotebookPage/NotebookPage";
 
-import { openFile } from "../NotebookIO";
+import { openFile } from "../IO/NotebookIO";
 
 import "../css/pages/EmptyPage.css";
+import { AppController } from "../contexts/AppController";
 
 const openIcon = {
   iconName: "OpenFile",
@@ -19,7 +20,10 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-export function EmptyPage({ id, appController, statusBarRef }) {
+export function EmptyPage({ id }) {
+  const appController = React.useContext(AppController);
+  const statusBarRef = appController.getStatusBarRef();
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -42,8 +46,6 @@ export function EmptyPage({ id, appController, statusBarRef }) {
           <NotebookPage
             key={id}
             id={id}
-            appController={appController}
-            statusBarRef={statusBarRef}
             notebook={notebook}
             notebookPath={notebookPath}
           />
@@ -57,15 +59,7 @@ export function EmptyPage({ id, appController, statusBarRef }) {
 
     appController.tabsDo(setTabContent, {
       id: id,
-      content: (
-        <NotebookPage
-          key={id}
-          id={id}
-          appController={appController}
-          statusBarRef={statusBarRef}
-          notebook={notebook}
-        />
-      ),
+      content: <NotebookPage key={id} id={id} notebook={notebook} />,
     });
   };
 

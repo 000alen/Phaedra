@@ -1,8 +1,9 @@
 import { getCellData, setCellData } from "../manipulation/NotebookManipulation";
 
-export function handleTest(notebookRef) {
-  const { notebookController, notebook } = notebookRef.current.state;
-  const { activePage, activeCell } = notebookRef.current.state;
+export function handleTest(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+
+  const { notebook, activePage, activeCell } = notebookRef.current.state;
 
   let data = getCellData(notebook, {
     pageId: activePage,
@@ -11,7 +12,7 @@ export function handleTest(notebookRef) {
 
   if (data.loading === undefined) data.loading = true;
 
-  notebookController.do(setCellData, {
+  notebookRef.current.do(setCellData, {
     pageId: activePage,
     cellId: activeCell,
     data: {

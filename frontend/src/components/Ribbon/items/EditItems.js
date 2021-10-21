@@ -1,18 +1,16 @@
 import React from "react";
 import { CommandBar } from "@fluentui/react";
 import { handleSeamless, handleEdit } from "../../../actions/EditAction";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
-export default function EditItems({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-}) {
+export default function EditItems() {
+  const notebookPageController = React.useContext(NotebookPageController);
+
   const editItems = [
     {
       key: "Seamless",
       iconProps: { iconName: "AlignLeft" },
-      onClick: () => handleSeamless(notebookRef),
+      onClick: () => handleSeamless(notebookPageController),
     },
   ];
 
@@ -20,7 +18,7 @@ export default function EditItems({
     {
       key: "edit",
       iconProps: { iconName: "Edit" },
-      onClick: () => handleEdit(notebookRef),
+      onClick: () => handleEdit(notebookPageController),
     },
   ];
 

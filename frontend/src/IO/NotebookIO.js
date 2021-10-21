@@ -1,4 +1,4 @@
-import { notebookFromPdf, notebookFromText } from "./API/PhaedraAPI";
+import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
 import {
   openDialog,
   saveDialog,
@@ -6,22 +6,8 @@ import {
   readFile,
   base64encode,
   addRecent,
-} from "./API/ElectronAPI";
+} from "../API/ElectronAPI";
 
-/**
- * @typedef {import("./manipulation/NotebookManipulation").Notebook} Notebook
- */
-
-/**
- * @typedef {Object} NotebookInformation
- * @property {Notebook} notebook
- * @property {string | undefined} notebookPath
- */
-
-/**
- * Creates a Notebook from a PDF file.
- * @returns {Promise<NotebookInformation>}
- */
 export function openPdf() {
   const openDialogOptions = {
     properties: ["openFile"],
@@ -45,10 +31,6 @@ export function openPdf() {
   });
 }
 
-/**
- * Opens a Notebook from a JSON file.
- * @returns {Promise<NotebookInformation>}
- */
 export function openJson() {
   const openDialogOptions = {
     properties: ["openFile"],

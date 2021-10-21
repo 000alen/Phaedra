@@ -7,27 +7,22 @@ import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { AppController } from "../../../contexts/AppController";
 
 const newIcon = {
   iconName: "FileTemplate",
 };
 
-export default function EmptyView({ id, appController, statusBarRef }) {
+export default function EmptyView({ id }) {
+  const appController = React.useContext(AppController);
+
   const handleNew = () => {
     const id = uuidv4();
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });
 
     appController.tabsDo(addTab, {
       tab: createTab({
-        content: (
-          <NotebookPage
-            key={id}
-            id={id}
-            appController={appController}
-            statusBarRef={statusBarRef}
-            notebook={notebook}
-          />
-        ),
+        content: <NotebookPage key={id} id={id} notebook={notebook} />,
       }),
     });
   };

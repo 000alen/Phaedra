@@ -16,6 +16,6 @@
 - [ ] Cache PageDocumentComponents for better performance
 - [ ] Key bindings
 - [ ] Collaborative editing ([inspiration](https://www.youtube.com/watch?v=Exr0iY_D-vw))
+- [ ] Recent files
+- [ ] Pinned files
 - [x] Tabs overflow
-- [x] Recent files
-- [x] Pinned files

@@ -6,56 +6,78 @@ import {
   addAntonymCell,
 } from "../manipulation/NotebookManipulation";
 
-export function handleMeaning(notebookRef, commandBoxRef, pageController) {
-  const { notebookController } = notebookRef.current.state;
+export function handleMeaning(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+  const commandBoxRef = notebookPageController.getCommandBoxRef();
+
   const { activePage } = notebookRef.current.state;
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addMeaningCell, {
+    notebookRef.current.do(addMeaningCell, {
       word: command,
       pageId: activePage,
     });
     commandBoxRef.current.consume();
   } else if (activePage) {
-    pageController.addMessageBar("No word selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No word selected",
+      MessageBarType.error
+    );
   } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No page selected",
+      MessageBarType.error
+    );
   }
 }
 
-export function handleSynonym(notebookRef, commandBoxRef, pageController) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
+export function handleSynonym(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+  const commandBoxRef = notebookPageController.getCommandBoxRef();
 
+  const { activePage } = notebookRef.current.state;
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addSynonymCell, {
+    notebookRef.current.do(addSynonymCell, {
       word: command,
       pageId: activePage,
     });
     commandBoxRef.current.consume();
   } else if (activePage) {
-    pageController.addMessageBar("No word selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No word selected",
+      MessageBarType.error
+    );
   } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No page selected",
+      MessageBarType.error
+    );
   }
 }
 
-export function handleAntonym(notebookRef, commandBoxRef, pageController) {
-  const { notebookController } = notebookRef.current.state;
-  const { activePage } = notebookRef.current.state;
+export function handleAntonym(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+  const commandBoxRef = notebookPageController.getCommandBoxRef();
 
+  const { activePage } = notebookRef.current.state;
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addAntonymCell, {
+    notebookRef.current.do(addAntonymCell, {
       word: command,
       pageId: activePage,
     });
     commandBoxRef.current.consume();
   } else if (activePage) {
-    pageController.addMessageBar("No word selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No word selected",
+      MessageBarType.error
+    );
   } else {
-    pageController.addMessageBar("No page selected", MessageBarType.error);
+    notebookPageController.addMessageBar(
+      "No page selected",
+      MessageBarType.error
+    );
   }
 }

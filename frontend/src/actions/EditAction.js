@@ -1,8 +1,8 @@
 import { setCellData, getCellData } from "../manipulation/NotebookManipulation";
 
-export function handleSeamless(notebookRef) {
-  const { notebookController, notebook } = notebookRef.current.state;
-  const { activePage, activeCell } = notebookRef.current.state;
+export function handleSeamless(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+  const { notebook, activePage, activeCell } = notebookRef.current.state;
 
   let data = getCellData(notebook, {
     pageId: activePage,
@@ -11,7 +11,7 @@ export function handleSeamless(notebookRef) {
 
   if (data.seamless === undefined) data.seamless = false;
 
-  notebookController.do(setCellData, {
+  notebookRef.current.do(setCellData, {
     pageId: activePage,
     cellId: activeCell,
     data: {
@@ -21,7 +21,8 @@ export function handleSeamless(notebookRef) {
   });
 }
 
-export function handleEdit(notebookRef) {
-  const { notebookController } = notebookRef.current.state;
-  notebookController.toggleEditing();
+export function handleEdit(notebookPageController) {
+  const notebookRef = notebookPageController.getNotebookRef();
+
+  notebookRef.current.toggleEditing();
 }

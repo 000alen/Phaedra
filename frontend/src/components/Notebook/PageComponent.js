@@ -4,34 +4,20 @@ import { PageDocumentComponent } from "./PageDocumentComponent";
 import CellComponent from "./CellComponent";
 
 import { theme } from "../../index";
-
-/**
- * @typedef {import("./NotebookComponent").NotebookController} NotebookController
- */
-
-/**
- * @typedef {import("../../pages/NotebookPage/NotebookPage").NotebookPageController} NotebookPageController
- */
-
-/**
- * @typedef {Object} PageState
- * @property {string} id
- * @property {NotebookController} notebookController
- * @property {NotebookPageController} pageController
- */
+import { NotebookController } from "../../contexts/NotebookController";
 
 export default class PageComponent extends Component {
+  static contextType = NotebookController;
+
   constructor(props) {
     super(props);
 
     this.handleSelection = this.handleSelection.bind(this);
 
-    const { id, notebookController, pageController } = props;
+    const { id } = props;
 
     this.state = {
       id: id,
-      notebookController: notebookController,
-      pageController: pageController,
     };
   }
 
@@ -39,12 +25,12 @@ export default class PageComponent extends Component {
     const { active, editing } = this.props;
     if (active && editing) return;
 
-    const { notebookController, id } = this.state;
-    notebookController.handleSelection(id);
+    const { id } = this.state;
+    this.context.handleSelection(id);
   }
 
   renderWithDocument() {
-    const { id, notebookController, pageController } = this.state;
+    const { id } = this.state;
     const { data, cells, active, activeCell, document, editing } = this.props;
 
     const containerStyle = {
@@ -69,8 +55,6 @@ export default class PageComponent extends Component {
             <CellComponent
               key={cell.id}
               id={cell.id}
-              pageController={pageController}
-              notebookController={notebookController}
               data={cell.data}
               content={cell.content}
               pageId={id}
@@ -91,7 +75,7 @@ export default class PageComponent extends Component {
   }
 
   renderWithoutDocument() {
-    const { id, notebookController, pageController } = this.state;
+    const { id } = this.state;
     const { cells, active, activeCell, editing } = this.props;
 
     const containerStyle = {
@@ -117,8 +101,6 @@ export default class PageComponent extends Component {
               <CellComponent
                 key={cell.id}
                 id={cell.id}
-                pageController={pageController}
-                notebookController={notebookController}
                 data={cell.data}
                 content={cell.content}
                 pageId={id}

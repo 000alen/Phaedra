@@ -7,13 +7,16 @@ import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 
 import NotebookPage from "../../../pages/NotebookPage/NotebookPage";
 
-import { openText } from "../../../NotebookIO";
+import { openText } from "../../../IO/NotebookIO";
+import { AppController } from "../../../contexts/AppController";
 
 const openIcon = {
   iconName: "OpenFile",
 };
 
-export default function FromTextView({ id, appController, statusBarRef }) {
+export default function FromTextView({ id }) {
+  const appController = React.useContext(AppController);
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
@@ -28,15 +31,7 @@ export default function FromTextView({ id, appController, statusBarRef }) {
 
       appController.tabsDo(addTab, {
         tab: createTab({
-          content: (
-            <NotebookPage
-              key={id}
-              id={id}
-              appController={appController}
-              statusBarRef={statusBarRef}
-              notebook={notebook}
-            />
-          ),
+          content: <NotebookPage key={id} id={id} notebook={notebook} />,
         }),
       });
     });

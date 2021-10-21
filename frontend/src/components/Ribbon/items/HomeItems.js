@@ -13,18 +13,16 @@ import {
   handleGenerate,
   handleQuestion,
 } from "../../../actions/HomeActions";
+import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
-export default function HomeItems({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-}) {
+export default function HomeItems() {
+  const notebookPageController = React.useContext(NotebookPageController);
+
   const homeItems = [
     {
       key: "save",
       iconProps: { iconName: "Save" },
-      onClick: () => handleSave(notebookRef),
+      onClick: () => handleSave(notebookPageController),
     },
     {
       key: "insert",
@@ -34,12 +32,14 @@ export default function HomeItems({
           {
             key: "insertPage",
             text: "Insert Page",
-            onClick: () => handleInsertPage(notebookRef, pageController),
+            onClick: () => handleInsertPage(notebookPageController),
           },
           {
             key: "insertCell",
             text: "Insert Cell",
-            onClick: () => handleInsertCell(notebookRef, pageController),
+            onClick: () => {
+              handleInsertCell(notebookPageController);
+            },
           },
         ],
       },
@@ -47,7 +47,7 @@ export default function HomeItems({
     {
       key: "delete",
       iconProps: { iconName: "Delete" },
-      onClick: () => handleDelete(notebookRef, pageController),
+      onClick: () => handleDelete(notebookPageController),
     },
     {
       key: "history",
@@ -58,13 +58,13 @@ export default function HomeItems({
             key: "undo",
             text: "Undo",
             iconProps: { iconName: "Undo" },
-            onClick: () => handleUndo(notebookRef),
+            onClick: () => handleUndo(notebookPageController),
           },
           {
             key: "redo",
             text: "Redo",
             iconProps: { iconName: "Redo" },
-            onClick: () => handleRedo(notebookRef),
+            onClick: () => handleRedo(notebookPageController),
           },
         ],
       },
@@ -78,22 +78,19 @@ export default function HomeItems({
             key: "cut",
             text: "Cut",
             iconProps: { iconName: "Cut" },
-            onClick: () =>
-              handleCut(notebookRef, pageController, appController),
+            onClick: () => handleCut(notebookPageController),
           },
           {
             key: "copy",
             text: "Copy",
             iconProps: { iconName: "Copy" },
-            onClick: () =>
-              handleCopy(notebookRef, pageController, appController),
+            onClick: () => handleCopy(notebookPageController),
           },
           {
             key: "paste",
             text: "Paste",
             iconProps: { iconName: "Paste" },
-            onClick: () =>
-              handlePaste(notebookRef, pageController, appController),
+            onClick: () => handlePaste(notebookPageController),
           },
         ],
       },
@@ -104,12 +101,12 @@ export default function HomeItems({
     {
       key: "generate",
       iconProps: { iconName: "Processing" },
-      onClick: () => handleGenerate(notebookRef, commandBoxRef, pageController),
+      onClick: () => handleGenerate(notebookPageController),
     },
     {
       key: "question",
       iconProps: { iconName: "Search" },
-      onClick: () => handleQuestion(notebookRef, commandBoxRef, pageController),
+      onClick: () => handleQuestion(notebookPageController),
     },
   ];
 

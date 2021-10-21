@@ -12,13 +12,7 @@ import { theme } from "../../index";
 
 import "../../css/components/RibbonComponent.css";
 
-export default function RibbonComponent({
-  notebookRef,
-  commandBoxRef,
-  appController,
-  pageController,
-  statusBarRef,
-}) {
+export default function RibbonComponent() {
   const ribbonStyle = {
     backgroundColor: theme.palette.white,
   };
@@ -27,57 +21,27 @@ export default function RibbonComponent({
     <div className="ribbon" style={ribbonStyle}>
       <Pivot aria-label="Ribbon" defaultSelectedKey="home">
         <PivotItem headerText="File" itemKey="file">
-          <FileItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <FileItems />
         </PivotItem>
 
         <PivotItem headerText="Home" itemKey="home">
-          <HomeItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <HomeItems />
         </PivotItem>
 
         <PivotItem headerText="Edit" itemKey="edit">
-          <EditItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <EditItems />
         </PivotItem>
 
         <PivotItem headerText="Insert" itemKey="insert">
-          <InsertItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <InsertItems />
         </PivotItem>
 
         <PivotItem headerText="Review" itemKey="review">
-          <ReviewItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <ReviewItems />
         </PivotItem>
 
         <PivotItem headerText="View" itemKey="view">
-          <ViewItems
-            notebookRef={notebookRef}
-            commandBoxRef={commandBoxRef}
-            appController={appController}
-            pageController={pageController}
-          />
+          <ViewItems />
         </PivotItem>
       </Pivot>
     </div>

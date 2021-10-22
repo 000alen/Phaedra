@@ -9,41 +9,60 @@ import ViewItems from "./items/ViewItems";
 import EditItems from "./items/EditItems";
 
 import { theme } from "../../index";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { RibbonComponentShortcuts } from "../../shortcuts/RibbonComponentShortcuts";
+import Mousetrap from "mousetrap";
 
 import "../../css/components/RibbonComponent.css";
 
-export default function RibbonComponent() {
-  const ribbonStyle = {
-    backgroundColor: theme.palette.white,
-  };
+export default class RibbonComponent extends React.Component {
+  static contextType = NotebookPageController;
 
-  return (
-    <div className="ribbon" style={ribbonStyle}>
-      <Pivot aria-label="Ribbon" defaultSelectedKey="home">
-        <PivotItem headerText="File" itemKey="file">
-          <FileItems />
-        </PivotItem>
+  componentDidMount() {
+    for (const [keys, action] of Object.entries(RibbonComponentShortcuts)) {
+      Mousetrap.bind(keys, () => action(this.context), "keyup");
+    }
+  }
 
-        <PivotItem headerText="Home" itemKey="home">
-          <HomeItems />
-        </PivotItem>
+  componentWillUnmount() {
+    for (const keys of Object.keys(RibbonComponentShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
+  }
 
-        <PivotItem headerText="Edit" itemKey="edit">
-          <EditItems />
-        </PivotItem>
+  render() {
+    const ribbonStyle = {
+      backgroundColor: theme.palette.white,
+    };
 
-        <PivotItem headerText="Insert" itemKey="insert">
-          <InsertItems />
-        </PivotItem>
+    return (
+      <div className="ribbon" style={ribbonStyle}>
+        <Pivot aria-label="Ribbon" defaultSelectedKey="home">
+          <PivotItem headerText="File" itemKey="file">
+            <FileItems />
+          </PivotItem>
 
-        <PivotItem headerText="Review" itemKey="review">
-          <ReviewItems />
-        </PivotItem>
+          <PivotItem headerText="Home" itemKey="home">
+            <HomeItems />
+          </PivotItem>
 
-        <PivotItem headerText="View" itemKey="view">
-          <ViewItems />
-        </PivotItem>
-      </Pivot>
-    </div>
-  );
+          <PivotItem headerText="Edit" itemKey="edit">
+            <EditItems />
+          </PivotItem>
+
+          <PivotItem headerText="Insert" itemKey="insert">
+            <InsertItems />
+          </PivotItem>
+
+          <PivotItem headerText="Review" itemKey="review">
+            <ReviewItems />
+          </PivotItem>
+
+          <PivotItem headerText="View" itemKey="view">
+            <ViewItems />
+          </PivotItem>
+        </Pivot>
+      </div>
+    );
+  }
 }

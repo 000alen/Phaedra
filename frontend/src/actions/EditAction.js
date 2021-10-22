@@ -22,6 +22,8 @@ export function handleSeamless(notebookPageController) {
 }
 
 export function handleEdit(notebookPageController) {
+  console.log(notebookPageController);
+
   const notebookRef = notebookPageController.getNotebookRef();
 
   notebookRef.current.toggleEditing();

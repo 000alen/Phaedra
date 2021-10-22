@@ -7,9 +7,9 @@
 
 ## Backend
 
-- [ ] Add a reliable source for vocabulary
 - [ ] Provide examples for generation (backend with GPT)
 - [ ] Automate queries and relevant information extraction when generating notebooks
+- [x] Add a reliable source for vocabulary
 
 ## Frontend
 

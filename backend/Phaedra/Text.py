@@ -11,6 +11,7 @@ from nltk import word_tokenize, corpus, download  # type: ignore
 
 download("punkt")
 download("stopwords")
+download("wordnet")
 
 __all__ = ("extract_text_from_pdf", "extract_text_from_pdf_to_pages", "preprocess_text")
 

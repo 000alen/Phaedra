@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "main": "public/index.js",
+  "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
     "@craco/craco": "^6.3.0",
@@ -34,10 +34,13 @@
   },
   "scripts": {
     "build:tailwind": "tailwindcss build -i src/css/tailwind.css -o src/css/tailwind.output.css",
+    "build:react": "react-scripts build",
+    "build:electron": "electron-builder",
+    "build:craco": "craco build",
     "prestart": "npm run build:tailwind",
     "prebuild": "npm run build:tailwind",
     "start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build": "craco build",
+    "build": "yarn build:react && yarn build:electron",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
@@ -62,6 +65,7 @@
   "devDependencies": {
     "autoprefixer": "^10.3.7",
     "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
     "postcss": "^8.3.11",
     "tailwindcss": "^2.2.17"
   }

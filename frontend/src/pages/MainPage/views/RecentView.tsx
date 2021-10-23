@@ -1,10 +1,14 @@
 import React, { Component } from "react";
-import { DetailsList } from "@fluentui/react";
-import { getRecent, readFile } from "../../../API/ElectronAPI";
 import { v4 as uuidv4 } from "uuid";
-import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import NotebookPage from "../../NotebookPage/NotebookPage";
+
+import { DetailsList } from "@fluentui/react";
+
+import { getRecent, readFileSync } from "../../../API/ElectronAPI";
+import { StoreFile } from "../../../API/IElectronAPI";
 import { AppController } from "../../../contexts/AppController";
+import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import NotebookPage from "../../NotebookPage";
+import { MainPageViewProps } from "../IMainPage";
 
 const columns = [
   {
@@ -33,26 +37,20 @@ const columns = [
   },
 ];
 
-interface RecentViewProps {
-  id: string;
-}
-
 interface RecentViewState {
-  items: any[];
+  items: StoreFile[];
 }
 
 export default class RecentView extends Component<
-  RecentViewProps,
+  MainPageViewProps,
   RecentViewState
 > {
   static contextType = AppController;
 
-  constructor(props: RecentViewProps) {
+  constructor(props: MainPageViewProps) {
     super(props);
 
     this.handleInvokedItem = this.handleInvokedItem.bind(this);
-
-    const { id } = props;
 
     this.state = {
       items: [],
@@ -67,7 +65,7 @@ export default class RecentView extends Component<
     });
   }
 
-  formatItems(items: any[]): any[] {
+  formatItems(items: StoreFile[]): any[] {
     return items.map((item) => {
       return {
         key: uuidv4(),
@@ -83,8 +81,8 @@ export default class RecentView extends Component<
     const { id } = this.props;
     const { path } = item;
 
-    readFile(path, "utf-8").then((_notebook) => {
-      let notebook = JSON.parse(_notebook);
+    readFileSync(path, "utf-8").then((_notebook) => {
+      let notebook = JSON.parse(_notebook as string);
 
       appController.tabsDo(addTab, {
         tab: createTab({

@@ -1,19 +1,14 @@
-import React, { Component } from "react";
-
-import { StatusBarButtonComponent } from "./StatusBarButtonComponent";
-import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
-
-import { theme } from "../../index";
-
 import "../../css/components/StatusBarComponent.css";
 
-interface StatusBarController {
-  setLoadingText: (text: string) => void;
-  showLoading: () => void;
-  hideLoading: () => void;
-}
+import React, { Component } from "react";
 
-interface StatusBarComponentProps {}
+import { theme } from "../../index";
+import {
+  StatusBarComponentProps,
+  StatusBarController,
+} from "./IStatusBarComponent";
+import { StatusBarButtonComponent } from "./StatusBarButtonComponent";
+import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 
 interface StatusBarComponentState {
   statusBarController: StatusBarController;

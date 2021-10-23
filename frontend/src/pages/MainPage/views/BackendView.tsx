@@ -1,18 +1,16 @@
 import React, { useState } from "react";
+
 import {
-  DefaultButton,
   CompoundButton,
+  DefaultButton,
   PrimaryButton,
   TextField,
 } from "@fluentui/react";
 
 import { getApiUrl, setApiUrl } from "../../../API/PhaedraAPI";
+import { MainPageViewProps } from "../IMainPage";
 
-interface BackendViewProps {
-  id: string;
-}
-
-export default function BackendView({ id }: BackendViewProps) {
+export default function BackendView({ id }: MainPageViewProps) {
   const [url, setUrl] = useState(getApiUrl());
 
   const handleUrlChange = (

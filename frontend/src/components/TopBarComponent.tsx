@@ -1,13 +1,11 @@
+import "../css/components/TopBarComponent.css";
+
 import React, { useState } from "react";
+
 import { IconButton } from "@fluentui/react";
 
 import { ipcRenderer, theme } from "../index";
-
-import "../css/components/TopBarComponent.css";
-
-interface TopBarComponentProps {
-  children: JSX.Element[] | JSX.Element;
-}
+import { TopBarComponentProps } from "./ITopBarComponent";
 
 export default function TopBarComponent({
   children,

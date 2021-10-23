@@ -1,17 +1,11 @@
-import { INotebookCommand } from "./NotebookManipulation";
-
-export type History = INotebookCommand[];
-
-export interface IHistoryInformation {
-  history: History;
-  historyIndex: number;
-}
+import { IHistory, IHistoryManipulation } from "./IHistoryManipulation";
+import { INotebookCommand } from "./INotebookManipulation";
 
 export function historyDo(
-  history: History,
+  history: IHistory,
   historyIndex: number,
   { command }: { command: INotebookCommand }
-): IHistoryInformation {
+): IHistoryManipulation {
   if (historyIndex === history.length - 1) {
     history.push(command);
   } else {
@@ -25,18 +19,18 @@ export function historyDo(
 }
 
 export function historyUndo(
-  history: History,
+  history: IHistory,
   historyIndex: number
-): [INotebookCommand, IHistoryInformation] {
+): [INotebookCommand, IHistoryManipulation] {
   let command = history[historyIndex];
   historyIndex--;
   return [command, { history: history, historyIndex: historyIndex }];
 }
 
 export function historyRedo(
-  history: History,
+  history: IHistory,
   historyIndex: number
-): [INotebookCommand, IHistoryInformation] {
+): [INotebookCommand, IHistoryManipulation] {
   let command = history[historyIndex];
   historyIndex++;
   return [command, { history: history, historyIndex: historyIndex }];

@@ -1,56 +1,35 @@
 import React, { Component } from "react";
 
-import { readFile } from "../../API/ElectronAPI";
-
-import PageComponent from "./PageComponent";
-
+import { readFileSync } from "../../API/ElectronAPI";
+import { NotebookController } from "../../contexts/NotebookController";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { saveNotebook } from "../../IO/NotebookIO";
 import {
   historyDo,
   historyRedo,
   historyUndo,
 } from "../../manipulation/HistoryManipulation";
 import {
-  undo,
-  redo,
-  getPage,
-  indexPage,
-  getCell,
-  indexCell,
-  getCellContent,
-  getCellData,
-  addPlaceholderCell,
   INotebook,
   INotebookCommand,
+  INotebookManipulation,
+} from "../../manipulation/INotebookManipulation";
+import {
+  addPlaceholderCell,
+  getCell,
+  getCellContent,
+  getCellData,
+  getPage,
+  indexCell,
+  indexPage,
+  redo,
+  undo,
 } from "../../manipulation/NotebookManipulation";
-
-import { saveNotebook } from "../../IO/NotebookIO";
-import { NotebookPageController } from "../../contexts/NotebookPageController";
-import { NotebookController } from "../../contexts/NotebookController";
-
-export interface File {
-  url: string;
-  data: Uint8Array;
-}
-
-interface NotebookComponentProps {
-  tabId: string;
-  notebook: INotebook;
-  notebookPath: string | undefined;
-}
-
-interface NotebookComponentState {
-  tabId: string;
-  notebook: INotebook;
-  notebookPath: string | undefined;
-  documentPath: string | undefined;
-  documentFile: File | undefined;
-  activePage: string | undefined;
-  activeCell: string | undefined;
-  editing: boolean;
-  history: any; // XXX
-  historyIndex: number;
-  isSaved: boolean;
-}
+import {
+  NotebookComponentProps,
+  NotebookComponentState,
+} from "./INotebookComponent";
+import PageComponent from "./PageComponent";
 
 export default class NotebookComponent extends Component<
   NotebookComponentProps,
@@ -88,6 +67,15 @@ export default class NotebookComponent extends Component<
       history: [],
       historyIndex: -1,
       isSaved: true,
+      notebookController: {
+        save: this.save,
+        handleSelection: this.handleSelection,
+        toggleEditing: this.toggleEditing,
+        undo: this.undo,
+        redo: this.redo,
+        do: this.do,
+        getNotebookPageController: this.getNotebookPageController,
+      },
     };
   }
 
@@ -117,7 +105,7 @@ export default class NotebookComponent extends Component<
   }
 
   loadDocument() {
-    readFile(this.state.documentPath).then((documentContent) => {
+    readFileSync(this.state.documentPath!).then((documentContent) => {
       this.setState((state) => {
         const documentFile = {
           url: this.state.documentPath!,
@@ -173,9 +161,9 @@ export default class NotebookComponent extends Component<
     });
   }
 
-  do(action: Function, args: INotebookCommand) {
+  do(manipulation: INotebookManipulation, args: INotebookCommand) {
     let notebook = this.state.notebook;
-    switch (action.name) {
+    switch (manipulation.name) {
       case "removePage":
         const page = getPage(notebook, { pageId: args.pageId });
         const pageIndex = indexPage(notebook, {
@@ -212,7 +200,7 @@ export default class NotebookComponent extends Component<
         break;
     }
 
-    switch (action.name) {
+    switch (manipulation.name) {
       case "addEntitiesCell":
       case "addQuestionCell":
       case "addSparseQuestionCell":
@@ -223,15 +211,19 @@ export default class NotebookComponent extends Component<
       case "addMeaningCell":
       case "addSynonymCell":
       case "addAntonymCell":
-        this.wrapDo(action, args);
+        this.wrapDo(manipulation, args);
         break;
       default:
-        this.handleDo(action, args, action(notebook, args));
+        this.handleDo(
+          manipulation,
+          args,
+          manipulation(notebook, args) as INotebook
+        );
         break;
     }
   }
 
-  wrapDo(action: Function, args: INotebookCommand) {
+  wrapDo(manipulation: INotebookManipulation, args: INotebookCommand) {
     const notebookPageController = this.context;
     const appController = notebookPageController.getAppController();
     const statusBarRef = appController.getStatusBarRef();
@@ -264,17 +256,23 @@ export default class NotebookComponent extends Component<
     });
 
     statusBarController.showLoading();
-    action(notebook, args).then((_notebook: INotebook) => {
-      statusBarController.hideLoading();
-      this.handleDo(action, args, _notebook);
-    });
+    (manipulation(notebook, args) as Promise<INotebook>).then(
+      (_notebook: INotebook) => {
+        statusBarController.hideLoading();
+        this.handleDo(manipulation, args, _notebook);
+      }
+    );
   }
 
-  handleDo(action: Function, args: INotebookCommand, notebook: INotebook) {
+  handleDo(
+    manipulation: INotebookManipulation,
+    args: INotebookCommand,
+    notebook: INotebook
+  ) {
     let { history, historyIndex } = this.state;
 
     const newHistoryInformation = historyDo(history, historyIndex, {
-      command: { ...args, action: action.name },
+      command: { ...args, action: manipulation.name },
     });
 
     this.setState((state) => {
@@ -344,17 +342,7 @@ export default class NotebookComponent extends Component<
 
   render() {
     return (
-      <NotebookController.Provider
-        value={{
-          save: this.save,
-          handleSelection: this.handleSelection,
-          toggleEditing: this.toggleEditing,
-          undo: this.undo,
-          redo: this.redo,
-          do: this.do,
-          getNotebookPageController: this.getNotebookPageController,
-        }}
-      >
+      <NotebookController.Provider value={this.state.notebookController}>
         <div className="notebook" id="notebook">
           {this.state.notebook.pages.map((page) => (
             <PageComponent

@@ -2,22 +2,17 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CardComponent from "../../../components/CardComponent";
-
-import NotebookPage from "../../NotebookPage/NotebookPage";
-
+import { AppController } from "../../../contexts/AppController";
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import { AppController } from "../../../contexts/AppController";
+import NotebookPage from "../../NotebookPage";
+import { MainPageViewProps } from "../IMainPage";
 
 const newIcon = {
   iconName: "FileTemplate",
 };
 
-interface EmptyViewProps {
-  id: string;
-}
-
-export default function EmptyView({ id }: EmptyViewProps) {
+export default function EmptyView({ id }: MainPageViewProps) {
   const appController = React.useContext(AppController);
 
   const handleNew = () => {

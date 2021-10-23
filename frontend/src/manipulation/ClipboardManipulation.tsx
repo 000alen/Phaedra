@@ -1,13 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { IPage, ICell } from "./NotebookManipulation";
-
-export type IClipboardElement = IPage | ICell;
-export type IClipboard = Array<IClipboardElement>;
-
-export interface IClipboardCommand {
-  element: IClipboardElement;
-}
+import { IClipboard, IClipboardElement } from "./IClipboardManipulation";
+import { ICell, IPage } from "./INotebookManipulation";
 
 export function clipboardPush(
   clipboard: IClipboard,

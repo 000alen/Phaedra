@@ -1,23 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-export interface ITab {
-  id: string;
-  title: string;
-  content?: JSX.Element;
-}
-
-export interface ITabsInformation {
-  tabs: ITab[];
-  activeTab?: string;
-}
-
-export interface ITabsCommand {
-  tab?: ITab;
-  id?: string;
-  index?: number;
-  title?: string;
-  content?: JSX.Element;
-}
+import { ITab, ITabsCommand, ITabsInformation } from "./ITabsManipulation";
 
 export function createTab({ id, title, content }: Partial<ITab>): ITab {
   if (id === undefined) id = uuidv4();

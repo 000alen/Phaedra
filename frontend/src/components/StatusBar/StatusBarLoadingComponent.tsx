@@ -1,9 +1,8 @@
 import React from "react";
+
 import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 
-interface StatusBarLoadingComponentProps {
-  text: string;
-}
+import { StatusBarLoadingComponentProps } from "./IStatusBarLoadingComponent";
 
 export function StatusBarLoadingComponent({
   text,

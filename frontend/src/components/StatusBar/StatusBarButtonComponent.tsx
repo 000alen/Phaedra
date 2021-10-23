@@ -1,10 +1,8 @@
 import React from "react";
-import { Text, Icon } from "@fluentui/react";
 
-interface StatusBarButtonComponentProps {
-  text: string;
-  icon: string;
-}
+import { Icon, Text } from "@fluentui/react";
+
+import { StatusBarButtonComponentProps } from "./IStatusBarButtonComponent";
 
 export function StatusBarButtonComponent({
   text,

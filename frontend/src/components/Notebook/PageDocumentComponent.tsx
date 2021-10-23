@@ -1,15 +1,12 @@
 import React, { PureComponent } from "react";
-import { pdfjs, Document, Page as DocumentPage } from "react-pdf";
-import { File } from "./NotebookComponent";
+import { Document, Page as DocumentPage, pdfjs } from "react-pdf";
+
+import {
+  PageDocumentComponentProps,
+  PageDocumentComponentState,
+} from "./IPageDocumentComponent";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
-interface PageDocumentComponentProps {
-  document: File;
-  pageNumber: number;
-}
-
-interface PageDocumentComponentState {}
 
 export class PageDocumentComponent extends PureComponent<
   PageDocumentComponentProps,

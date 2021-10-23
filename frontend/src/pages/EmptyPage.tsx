@@ -1,19 +1,16 @@
+// TODO: Refactor handling calls
+
+import "../css/pages/EmptyPage.css";
+
 import React, { useState } from "react";
 
 import CardComponent from "../components/CardComponent";
-
-import {
-  createNotebook,
-  INotebook,
-} from "../manipulation/NotebookManipulation";
-import { setTabContent } from "../manipulation/TabsManipulation";
-
-import NotebookPage from "./NotebookPage/NotebookPage";
-
-import { openFile } from "../IO/NotebookIO";
-
-import "../css/pages/EmptyPage.css";
 import { AppController } from "../contexts/AppController";
+import { openFile } from "../IO/NotebookIO";
+import { createNotebook } from "../manipulation/NotebookManipulation";
+import { setTabContent } from "../manipulation/TabsManipulation";
+import { EmptyPageProps } from "./IEmptyPage";
+import NotebookPage from "./NotebookPage";
 
 const openIcon = {
   iconName: "OpenFile",
@@ -22,10 +19,6 @@ const openIcon = {
 const newIcon = {
   iconName: "FileTemplate",
 };
-
-interface EmptyPageProps {
-  id: string;
-}
 
 export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
   const appController = React.useContext(AppController);

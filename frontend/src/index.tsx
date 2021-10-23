@@ -1,11 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { initializeIcons, ThemeProvider, createTheme } from "@fluentui/react";
-
-import App from "./App";
-
 import "./css/index.css";
 import "./css/tailwind.output.css";
+
+import React from "react";
+import ReactDOM from "react-dom";
+
+import { createTheme, initializeIcons, ThemeProvider } from "@fluentui/react";
+
+import App from "./App";
 
 export const { ipcRenderer } = window.require("electron");
 

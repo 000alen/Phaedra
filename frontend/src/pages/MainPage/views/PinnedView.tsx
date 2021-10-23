@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+
 import { DetailsList } from "@fluentui/react";
+
 import { getPinned } from "../../../API/ElectronAPI";
+import { StoreFile } from "../../../API/IElectronAPI";
+import { MainPageViewProps } from "../IMainPage";
 
 const columns = [
   {
@@ -29,19 +33,15 @@ const columns = [
   },
 ];
 
-interface PinnedViewProps {
-  id: string;
-}
-
 interface PinnedViewState {
-  items: any[];
+  items: StoreFile[];
 }
 
 export default class PinnedView extends Component<
-  PinnedViewProps,
+  MainPageViewProps,
   PinnedViewState
 > {
-  constructor(props: PinnedViewProps) {
+  constructor(props: MainPageViewProps) {
     super(props);
 
     this.state = {
@@ -57,7 +57,7 @@ export default class PinnedView extends Component<
     });
   }
 
-  formatItems(items: any[]): any[] {
+  formatItems(items: StoreFile[]): any[] {
     return items.map((item) => {
       return {
         key: item.name,

@@ -2,7 +2,7 @@
  * @typedef {import("../manipulation/NotebookManipulation").Notebook} Notebook
  */
 
-import { INotebook } from "../manipulation/NotebookManipulation";
+import { INotebook } from "../manipulation/INotebookManipulation";
 
 const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };

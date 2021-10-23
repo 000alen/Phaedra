@@ -1,22 +1,12 @@
 import React, { Component, FormEvent, MouseEvent } from "react";
 import ReactMarkdown from "react-markdown";
-import { Shimmer, TextField, mergeStyles } from "@fluentui/react";
 
-import { setCellContent } from "../../manipulation/NotebookManipulation";
+import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
-import { theme } from "../../index";
 import { NotebookController } from "../../contexts/NotebookController";
-
-interface CellComponentProps {
-  id: string;
-  data: any;
-  content: string;
-  pageId: string;
-  active: boolean;
-  editing: boolean;
-}
-
-interface CellComponentState {}
+import { theme } from "../../index";
+import { setCellContent } from "../../manipulation/NotebookManipulation";
+import { CellComponentProps, CellComponentState } from "./ICellComponent";
 
 export default class CellComponent extends Component<
   CellComponentProps,

@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   IconButton,
   IOverflowSetItemProps,
@@ -6,16 +7,14 @@ import {
   OverflowSet,
 } from "@fluentui/react";
 
-import { TabComponent, iconButtonStyles } from "./TabComponent";
-
+import { theme } from "../../index";
 import {
   addTab,
-  ITab,
   removeTab,
   selectTab,
 } from "../../manipulation/TabsManipulation";
-
-import { theme } from "../../index";
+import { TabsComponentProps } from "./ITabsComponent";
+import { iconButtonStyles, TabComponent } from "./TabComponent";
 
 const numberOfTabs = 5;
 
@@ -41,12 +40,6 @@ const onRenderOverflowButton = (
     />
   );
 };
-
-interface TabsComponentProps {
-  tabs: ITab[];
-  activeTab: string | undefined;
-  onAction: Function;
-}
 
 export default function TabsComponent({
   tabs,

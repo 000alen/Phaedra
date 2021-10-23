@@ -1,24 +1,10 @@
 import React, { Component, MouseEvent } from "react";
 
-import { PageDocumentComponent } from "./PageDocumentComponent";
-import CellComponent from "./CellComponent";
-import { File } from "./NotebookComponent";
-
-import { theme } from "../../index";
 import { NotebookController } from "../../contexts/NotebookController";
-import { ICell } from "../../manipulation/NotebookManipulation";
-
-interface PageComponentProps {
-  id: string;
-  data: any;
-  cells: ICell[];
-  active: boolean;
-  activeCell: string | undefined;
-  document: File | undefined;
-  editing: boolean;
-}
-
-interface PageComponentState {}
+import { theme } from "../../index";
+import CellComponent from "./CellComponent";
+import { PageComponentProps, PageComponentState } from "./IPageComponent";
+import { PageDocumentComponent } from "./PageDocumentComponent";
 
 export default class PageComponent extends Component<
   PageComponentProps,

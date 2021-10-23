@@ -1,12 +1,13 @@
-import React, { Component, FormEvent } from "react";
-import { TextField } from "@fluentui/react";
-
 import "../css/components/CommandBoxComponent.css";
 
-interface CommandBoxComponentProps {}
-interface CommandBoxComponentState {
-  command: string;
-}
+import React, { Component, FormEvent } from "react";
+
+import { TextField } from "@fluentui/react";
+
+import {
+  CommandBoxComponentProps,
+  CommandBoxComponentState,
+} from "./ICommandBoxComponent";
 
 export default class CommandBoxComponent extends Component<
   CommandBoxComponentProps,

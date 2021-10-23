@@ -1,6 +1,6 @@
 import { MessageBarType } from "@fluentui/react";
-import { INotebookPageController } from "../contexts/NotebookPageController";
 
+import { INotebookPageController } from "../contexts/INotebookPageController";
 import {
   clipboardPush,
   clipboardTop,
@@ -8,20 +8,20 @@ import {
   makePageUnique,
 } from "../manipulation/ClipboardManipulation";
 import {
-  createPage,
-  createCell,
-  indexPage,
-  insertPage,
-  indexCell,
-  insertCell,
-  removeCell,
-  addQuestionCell,
-  addGenerateCell,
-  getCell,
   addCell,
+  addGenerateCell,
   addPage,
-  removePage,
+  addQuestionCell,
+  createCell,
+  createPage,
+  getCell,
   getPage,
+  indexCell,
+  indexPage,
+  insertCell,
+  insertPage,
+  removeCell,
+  removePage,
 } from "../manipulation/NotebookManipulation";
 
 export function handleSave(notebookController: INotebookPageController) {
@@ -145,28 +145,26 @@ export function handleCut(notebookPageController: INotebookPageController) {
 }
 
 export function handleCopy(notebookPageController: INotebookPageController) {
-  const appController = notebookPageController.getAppController();
-  const notebookRef = notebookPageController.getNotebookRef();
-
-  const { notebook, activePage, activeCell } = notebookRef!.current!.state;
-
-  if (activeCell) {
-    const cell = getCell(notebook, {
-      pageId: activePage,
-      cellId: activeCell,
-    });
-    appController!.clipboardDo(clipboardPush, { element: cell! });
-  } else if (activePage) {
-    const page = getPage(notebook, {
-      pageId: activePage,
-    });
-    appController!.clipboardDo(clipboardPush, { element: page! });
-  } else {
-    notebookPageController.addMessageBar(
-      "No cell selected",
-      MessageBarType.error
-    );
-  }
+  // const appController = notebookPageController.getAppController();
+  // const notebookRef = notebookPageController.getNotebookRef();
+  // const { notebook, activePage, activeCell } = notebookRef!.current!.state;
+  // if (activeCell) {
+  //   const cell = getCell(notebook, {
+  //     pageId: activePage,
+  //     cellId: activeCell,
+  //   });
+  //   appController!.clipboardDo(clipboardPush, { element: cell! });
+  // } else if (activePage) {
+  //   const page = getPage(notebook, {
+  //     pageId: activePage,
+  //   });
+  //   appController!.clipboardDo(clipboardPush, { element: page! });
+  // } else {
+  //   notebookPageController.addMessageBar(
+  //     "No cell selected",
+  //     MessageBarType.error
+  //   );
+  // }
 }
 
 export function handlePaste(notebookPageController: INotebookPageController) {

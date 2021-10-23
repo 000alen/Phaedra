@@ -1,36 +1,26 @@
+import "./css/App.css";
+
+import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import StatusBarComponent from "./components/StatusBar/StatusBarComponent";
 import TabsComponent from "./components/Tabs/TabsComponent";
 import TopBarComponent from "./components/TopBarComponent";
-
+import { AppController } from "./contexts/AppController";
+import { AppProps, AppState } from "./IApp";
 import {
-  getTabContent,
-  createTab,
-  ITab,
+  IClipboardCommand,
+  IClipboardManipulation,
+} from "./manipulation/IClipboardManipulation";
+import {
   ITabsCommand,
-} from "./manipulation/TabsManipulation";
-
+  ITabsManipulation,
+} from "./manipulation/ITabsManipulation";
+import { createTab, getTabContent } from "./manipulation/TabsManipulation";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage/MainPage";
-import { AppController } from "./contexts/AppController";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
-import Mousetrap from "mousetrap";
-import {
-  IClipboard,
-  IClipboardCommand,
-} from "./manipulation/ClipboardManipulation";
-
-import "./css/App.css";
-
-interface AppProps {}
-
-interface AppState {
-  tabs: ITab[];
-  activeTab: string | undefined;
-  clipboard: IClipboard;
-}
 
 export default class App extends Component<AppProps, AppState> {
   statusBarRef: React.RefObject<StatusBarComponent>;
@@ -48,12 +38,17 @@ export default class App extends Component<AppProps, AppState> {
       tabs: [],
       activeTab: undefined,
       clipboard: [],
+      appController: {
+        tabsDo: this.tabsDo,
+        clipboardDo: this.clipboardDo,
+        getStatusBarRef: this.getStatusBarRef,
+      },
     };
   }
 
   componentDidMount(): void {
     for (const [keys, action] of Object.entries(AppShortcuts)) {
-      Mousetrap.bind(keys, action, "keyup");
+      Mousetrap.bind(keys, () => action(this.state.appController), "keyup");
     }
   }
 
@@ -63,12 +58,12 @@ export default class App extends Component<AppProps, AppState> {
     }
   }
 
-  tabsDo(action: Function, args: ITabsCommand): void {
+  tabsDo(manipulation: ITabsManipulation, args: ITabsCommand): void {
     if (args === undefined) args = {};
 
     let { tabs, activeTab } = this.state;
 
-    switch (action.name) {
+    switch (manipulation.name) {
       case "addTab":
         const id = uuidv4();
         if (args.tab === undefined) {
@@ -83,7 +78,7 @@ export default class App extends Component<AppProps, AppState> {
         break;
     }
 
-    let tabsInformation = action(tabs, activeTab, args);
+    let tabsInformation = manipulation(tabs, activeTab!, args);
 
     this.setState((state) => {
       return {
@@ -93,9 +88,12 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  clipboardDo(action: Function, args: IClipboardCommand): void {
+  clipboardDo(
+    manipulation: IClipboardManipulation,
+    args: IClipboardCommand
+  ): void {
     const clipboard = this.state.clipboard;
-    const currentClipboard = action(clipboard, args);
+    const currentClipboard = manipulation(clipboard, args);
 
     this.setState((state) => {
       return {
@@ -120,13 +118,7 @@ export default class App extends Component<AppProps, AppState> {
     }
 
     return (
-      <AppController.Provider
-        value={{
-          tabsDo: this.tabsDo,
-          clipboardDo: this.clipboardDo,
-          getStatusBarRef: this.getStatusBarRef,
-        }}
-      >
+      <AppController.Provider value={this.state.appController}>
         <div className="app">
           <TopBarComponent>
             <TabsComponent

@@ -1,55 +1,23 @@
 import { v4 as uuidv4 } from "uuid";
 
 import {
+  addAntonymCell as _addAntonymCell,
   addEntitiesCell as _addEntitiesCell,
+  addGenerateCell as _addGenerateCell,
+  addMeaningCell as _addMeaningCell,
   addQuestionCell as _addQuestionCell,
   addSparseQuestionCell as _addSparseQuestionCell,
-  addGenerateCell as _addGenerateCell,
-  addWikipediaSummaryCell as _addWikipediaSummaryCell,
-  addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
-  addWikipediaImageCell as _addWikipediaImageCell,
-  addMeaningCell as _addMeaningCell,
   addSynonymCell as _addSynonymCell,
-  addAntonymCell as _addAntonymCell,
+  addWikipediaImageCell as _addWikipediaImageCell,
+  addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
+  addWikipediaSummaryCell as _addWikipediaSummaryCell,
 } from "../API/PhaedraAPI";
-
-export interface ICell {
-  id: string;
-  data: any;
-  content: string;
-}
-
-export interface IPage {
-  id: string;
-  data: any;
-  cells: ICell[];
-}
-
-export interface INotebook {
-  id: string;
-  name: string;
-  document_path?: string;
-  pages: IPage[];
-}
-
-export interface INotebookCommand {
-  action?: string;
-  page?: IPage;
-  pageId?: string;
-  cell?: ICell;
-  cellId?: string;
-  index?: number;
-  question?: string;
-  prompt?: string;
-  query?: string;
-  content?: string;
-  previousContent?: string;
-  data?: any;
-  previousData?: any;
-  word?: string;
-  pageIndex?: number;
-  cellIndex?: number;
-}
+import {
+  ICell,
+  INotebook,
+  INotebookCommand,
+  IPage,
+} from "./INotebookManipulation";
 
 export function createNotebook({
   id,

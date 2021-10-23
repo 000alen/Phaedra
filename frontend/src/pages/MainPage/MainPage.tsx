@@ -1,17 +1,20 @@
+import "../../css/pages/MainPage.css";
+
+import Mousetrap from "mousetrap";
 import React, { Component, MouseEvent } from "react";
+
 import { INavLink, Nav } from "@fluentui/react";
 
+import { AppController } from "../../contexts/AppController";
+import { MainPageShortcuts } from "../../shortcuts/MainPageShortcuts";
+import { MainPageProps, MainPageState } from "./IMainPage";
 import BackendView from "./views/BackendView";
+import EmptyView from "./views/EmptyView";
 import FromPdfView from "./views/FromPdfView";
 import FromTextView from "./views/FromTextView";
 import NotebookView from "./views/NotebookView";
 import PinnedView from "./views/PinnedView";
 import RecentView from "./views/RecentView";
-import EmptyView from "./views/EmptyView";
-import { MainPageShortcuts } from "../../shortcuts/MainPageShortcuts";
-import Mousetrap from "mousetrap";
-
-import "../../css/pages/MainPage.css";
 
 const navLinkGroups = [
   {
@@ -39,16 +42,9 @@ const navLinkGroups = [
   },
 ];
 
-interface MainPageProps {
-  id: string;
-}
-
-interface MainPageState {
-  selectedKey: string;
-  navLinkContents: any;
-}
-
 export class MainPage extends Component<MainPageProps, MainPageState> {
+  static contextType = AppController;
+
   constructor(props: MainPageProps) {
     super(props);
 
@@ -72,25 +68,25 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
     };
   }
 
-  handleClick(event?: MouseEvent<HTMLElement>, item?: INavLink) {
+  handleClick(event?: MouseEvent<HTMLElement>, item?: INavLink): void {
     this.setState((state) => {
       return { ...state, selectedKey: item!.key! };
     });
   }
 
-  // componentDidMount() {
-  //   for (const [keys, action] of Object.entries(MainPageShortcuts)) {
-  //     Mousetrap.bind(keys, action, "keyup");
-  //   }
-  // }
+  componentDidMount(): void {
+    for (const [keys, action] of Object.entries(MainPageShortcuts)) {
+      Mousetrap.bind(keys, () => action(this.context), "keyup");
+    }
+  }
 
-  // componentWillUnmount() {
-  //   for (const keys of Object.keys(MainPageShortcuts)) {
-  //     Mousetrap.unbind(keys);
-  //   }
-  // }
+  componentWillUnmount(): void {
+    for (const keys of Object.keys(MainPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
+  }
 
-  render() {
+  render(): JSX.Element {
     const { selectedKey, navLinkContents } = this.state;
 
     return (

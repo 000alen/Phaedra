@@ -1,32 +1,29 @@
-import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
 import {
-  openDialog,
-  saveDialog,
-  writeFile,
-  readFile,
-  base64encode,
   addRecent,
+  base64,
+  readFileSync,
+  showOpenDialog,
+  showSaveDialog,
+  writeFileSync,
 } from "../API/ElectronAPI";
-import { INotebook } from "../manipulation/NotebookManipulation";
-
-interface INotebookIO {
-  notebook: INotebook;
-  notebookPath: string | undefined;
-}
+import { OpenDialogOptions } from "../API/IElectronAPI";
+import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
+import { INotebook } from "../manipulation/INotebookManipulation";
+import { INotebookIO } from "./INotebookIO";
 
 export function openPdf(): Promise<INotebookIO> {
-  const openDialogOptions = {
+  const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
     filters: [{ name: "Notebooks", extensions: ["pdf"] }],
   };
 
   return new Promise((resolve, reject) => {
-    openDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
 
-        readFile(path).then((content) => {
-          base64encode(content).then((base64) => {
+        readFileSync(path).then((content) => {
+          base64(content as Uint8Array).then((base64) => {
             notebookFromPdf(path, base64).then((notebook) => {
               resolve({ notebook: notebook, notebookPath: undefined });
             });
@@ -38,18 +35,18 @@ export function openPdf(): Promise<INotebookIO> {
 }
 
 export function openJson(): Promise<INotebookIO> {
-  const openDialogOptions = {
+  const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
     filters: [{ name: "Notebooks", extensions: ["json"] }],
   };
 
   return new Promise((resolve, reject) => {
-    openDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
 
-        readFile(path, "utf-8").then((_notebook) => {
-          let notebook = JSON.parse(_notebook);
+        readFileSync(path, "utf-8").then((_notebook) => {
+          let notebook = JSON.parse(_notebook as string);
 
           addRecent(path, notebook.name);
 
@@ -61,17 +58,17 @@ export function openJson(): Promise<INotebookIO> {
 }
 
 export function openText(): Promise<INotebookIO> {
-  const openDialogOptions = {
+  const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
     filters: [{ name: "Notebooks", extensions: ["txt"] }],
   };
 
   return new Promise((resolve, reject) => {
-    openDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
-        readFile(path, "utf-8").then((text) => {
-          notebookFromText(text).then((notebook) => {
+        readFileSync(path, "utf-8").then((text) => {
+          notebookFromText(text as string).then((notebook) => {
             resolve({ notebook: notebook, notebookPath: undefined });
           });
         });
@@ -81,15 +78,15 @@ export function openText(): Promise<INotebookIO> {
 }
 
 export function openFile(): Promise<INotebookIO> {
-  const openDialogOptions = {
+  const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
     filters: [{ name: "Notebooks", extensions: ["pdf", "json", "txt"] }],
   };
 
   const handleOpenPdf = (path: string) => {
     return new Promise((resolve, reject) => {
-      readFile(path).then((content) => {
-        base64encode(content).then((base64) => {
+      readFileSync(path).then((content) => {
+        base64(content as Uint8Array).then((base64) => {
           notebookFromPdf(path, base64).then((notebook) => {
             resolve({ notebook: notebook, notebookPath: undefined });
           });
@@ -100,8 +97,8 @@ export function openFile(): Promise<INotebookIO> {
 
   const handleOpenJson = (path: string) => {
     return new Promise((resolve, reject) => {
-      readFile(path, "utf-8").then((_notebook) => {
-        let notebook = JSON.parse(_notebook);
+      readFileSync(path, "utf-8").then((_notebook) => {
+        let notebook = JSON.parse(_notebook as string);
 
         addRecent(path, notebook.name);
 
@@ -112,8 +109,8 @@ export function openFile(): Promise<INotebookIO> {
 
   const handleOpenText = (path: string) => {
     return new Promise((resolve, reject) => {
-      readFile(path, "utf-8").then((text) => {
-        notebookFromText(text).then((notebook) => {
+      readFileSync(path, "utf-8").then((text) => {
+        notebookFromText(text as string).then((notebook) => {
           resolve({ notebook: notebook, notebookPath: undefined });
         });
       });
@@ -121,10 +118,10 @@ export function openFile(): Promise<INotebookIO> {
   };
 
   return new Promise((resolve, reject) => {
-    openDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
-        const extension = path.split(".").pop().toLowerCase();
+        const extension = path.split(".").pop()!.toLowerCase();
 
         let handler;
         if (extension === "pdf") {
@@ -153,15 +150,15 @@ export function saveNotebook(
 
   return new Promise((resolve, reject) => {
     if (notebookPath === undefined) {
-      saveDialog(saveDialogOptions).then((results) => {
+      showSaveDialog(saveDialogOptions).then((results) => {
         if (!results.canceled) {
           const path = results.filePath;
-          writeFile(path, JSON.stringify(notebook));
-          resolve(path);
+          writeFileSync(path!, JSON.stringify(notebook));
+          resolve(path!);
         }
       });
     } else {
-      writeFile(notebookPath, JSON.stringify(notebook));
+      writeFileSync(notebookPath, JSON.stringify(notebook));
       resolve(notebookPath);
     }
   });

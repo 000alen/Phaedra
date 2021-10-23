@@ -1,11 +1,11 @@
 import { MessageBarType } from "@fluentui/react";
-import { INotebookPageController } from "../contexts/NotebookPageController";
 
+import { INotebookPageController } from "../contexts/INotebookPageController";
 import {
-  addWikipediaSummaryCell,
-  addWikipediaSuggestionsCell,
-  addWikipediaImageCell,
   addEntitiesCell,
+  addWikipediaImageCell,
+  addWikipediaSuggestionsCell,
+  addWikipediaSummaryCell,
 } from "../manipulation/NotebookManipulation";
 
 export function handleWikipediaSummary(

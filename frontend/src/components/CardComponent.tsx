@@ -1,20 +1,13 @@
 import React from "react";
+
 import {
   DocumentCard,
-  DocumentCardTitle,
   DocumentCardImage,
-  IIconProps,
+  DocumentCardTitle,
 } from "@fluentui/react";
 import { mergeStyles } from "@fluentui/react/lib/Styling";
 
-interface CardComponentProps {
-  iconProps: IIconProps;
-  title: string;
-  subtitle: string;
-  onClick: (
-    event: React.SyntheticEvent<HTMLElement, Event> | undefined
-  ) => void;
-}
+import { CardComponentProps } from "./ICardComponent";
 
 export default function CardComponent({
   iconProps,

@@ -1,21 +1,25 @@
+import "../../css/components/RibbonComponent.css";
+
+import Mousetrap from "mousetrap";
 import React from "react";
+
 import { Pivot, PivotItem } from "@fluentui/react";
 
+import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { theme } from "../../index";
+import { RibbonComponentShortcuts } from "../../shortcuts/RibbonComponentShortcuts";
+import { RibbonProps, RibbonState } from "./IRibbonComponent";
+import EditItems from "./items/EditItems";
 import FileItems from "./items/FileItems";
 import HomeItems from "./items/HomeItems";
 import InsertItems from "./items/InsertItems";
 import ReviewItems from "./items/ReviewItems";
 import ViewItems from "./items/ViewItems";
-import EditItems from "./items/EditItems";
 
-import { theme } from "../../index";
-import { NotebookPageController } from "../../contexts/NotebookPageController";
-import { RibbonComponentShortcuts } from "../../shortcuts/RibbonComponentShortcuts";
-import Mousetrap from "mousetrap";
-
-import "../../css/components/RibbonComponent.css";
-
-export default class RibbonComponent extends React.Component {
+export default class RibbonComponent extends React.Component<
+  RibbonProps,
+  RibbonState
+> {
   static contextType = NotebookPageController;
 
   componentDidMount() {

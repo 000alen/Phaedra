@@ -1,4 +1,4 @@
-import { INotebookPageController } from "../contexts/NotebookPageController";
+import { INotebookPageController } from "../contexts/INotebookPageController";
 import { getCellData, setCellData } from "../manipulation/NotebookManipulation";
 
 export function handleTest(notebookPageController: INotebookPageController) {

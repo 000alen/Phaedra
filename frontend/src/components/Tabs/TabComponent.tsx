@@ -1,9 +1,10 @@
 import React from "react";
+
 import { IconButton } from "@fluentui/react";
 
-import { removeTab, selectTab } from "../../manipulation/TabsManipulation";
-
 import { theme } from "../../index";
+import { removeTab, selectTab } from "../../manipulation/TabsManipulation";
+import { TabComponentProps } from "./ITabComponent";
 
 export const iconButtonStyles = {
   rootHovered: {
@@ -13,13 +14,6 @@ export const iconButtonStyles = {
     backgroundColor: "transparent",
   },
 };
-
-interface TabComponentProps {
-  id: string;
-  title: string;
-  active: boolean;
-  onAction: Function;
-}
 
 export function TabComponent({
   id,

@@ -701,11 +701,6 @@ video {
   border-width: 1px;
 }
 
-.bg-red-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgba(220, 38, 38, var(--tw-bg-opacity));
-}
-
 .p-2 {
   padding: 0.5rem;
 }

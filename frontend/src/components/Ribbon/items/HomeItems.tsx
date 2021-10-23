@@ -1,21 +1,24 @@
 import React from "react";
+
 import { CommandBar } from "@fluentui/react";
+
 import {
-  handleSave,
-  handleInsertPage,
-  handleInsertCell,
-  handleDelete,
-  handleUndo,
-  handleRedo,
-  handleCut,
   handleCopy,
-  handlePaste,
+  handleCut,
+  handleDelete,
   handleGenerate,
+  handleInsertCell,
+  handleInsertPage,
+  handlePaste,
   handleQuestion,
+  handleRedo,
+  handleSave,
+  handleUndo,
 } from "../../../actions/HomeActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function HomeItems() {
+export default function HomeItems({}: RibbonItemsProps) {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const homeItems = [

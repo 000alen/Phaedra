@@ -1,46 +1,67 @@
+import { PathLike, WriteFileOptions } from "fs";
+
 import { ipcRenderer } from "../index";
+import {
+  OpenDialogOptions,
+  OpenDialogReturnValue,
+  SaveDialogOptions,
+  SaveDialogReturnValue,
+  StoreFile,
+} from "./IElectronAPI";
 
-export function readFile(...args: any[]): Promise<any> {
+export function readFileSync(
+  path: PathLike | number,
+  options?:
+    | { encoding: BufferEncoding; flag?: string | undefined }
+    | BufferEncoding
+    | undefined
+): Promise<string | Uint8Array> {
   return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("readFile", ...args).then((result: any) => {
+    ipcRenderer.invoke("readFileSync", path, options).then((result: any) => {
       resolve(result);
     });
   });
 }
 
-export function writeFile(...args: any[]): Promise<any> {
+export function writeFileSync(
+  path: PathLike | number,
+  data: string | NodeJS.ArrayBufferView,
+  options?: WriteFileOptions
+) {
+  ipcRenderer.invoke("writeFileSync", path, data, options);
+}
+
+export function showOpenDialog(
+  options: OpenDialogOptions
+): Promise<OpenDialogReturnValue> {
   return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("writeFile", ...args).then((result: any) => {
+    ipcRenderer.invoke("showOpenDialog", options).then((result: any) => {
       resolve(result);
     });
   });
 }
 
-export function openDialog(...args: any[]): Promise<any> {
+export function showSaveDialog(
+  options: SaveDialogOptions
+): Promise<SaveDialogReturnValue> {
   return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("openDialog", ...args).then((result: any) => {
+    ipcRenderer.invoke("showSaveDialog", options).then((result: any) => {
       resolve(result);
     });
   });
 }
 
-export function saveDialog(...args: any[]): Promise<any> {
+export function base64(
+  data: Uint8Array | ReadonlyArray<number>
+): Promise<string> {
   return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("saveDialog", ...args).then((result: any) => {
+    ipcRenderer.invoke("base64", data).then((result: any) => {
       resolve(result);
     });
   });
 }
 
-export function base64encode(...args: any[]): Promise<any> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("base64encode", ...args).then((result: any) => {
-      resolve(result);
-    });
-  });
-}
-
-export function getRecent(): Promise<any> {
+export function getRecent(): Promise<StoreFile[]> {
   return new Promise((resolve, reject) => {
     ipcRenderer.invoke("getRecent").then((result: any) => {
       resolve(result);
@@ -56,7 +77,7 @@ export function clearRecent() {
   ipcRenderer.invoke("clearRecent");
 }
 
-export function getPinned(): Promise<any> {
+export function getPinned(): Promise<StoreFile[]> {
   return new Promise((resolve, reject) => {
     ipcRenderer.invoke("getPinned").then((result: any) => {
       resolve(result);

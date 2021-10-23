@@ -1,14 +1,17 @@
 import React from "react";
+
 import { CommandBar } from "@fluentui/react";
+
 import {
   handleEntities,
-  handleWikipediaSummary,
-  handleWikipediaSuggestions,
   handleWikipediaImage,
+  handleWikipediaSuggestions,
+  handleWikipediaSummary,
 } from "../../../actions/InsertActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function InsertItems() {
+export default function InsertItems({}: RibbonItemsProps) {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const insertItems = [

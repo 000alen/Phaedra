@@ -1,10 +1,10 @@
 import { MessageBarType } from "@fluentui/react";
-import { INotebookPageController } from "../contexts/NotebookPageController";
 
+import { INotebookPageController } from "../contexts/INotebookPageController";
 import {
+  addAntonymCell,
   addMeaningCell,
   addSynonymCell,
-  addAntonymCell,
 } from "../manipulation/NotebookManipulation";
 
 export function handleMeaning(notebookPageController: INotebookPageController) {

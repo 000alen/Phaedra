@@ -1,13 +1,16 @@
 import React from "react";
+
 import { CommandBar } from "@fluentui/react";
+
 import {
+  handleAntonym,
   handleMeaning,
   handleSynonym,
-  handleAntonym,
 } from "../../../actions/ReviewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function ReviewItems() {
+export default function ReviewItems({}: RibbonItemsProps) {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const reviewItems = [

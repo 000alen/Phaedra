@@ -1,3 +1,3 @@
-import { INotebookPageController } from "../contexts/NotebookPageController";
+import { INotebookPageController } from "../contexts/INotebookPageController";
 
 export function handleExport(notebookPageController: INotebookPageController) {}

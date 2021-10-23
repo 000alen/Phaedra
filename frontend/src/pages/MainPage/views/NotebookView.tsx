@@ -2,23 +2,17 @@ import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import CardComponent from "../../../components/CardComponent";
-
-import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-
-import NotebookPage from "../../NotebookPage/NotebookPage";
-
-import { openJson } from "../../../IO/NotebookIO";
 import { AppController } from "../../../contexts/AppController";
+import { openJson } from "../../../IO/NotebookIO";
+import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import NotebookPage from "../../NotebookPage";
+import { MainPageViewProps } from "../IMainPage";
 
 const openIcon = {
   iconName: "OpenFile",
 };
 
-interface NotebookViewProps {
-  id: string;
-}
-
-export default function NotebookView({ id }: NotebookViewProps) {
+export default function NotebookView({ id }: MainPageViewProps) {
   const appController = React.useContext(AppController);
 
   const [dialogOpen, setDialogOpen] = useState(false);

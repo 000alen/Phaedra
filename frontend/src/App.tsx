@@ -31,6 +31,8 @@ export default class App extends Component<AppProps, AppState> {
     this.tabsDo = this.tabsDo.bind(this);
     this.clipboardDo = this.clipboardDo.bind(this);
     this.getStatusBarRef = this.getStatusBarRef.bind(this);
+    this.getTabs = this.getTabs.bind(this);
+    this.getClipboard = this.getClipboard.bind(this);
 
     this.statusBarRef = React.createRef();
 
@@ -42,6 +44,8 @@ export default class App extends Component<AppProps, AppState> {
         tabsDo: this.tabsDo,
         clipboardDo: this.clipboardDo,
         getStatusBarRef: this.getStatusBarRef,
+        getTabs: this.getTabs,
+        getClipboard: this.getClipboard,
       },
     };
   }
@@ -101,6 +105,14 @@ export default class App extends Component<AppProps, AppState> {
         clipboard: currentClipboard,
       };
     });
+  }
+
+  getTabs() {
+    return this.state.tabs;
+  }
+
+  getClipboard() {
+    return this.state.clipboard;
   }
 
   getStatusBarRef(): React.RefObject<StatusBarComponent> {

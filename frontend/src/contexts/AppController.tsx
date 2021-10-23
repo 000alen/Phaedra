@@ -14,4 +14,6 @@ export const AppController = React.createContext<IAppController>({
   tabsDo: (action: ITabsManipulation, args: ITabsCommand) => {},
   clipboardDo: (action: IClipboardManipulation, args: IClipboardCommand) => {},
   getStatusBarRef: () => undefined,
+  getTabs: () => undefined,
+  getClipboard: () => undefined,
 });

@@ -4,9 +4,8 @@ import { CommandBar } from "@fluentui/react";
 
 import { handleExport } from "../../../actions/ViewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function ViewItems({}: RibbonItemsProps) {
+export default function ViewItems() {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const viewItems = [

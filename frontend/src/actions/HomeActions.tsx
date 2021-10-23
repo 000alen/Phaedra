@@ -7,6 +7,7 @@ import {
   makeCellUnique,
   makePageUnique,
 } from "../manipulation/ClipboardManipulation";
+import { ICell, IPage } from "../manipulation/INotebookManipulation";
 import {
   addCell,
   addGenerateCell,
@@ -20,6 +21,8 @@ import {
   indexPage,
   insertCell,
   insertPage,
+  isCell,
+  isPage,
   removeCell,
   removePage,
 } from "../manipulation/NotebookManipulation";
@@ -114,89 +117,112 @@ export function handleRedo(notebookPageController: INotebookPageController) {
 }
 
 export function handleCut(notebookPageController: INotebookPageController) {
-  // const appController = notebookPageController.getAppController();
-  // const notebookRef = notebookPageController.getNotebookRef();
-  // const { notebook, notebookController, activePage, activeCell } =
-  //   notebookRef!.current!.state;
-  // if (activeCell) {
-  //   const cell = getCell(notebook, {
-  //     pageId: activePage,
-  //     cellId: activeCell,
-  //   });
-  //   appController.clipboardDo(clipboardPush, { element: cell });
-  //   notebookController.do(removeCell, {
-  //     pageId: activePage,
-  //     cellId: activeCell,
-  //   });
-  // } else if (activePage) {
-  //   const page = getPage(notebook, {
-  //     pageId: activePage,
-  //   });
-  //   appController.clipboardDo(clipboardPush, { element: page });
-  //   notebookController.do(removePage, {
-  //     pageId: activePage,
-  //   });
-  // } else {
-  //   notebookPageController.addMessageBar(
-  //     "No cell selected",
-  //     MessageBarType.error
-  //   );
-  // }
+  const appController = notebookPageController.getAppController();
+  const notebookRef = notebookPageController.getNotebookRef();
+  const { notebook, notebookController, activePage, activeCell } =
+    notebookRef!.current!.state;
+  if (activeCell) {
+    const cell = getCell(notebook, {
+      pageId: activePage,
+      cellId: activeCell,
+    });
+    appController!.clipboardDo(clipboardPush, { element: cell! });
+    notebookController.do(removeCell, {
+      pageId: activePage,
+      cellId: activeCell,
+    });
+  } else if (activePage) {
+    const page = getPage(notebook, {
+      pageId: activePage,
+    });
+    appController!.clipboardDo(clipboardPush, { element: page! });
+    notebookController.do(removePage, {
+      pageId: activePage,
+    });
+  } else {
+    notebookPageController.addMessageBar(
+      "No cell selected",
+      MessageBarType.error
+    );
+  }
 }
 
 export function handleCopy(notebookPageController: INotebookPageController) {
-  // const appController = notebookPageController.getAppController();
-  // const notebookRef = notebookPageController.getNotebookRef();
-  // const { notebook, activePage, activeCell } = notebookRef!.current!.state;
-  // if (activeCell) {
-  //   const cell = getCell(notebook, {
-  //     pageId: activePage,
-  //     cellId: activeCell,
-  //   });
-  //   appController!.clipboardDo(clipboardPush, { element: cell! });
-  // } else if (activePage) {
-  //   const page = getPage(notebook, {
-  //     pageId: activePage,
-  //   });
-  //   appController!.clipboardDo(clipboardPush, { element: page! });
-  // } else {
-  //   notebookPageController.addMessageBar(
-  //     "No cell selected",
-  //     MessageBarType.error
-  //   );
-  // }
+  const appController = notebookPageController.getAppController();
+  const notebookRef = notebookPageController.getNotebookRef();
+  const { notebook, activePage, activeCell } = notebookRef!.current!.state;
+  if (activeCell) {
+    const cell = getCell(notebook, {
+      pageId: activePage,
+      cellId: activeCell,
+    });
+    appController!.clipboardDo(clipboardPush, { element: cell! });
+  } else if (activePage) {
+    const page = getPage(notebook, {
+      pageId: activePage,
+    });
+    appController!.clipboardDo(clipboardPush, { element: page! });
+  } else {
+    notebookPageController.addMessageBar(
+      "No cell selected",
+      MessageBarType.error
+    );
+  }
 }
 
 export function handlePaste(notebookPageController: INotebookPageController) {
-  // const appController = notebookPageController.getAppController();
-  // const notebookRef = notebookPageController.getNotebookRef();
-  // const { activePage, activeCell } = notebookRef!.current!.state;
-  // if (activeCell) {
-  //   const activeCellIndex = notebookRef!.current!.do(indexCell, {
-  //     pageId: activePage,
-  //     cellId: activeCell,
-  //   });
-  //   let cell = makeCellUnique(appController!.clipboardDo(clipboardTop));
-  //   notebookRef!.current!.do(insertCell, {
-  //     pageId: activePage,
-  //     cell: cell,
-  //     index: activeCellIndex + 1,
-  //   });
-  // } else if (activePage) {
-  //   const activePageIndex = notebookRef!.current!.do(indexPage, {
-  //     pageId: activePage,
-  //   });
-  //   let page = makePageUnique(clipboardTop(appController.));
-  //   notebookRef!.current!.do(insertPage, {
-  //     page: page,
-  //     index: activePageIndex + 1,
-  //   });
-  // } else {
-  //   notebookPageController.addMessageBar(
-  //     "No cell selected",
-  //     MessageBarType.error
-  //   );
-  // }
+  const appController = notebookPageController.getAppController();
+  const notebookRef = notebookPageController.getNotebookRef();
+  const top = clipboardTop(appController!.getClipboard()!);
+  const { activePage, activeCell } = notebookRef!.current!.state;
+
+  if (isCell(top)) {
+    const cell = makeCellUnique(top as ICell);
+    if (activeCell) {
+      const index =
+        indexCell(notebookRef!.current!.state.notebook, {
+          pageId: activePage,
+          cellId: activeCell,
+        }) + 1;
+      notebookRef!.current!.do(insertCell, {
+        pageId: activePage,
+        cell: cell,
+        index,
+      });
+    } else if (activePage) {
+      notebookRef!.current!.do(addCell, {
+        pageId: activePage,
+        cell: cell,
+      });
+    } else {
+      notebookPageController.addMessageBar(
+        "No page selected",
+        MessageBarType.error
+      );
+    }
+  } else if (isPage(top)) {
+    const page = makePageUnique(top as IPage);
+    if (activePage) {
+      const index =
+        indexPage(notebookRef!.current!.state.notebook, {
+          pageId: activePage,
+        }) + 1;
+      notebookRef!.current!.do(insertPage, {
+        page: page,
+        index,
+      });
+    } else {
+      notebookPageController.addMessageBar(
+        "No page selected",
+        MessageBarType.error
+      );
+    }
+  } else {
+    notebookPageController.addMessageBar(
+      "No page selected",
+      MessageBarType.error
+    );
+  }
 }
 
 export function handleQuestion(

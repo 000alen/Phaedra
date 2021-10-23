@@ -1,5 +1,10 @@
 import { handleEdit } from "../actions/EditAction";
-import { handleSave } from "../actions/HomeActions";
+import {
+  handleCopy,
+  handleCut,
+  handlePaste,
+  handleSave,
+} from "../actions/HomeActions";
 import { INotebookPageController } from "../contexts/INotebookPageController";
 import { IShortcuts } from "./IShortcuts";
 
@@ -8,4 +13,10 @@ export const RibbonComponentShortcuts: IShortcuts = {
     handleSave(notebookPageController),
   "ctrl+i": (notebookPageController: INotebookPageController) =>
     handleEdit(notebookPageController),
+  "ctrl+c": (notebookPageController: INotebookPageController) =>
+    handleCopy(notebookPageController),
+  "ctrl+v": (notebookPageController: INotebookPageController) =>
+    handlePaste(notebookPageController),
+  "ctrl+x": (notebookPageController: INotebookPageController) =>
+    handleCut(notebookPageController),
 };

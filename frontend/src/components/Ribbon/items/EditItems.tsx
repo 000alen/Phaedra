@@ -4,9 +4,8 @@ import { CommandBar } from "@fluentui/react";
 
 import { handleEdit, handleSeamless } from "../../../actions/EditAction";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function EditItems({}: RibbonItemsProps) {
+export default function EditItems() {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const editItems = [

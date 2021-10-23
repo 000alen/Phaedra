@@ -9,9 +9,8 @@ import {
   handleWikipediaSummary,
 } from "../../../actions/InsertActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function InsertItems({}: RibbonItemsProps) {
+export default function InsertItems() {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const insertItems = [

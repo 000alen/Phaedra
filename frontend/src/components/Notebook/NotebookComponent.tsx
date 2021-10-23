@@ -4,11 +4,7 @@ import { readFileSync } from "../../API/ElectronAPI";
 import { NotebookController } from "../../contexts/NotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { saveNotebook } from "../../IO/NotebookIO";
-import {
-  historyDo,
-  historyRedo,
-  historyUndo,
-} from "../../manipulation/HistoryManipulation";
+import { historyDo, historyUndo } from "../../manipulation/HistoryManipulation"; // historyRedo,
 import {
   INotebook,
   INotebookCommand,
@@ -22,9 +18,8 @@ import {
   getPage,
   indexCell,
   indexPage,
-  redo,
   undo,
-} from "../../manipulation/NotebookManipulation";
+} from "../../manipulation/NotebookManipulation"; //  redo
 import {
   NotebookComponentProps,
   NotebookComponentState,
@@ -301,27 +296,25 @@ export default class NotebookComponent extends Component<
   }
 
   redo() {
-    let { notebook, history, historyIndex } = this.state;
-    const [command, newHistoryInformation] = historyRedo(history, historyIndex);
-
-    switch (command.action) {
-      case "addEntitiesCell":
-      case "addQuestionCell":
-      case "addSparseQuestionCell":
-      case "addGenerateCell":
-      case "addWikipediaSummaryCell":
-      case "addWikipediaSuggestionsCell":
-      case "addWikipediaImageCell":
-      case "addMeaningCell":
-      case "addSynonymCell":
-      case "addAntonymCell":
-        // this.wrapRedo(command, args);
-        break;
-      default:
-        // this.handleRedo(command, args);
-        break;
-    }
-
+    // let { notebook, history, historyIndex } = this.state;
+    // const [command, newHistoryInformation] = historyRedo(history, historyIndex);
+    // switch (command.action) {
+    //   case "addEntitiesCell":
+    //   case "addQuestionCell":
+    //   case "addSparseQuestionCell":
+    //   case "addGenerateCell":
+    //   case "addWikipediaSummaryCell":
+    //   case "addWikipediaSuggestionsCell":
+    //   case "addWikipediaImageCell":
+    //   case "addMeaningCell":
+    //   case "addSynonymCell":
+    //   case "addAntonymCell":
+    //     this.wrapRedo(command, args);
+    //     break;
+    //   default:
+    //     this.handleRedo(command, args);
+    //     break;
+    // }
     // this.setState((state) => {
     //   return {
     //     ...state,

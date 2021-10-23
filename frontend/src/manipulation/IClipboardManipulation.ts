@@ -1,13 +1,17 @@
 import { ICell, IPage } from "./INotebookManipulation";
 
 export type IClipboardElement = IPage | ICell;
-export type IClipboard = Array<IClipboardElement>;
+export type IClipboard = IClipboardElement[];
 
 export interface IClipboardCommand {
   element: IClipboardElement;
 }
 
-export type IClipboardManipulation = (
+type IClipboardPush = (
   clipboard: IClipboard,
-  clipboardCommand?: IClipboardCommand
+  { element }: { element: IClipboardElement }
 ) => IClipboard;
+
+type IClipboardPop = (clipboard: IClipboard) => IClipboard;
+
+export type IClipboardManipulation = IClipboardPush | IClipboardPop;

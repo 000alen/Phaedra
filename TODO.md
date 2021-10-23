@@ -13,6 +13,8 @@
 
 ## Frontend
 
+- [ ] Fix history
+- [ ] Add empty Notebook view
 - [ ] Error handling
 - [ ] HoverCard
 - [ ] Cache PageDocumentComponents for better performance

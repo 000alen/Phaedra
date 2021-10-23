@@ -8,9 +8,8 @@ import {
   handleSynonym,
 } from "../../../actions/ReviewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function ReviewItems({}: RibbonItemsProps) {
+export default function ReviewItems() {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const reviewItems = [

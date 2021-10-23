@@ -16,9 +16,8 @@ import {
   handleUndo,
 } from "../../../actions/HomeActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { RibbonItemsProps } from "../IRibbonComponent";
 
-export default function HomeItems({}: RibbonItemsProps) {
+export default function HomeItems() {
   const notebookPageController = React.useContext(NotebookPageController);
 
   const homeItems = [

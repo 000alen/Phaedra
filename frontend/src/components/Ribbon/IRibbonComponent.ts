@@ -1,5 +1,5 @@
-export interface RibbonProps {}
-
-export interface RibbonState {}
+export interface RibbonProps {
+  ribbonKey: string;
+}
 
 export interface RibbonItemsProps {}

@@ -5,7 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { openPdf } from "../../../IO/NotebookIO";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import NotebookPage from "../../NotebookPage";
+import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
 const openIcon = {

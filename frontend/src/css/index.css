@@ -1,5 +1,4 @@
 ::-webkit-scrollbar {
-  /* display: none; */
   width: 16px;
 }
 
@@ -20,4 +19,17 @@
 .react-pdf__Page__svg svg {
   width: 100% !important;
   height: auto !important;
+}
+
+.fill-parent {
+  width: 100%;
+  height: 100%;
+}
+
+.fill-parent-x {
+  width: 100%;
+}
+
+.fill-parent-y {
+  height: 100%;
 }

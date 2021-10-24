@@ -1,14 +1,17 @@
-import { handleEdit } from "../actions/EditAction";
+import { handleEdit, handleSeamless } from "../actions/EditActions";
 import {
   handleCopy,
   handleCut,
+  handleInsertCell,
   handlePaste,
+  handleRedo,
   handleSave,
+  handleUndo,
 } from "../actions/HomeActions";
 import { INotebookPageController } from "../contexts/INotebookPageController";
 import { IShortcuts } from "./IShortcuts";
 
-export const RibbonComponentShortcuts: IShortcuts = {
+export const NotebookPageShortcuts: IShortcuts = {
   "ctrl+s": (notebookPageController: INotebookPageController) =>
     handleSave(notebookPageController),
   "ctrl+i": (notebookPageController: INotebookPageController) =>
@@ -19,4 +22,12 @@ export const RibbonComponentShortcuts: IShortcuts = {
     handlePaste(notebookPageController),
   "ctrl+x": (notebookPageController: INotebookPageController) =>
     handleCut(notebookPageController),
+  "ctrl+z": (notebookPageController: INotebookPageController) =>
+    handleUndo(notebookPageController),
+  "ctrl+y": (notebookPageController: INotebookPageController) =>
+    handleRedo(notebookPageController),
+  "ctrl+n": (notebookPageController: INotebookPageController) =>
+    handleInsertCell(notebookPageController),
+  s: (notebookPageController: INotebookPageController) =>
+    handleSeamless(notebookPageController),
 };

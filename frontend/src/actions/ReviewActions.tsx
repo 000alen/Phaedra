@@ -10,6 +10,7 @@ import {
   addMeaningCell,
   addSynonymCell,
 } from "../manipulation/NotebookManipulation";
+import { strings } from "../strings";
 
 export function handleMeaning(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
@@ -27,14 +28,14 @@ export function handleMeaning(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No word",
+        text: strings.noWord,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -56,14 +57,14 @@ export function handleSynonym(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No word",
+        text: strings.noWord,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -85,14 +86,14 @@ export function handleAntonym(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No word",
+        text: strings.noWord,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }

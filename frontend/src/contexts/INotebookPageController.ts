@@ -1,5 +1,8 @@
+import React from "react";
+
+import { PivotItem } from "@fluentui/react";
+
 import CommandBoxComponent from "../components/CommandBoxComponent";
-import NotebookComponent from "../components/Notebook/NotebookComponent";
 import {
   IMessagesCommand,
   IMessagesManipulation,
@@ -17,4 +20,6 @@ export interface INotebookPageController {
   getCommandBoxRef: () => React.RefObject<CommandBoxComponent> | undefined;
   getAppController: () => IAppController | undefined;
   getNotebookController: () => INotebookController | undefined;
+  getRibbonKey: () => string | undefined;
+  setRibbonKey: (item?: PivotItem | undefined) => void;
 }

@@ -43,6 +43,7 @@ export default class App extends Component<AppProps, AppState> {
     this.tasksDo = this.tasksDo.bind(this);
     this.widgetsDo = this.widgetsDo.bind(this);
     this.getTabs = this.getTabs.bind(this);
+    this.getActiveTab = this.getActiveTab.bind(this);
     this.getClipboard = this.getClipboard.bind(this);
     this.getTasks = this.getTasks.bind(this);
     this.getWidgets = this.getWidgets.bind(this);
@@ -59,6 +60,7 @@ export default class App extends Component<AppProps, AppState> {
         tasksDo: this.tasksDo,
         widgetsDo: this.widgetsDo,
         getTabs: this.getTabs,
+        getActiveTab: this.getActiveTab,
         getClipboard: this.getClipboard,
         getTasks: this.getTasks,
         getWidgets: this.getWidgets,
@@ -68,7 +70,14 @@ export default class App extends Component<AppProps, AppState> {
 
   componentDidMount(): void {
     for (const [keys, action] of Object.entries(AppShortcuts)) {
-      Mousetrap.bind(keys, () => action(this.state.appController), "keyup");
+      Mousetrap.bind(
+        keys,
+        (event) => {
+          action(this.state.appController);
+          event.preventDefault();
+        },
+        "keyup"
+      );
     }
   }
 
@@ -149,6 +158,10 @@ export default class App extends Component<AppProps, AppState> {
 
   getTabs(): ITab[] {
     return this.state.tabs;
+  }
+
+  getActiveTab(): string | undefined {
+    return this.state.activeTab;
   }
 
   getClipboard(): IClipboard {

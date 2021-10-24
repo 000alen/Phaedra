@@ -1,20 +1,25 @@
-import "../css/pages/NotebookPage.css";
+import "../../css/pages/NotebookPage.css";
 
+import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
-import CommandBoxComponent from "../components/CommandBoxComponent";
-import NotebookComponent from "../components/Notebook/NotebookComponent";
-import RibbonComponent from "../components/Ribbon/RibbonComponent";
-import { AppController } from "../contexts/AppController";
-import { IAppController } from "../contexts/IAppController";
-import { INotebookController } from "../contexts/INotebookController";
-import { NotebookPageController } from "../contexts/NotebookPageController";
+import { PivotItem } from "@fluentui/react";
+
+import CommandBoxComponent from "../../components/CommandBoxComponent";
+import NotebookComponent from "../../components/Notebook/NotebookComponent";
+import { RibbonComponent } from "../../components/Ribbon/RibbonComponent";
+import { AppController } from "../../contexts/AppController";
+import { IAppController } from "../../contexts/IAppController";
+import { INotebookController } from "../../contexts/INotebookController";
+import { NotebookPageController } from "../../contexts/NotebookPageController";
 import {
   IMessagesCommand,
   IMessagesManipulation,
-} from "../manipulation/IMessagesManipulation";
-import { populateMessages } from "../manipulation/MessagesManipulation";
+} from "../../manipulation/IMessagesManipulation";
+import { populateMessages } from "../../manipulation/MessagesManipulation";
+import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
 import { NotebookPageProps, NotebookPageState } from "./INotebookPage";
+import { FileView } from "./views/FileView";
 
 export default class NotebookPage extends Component<
   NotebookPageProps,
@@ -34,12 +39,15 @@ export default class NotebookPage extends Component<
     this.getAppController = this.getAppController.bind(this);
     this.getCommandBoxRef = this.getCommandBoxRef.bind(this);
     this.getNotebookController = this.getNotebookController.bind(this);
+    this.getRibbonKey = this.getRibbonKey.bind(this);
+    this.setRibbonKey = this.setRibbonKey.bind(this);
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
 
     this.state = {
       messages: [],
+      ribbonKey: "home",
       commandBoxShown: false,
       notebookPageController: {
         messagesDo: this.messagesDo,
@@ -48,8 +56,29 @@ export default class NotebookPage extends Component<
         getAppController: this.getAppController,
         getCommandBoxRef: this.getCommandBoxRef,
         getNotebookController: this.getNotebookController,
+        getRibbonKey: this.getRibbonKey,
+        setRibbonKey: this.setRibbonKey,
       },
     };
+  }
+
+  componentDidMount(): void {
+    for (const [keys, action] of Object.entries(NotebookPageShortcuts)) {
+      Mousetrap.bind(
+        keys,
+        (event) => {
+          action(this.state.notebookPageController);
+          event.preventDefault();
+        },
+        "keyup"
+      );
+    }
+  }
+
+  componentWillUnmount(): void {
+    for (const keys of Object.keys(NotebookPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
   }
 
   messagesDo(manipulation: IMessagesManipulation, args: IMessagesCommand) {
@@ -88,9 +117,21 @@ export default class NotebookPage extends Component<
     return this.notebookRef.current!.state.notebookController!;
   }
 
+  getRibbonKey(): string {
+    return this.state.ribbonKey;
+  }
+
+  setRibbonKey(item: PivotItem | undefined) {
+    this.setState((state) => {
+      return { ...state, ribbonKey: item!.props.itemKey! };
+    });
+  }
+
   render(): JSX.Element {
+    const displayableMessages = this.state.messages.slice(0, 3);
+
     const notebookPageContentStyle = {
-      height: `calc(100% - 88px - ${this.state.messages.length * 32}px)`,
+      height: `calc(100% - 88px - ${displayableMessages.length * 32}px)`,
     };
 
     return (
@@ -98,18 +139,22 @@ export default class NotebookPage extends Component<
         value={this.state.notebookPageController}
       >
         <div className="notebookPage">
-          <RibbonComponent />
+          <RibbonComponent ribbonKey={this.state.ribbonKey} />
 
-          <div>{populateMessages(this.state.messages, this.messagesDo)}</div>
+          <div>{populateMessages(displayableMessages, this.messagesDo)}</div>
 
           <div className="notebookPageContent" style={notebookPageContentStyle}>
-            <NotebookComponent
-              key={this.props.id}
-              ref={this.notebookRef}
-              tabId={this.props.id}
-              notebook={this.props.notebook}
-              notebookPath={this.props.notebookPath}
-            />
+            {this.state.ribbonKey === "file" ? (
+              <FileView />
+            ) : (
+              <NotebookComponent
+                key={this.props.id}
+                ref={this.notebookRef}
+                tabId={this.props.id}
+                notebook={this.props.notebook}
+                notebookPath={this.props.notebookPath}
+              />
+            )}
 
             {this.state.commandBoxShown && (
               <CommandBoxComponent ref={this.commandBoxRef} />

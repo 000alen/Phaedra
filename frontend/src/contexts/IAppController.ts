@@ -28,6 +28,7 @@ export interface IAppController {
   tasksDo: (action: ITasksManipulation, args: ITasksCommand) => void;
   widgetsDo: (action: IWidgetsManipulation, args: IWidgetsCommand) => void;
   getTabs: () => ITab[] | undefined;
+  getActiveTab: () => string | undefined;
   getClipboard: () => IClipboard | undefined;
   getTasks: () => ITask[] | undefined;
   getWidgets: () => IWidget[] | undefined;

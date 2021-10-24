@@ -57,7 +57,7 @@ export default class CellComponent extends Component<
       : theme.palette.neutralLight;
 
     const border = `1px solid ${borderColor}`;
-    const shadow = data.seamless ? "" : "shadow-md";
+    const shadow = data.seamless ? "" : "shadow-sm";
 
     const style = {
       backgroundColor: backgroundColor,

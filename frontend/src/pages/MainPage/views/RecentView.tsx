@@ -7,7 +7,7 @@ import { getRecent, readFileSync } from "../../../API/ElectronAPI";
 import { StoreFile } from "../../../API/IElectronAPI";
 import { AppController } from "../../../contexts/AppController";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import NotebookPage from "../../NotebookPage";
+import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
 const columns = [

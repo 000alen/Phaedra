@@ -5,7 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
-import NotebookPage from "../../NotebookPage";
+import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
 const newIcon = {

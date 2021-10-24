@@ -43,7 +43,7 @@ export default class PageComponent extends Component<
     return (
       <div className="page grid grid-cols-2" style={containerStyle}>
         <div
-          className="m-2 p-2 rounded-md shadow-md"
+          className="m-2 p-2 rounded-sm shadow-sm"
           style={paperStyle}
           onClick={this.handleSelection}
         >
@@ -87,7 +87,7 @@ export default class PageComponent extends Component<
     return (
       <div className="flex items-center justify-center" style={containerStyle}>
         <div
-          className="page p-2 m-2 rounded-md shadow-md"
+          className="page p-2 m-2 rounded-sm shadow-sm"
           style={pageStyle}
           onClick={this.handleSelection}
         >

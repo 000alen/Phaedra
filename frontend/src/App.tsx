@@ -4,48 +4,64 @@ import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import StatusBarComponent from "./components/StatusBar/StatusBarComponent";
+import { StatusBarComponent } from "./components/StatusBar/StatusBarComponent";
 import TabsComponent from "./components/Tabs/TabsComponent";
 import TopBarComponent from "./components/TopBarComponent";
 import { AppController } from "./contexts/AppController";
 import { AppProps, AppState } from "./IApp";
 import {
+  IClipboard,
   IClipboardCommand,
   IClipboardManipulation,
 } from "./manipulation/IClipboardManipulation";
 import {
+  ITab,
   ITabsCommand,
   ITabsManipulation,
 } from "./manipulation/ITabsManipulation";
+import {
+  ITask,
+  ITasksCommand,
+  ITasksManipulation,
+} from "./manipulation/ITasksManipulation";
+import {
+  IWidget,
+  IWidgetsCommand,
+  IWidgetsManipulation,
+} from "./manipulation/IWidgetsManipulation";
 import { createTab, getTabContent } from "./manipulation/TabsManipulation";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage/MainPage";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
 
 export default class App extends Component<AppProps, AppState> {
-  statusBarRef: React.RefObject<StatusBarComponent>;
-
   constructor(props: AppProps) {
     super(props);
 
     this.tabsDo = this.tabsDo.bind(this);
     this.clipboardDo = this.clipboardDo.bind(this);
-    this.getStatusBarRef = this.getStatusBarRef.bind(this);
+    this.tasksDo = this.tasksDo.bind(this);
+    this.widgetsDo = this.widgetsDo.bind(this);
     this.getTabs = this.getTabs.bind(this);
     this.getClipboard = this.getClipboard.bind(this);
-
-    this.statusBarRef = React.createRef();
+    this.getTasks = this.getTasks.bind(this);
+    this.getWidgets = this.getWidgets.bind(this);
 
     this.state = {
       tabs: [],
       activeTab: undefined,
       clipboard: [],
+      tasks: [],
+      widgets: [],
       appController: {
         tabsDo: this.tabsDo,
         clipboardDo: this.clipboardDo,
-        getStatusBarRef: this.getStatusBarRef,
+        tasksDo: this.tasksDo,
+        widgetsDo: this.widgetsDo,
         getTabs: this.getTabs,
         getClipboard: this.getClipboard,
+        getTasks: this.getTasks,
+        getWidgets: this.getWidgets,
       },
     };
   }
@@ -107,20 +123,48 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  getTabs() {
+  tasksDo(manipulation: ITasksManipulation, args: ITasksCommand): void {
+    const tasks = this.state.tasks;
+    const currentTasks = manipulation(tasks, args);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        tasks: currentTasks,
+      };
+    });
+  }
+
+  widgetsDo(manipulation: IWidgetsManipulation, args: IWidgetsCommand): void {
+    const widgets = this.state.widgets;
+    const currentWidgets = manipulation(widgets, args);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        widgets: currentWidgets,
+      };
+    });
+  }
+
+  getTabs(): ITab[] {
     return this.state.tabs;
   }
 
-  getClipboard() {
+  getClipboard(): IClipboard {
     return this.state.clipboard;
   }
 
-  getStatusBarRef(): React.RefObject<StatusBarComponent> {
-    return this.statusBarRef;
+  getTasks(): ITask[] {
+    return this.state.tasks;
+  }
+
+  getWidgets(): IWidget[] {
+    return this.state.widgets;
   }
 
   render(): JSX.Element {
-    const { tabs, activeTab } = this.state;
+    const { tabs, activeTab, tasks, widgets } = this.state;
 
     let content;
     if (activeTab === undefined) {
@@ -142,7 +186,7 @@ export default class App extends Component<AppProps, AppState> {
 
           <div className="appContent">{content}</div>
 
-          <StatusBarComponent ref={this.statusBarRef} />
+          <StatusBarComponent tasks={tasks} widgets={widgets} />
         </div>
       </AppController.Provider>
     );

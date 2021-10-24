@@ -323,11 +323,7 @@ export function addEntitiesCell(
 ): Promise<INotebook> {
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addEntitiesCell(notebook, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addEntitiesCell(notebook, pageId!, cellId!);
 }
 
 export function undoAddEntitiesCell(
@@ -347,11 +343,7 @@ export function addQuestionCell(
   if (question === undefined) throw new Error("Question is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addQuestionCell(notebook, question, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addQuestionCell(notebook, question, pageId!, cellId!);
 }
 
 export function undoAddQuestionCell(
@@ -370,13 +362,7 @@ export function addSparseQuestionCell(
 ): Promise<INotebook> {
   if (question === undefined) throw new Error("Question is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addSparseQuestionCell(notebook, question, pageId!, cellId!).then(
-      (notebook) => {
-        resolve(notebook);
-      }
-    );
-  });
+  return _addSparseQuestionCell(notebook, question, pageId!, cellId!);
 }
 
 export function undoAddSparseQuestionCell(
@@ -396,11 +382,7 @@ export function addGenerateCell(
   if (prompt === undefined) throw new Error("Prompt is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addGenerateCell(notebook, prompt, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addGenerateCell(notebook, prompt, pageId!, cellId!);
 }
 
 export function undoAddGenerateCell(
@@ -420,13 +402,7 @@ export function addWikipediaSummaryCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addWikipediaSummaryCell(notebook, query, pageId!, cellId!).then(
-      (notebook) => {
-        resolve(notebook);
-      }
-    );
-  });
+  return _addWikipediaSummaryCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaSummaryCell(
@@ -446,13 +422,7 @@ export function addWikipediaSuggestionsCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addWikipediaSuggestionsCell(notebook, query, pageId!, cellId!).then(
-      (notebook) => {
-        resolve(notebook);
-      }
-    );
-  });
+  return _addWikipediaSuggestionsCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaSuggestionsCell(
@@ -472,13 +442,7 @@ export function addWikipediaImageCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addWikipediaImageCell(notebook, query, pageId!, cellId!).then(
-      (notebook) => {
-        resolve(notebook);
-      }
-    );
-  });
+  return _addWikipediaImageCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaImageCell(
@@ -498,11 +462,7 @@ export function addMeaningCell(
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addMeaningCell(notebook, word, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addMeaningCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddMeaningCell(
@@ -522,11 +482,7 @@ export function addSynonymCell(
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addSynonymCell(notebook, word, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addSynonymCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddSynonymCell(
@@ -546,11 +502,7 @@ export function addAntonymCell(
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return new Promise((resolve, reject) => {
-    _addAntonymCell(notebook, word, pageId!, cellId!).then((notebook) => {
-      resolve(notebook);
-    });
-  });
+  return _addAntonymCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddAntonymCell(

@@ -16,11 +16,7 @@ export function readFileSync(
     | BufferEncoding
     | undefined
 ): Promise<string | Uint8Array> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("readFileSync", path, options).then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("readFileSync", path, options);
 }
 
 export function writeFileSync(
@@ -34,39 +30,23 @@ export function writeFileSync(
 export function showOpenDialog(
   options: OpenDialogOptions
 ): Promise<OpenDialogReturnValue> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("showOpenDialog", options).then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("showOpenDialog", options);
 }
 
 export function showSaveDialog(
   options: SaveDialogOptions
 ): Promise<SaveDialogReturnValue> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("showSaveDialog", options).then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("showSaveDialog", options);
 }
 
 export function base64(
   data: Uint8Array | ReadonlyArray<number>
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("base64", data).then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("base64", data);
 }
 
 export function getRecent(): Promise<StoreFile[]> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("getRecent").then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("getRecent");
 }
 
 export function addRecent(path: string, name: string) {
@@ -78,11 +58,7 @@ export function clearRecent() {
 }
 
 export function getPinned(): Promise<StoreFile[]> {
-  return new Promise((resolve, reject) => {
-    ipcRenderer.invoke("getPinned").then((result: any) => {
-      resolve(result);
-    });
-  });
+  return ipcRenderer.invoke("getPinned");
 }
 
 export function addPinned(path: string, name: string) {

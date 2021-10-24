@@ -4,8 +4,10 @@ import { getCellData, setCellData } from "../manipulation/NotebookManipulation";
 export function handleSeamless(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const { notebook, activePage, activeCell } = notebookRef!.current!.state;
+  const notebookController = notebookPageController.getNotebookController();
+  const notebook = notebookController!.getNotebook()!;
+  const activePage = notebookController!.getActivePage()!;
+  const activeCell = notebookController!.getActiveCell()!;
 
   let data = getCellData(notebook, {
     pageId: activePage,
@@ -14,7 +16,7 @@ export function handleSeamless(
 
   if (data.seamless === undefined) data.seamless = false;
 
-  notebookRef!.current!.do(setCellData, {
+  notebookController!.do(setCellData, {
     pageId: activePage,
     cellId: activeCell,
     data: {
@@ -25,9 +27,7 @@ export function handleSeamless(
 }
 
 export function handleEdit(notebookPageController: INotebookPageController) {
-  console.log(notebookPageController);
+  const notebookController = notebookPageController.getNotebookController();
 
-  const notebookRef = notebookPageController.getNotebookRef();
-
-  notebookRef!.current!.toggleEditing();
+  notebookController!.toggleEditing();
 }

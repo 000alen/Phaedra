@@ -3,12 +3,18 @@
 import "../css/pages/EmptyPage.css";
 
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import CardComponent from "../components/CardComponent";
 import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
 import { createNotebook } from "../manipulation/NotebookManipulation";
 import { setTabContent } from "../manipulation/TabsManipulation";
+import {
+  addTask,
+  createTask,
+  removeTask,
+} from "../manipulation/TasksManipulation";
 import { EmptyPageProps } from "./IEmptyPage";
 import NotebookPage from "./NotebookPage";
 
@@ -22,20 +28,20 @@ const newIcon = {
 
 export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
   const appController = React.useContext(AppController);
-  const statusBarRef = appController.getStatusBarRef();
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleOpen = () => {
-    const { statusBarController } = statusBarRef!.current!.state;
-
     if (dialogOpen) return;
 
-    statusBarController.showLoading();
+    const taskId = uuidv4();
+    appController.tasksDo(addTask, {
+      task: createTask({ id: id, name: "Opening file" }),
+    });
     setDialogOpen(true);
 
     openFile().then(({ notebook, notebookPath }) => {
-      statusBarController.hideLoading();
+      appController.tasksDo(removeTask, { id: taskId });
       setDialogOpen(false);
 
       if (!notebook) return;

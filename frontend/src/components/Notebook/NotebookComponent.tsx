@@ -1,6 +1,11 @@
 import React, { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import { MessageBarType } from "@fluentui/react";
 
 import { readFileSync } from "../../API/ElectronAPI";
+import { IAppController } from "../../contexts/IAppController";
+import { INotebookPageController } from "../../contexts/INotebookPageController";
 import { NotebookController } from "../../contexts/NotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { saveNotebook } from "../../IO/NotebookIO";
@@ -11,6 +16,10 @@ import {
   INotebookManipulation,
 } from "../../manipulation/INotebookManipulation";
 import {
+  addMessage,
+  createMessage,
+} from "../../manipulation/MessagesManipulation";
+import {
   addPlaceholderCell,
   getCell,
   getCellContent,
@@ -20,6 +29,11 @@ import {
   indexPage,
   undo,
 } from "../../manipulation/NotebookManipulation"; //  redo
+import {
+  addTask,
+  createTask,
+  removeTask,
+} from "../../manipulation/TasksManipulation";
 import {
   NotebookComponentProps,
   NotebookComponentState,
@@ -47,6 +61,9 @@ export default class NotebookComponent extends Component<
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
+    this.getActiveCell = this.getActiveCell.bind(this);
+    this.getActivePage = this.getActivePage.bind(this);
+    this.getNotebook = this.getNotebook.bind(this);
 
     const { tabId, notebook, notebookPath } = props;
 
@@ -70,6 +87,9 @@ export default class NotebookComponent extends Component<
         redo: this.redo,
         do: this.do,
         getNotebookPageController: this.getNotebookPageController,
+        getActiveCell: this.getActiveCell,
+        getActivePage: this.getActivePage,
+        getNotebook: this.getNotebook,
       },
     };
   }
@@ -100,20 +120,46 @@ export default class NotebookComponent extends Component<
   }
 
   loadDocument() {
-    readFileSync(this.state.documentPath!).then((documentContent) => {
-      this.setState((state) => {
-        const documentFile = {
-          url: this.state.documentPath!,
-          data: documentContent as Uint8Array,
-        };
-        return { ...state, documentFile: documentFile };
-      });
+    const notebookPageController: INotebookPageController = this.context;
+    const appController = notebookPageController.getAppController();
+
+    const taskId = uuidv4();
+    appController!.tasksDo(addTask, {
+      task: createTask({ id: taskId, name: "Loading document" }),
     });
+
+    readFileSync(this.state.documentPath!)
+      .then((documentContent) => {
+        this.setState((state) => {
+          const documentFile = {
+            url: this.state.documentPath!,
+            data: documentContent as Uint8Array,
+          };
+          return { ...state, documentFile: documentFile };
+        });
+      })
+      .catch((error) => {
+        notebookPageController.messagesDo(addMessage, {
+          message: createMessage({ text: "error", type: MessageBarType.error }),
+        });
+      })
+      .finally(() => {
+        console.log("finally");
+        appController!.tasksDo(removeTask, { id: taskId });
+      });
   }
 
   save() {
-    saveNotebook(this.state.notebook, this.state.notebookPath).then(
-      (notebookPath) => {
+    const notebookPageController: INotebookPageController = this.context;
+    const appController = notebookPageController.getAppController();
+
+    const taskId = uuidv4();
+    appController!.tasksDo(addTask, {
+      task: createTask({ id: taskId, name: "Loading document" }),
+    });
+
+    saveNotebook(this.state.notebook, this.state.notebookPath)
+      .then((notebookPath) => {
         this.setState((state) => {
           return {
             ...state,
@@ -121,8 +167,19 @@ export default class NotebookComponent extends Component<
             isSaved: true,
           };
         });
-      }
-    );
+      })
+      .catch((error) => {
+        notebookPageController.messagesDo(addMessage, {
+          message: createMessage({
+            text: "Could not save file",
+            type: MessageBarType.error,
+          }),
+        });
+      })
+      .finally(() => {
+        console.log("finally");
+        appController!.tasksDo(removeTask, { id: taskId });
+      });
   }
 
   handleSelection(pageId: string, cellId: string) {
@@ -219,14 +276,8 @@ export default class NotebookComponent extends Component<
   }
 
   wrapDo(manipulation: INotebookManipulation, args: INotebookCommand) {
-    const notebookPageController = this.context;
+    const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
-    const statusBarRef = appController.getStatusBarRef();
-
-    if (statusBarRef === undefined)
-      throw new Error("StatusBarRef is undefined.");
-
-    const { statusBarController } = statusBarRef.current.state;
 
     let notebook = this.state.notebook;
 
@@ -250,13 +301,24 @@ export default class NotebookComponent extends Component<
       return { ...state, notebook: notebook };
     });
 
-    statusBarController.showLoading();
-    (manipulation(notebook, args) as Promise<INotebook>).then(
-      (_notebook: INotebook) => {
-        statusBarController.hideLoading();
+    const taskId = uuidv4();
+    appController!.tasksDo(addTask, {
+      task: createTask({ id: taskId, name: manipulation.name }),
+    });
+
+    (manipulation(notebook, args) as Promise<INotebook>)
+      .then((_notebook: INotebook) => {
         this.handleDo(manipulation, args, _notebook);
-      }
-    );
+      })
+      .catch((error) => {
+        notebookPageController.messagesDo(addMessage, {
+          message: createMessage({ text: "error", type: MessageBarType.error }),
+        });
+      })
+      .finally(() => {
+        console.log("finally");
+        appController!.tasksDo(removeTask, { id: taskId });
+      });
   }
 
   handleDo(
@@ -295,6 +357,7 @@ export default class NotebookComponent extends Component<
     });
   }
 
+  // TODO
   redo() {
     // let { notebook, history, historyIndex } = this.state;
     // const [command, newHistoryInformation] = historyRedo(history, historyIndex);
@@ -325,12 +388,26 @@ export default class NotebookComponent extends Component<
     // });
   }
 
+  // TODO
   wrapRedo() {}
 
+  // TODO
   handleRedo() {}
 
   getNotebookPageController() {
     return this.context;
+  }
+
+  getActiveCell(): string | undefined {
+    return this.state.activeCell;
+  }
+
+  getActivePage(): string | undefined {
+    return this.state.activePage;
+  }
+
+  getNotebook(): INotebook {
+    return this.state.notebook;
   }
 
   render() {

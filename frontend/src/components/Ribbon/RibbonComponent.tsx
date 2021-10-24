@@ -1,6 +1,5 @@
 import "../../css/components/RibbonComponent.css";
 
-import Mousetrap from "mousetrap";
 import React from "react";
 
 import { Pivot, PivotItem } from "@fluentui/react";

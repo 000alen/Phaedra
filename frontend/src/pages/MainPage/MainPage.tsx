@@ -76,7 +76,14 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
 
   componentDidMount(): void {
     for (const [keys, action] of Object.entries(MainPageShortcuts)) {
-      Mousetrap.bind(keys, () => action(this.context), "keyup");
+      Mousetrap.bind(
+        keys,
+        (event) => {
+          action(this.context);
+          event.preventDefault();
+        },
+        "keyup"
+      );
     }
   }
 

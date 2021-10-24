@@ -2,7 +2,7 @@ import React from "react";
 
 import { CommandBar } from "@fluentui/react";
 
-import { handleEdit, handleSeamless } from "../../../actions/EditAction";
+import { handleEdit, handleSeamless } from "../../../actions/EditActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
 
 export default function EditItems() {

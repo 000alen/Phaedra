@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
 const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
 const { register } = require("./ElectronAPI");
@@ -65,6 +65,26 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+app.on("browser-window-focus", function () {
+  globalShortcut.register("CommandOrControl+R", () => {
+    console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+  });
+
+  globalShortcut.register("F5", () => {
+    console.log("F5 is pressed: Shortcut Disabled");
+  });
+
+  globalShortcut.register("CommandOrControl+W", () => {
+    console.log("CommandOrControl+W is pressed: Shortcut Disabled");
+  });
+});
+
+app.on("browser-window-blur", function () {
+  globalShortcut.unregister("CommandOrControl+R");
+  globalShortcut.unregister("F5");
+  globalShortcut.unregister("CommandOrControl+W");
 });
 
 register();

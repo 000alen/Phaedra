@@ -24,6 +24,7 @@ export const AppController = React.createContext<IAppController>({
   tasksDo: (action: ITasksManipulation, args: ITasksCommand) => {},
   widgetsDo: (action: IWidgetsManipulation, args: IWidgetsCommand) => {},
   getTabs: () => undefined,
+  getActiveTab: () => undefined,
   getClipboard: () => undefined,
   getTasks: () => undefined,
   getWidgets: () => undefined,

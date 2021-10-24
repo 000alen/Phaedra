@@ -1,5 +1,6 @@
 import "../../css/pages/NotebookPage.css";
 
+import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
 import { PivotItem } from "@fluentui/react";
@@ -16,6 +17,7 @@ import {
   IMessagesManipulation,
 } from "../../manipulation/IMessagesManipulation";
 import { populateMessages } from "../../manipulation/MessagesManipulation";
+import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
 import { NotebookPageProps, NotebookPageState } from "./INotebookPage";
 import { FileView } from "./views/FileView";
 
@@ -58,6 +60,25 @@ export default class NotebookPage extends Component<
         setRibbonKey: this.setRibbonKey,
       },
     };
+  }
+
+  componentDidMount(): void {
+    for (const [keys, action] of Object.entries(NotebookPageShortcuts)) {
+      Mousetrap.bind(
+        keys,
+        (event) => {
+          action(this.state.notebookPageController);
+          event.preventDefault();
+        },
+        "keyup"
+      );
+    }
+  }
+
+  componentWillUnmount(): void {
+    for (const keys of Object.keys(NotebookPageShortcuts)) {
+      Mousetrap.unbind(keys);
+    }
   }
 
   messagesDo(manipulation: IMessagesManipulation, args: IMessagesCommand) {

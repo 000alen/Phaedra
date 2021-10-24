@@ -1,11 +1,11 @@
-import { IHistory, IHistoryManipulation } from "./IHistoryManipulation";
+import { IHistory, IHistoryInformation } from "./IHistoryManipulation";
 import { INotebookCommand } from "./INotebookManipulation";
 
 export function historyDo(
   history: IHistory,
   historyIndex: number,
   { command }: { command: INotebookCommand }
-): IHistoryManipulation {
+): IHistoryInformation {
   if (historyIndex === history.length - 1) {
     history.push(command);
   } else {
@@ -21,7 +21,7 @@ export function historyDo(
 export function historyUndo(
   history: IHistory,
   historyIndex: number
-): [INotebookCommand, IHistoryManipulation] {
+): [INotebookCommand, IHistoryInformation] {
   let command = history[historyIndex];
   historyIndex--;
   return [command, { history: history, historyIndex: historyIndex }];
@@ -30,7 +30,7 @@ export function historyUndo(
 export function historyRedo(
   history: IHistory,
   historyIndex: number
-): [INotebookCommand, IHistoryManipulation] {
+): [INotebookCommand, IHistoryInformation] {
   let command = history[historyIndex];
   historyIndex++;
   return [command, { history: history, historyIndex: historyIndex }];

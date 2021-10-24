@@ -4,12 +4,16 @@ import { v4 as uuidv4 } from "uuid";
 import { MessageBarType } from "@fluentui/react";
 
 import { readFileSync } from "../../API/ElectronAPI";
-import { IAppController } from "../../contexts/IAppController";
 import { INotebookPageController } from "../../contexts/INotebookPageController";
 import { NotebookController } from "../../contexts/NotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { saveNotebook } from "../../IO/NotebookIO";
-import { historyDo, historyUndo } from "../../manipulation/HistoryManipulation"; // historyRedo,
+import {
+  historyDo,
+  historyRedo,
+  historyUndo,
+} from "../../manipulation/HistoryManipulation";
+import { IHistoryInformation } from "../../manipulation/IHistoryManipulation";
 import {
   INotebook,
   INotebookCommand,
@@ -20,15 +24,26 @@ import {
   createMessage,
 } from "../../manipulation/MessagesManipulation";
 import {
+  addAntonymCell,
+  addEntitiesCell,
+  addGenerateCell,
+  addMeaningCell,
   addPlaceholderCell,
+  addQuestionCell,
+  addSparseQuestionCell,
+  addSynonymCell,
+  addWikipediaImageCell,
+  addWikipediaSuggestionsCell,
+  addWikipediaSummaryCell,
   getCell,
   getCellContent,
   getCellData,
   getPage,
   indexCell,
   indexPage,
+  redo,
   undo,
-} from "../../manipulation/NotebookManipulation"; //  redo
+} from "../../manipulation/NotebookManipulation";
 import {
   addTask,
   createTask,
@@ -144,7 +159,6 @@ export default class NotebookComponent extends Component<
         });
       })
       .finally(() => {
-        console.log("finally");
         appController!.tasksDo(removeTask, { id: taskId });
       });
   }
@@ -357,42 +371,124 @@ export default class NotebookComponent extends Component<
     });
   }
 
-  // TODO
   redo() {
-    // let { notebook, history, historyIndex } = this.state;
-    // const [command, newHistoryInformation] = historyRedo(history, historyIndex);
-    // switch (command.action) {
-    //   case "addEntitiesCell":
-    //   case "addQuestionCell":
-    //   case "addSparseQuestionCell":
-    //   case "addGenerateCell":
-    //   case "addWikipediaSummaryCell":
-    //   case "addWikipediaSuggestionsCell":
-    //   case "addWikipediaImageCell":
-    //   case "addMeaningCell":
-    //   case "addSynonymCell":
-    //   case "addAntonymCell":
-    //     this.wrapRedo(command, args);
-    //     break;
-    //   default:
-    //     this.handleRedo(command, args);
-    //     break;
-    // }
-    // this.setState((state) => {
-    //   return {
-    //     ...state,
-    //     ...newHistoryInformation,
-    //     notebook: newNotebook,
-    //     isSaved: false,
-    //   };
-    // });
+    let { notebook, history, historyIndex } = this.state;
+    const [command, newHistoryInformation] = historyRedo(history, historyIndex);
+
+    switch (command.action) {
+      case "addEntitiesCell":
+      case "addQuestionCell":
+      case "addSparseQuestionCell":
+      case "addGenerateCell":
+      case "addWikipediaSummaryCell":
+      case "addWikipediaSuggestionsCell":
+      case "addWikipediaImageCell":
+      case "addMeaningCell":
+      case "addSynonymCell":
+      case "addAntonymCell":
+        this.wrapRedo(command, newHistoryInformation);
+        break;
+      default:
+        this.handleRedo(
+          newHistoryInformation,
+          redo(notebook, command) as INotebook
+        );
+        break;
+    }
   }
 
   // TODO
-  wrapRedo() {}
+  wrapRedo(command: INotebookCommand, historyInformation: IHistoryInformation) {
+    const notebookPageController: INotebookPageController = this.context;
+    const appController = notebookPageController.getAppController();
 
-  // TODO
-  handleRedo() {}
+    let notebook = this.state.notebook;
+
+    let { pageId, cellId } = command;
+
+    if (pageId === undefined) {
+      const lastPage = notebook.pages[notebook.pages.length - 1];
+      if (lastPage === undefined) throw new Error("No page.");
+      command.pageId = lastPage.id;
+    }
+
+    if (cellId === undefined) {
+      let [_notebook, id] = addPlaceholderCell(notebook, {
+        pageId: command.pageId,
+      });
+      notebook = _notebook;
+      command.cellId = id;
+    }
+
+    this.setState((state) => {
+      return { ...state, notebook: notebook };
+    });
+
+    const taskId = uuidv4();
+    appController!.tasksDo(addTask, {
+      task: createTask({ id: taskId, name: command.action }),
+    });
+
+    let manipulation: INotebookManipulation;
+    switch (command.action) {
+      case "addEntitiesCell":
+        manipulation = addEntitiesCell;
+        break;
+      case "addQuestionCell":
+        manipulation = addQuestionCell;
+        break;
+      case "addSparseQuestionCell":
+        manipulation = addSparseQuestionCell;
+        break;
+      case "addGenerateCell":
+        manipulation = addGenerateCell;
+        break;
+      case "addWikipediaSummaryCell":
+        manipulation = addWikipediaSummaryCell;
+        break;
+      case "addWikipediaSuggestionsCell":
+        manipulation = addWikipediaSuggestionsCell;
+        break;
+      case "addWikipediaImageCell":
+        manipulation = addWikipediaImageCell;
+        break;
+      case "addMeaningCell":
+        manipulation = addMeaningCell;
+        break;
+      case "addSynonymCell":
+        manipulation = addSynonymCell;
+        break;
+      case "addAntonymCell":
+        manipulation = addAntonymCell;
+        break;
+      default:
+        throw new Error("Invalid action.");
+    }
+
+    (manipulation(notebook, command) as Promise<INotebook>)
+      .then((_notebook: INotebook) => {
+        this.handleRedo(historyInformation, _notebook);
+      })
+      .catch((error) => {
+        notebookPageController.messagesDo(addMessage, {
+          message: createMessage({ text: "error", type: MessageBarType.error }),
+        });
+      })
+      .finally(() => {
+        appController!.tasksDo(removeTask, { id: taskId });
+      });
+  }
+
+  handleRedo(historyInformation: IHistoryInformation, notebook: INotebook) {
+    this.setState((state) => {
+      return {
+        ...state,
+        ...historyInformation,
+        notebook: notebook,
+        isSaved: false,
+      };
+    });
+  }
 
   getNotebookPageController() {
     return this.context;

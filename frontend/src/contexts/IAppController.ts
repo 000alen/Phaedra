@@ -1,4 +1,3 @@
-import StatusBarComponent from "../components/StatusBar/StatusBarComponent";
 import {
   IClipboard,
   IClipboardCommand,
@@ -9,6 +8,16 @@ import {
   ITabsCommand,
   ITabsManipulation,
 } from "../manipulation/ITabsManipulation";
+import {
+  ITask,
+  ITasksCommand,
+  ITasksManipulation,
+} from "../manipulation/ITasksManipulation";
+import {
+  IWidget,
+  IWidgetsCommand,
+  IWidgetsManipulation,
+} from "../manipulation/IWidgetsManipulation";
 
 export interface IAppController {
   tabsDo: (action: ITabsManipulation, args: ITabsCommand) => void;
@@ -16,7 +25,10 @@ export interface IAppController {
     action: IClipboardManipulation,
     args: IClipboardCommand
   ) => void;
-  getStatusBarRef: () => React.RefObject<StatusBarComponent> | undefined;
+  tasksDo: (action: ITasksManipulation, args: ITasksCommand) => void;
+  widgetsDo: (action: IWidgetsManipulation, args: IWidgetsCommand) => void;
   getTabs: () => ITab[] | undefined;
   getClipboard: () => IClipboard | undefined;
+  getTasks: () => ITask[] | undefined;
+  getWidgets: () => IWidget[] | undefined;
 }

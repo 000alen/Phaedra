@@ -2,6 +2,10 @@ import { MessageBarType } from "@fluentui/react";
 
 import { INotebookPageController } from "../contexts/INotebookPageController";
 import {
+  addMessage,
+  createMessage,
+} from "../manipulation/MessagesManipulation";
+import {
   addEntitiesCell,
   addWikipediaImageCell,
   addWikipediaSuggestionsCell,
@@ -22,15 +26,19 @@ export function handleWikipediaSummary(
     });
     commandBoxRef!.current!.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No query selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No query",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -48,15 +56,19 @@ export function handleWikipediaSuggestions(
     });
     commandBoxRef!.current!.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No query selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No query",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -74,15 +86,19 @@ export function handleWikipediaImage(
     });
     commandBoxRef!.current.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No query selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No query",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -94,9 +110,11 @@ export function handleEntities(
   if (activePage) {
     notebookRef!.current!.do(addEntitiesCell, { pageId: activePage });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }

@@ -2,6 +2,10 @@ import { MessageBarType } from "@fluentui/react";
 
 import { INotebookPageController } from "../contexts/INotebookPageController";
 import {
+  addMessage,
+  createMessage,
+} from "../manipulation/MessagesManipulation";
+import {
   addAntonymCell,
   addMeaningCell,
   addSynonymCell,
@@ -19,15 +23,19 @@ export function handleMeaning(notebookPageController: INotebookPageController) {
     });
     commandBoxRef!.current!.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No word selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No word",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -43,15 +51,19 @@ export function handleSynonym(notebookPageController: INotebookPageController) {
     });
     commandBoxRef!.current!.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No word selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No word",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -67,14 +79,18 @@ export function handleAntonym(notebookPageController: INotebookPageController) {
     });
     commandBoxRef!.current.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar(
-      "No word selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No word",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }

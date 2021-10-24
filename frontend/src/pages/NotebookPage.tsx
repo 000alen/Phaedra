@@ -1,11 +1,6 @@
-// TODO: Refactor MessageBar API
-
 import "../css/pages/NotebookPage.css";
 
 import React, { Component } from "react";
-import { v4 as uuidv4 } from "uuid";
-
-import { MessageBar, MessageBarType } from "@fluentui/react";
 
 import CommandBoxComponent from "../components/CommandBoxComponent";
 import NotebookComponent from "../components/Notebook/NotebookComponent";
@@ -13,6 +8,11 @@ import RibbonComponent from "../components/Ribbon/RibbonComponent";
 import { AppController } from "../contexts/AppController";
 import { IAppController } from "../contexts/IAppController";
 import { NotebookPageController } from "../contexts/NotebookPageController";
+import {
+  IMessagesCommand,
+  IMessagesManipulation,
+} from "../manipulation/IMessagesManipulation";
+import { populateMessages } from "../manipulation/MessagesManipulation";
 import { NotebookPageProps, NotebookPageState } from "./INotebookPage";
 
 export default class NotebookPage extends Component<
@@ -27,10 +27,9 @@ export default class NotebookPage extends Component<
   constructor(props: NotebookPageProps) {
     super(props);
 
+    this.messagesDo = this.messagesDo.bind(this);
     this.showCommandBox = this.showCommandBox.bind(this);
     this.hideCommandBox = this.hideCommandBox.bind(this);
-    this.addMessageBar = this.addMessageBar.bind(this);
-    this.removeMessageBar = this.removeMessageBar.bind(this);
     this.getAppController = this.getAppController.bind(this);
     this.getCommandBoxRef = this.getCommandBoxRef.bind(this);
     this.getNotebookRef = this.getNotebookRef.bind(this);
@@ -39,18 +38,29 @@ export default class NotebookPage extends Component<
     this.commandBoxRef = React.createRef();
 
     this.state = {
+      messages: [],
       commandBoxShown: false,
-      messageBars: [],
       notebookPageController: {
+        messagesDo: this.messagesDo,
         showCommandBox: this.showCommandBox,
         hideCommandBox: this.hideCommandBox,
-        addMessageBar: this.addMessageBar,
-        removeMessageBar: this.removeMessageBar,
         getAppController: this.getAppController,
         getCommandBoxRef: this.getCommandBoxRef,
         getNotebookRef: this.getNotebookRef,
       },
     };
+  }
+
+  messagesDo(manipulation: IMessagesManipulation, args: IMessagesCommand) {
+    const messages = this.state.messages;
+    const currentMessages = manipulation(messages, args);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        messages: currentMessages,
+      };
+    });
   }
 
   showCommandBox(): void {
@@ -62,39 +72,6 @@ export default class NotebookPage extends Component<
   hideCommandBox(): void {
     this.setState((state) => {
       return { ...state, commandBoxShown: false };
-    });
-  }
-
-  addMessageBar(text: string, type: MessageBarType): void {
-    const id = uuidv4();
-    let messageBars = [...this.state.messageBars];
-    messageBars.push(
-      <MessageBar
-        key={id}
-        id={id}
-        isMultiline={false}
-        messageBarType={type}
-        onDismiss={() => {
-          this.removeMessageBar(id);
-        }}
-      >
-        {text}
-      </MessageBar>
-    );
-
-    this.setState((state) => {
-      return { ...state, messageBars: messageBars };
-    });
-  }
-
-  removeMessageBar(id: string): void {
-    let messageBars = [...this.state.messageBars];
-    messageBars = messageBars.filter(
-      (messageBar) => messageBar.props.id !== id
-    );
-
-    this.setState((state) => {
-      return { ...state, messageBars: messageBars };
     });
   }
 
@@ -112,7 +89,7 @@ export default class NotebookPage extends Component<
 
   render(): JSX.Element {
     const notebookPageContentStyle = {
-      height: `calc(100% - 88px - ${this.state.messageBars.length * 32}px)`,
+      height: `calc(100% - 88px - ${this.state.messages.length * 32}px)`,
     };
 
     return (
@@ -122,11 +99,7 @@ export default class NotebookPage extends Component<
         <div className="notebookPage">
           <RibbonComponent />
 
-          <div>
-            {this.state.messageBars.map((messageBar) => {
-              return messageBar;
-            })}
-          </div>
+          <div>{populateMessages(this.state.messages, this.messagesDo)}</div>
 
           <div className="notebookPageContent" style={notebookPageContentStyle}>
             <NotebookComponent

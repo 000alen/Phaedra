@@ -9,6 +9,10 @@ import {
 } from "../manipulation/ClipboardManipulation";
 import { ICell, IPage } from "../manipulation/INotebookManipulation";
 import {
+  addMessage,
+  createMessage,
+} from "../manipulation/MessagesManipulation";
+import {
   addCell,
   addGenerateCell,
   addPage,
@@ -76,10 +80,12 @@ export function handleInsertCell(
       cell: createCell({}),
     });
   } else {
-    notebookPageController.addMessageBar(
-      "No cell selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -97,10 +103,12 @@ export function handleDelete(notebookPageController: INotebookPageController) {
       pageId: activePage,
     });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -140,10 +148,12 @@ export function handleCut(notebookPageController: INotebookPageController) {
       pageId: activePage,
     });
   } else {
-    notebookPageController.addMessageBar(
-      "No cell selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -163,10 +173,12 @@ export function handleCopy(notebookPageController: INotebookPageController) {
     });
     appController!.clipboardDo(clipboardPush, { element: page! });
   } else {
-    notebookPageController.addMessageBar(
-      "No cell selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -195,10 +207,12 @@ export function handlePaste(notebookPageController: INotebookPageController) {
         cell: cell,
       });
     } else {
-      notebookPageController.addMessageBar(
-        "No page selected",
-        MessageBarType.error
-      );
+      notebookPageController.messagesDo(addMessage, {
+        message: createMessage({
+          type: MessageBarType.error,
+          text: "No active page or cell",
+        }),
+      });
     }
   } else if (isPage(top)) {
     const page = makePageUnique(top as IPage);
@@ -212,16 +226,20 @@ export function handlePaste(notebookPageController: INotebookPageController) {
         index,
       });
     } else {
-      notebookPageController.addMessageBar(
-        "No page selected",
-        MessageBarType.error
-      );
+      notebookPageController.messagesDo(addMessage, {
+        message: createMessage({
+          type: MessageBarType.error,
+          text: "No active page or cell",
+        }),
+      });
     }
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -241,12 +259,19 @@ export function handleQuestion(
     });
     commandBoxRef!.current.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar("No question", MessageBarType.error);
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No question",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }
 
@@ -266,11 +291,18 @@ export function handleGenerate(
     });
     commandBoxRef!.current.consume();
   } else if (activePage) {
-    notebookPageController.addMessageBar("No prompt", MessageBarType.error);
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No prompt",
+      }),
+    });
   } else {
-    notebookPageController.addMessageBar(
-      "No page selected",
-      MessageBarType.error
-    );
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: "No active page or cell",
+      }),
+    });
   }
 }

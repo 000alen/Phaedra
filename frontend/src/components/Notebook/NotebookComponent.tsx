@@ -191,7 +191,6 @@ export default class NotebookComponent extends Component<
         });
       })
       .finally(() => {
-        console.log("finally");
         appController!.tasksDo(removeTask, { id: taskId });
       });
   }
@@ -330,7 +329,6 @@ export default class NotebookComponent extends Component<
         });
       })
       .finally(() => {
-        console.log("finally");
         appController!.tasksDo(removeTask, { id: taskId });
       });
   }

@@ -16,7 +16,7 @@ import {
   removeTask,
 } from "../manipulation/TasksManipulation";
 import { EmptyPageProps } from "./IEmptyPage";
-import NotebookPage from "./NotebookPage";
+import NotebookPage from "./NotebookPage/NotebookPage";
 
 const openIcon = {
   iconName: "OpenFile",

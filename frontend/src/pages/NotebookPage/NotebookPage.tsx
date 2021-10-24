@@ -128,8 +128,10 @@ export default class NotebookPage extends Component<
   }
 
   render(): JSX.Element {
+    const displayableMessages = this.state.messages.slice(0, 3);
+
     const notebookPageContentStyle = {
-      height: `calc(100% - 88px - ${this.state.messages.length * 32}px)`,
+      height: `calc(100% - 88px - ${displayableMessages.length * 32}px)`,
     };
 
     return (
@@ -139,7 +141,7 @@ export default class NotebookPage extends Component<
         <div className="notebookPage">
           <RibbonComponent ribbonKey={this.state.ribbonKey} />
 
-          <div>{populateMessages(this.state.messages, this.messagesDo)}</div>
+          <div>{populateMessages(displayableMessages, this.messagesDo)}</div>
 
           <div className="notebookPageContent" style={notebookPageContentStyle}>
             {this.state.ribbonKey === "file" ? (

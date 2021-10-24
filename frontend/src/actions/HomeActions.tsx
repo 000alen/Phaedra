@@ -30,6 +30,7 @@ import {
   removeCell,
   removePage,
 } from "../manipulation/NotebookManipulation";
+import { strings } from "../strings";
 
 export function handleSave(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
@@ -86,7 +87,7 @@ export function handleInsertCell(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -110,7 +111,7 @@ export function handleDelete(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -157,7 +158,7 @@ export function handleCut(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -185,7 +186,7 @@ export function handleCopy(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -221,7 +222,7 @@ export function handlePaste(notebookPageController: INotebookPageController) {
       notebookPageController.messagesDo(addMessage, {
         message: createMessage({
           type: MessageBarType.error,
-          text: "No active page or cell",
+          text: strings.noActiveCellOrPage,
         }),
       });
     }
@@ -240,7 +241,7 @@ export function handlePaste(notebookPageController: INotebookPageController) {
       notebookPageController.messagesDo(addMessage, {
         message: createMessage({
           type: MessageBarType.error,
-          text: "No active page or cell",
+          text: strings.noActiveCellOrPage,
         }),
       });
     }
@@ -248,7 +249,7 @@ export function handlePaste(notebookPageController: INotebookPageController) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.unknownError,
       }),
     });
   }
@@ -272,14 +273,14 @@ export function handleQuestion(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No question",
+        text: strings.noQuestion,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -303,14 +304,14 @@ export function handleGenerate(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No prompt",
+        text: strings.noPrompt,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }

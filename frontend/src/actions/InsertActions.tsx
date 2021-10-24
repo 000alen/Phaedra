@@ -11,6 +11,7 @@ import {
   addWikipediaSuggestionsCell,
   addWikipediaSummaryCell,
 } from "../manipulation/NotebookManipulation";
+import { strings } from "../strings";
 
 export function handleWikipediaSummary(
   notebookPageController: INotebookPageController
@@ -30,14 +31,14 @@ export function handleWikipediaSummary(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No query",
+        text: strings.noQuery,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -61,14 +62,14 @@ export function handleWikipediaSuggestions(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No query",
+        text: strings.noQuery,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -92,14 +93,14 @@ export function handleWikipediaImage(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No query",
+        text: strings.noQuery,
       }),
     });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }
@@ -117,7 +118,7 @@ export function handleEntities(
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
-        text: "No active page or cell",
+        text: strings.noActiveCellOrPage,
       }),
     });
   }

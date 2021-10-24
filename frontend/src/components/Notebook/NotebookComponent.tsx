@@ -49,6 +49,7 @@ import {
   createTask,
   removeTask,
 } from "../../manipulation/TasksManipulation";
+import { strings } from "../../strings";
 import {
   NotebookComponentProps,
   NotebookComponentState,
@@ -155,7 +156,10 @@ export default class NotebookComponent extends Component<
       })
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
-          message: createMessage({ text: "error", type: MessageBarType.error }),
+          message: createMessage({
+            text: strings.documentLoadingError,
+            type: MessageBarType.error,
+          }),
         });
       })
       .finally(() => {
@@ -325,7 +329,10 @@ export default class NotebookComponent extends Component<
       })
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
-          message: createMessage({ text: "error", type: MessageBarType.error }),
+          message: createMessage({
+            text: strings.notebookManipulationError,
+            type: MessageBarType.error,
+          }),
         });
       })
       .finally(() => {
@@ -469,7 +476,10 @@ export default class NotebookComponent extends Component<
       })
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
-          message: createMessage({ text: "error", type: MessageBarType.error }),
+          message: createMessage({
+            text: strings.notebookManipulationError,
+            type: MessageBarType.error,
+          }),
         });
       })
       .finally(() => {

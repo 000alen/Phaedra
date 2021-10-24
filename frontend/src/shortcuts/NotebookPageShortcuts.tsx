@@ -1,4 +1,4 @@
-import { handleEdit } from "../actions/EditActions";
+import { handleEdit, handleSeamless } from "../actions/EditActions";
 import {
   handleCopy,
   handleCut,
@@ -8,7 +8,6 @@ import {
   handleSave,
   handleUndo,
 } from "../actions/HomeActions";
-import { insertCellAbove, insertCellBelow } from "../actions/TestActions";
 import { INotebookPageController } from "../contexts/INotebookPageController";
 import { IShortcuts } from "./IShortcuts";
 
@@ -29,8 +28,6 @@ export const NotebookPageShortcuts: IShortcuts = {
     handleRedo(notebookPageController),
   "ctrl+n": (notebookPageController: INotebookPageController) =>
     handleInsertCell(notebookPageController),
-  b: (notebookPageController: INotebookPageController) =>
-    insertCellBelow(notebookPageController),
-  a: (notebookPageController: INotebookPageController) =>
-    insertCellAbove(notebookPageController),
+  s: (notebookPageController: INotebookPageController) =>
+    handleSeamless(notebookPageController),
 };

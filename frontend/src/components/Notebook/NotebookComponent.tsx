@@ -61,6 +61,9 @@ export default class NotebookComponent extends Component<
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
+    this.getActiveCell = this.getActiveCell.bind(this);
+    this.getActivePage = this.getActivePage.bind(this);
+    this.getNotebook = this.getNotebook.bind(this);
 
     const { tabId, notebook, notebookPath } = props;
 
@@ -84,6 +87,9 @@ export default class NotebookComponent extends Component<
         redo: this.redo,
         do: this.do,
         getNotebookPageController: this.getNotebookPageController,
+        getActiveCell: this.getActiveCell,
+        getActivePage: this.getActivePage,
+        getNotebook: this.getNotebook,
       },
     };
   }
@@ -351,6 +357,7 @@ export default class NotebookComponent extends Component<
     });
   }
 
+  // TODO
   redo() {
     // let { notebook, history, historyIndex } = this.state;
     // const [command, newHistoryInformation] = historyRedo(history, historyIndex);
@@ -381,12 +388,26 @@ export default class NotebookComponent extends Component<
     // });
   }
 
+  // TODO
   wrapRedo() {}
 
+  // TODO
   handleRedo() {}
 
   getNotebookPageController() {
     return this.context;
+  }
+
+  getActiveCell(): string | undefined {
+    return this.state.activeCell;
+  }
+
+  getActivePage(): string | undefined {
+    return this.state.activePage;
+  }
+
+  getNotebook(): INotebook {
+    return this.state.notebook;
   }
 
   render() {

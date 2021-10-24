@@ -1,4 +1,5 @@
 import {
+  INotebook,
   INotebookCommand,
   INotebookManipulation,
 } from "../manipulation/INotebookManipulation";
@@ -12,4 +13,7 @@ export interface INotebookController {
   redo: () => void;
   do: (action: INotebookManipulation, args: INotebookCommand) => void;
   getNotebookPageController: () => INotebookPageController | undefined;
+  getActiveCell: () => string | undefined;
+  getActivePage: () => string | undefined;
+  getNotebook: () => INotebook | undefined;
 }

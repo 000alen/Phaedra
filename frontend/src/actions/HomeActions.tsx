@@ -31,28 +31,29 @@ import {
   removePage,
 } from "../manipulation/NotebookManipulation";
 
-export function handleSave(notebookController: INotebookPageController) {
-  const notebookRef = notebookController.getNotebookRef();
+export function handleSave(notebookPageController: INotebookPageController) {
+  const notebookController = notebookPageController.getNotebookController()!;
 
-  notebookRef!.current!.save();
+  notebookController.save();
 }
 
 export function handleInsertPage(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
+  const notebookController = notebookPageController.getNotebookController()!;
+  const notebook = notebookController.getNotebook()!;
+  const activePage = notebookController.getActivePage();
 
-  const { activePage } = notebookRef!.current!.state;
   if (activePage) {
-    const activePageIndex = indexPage(notebookRef!.current!.state.notebook, {
+    const activePageIndex = indexPage(notebook, {
       pageId: activePage,
     });
-    notebookRef!.current!.do(insertPage, {
+    notebookController.do(insertPage, {
       page: createPage({}),
       index: activePageIndex + 1,
     });
   } else {
-    notebookRef!.current!.do(addPage, {
+    notebookController.do(addPage, {
       page: createPage({}),
     });
   }
@@ -61,21 +62,23 @@ export function handleInsertPage(
 export function handleInsertCell(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
+  const notebookController = notebookPageController.getNotebookController()!;
+  const notebook = notebookController.getNotebook()!;
+  const activeCell = notebookController.getActiveCell()!;
+  const activePage = notebookController.getActivePage()!;
 
-  const { activePage, activeCell } = notebookRef!.current!.state;
   if (activeCell) {
-    const activeCellIndex = indexCell(notebookRef!.current!.state.notebook, {
+    const activeCellIndex = indexCell(notebook, {
       pageId: activePage,
       cellId: activeCell,
     });
-    notebookRef!.current!.do(insertCell, {
+    notebookController.do(insertCell, {
       pageId: activePage,
       cell: createCell({}),
       index: activeCellIndex + 1,
     });
   } else if (activePage) {
-    notebookRef!.current!.do(addCell, {
+    notebookController.do(addCell, {
       pageId: activePage,
       cell: createCell({}),
     });
@@ -90,16 +93,17 @@ export function handleInsertCell(
 }
 
 export function handleDelete(notebookPageController: INotebookPageController) {
-  const notebookRef = notebookPageController.getNotebookRef();
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activeCell = notebookController.getActiveCell()!;
+  const activePage = notebookController.getActivePage()!;
 
-  const { activePage, activeCell } = notebookRef!.current!.state;
   if (activeCell) {
-    notebookRef!.current!.do(removeCell, {
+    notebookController.do(removeCell, {
       pageId: activePage,
       cellId: activeCell,
     });
   } else if (activePage) {
-    notebookRef!.current!.do(removePage, {
+    notebookController.do(removePage, {
       pageId: activePage,
     });
   } else {
@@ -113,28 +117,30 @@ export function handleDelete(notebookPageController: INotebookPageController) {
 }
 
 export function handleUndo(notebookPageController: INotebookPageController) {
-  const notebookRef = notebookPageController.getNotebookRef();
+  const notebookController = notebookPageController.getNotebookController()!;
 
-  notebookRef!.current!.undo();
+  notebookController.undo();
 }
 
 export function handleRedo(notebookPageController: INotebookPageController) {
-  const notebookRef = notebookPageController.getNotebookRef();
+  const notebookController = notebookPageController.getNotebookController()!;
 
-  notebookRef!.current!.redo();
+  notebookController.redo();
 }
 
 export function handleCut(notebookPageController: INotebookPageController) {
-  const appController = notebookPageController.getAppController();
-  const notebookRef = notebookPageController.getNotebookRef();
-  const { notebook, notebookController, activePage, activeCell } =
-    notebookRef!.current!.state;
+  const appController = notebookPageController.getAppController()!;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const notebook = notebookController.getNotebook()!;
+  const activeCell = notebookController.getActiveCell()!;
+  const activePage = notebookController.getActivePage()!;
+
   if (activeCell) {
     const cell = getCell(notebook, {
       pageId: activePage,
       cellId: activeCell,
     });
-    appController!.clipboardDo(clipboardPush, { element: cell! });
+    appController.clipboardDo(clipboardPush, { element: cell! });
     notebookController.do(removeCell, {
       pageId: activePage,
       cellId: activeCell,
@@ -143,7 +149,7 @@ export function handleCut(notebookPageController: INotebookPageController) {
     const page = getPage(notebook, {
       pageId: activePage,
     });
-    appController!.clipboardDo(clipboardPush, { element: page! });
+    appController.clipboardDo(clipboardPush, { element: page! });
     notebookController.do(removePage, {
       pageId: activePage,
     });
@@ -158,20 +164,23 @@ export function handleCut(notebookPageController: INotebookPageController) {
 }
 
 export function handleCopy(notebookPageController: INotebookPageController) {
-  const appController = notebookPageController.getAppController();
-  const notebookRef = notebookPageController.getNotebookRef();
-  const { notebook, activePage, activeCell } = notebookRef!.current!.state;
+  const appController = notebookPageController.getAppController()!;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const notebook = notebookController.getNotebook()!;
+  const activeCell = notebookController.getActiveCell()!;
+  const activePage = notebookController.getActivePage()!;
+
   if (activeCell) {
     const cell = getCell(notebook, {
       pageId: activePage,
       cellId: activeCell,
     });
-    appController!.clipboardDo(clipboardPush, { element: cell! });
+    appController.clipboardDo(clipboardPush, { element: cell! });
   } else if (activePage) {
     const page = getPage(notebook, {
       pageId: activePage,
     });
-    appController!.clipboardDo(clipboardPush, { element: page! });
+    appController.clipboardDo(clipboardPush, { element: page! });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
@@ -183,26 +192,28 @@ export function handleCopy(notebookPageController: INotebookPageController) {
 }
 
 export function handlePaste(notebookPageController: INotebookPageController) {
-  const appController = notebookPageController.getAppController();
-  const notebookRef = notebookPageController.getNotebookRef();
-  const top = clipboardTop(appController!.getClipboard()!);
-  const { activePage, activeCell } = notebookRef!.current!.state;
+  const appController = notebookPageController.getAppController()!;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const top = clipboardTop(appController.getClipboard()!);
+  const notebook = notebookController.getNotebook()!;
+  const activeCell = notebookController.getActiveCell()!;
+  const activePage = notebookController.getActivePage()!;
 
   if (isCell(top)) {
     const cell = makeCellUnique(top as ICell);
     if (activeCell) {
       const index =
-        indexCell(notebookRef!.current!.state.notebook, {
+        indexCell(notebook, {
           pageId: activePage,
           cellId: activeCell,
         }) + 1;
-      notebookRef!.current!.do(insertCell, {
+      notebookController.do(insertCell, {
         pageId: activePage,
         cell: cell,
         index,
       });
     } else if (activePage) {
-      notebookRef!.current!.do(addCell, {
+      notebookController.do(addCell, {
         pageId: activePage,
         cell: cell,
       });
@@ -218,10 +229,10 @@ export function handlePaste(notebookPageController: INotebookPageController) {
     const page = makePageUnique(top as IPage);
     if (activePage) {
       const index =
-        indexPage(notebookRef!.current!.state.notebook, {
+        indexPage(notebook, {
           pageId: activePage,
         }) + 1;
-      notebookRef!.current!.do(insertPage, {
+      notebookController.do(insertPage, {
         page: page,
         index,
       });
@@ -246,18 +257,17 @@ export function handlePaste(notebookPageController: INotebookPageController) {
 export function handleQuestion(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
-
-  const { activePage } = notebookRef!.current!.state;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+  const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
-    notebookRef!.current!.do(addQuestionCell, {
+    notebookController.do(addQuestionCell, {
       question: command,
       pageId: activePage,
     });
-    commandBoxRef!.current.consume();
+    commandBoxRef.current.consume();
   } else if (activePage) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
@@ -278,18 +288,17 @@ export function handleQuestion(
 export function handleGenerate(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
-
-  const { activePage } = notebookRef!.current!.state;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+  const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
-    notebookRef!.current!.do(addGenerateCell, {
+    notebookController.do(addGenerateCell, {
       prompt: command,
       pageId: activePage,
     });
-    commandBoxRef!.current.consume();
+    commandBoxRef.current.consume();
   } else if (activePage) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({

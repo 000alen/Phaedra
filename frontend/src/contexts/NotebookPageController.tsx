@@ -7,7 +7,7 @@ export const NotebookPageController =
     messagesDo: (manipulation, args) => {},
     showCommandBox: () => {},
     hideCommandBox: () => {},
-    getNotebookRef: () => undefined,
     getCommandBoxRef: () => undefined,
     getAppController: () => undefined,
+    getNotebookController: () => undefined,
   });

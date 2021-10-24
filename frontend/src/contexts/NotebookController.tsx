@@ -14,4 +14,7 @@ export const NotebookController = React.createContext<INotebookController>({
   redo: () => {},
   do: (action: INotebookManipulation, args: INotebookCommand) => {},
   getNotebookPageController: () => undefined,
+  getActiveCell: () => undefined,
+  getActivePage: () => undefined,
+  getNotebook: () => undefined,
 });

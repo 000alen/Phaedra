@@ -5,6 +5,7 @@ import {
   IMessagesManipulation,
 } from "../manipulation/IMessagesManipulation";
 import { IAppController } from "./IAppController";
+import { INotebookController } from "./INotebookController";
 
 export interface INotebookPageController {
   messagesDo: (
@@ -13,7 +14,7 @@ export interface INotebookPageController {
   ) => void;
   showCommandBox: () => void;
   hideCommandBox: () => void;
-  getNotebookRef: () => React.RefObject<NotebookComponent> | undefined;
   getCommandBoxRef: () => React.RefObject<CommandBoxComponent> | undefined;
   getAppController: () => IAppController | undefined;
+  getNotebookController: () => INotebookController | undefined;
 }

@@ -7,6 +7,7 @@ import NotebookComponent from "../components/Notebook/NotebookComponent";
 import RibbonComponent from "../components/Ribbon/RibbonComponent";
 import { AppController } from "../contexts/AppController";
 import { IAppController } from "../contexts/IAppController";
+import { INotebookController } from "../contexts/INotebookController";
 import { NotebookPageController } from "../contexts/NotebookPageController";
 import {
   IMessagesCommand,
@@ -32,7 +33,7 @@ export default class NotebookPage extends Component<
     this.hideCommandBox = this.hideCommandBox.bind(this);
     this.getAppController = this.getAppController.bind(this);
     this.getCommandBoxRef = this.getCommandBoxRef.bind(this);
-    this.getNotebookRef = this.getNotebookRef.bind(this);
+    this.getNotebookController = this.getNotebookController.bind(this);
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
@@ -46,7 +47,7 @@ export default class NotebookPage extends Component<
         hideCommandBox: this.hideCommandBox,
         getAppController: this.getAppController,
         getCommandBoxRef: this.getCommandBoxRef,
-        getNotebookRef: this.getNotebookRef,
+        getNotebookController: this.getNotebookController,
       },
     };
   }
@@ -75,16 +76,16 @@ export default class NotebookPage extends Component<
     });
   }
 
-  getNotebookRef(): React.RefObject<NotebookComponent> {
-    return this.notebookRef;
-  }
-
   getCommandBoxRef(): React.RefObject<CommandBoxComponent> {
     return this.commandBoxRef;
   }
 
   getAppController(): IAppController {
     return this.context;
+  }
+
+  getNotebookController(): INotebookController {
+    return this.notebookRef.current!.state.notebookController!;
   }
 
   render(): JSX.Element {

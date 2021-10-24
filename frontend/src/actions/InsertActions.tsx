@@ -15,16 +15,17 @@ import {
 export function handleWikipediaSummary(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
-  const { activePage } = notebookRef!.current!.state;
-  if (activePage && commandBoxRef!.current!) {
-    const { command } = commandBoxRef!.current.state;
-    notebookRef!.current!.do(addWikipediaSummaryCell, {
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+  const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  if (activePage && commandBoxRef.current) {
+    const { command } = commandBoxRef.current.state;
+    notebookController.do(addWikipediaSummaryCell, {
       query: command,
       pageId: activePage,
     });
-    commandBoxRef!.current!.consume();
+    commandBoxRef.current.consume();
   } else if (activePage) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
@@ -45,16 +46,17 @@ export function handleWikipediaSummary(
 export function handleWikipediaSuggestions(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
-  const { activePage } = notebookRef!.current!.state;
-  if (activePage && commandBoxRef!.current) {
-    const { command } = commandBoxRef!.current!.state;
-    notebookRef!.current!.do(addWikipediaSuggestionsCell, {
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+  const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  if (activePage && commandBoxRef.current) {
+    const { command } = commandBoxRef.current.state;
+    notebookController.do(addWikipediaSuggestionsCell, {
       query: command,
       pageId: activePage,
     });
-    commandBoxRef!.current!.consume();
+    commandBoxRef.current.consume();
   } else if (activePage) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
@@ -75,16 +77,17 @@ export function handleWikipediaSuggestions(
 export function handleWikipediaImage(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const commandBoxRef = notebookPageController.getCommandBoxRef();
-  const { activePage } = notebookRef!.current!.state;
-  if (activePage && commandBoxRef!.current) {
-    const { command } = commandBoxRef!.current.state;
-    notebookRef!.current!.do(addWikipediaImageCell, {
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+  const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  if (activePage && commandBoxRef.current) {
+    const { command } = commandBoxRef.current.state;
+    notebookController.do(addWikipediaImageCell, {
       query: command,
       pageId: activePage,
     });
-    commandBoxRef!.current.consume();
+    commandBoxRef.current.consume();
   } else if (activePage) {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
@@ -105,10 +108,11 @@ export function handleWikipediaImage(
 export function handleEntities(
   notebookPageController: INotebookPageController
 ) {
-  const notebookRef = notebookPageController.getNotebookRef();
-  const { activePage } = notebookRef!.current!.state;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const activePage = notebookController.getActivePage()!;
+
   if (activePage) {
-    notebookRef!.current!.do(addEntitiesCell, { pageId: activePage });
+    notebookController.do(addEntitiesCell, { pageId: activePage });
   } else {
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({

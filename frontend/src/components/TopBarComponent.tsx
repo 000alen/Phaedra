@@ -32,27 +32,6 @@ export default function TopBarComponent({
     ipcRenderer.send("closeApp");
   };
 
-  const minimizeIcon = {
-    iconName: "ChromeMinimize",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
-
-  const maximizeRestoreIcon = {
-    iconName: showMaximize ? "ChromeFullScreen" : "ChromeRestore",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
-
-  const closeIcon = {
-    iconName: "ChromeClose",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
-
   ipcRenderer.on("isMaximized", () => {
     changeMaximizeRestoreButton(true);
   });
@@ -63,6 +42,33 @@ export default function TopBarComponent({
 
   const topBarStyle = {
     backgroundColor: theme.palette.white,
+  };
+
+  const minimizeIcon = {
+    iconName: "ChromeMinimize",
+    styles: {
+      root: { color: theme.palette.black },
+    },
+  };
+  const maximizeIcon = {
+    iconName: "ChromeFullScreen",
+    styles: {
+      root: { color: theme.palette.black },
+    },
+  };
+
+  const restoreIcon = {
+    iconName: "ChromeRestore",
+    styles: {
+      root: { color: theme.palette.black },
+    },
+  };
+
+  const closeIcon = {
+    iconName: "ChromeClose",
+    styles: {
+      root: { color: theme.palette.black },
+    },
   };
 
   return (
@@ -79,7 +85,7 @@ export default function TopBarComponent({
         />
         <IconButton
           className="topButton"
-          iconProps={maximizeRestoreIcon}
+          iconProps={showMaximize ? maximizeIcon : restoreIcon}
           onClick={handleMaximizeRestoreButtonClick}
         />
         <IconButton

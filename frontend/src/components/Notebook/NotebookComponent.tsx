@@ -54,7 +54,7 @@ import {
   NotebookComponentProps,
   NotebookComponentState,
 } from "./INotebookComponent";
-import PageComponent from "./PageComponent";
+import PageComponent from "./Page/PageComponent";
 
 export default class NotebookComponent extends Component<
   NotebookComponentProps,

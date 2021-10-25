@@ -99,8 +99,8 @@ export default function TabsComponent({
       />
 
       <IconButton
+        className={`${iconButtonStyles}`}
         iconProps={addIcon}
-        styles={iconButtonStyles}
         onClick={handleAdd}
       />
     </div>

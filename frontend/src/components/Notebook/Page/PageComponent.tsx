@@ -1,8 +1,8 @@
 import React, { Component, MouseEvent } from "react";
 
-import { NotebookController } from "../../contexts/NotebookController";
-import { theme } from "../../index";
-import CellComponent from "./CellComponent";
+import { NotebookController } from "../../../contexts/NotebookController";
+import { theme } from "../../../index";
+import CellComponent from "../Cell/CellComponent";
 import { PageComponentProps, PageComponentState } from "./IPageComponent";
 import { PageDocumentComponent } from "./PageDocumentComponent";
 

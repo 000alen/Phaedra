@@ -3,9 +3,10 @@ import ReactMarkdown from "react-markdown";
 
 import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
-import { NotebookController } from "../../contexts/NotebookController";
-import { theme } from "../../index";
-import { setCellContent } from "../../manipulation/NotebookManipulation";
+import { NotebookController } from "../../../contexts/NotebookController";
+import { theme } from "../../../index";
+import { setCellContent } from "../../../manipulation/NotebookManipulation";
+import { CellToolbarComponent } from "./CellToolbarComponent";
 import { CellComponentProps, CellComponentState } from "./ICellComponent";
 
 export default class CellComponent extends Component<
@@ -19,6 +20,7 @@ export default class CellComponent extends Component<
 
     this.handleSelection = this.handleSelection.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.getStyles = this.getStyles.bind(this);
   }
 
   handleSelection(event: MouseEvent<HTMLDivElement>) {
@@ -43,26 +45,34 @@ export default class CellComponent extends Component<
     });
   }
 
-  renderLoading() {
-    const { data, active } = this.props;
+  getStyles(
+    seamless: boolean,
+    active: boolean,
+    editing: boolean
+  ): [string, React.CSSProperties] {
+    if (active && editing) return ["m-2 space-y-2", {}];
 
-    const backgroundColor = data.seamless
-      ? "transparent"
-      : theme.palette.neutralLight;
-
-    const borderColor = active
-      ? theme.palette.themePrimary
-      : data.seamless
-      ? "transparent"
-      : theme.palette.neutralLight;
-
-    const border = `1px solid ${borderColor}`;
-    const shadow = data.seamless ? "" : "shadow-sm";
+    const classes = `p-2 m-2 rounded-sm text-justify ${
+      seamless && "shadow-md"
+    }`;
 
     const style = {
-      backgroundColor: backgroundColor,
-      border: border,
+      backgroundColor: seamless ? "transparent" : theme.palette.neutralLight,
+      border: `1px solid ${
+        active
+          ? theme.palette.themePrimary
+          : seamless
+          ? "transparent"
+          : theme.palette.neutralLight
+      }`,
     };
+
+    return [classes, style];
+  }
+
+  renderLoading() {
+    const { data, active, editing } = this.props;
+    const [classes, style] = this.getStyles(data.seamless, active, editing);
 
     const wrapperClass = mergeStyles({
       padding: 2,
@@ -75,7 +85,7 @@ export default class CellComponent extends Component<
 
     return (
       <div
-        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify ${wrapperClass}`}
+        className={`cell ${classes} ${wrapperClass}`}
         style={style}
         onClick={this.handleSelection}
       >
@@ -87,42 +97,28 @@ export default class CellComponent extends Component<
   }
 
   renderViewing() {
-    const { data, content, active } = this.props;
-
-    const backgroundColor = data.seamless
-      ? "transparent"
-      : theme.palette.neutralLight;
-
-    const borderColor = active
-      ? theme.palette.themePrimary
-      : data.seamless
-      ? "transparent"
-      : theme.palette.neutralLight;
-
-    const border = `1px solid ${borderColor}`;
-    const shadow = data.seamless ? "" : "shadow-md";
-
-    const style = {
-      backgroundColor: backgroundColor,
-      border: border,
-    };
+    const { data, content, active, editing } = this.props;
+    const [classes, style] = this.getStyles(data.seamless, active, editing);
 
     return (
       <div
-        className={`cell p-2 m-2 rounded-sm ${shadow} text-justify`}
+        className={`cell ${classes}`}
         style={style}
         onClick={this.handleSelection}
       >
+        {active && <CellToolbarComponent />}
+
         <ReactMarkdown children={content} linkTarget="_blank" />
       </div>
     );
   }
 
   renderEditing() {
-    const { content } = this.props;
+    const { data, content, active, editing } = this.props;
+    const [classes, style] = this.getStyles(data.seamless, active, editing);
 
     return (
-      <div className="cell m-2 space-y-2">
+      <div className={`cell ${classes}`} style={style}>
         <TextField
           value={content}
           onChange={this.handleChange}
@@ -135,7 +131,7 @@ export default class CellComponent extends Component<
   }
 
   render() {
-    const { active, editing, data } = this.props;
+    const { data, active, editing } = this.props;
 
     const loading = data.loading;
 

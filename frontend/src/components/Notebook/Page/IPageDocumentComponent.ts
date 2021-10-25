@@ -1,4 +1,4 @@
-import { DocumentFile } from "./INotebookComponent";
+import { DocumentFile } from "../INotebookComponent";
 
 export interface PageDocumentComponentProps {
   document: DocumentFile;

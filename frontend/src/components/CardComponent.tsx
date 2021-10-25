@@ -9,21 +9,21 @@ import { mergeStyles } from "@fluentui/react/lib/Styling";
 
 import { CardComponentProps } from "./ICardComponent";
 
+const conversationTileClass = mergeStyles({
+  height: "auto",
+  paddingBottom: "10px",
+});
+
+const cardStyles = {
+  root: { display: "inline-block", marginRight: 20, width: 320 },
+};
+
 export default function CardComponent({
   iconProps,
   title,
   subtitle,
   onClick,
 }: CardComponentProps) {
-  const conversationTileClass = mergeStyles({
-    height: "auto",
-    paddingBottom: "10px",
-  });
-
-  const cardStyles = {
-    root: { display: "inline-block", marginRight: 20, width: 320 },
-  };
-
   return (
     <div>
       <DocumentCard styles={cardStyles} onClick={onClick}>

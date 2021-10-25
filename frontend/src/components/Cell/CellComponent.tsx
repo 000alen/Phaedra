@@ -3,9 +3,9 @@ import ReactMarkdown from "react-markdown";
 
 import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
-import { NotebookController } from "../../../contexts/NotebookController";
-import { theme } from "../../../index";
-import { setCellContent } from "../../../manipulation/NotebookManipulation";
+import { NotebookController } from "../../contexts/NotebookController";
+import { theme } from "../../index";
+import { setCellContent } from "../../manipulation/NotebookManipulation";
 import { CellToolbarComponent } from "./CellToolbarComponent";
 import { CellComponentProps, CellComponentState } from "./ICellComponent";
 

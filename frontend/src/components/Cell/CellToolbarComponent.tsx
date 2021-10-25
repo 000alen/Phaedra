@@ -1,4 +1,4 @@
-import "../../../css/components/CellToolbarComponent.css";
+import "../../css/components/CellToolbarComponent.css";
 
 import React from "react";
 

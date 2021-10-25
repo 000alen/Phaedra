@@ -50,11 +50,11 @@ import {
   removeTask,
 } from "../../manipulation/TasksManipulation";
 import { strings } from "../../strings";
+import PageComponent from "../Page/PageComponent";
 import {
   NotebookComponentProps,
   NotebookComponentState,
 } from "./INotebookComponent";
-import PageComponent from "./Page/PageComponent";
 
 export default class NotebookComponent extends Component<
   NotebookComponentProps,

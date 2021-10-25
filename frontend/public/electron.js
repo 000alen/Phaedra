@@ -3,6 +3,7 @@ const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
 const { register } = require("./ElectronAPI");
 
+let splashWindow;
 let mainWindow;
 
 function createWindow() {
@@ -19,13 +20,31 @@ function createWindow() {
       contextIsolation: false,
       devTools: true,
     },
+    show: false,
+  });
+
+  splashWindow = new BrowserWindow({
+    width: 600,
+    height: 400,
+    frame: false,
+    title: "Phaedra",
+    alwaysOnTop: true,
+    // transparent: true,
+    icon: icon,
   });
 
   if (app.isPackaged) {
+    splashWindow.loadFile(path.join(__dirname, "../build/splash.html"));
     mainWindow.loadFile(path.join(__dirname, "../build/index.html"));
   } else {
+    splashWindow.loadFile(path.join(__dirname, "./splash.html"));
     mainWindow.loadURL("http://localhost:3000");
   }
+
+  mainWindow.once("ready-to-show", () => {
+    splashWindow.destroy();
+    mainWindow.show();
+  });
 
   ipcMain.on("minimizeApp", () => {
     mainWindow.minimize();
@@ -68,22 +87,10 @@ app.on("activate", () => {
 });
 
 app.on("browser-window-focus", function () {
-  // globalShortcut.register("CommandOrControl+R", () => {
-  //   console.log("CommandOrControl+R is pressed: Shortcut Disabled");
-  // });
-
-  // globalShortcut.register("F5", () => {
-  //   console.log("F5 is pressed: Shortcut Disabled");
-  // });
-
-  globalShortcut.register("CommandOrControl+W", () => {
-    console.log("CommandOrControl+W is pressed: Shortcut Disabled");
-  });
+  globalShortcut.register("CommandOrControl+W", () => {});
 });
 
 app.on("browser-window-blur", function () {
-  // globalShortcut.unregister("CommandOrControl+R");
-  // globalShortcut.unregister("F5");
   globalShortcut.unregister("CommandOrControl+W");
 });
 

@@ -33,7 +33,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "build:tailwind": "tailwindcss build -i src/css/tailwind.css -o src/css/tailwind.output.css",
+    "build:tailwind": "tailwindcss build -i src/css/tailwind.css -o public/tailwind.css",
     "build:react": "react-scripts build",
     "build:electron": "electron-builder",
     "build:craco": "craco build",

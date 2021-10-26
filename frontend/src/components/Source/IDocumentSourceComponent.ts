@@ -1,8 +1,6 @@
 import { DocumentFile } from "../Notebook/INotebookComponent";
 
-export interface PageDocumentComponentProps {
+export interface DocumentSourceComponent {
   document: DocumentFile;
   pageNumber: number;
 }
-
-export interface PageDocumentComponentState {}

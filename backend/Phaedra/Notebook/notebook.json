@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "phaedra.notebook.json",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "document_path": {
+      "type": "string"
+    },
+    "pages": {
+      "type": "array",
+      "description": "The Pages in the Notebook",
+      "items": {
+        "$ref": "phaedra.page.json"
+      }
+    }
+  },
+  "required": ["id", "name", "pages"]
+}

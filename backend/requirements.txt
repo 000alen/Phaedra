@@ -10,3 +10,4 @@ names-generator
 wikipedia
 openai
 rich
+jsonschema

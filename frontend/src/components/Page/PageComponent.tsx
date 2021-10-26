@@ -3,8 +3,8 @@ import React, { Component, MouseEvent } from "react";
 import { NotebookController } from "../../contexts/NotebookController";
 import { theme } from "../../index";
 import CellComponent from "../Cell/CellComponent";
+import { DocumentSourceComponent } from "../Source/DocumentSourceComponent";
 import { PageComponentProps, PageComponentState } from "./IPageComponent";
-import { PageDocumentComponent } from "./PageDocumentComponent";
 
 export default class PageComponent extends Component<
   PageComponentProps,
@@ -61,7 +61,7 @@ export default class PageComponent extends Component<
         </div>
 
         <div className="m-2">
-          <PageDocumentComponent
+          <DocumentSourceComponent
             document={document!}
             pageNumber={data.document_page_number}
           />

@@ -5,7 +5,6 @@ import uuid
 from typing import BinaryIO, List, Optional, Dict, Union
 
 import names_generator  # type: ignore
-import wikipedia  # type: ignore
 
 from Phaedra.Text import extract_text_from_pdf_to_pages, preprocess_text
 from Phaedra.Language import (
@@ -25,6 +24,7 @@ from Phaedra.Language.Utils import chop
 from Phaedra.Notebook.Page import Page, PageJson
 from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
+from backend.Phaedra.Notebook.Schema import is_valid_notebook
 
 __all__ = ("Notebook",)
 
@@ -186,6 +186,7 @@ class Notebook:
             _json = json.load(open(file_path))
 
         assert type(_json) is dict
+        assert is_valid_notebook(_json)
 
         notebook = cls(
             id=_json["id"],
@@ -229,8 +230,14 @@ class Notebook:
         json: NotebookJson = {}
         json["id"] = self.id
         json["name"] = self.name
-        json["document_path"] = self.document_path
+
+        if self.document_path:
+            json["document_path"] = self.document_path
+
         json["pages"] = [page.json() for page in self.pages]
+
+        assert is_valid_notebook(json)
+
         return json
 
     def insert_page(self, page: Page, index: int):

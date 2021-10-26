@@ -11,7 +11,7 @@
 - [ ] Automate queries and relevant information extraction when generating notebooks
 - [x] Add a reliable source for vocabulary
 
-## Frontend
+## Client
 
 - [ ] Fix history
 - [ ] Add empty Notebook view

@@ -11,7 +11,7 @@
 - [ ] Automate queries and relevant information extraction when generating notebooks
 - [x] Add a reliable source for vocabulary
 
-## Frontend
+## Client
 
 - [ ] Fix history
 - [ ] Add empty Notebook view
@@ -20,6 +20,11 @@
 - [ ] Cache components for better performance
 - [ ] Key bindings
 - [ ] Collaborative editing ([inspiration](https://www.youtube.com/watch?v=Exr0iY_D-vw))
+- [ ] Extract strings to strings.ts
+- [ ] Extract styles
+- [ ] Splash screen
+- [ ] TextSourceComponent
+- [ ] Better DocumentSourceComponent
 - [x] Recent files
 - [x] Pinned files
 - [x] Tabs overflow

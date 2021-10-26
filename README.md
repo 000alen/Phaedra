@@ -10,7 +10,7 @@ Phaedra is currently in a prototype state and is being actively developed. As of
 
 ## Running (developing and testing)
 
-Run the backend locally (or serve it from [Google Colaboratory](https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra_LocalMode.ipynb)):
+Run the backend locally (or serve it from [Google Colaboratory](https://colab.research.google.com/github/000alen/Phaedra/blob/master/Phaedra_LocalMode.ipynb)):
 
 ```console
 foo@bar:~$ cd backend

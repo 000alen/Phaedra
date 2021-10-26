@@ -33,7 +33,7 @@ export default function BackendView({ id }: MainPageViewProps) {
       <CompoundButton
         primary
         secondaryText="Serve Phaedra's backend from Google Colaboratory"
-        href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/backend/Phaedra_LocalMode.ipynb"
+        href="https://colab.research.google.com/github/000alen/Phaedra/blob/master/Phaedra_LocalMode.ipynb"
         target="_blank"
       >
         Create remote backend

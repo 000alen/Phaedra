@@ -4,7 +4,7 @@ import React from "react";
 
 import { IconButton } from "@fluentui/react";
 
-import { CellToolbarProps } from "./ICellToolbarComponent";
+// import { CellToolbarProps } from "./ICellToolbarComponent";
 
 export function CellToolbarComponent() {
   return (

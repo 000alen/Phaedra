@@ -1,14 +1,14 @@
-import React, { Component } from "react";
+import React from "react";
 import { Document, Page as DocumentPage, pdfjs } from "react-pdf";
 
-import { DocumentSourceComponent } from "./IDocumentSourceComponent";
+import { DocumentSourceComponentProps } from "./IDocumentSourceComponent";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 export function DocumentSourceComponent({
   document,
   pageNumber,
-}: DocumentSourceComponent) {
+}: DocumentSourceComponentProps) {
   return (
     <Document file={document} renderMode="svg">
       <DocumentPage pageNumber={pageNumber} renderTextLayer={false} />

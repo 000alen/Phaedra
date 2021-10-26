@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "phaedra",
   "version": "0.1.0",
   "private": true,
   "main": "public/electron.js",

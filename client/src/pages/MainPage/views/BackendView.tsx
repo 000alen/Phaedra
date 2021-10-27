@@ -8,6 +8,7 @@ import {
 } from "@fluentui/react";
 
 import { getApiUrl, setApiUrl } from "../../../API/PhaedraAPI";
+import { strings } from "../../../strings";
 import { MainPageViewProps } from "../IMainPage";
 
 export default function BackendView({ id }: MainPageViewProps) {
@@ -40,7 +41,7 @@ export default function BackendView({ id }: MainPageViewProps) {
       </CompoundButton>
 
       <TextField
-        label="Backend URL"
+        label={strings.backendUrlLabel}
         prefix="http://"
         onChange={handleUrlChange}
         styles={textFieldStyles}
@@ -48,8 +49,8 @@ export default function BackendView({ id }: MainPageViewProps) {
       />
 
       <div className="flex flex-row align-top space-x-2">
-        <PrimaryButton text="Set" onClick={handleSetUrl} />
-        <DefaultButton text="Ping API (beacon)" />
+        <PrimaryButton text={strings.setButtonLabel} onClick={handleSetUrl} />
+        <DefaultButton text={strings.pingApiButtonLabel} />
       </div>
     </div>
   );

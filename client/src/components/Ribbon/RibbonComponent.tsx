@@ -6,6 +6,7 @@ import { Pivot, PivotItem } from "@fluentui/react";
 
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { theme } from "../../index";
+import { strings } from "../../strings";
 import { RibbonProps } from "./IRibbonComponent";
 import EditItems from "./items/EditItems";
 import FileItems from "./items/FileItems";
@@ -24,31 +25,30 @@ export function RibbonComponent({ ribbonKey }: RibbonProps) {
   return (
     <div className="ribbon" style={ribbonStyle}>
       <Pivot
-        aria-label="Ribbon"
         selectedKey={ribbonKey}
         onLinkClick={notebookPageController.setRibbonKey}
       >
-        <PivotItem headerText="File" itemKey="file">
+        <PivotItem headerText={strings.ribbonFileHeader} itemKey="file">
           <FileItems />
         </PivotItem>
 
-        <PivotItem headerText="Home" itemKey="home">
+        <PivotItem headerText={strings.ribbonHomeHeader} itemKey="home">
           <HomeItems />
         </PivotItem>
 
-        <PivotItem headerText="Edit" itemKey="edit">
+        <PivotItem headerText={strings.ribbonEditHeader} itemKey="edit">
           <EditItems />
         </PivotItem>
 
-        <PivotItem headerText="Insert" itemKey="insert">
+        <PivotItem headerText={strings.ribbonInsertHeader} itemKey="insert">
           <InsertItems />
         </PivotItem>
 
-        <PivotItem headerText="Review" itemKey="review">
+        <PivotItem headerText={strings.ribbonReviewHeader} itemKey="review">
           <ReviewItems />
         </PivotItem>
 
-        <PivotItem headerText="View" itemKey="view">
+        <PivotItem headerText={strings.ribbonViewHeader} itemKey="view">
           <ViewItems />
         </PivotItem>
       </Pivot>

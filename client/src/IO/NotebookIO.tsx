@@ -1,3 +1,5 @@
+// TODO: refactor
+
 import {
   addRecent,
   base64,
@@ -9,12 +11,13 @@ import {
 import { OpenDialogOptions } from "../API/IElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
 import { INotebook } from "../manipulation/INotebookManipulation";
+import { strings } from "../strings";
 import { INotebookIO } from "./INotebookIO";
 
 export function openPdf(): Promise<INotebookIO> {
   const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["pdf"] }],
+    filters: [{ name: strings.notebooksFilterName, extensions: ["pdf"] }],
   };
 
   return new Promise((resolve, reject) => {
@@ -37,7 +40,7 @@ export function openPdf(): Promise<INotebookIO> {
 export function openJson(): Promise<INotebookIO> {
   const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["json"] }],
+    filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
   };
 
   return new Promise((resolve, reject) => {
@@ -60,7 +63,7 @@ export function openJson(): Promise<INotebookIO> {
 export function openText(): Promise<INotebookIO> {
   const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["txt"] }],
+    filters: [{ name: strings.notebooksFilterName, extensions: ["txt"] }],
   };
 
   return new Promise((resolve, reject) => {
@@ -80,7 +83,9 @@ export function openText(): Promise<INotebookIO> {
 export function openFile(): Promise<INotebookIO> {
   const openDialogOptions: OpenDialogOptions = {
     properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["pdf", "json", "txt"] }],
+    filters: [
+      { name: strings.notebooksFilterName, extensions: ["pdf", "json", "txt"] },
+    ],
   };
 
   const handleOpenPdf = (path: string) => {
@@ -145,7 +150,7 @@ export function saveNotebook(
   notebookPath: string | undefined
 ): Promise<string> {
   const saveDialogOptions = {
-    filters: [{ name: "Notebooks", extensions: ["json"] }],
+    filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
   };
 
   return new Promise((resolve, reject) => {

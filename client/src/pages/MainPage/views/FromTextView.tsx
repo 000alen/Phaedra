@@ -5,6 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { openText } from "../../../IO/NotebookIO";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { strings } from "../../../strings";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
@@ -40,8 +41,8 @@ export default function FromTextView({ id }: MainPageViewProps) {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={openIcon}
-          title="Open text file"
-          subtitle="Create a Notebook from a text file"
+          title={strings.openTextFileButtonLabel}
+          subtitle={strings.openTextFileButtonDescription}
           onClick={handleOpen}
         />
       </div>

@@ -15,6 +15,7 @@ import {
   createTask,
   removeTask,
 } from "../manipulation/TasksManipulation";
+import { strings } from "../strings";
 import { EmptyPageProps } from "./IEmptyPage";
 import NotebookPage from "./NotebookPage/NotebookPage";
 
@@ -36,7 +37,7 @@ export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
 
     const taskId = uuidv4();
     appController.tasksDo(addTask, {
-      task: createTask({ id: id, name: "Opening file" }),
+      task: createTask({ id: id, name: strings.openingFileTaskLabel }),
     });
     setDialogOpen(true);
 
@@ -74,15 +75,15 @@ export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={openIcon}
-          title="Open file"
-          subtitle="Open a PDF document or a JSON notebook"
+          title={strings.openFileButtonLabel}
+          subtitle={strings.openFileButtonDescription}
           onClick={handleOpen}
         />
 
         <CardComponent
           iconProps={newIcon}
-          title="Create new file"
-          subtitle="Create a JSON notebook"
+          title={strings.createNotebookButtonLabel}
+          subtitle={strings.createNotebookButtonDescription}
           onClick={handleNew}
         />
       </div>

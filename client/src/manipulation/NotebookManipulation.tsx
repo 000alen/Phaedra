@@ -1,3 +1,5 @@
+// TODO: refactor and add schema validation
+
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -12,6 +14,7 @@ import {
   addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
   addWikipediaSummaryCell as _addWikipediaSummaryCell,
 } from "../API/PhaedraAPI";
+import { strings } from "../strings";
 import {
   ICell,
   INotebook,
@@ -26,7 +29,7 @@ export function createNotebook({
   pages,
 }: Partial<INotebook>): INotebook {
   if (id === undefined) id = uuidv4();
-  if (name === undefined) name = "Untitled";
+  if (name === undefined) name = strings.newNotebookTitle;
   if (document_path === undefined) document_path = undefined;
   if (pages === undefined)
     pages = [
@@ -60,7 +63,7 @@ export function createPage({ id, data, cells }: Partial<IPage>): IPage {
 export function createCell({ id, data, content }: Partial<ICell>): ICell {
   if (id === undefined) id = uuidv4();
   if (data === undefined) data = {};
-  if (content === undefined) content = "";
+  if (content === undefined) content = strings.newCellContent;
 
   return {
     id: id,

@@ -10,7 +10,7 @@ export default function EditItems() {
 
   const editItems = [
     {
-      key: "Seamless",
+      key: "seamless",
       iconProps: { iconName: "AlignLeft" },
       onClick: () => handleSeamless(notebookPageController),
     },

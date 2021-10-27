@@ -5,6 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { createNotebook } from "../../../manipulation/NotebookManipulation";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { strings } from "../../../strings";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
@@ -31,8 +32,8 @@ export default function EmptyView({ id }: MainPageViewProps) {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={newIcon}
-          title="Create Notebook"
-          subtitle="Create a JSON Notebook"
+          title={strings.createNotebookButtonLabel}
+          subtitle={strings.createNotebookButtonDescription}
           onClick={handleNew}
         />
       </div>

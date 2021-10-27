@@ -141,7 +141,7 @@ export default class NotebookComponent extends Component<
 
     const taskId = uuidv4();
     appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: "Loading document" }),
+      task: createTask({ id: taskId, name: strings.loadingDocumentTaskLabel }),
     });
 
     readFileSync(this.state.documentPath!)
@@ -173,7 +173,7 @@ export default class NotebookComponent extends Component<
 
     const taskId = uuidv4();
     appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: "Loading document" }),
+      task: createTask({ id: taskId, name: strings.savingNotebookTaskLabel }),
     });
 
     saveNotebook(this.state.notebook, this.state.notebookPath)
@@ -189,7 +189,7 @@ export default class NotebookComponent extends Component<
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
           message: createMessage({
-            text: "Could not save file",
+            text: strings.savingNotebookTaskError,
             type: MessageBarType.error,
           }),
         });

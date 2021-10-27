@@ -7,13 +7,14 @@ import { getRecent, readFileSync } from "../../../API/ElectronAPI";
 import { StoreFile } from "../../../API/IElectronAPI";
 import { AppController } from "../../../contexts/AppController";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { strings } from "../../../strings";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
 const columns = [
   {
     key: "name",
-    name: "Name",
+    name: strings.nameButtonLabel,
     fieldName: "name",
     minWidth: 100,
     maxWidth: 200,
@@ -21,7 +22,7 @@ const columns = [
   },
   {
     key: "path",
-    name: "Path",
+    name: strings.pathButtonLabel,
     fieldName: "path",
     minWidth: 100,
     maxWidth: 200,
@@ -29,7 +30,7 @@ const columns = [
   },
   {
     key: "lastOpened",
-    name: "Last Opened",
+    name: strings.lastOpenedButtonLabel,
     fieldName: "lastOpened",
     minWidth: 100,
     maxWidth: 200,

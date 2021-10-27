@@ -4,6 +4,7 @@ import React, { Component, FormEvent } from "react";
 
 import { TextField } from "@fluentui/react";
 
+import { strings } from "../strings";
 import {
   CommandBoxComponentProps,
   CommandBoxComponentState,
@@ -43,7 +44,7 @@ export default class CommandBoxComponent extends Component<
     return (
       <div className="commandBox w-96">
         <TextField
-          placeholder="Command"
+          placeholder={strings.commandBoxPlaceholder}
           value={this.state.command}
           onChange={this.handleChange}
         />

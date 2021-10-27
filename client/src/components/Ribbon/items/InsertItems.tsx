@@ -9,6 +9,7 @@ import {
   handleWikipediaSummary,
 } from "../../../actions/InsertActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { strings } from "../../../strings";
 
 export default function InsertItems() {
   const notebookPageController = React.useContext(NotebookPageController);
@@ -16,29 +17,29 @@ export default function InsertItems() {
   const insertItems = [
     {
       key: "entities",
-      text: "Entities",
+      text: strings.entitiesButtonLabel,
       iconProps: { iconName: "People" },
       onClick: () => handleEntities(notebookPageController),
     },
     {
       key: "wikipedia",
-      text: "Wikipedia",
+      text: strings.wikipediaButtonLabel,
       iconProps: { iconName: "Articles" },
       subMenuProps: {
         items: [
           {
             key: "wikipediaSummary",
-            text: "Wikipedia Summary",
+            text: strings.wikipediaSummaryButtonLabel,
             onClick: () => handleWikipediaSummary(notebookPageController),
           },
           {
             key: "wikipediaSuggestions",
-            text: "Wikipedia Suggestions",
+            text: strings.wikipediaSuggestionsButtonLabel,
             onClick: () => handleWikipediaSuggestions(notebookPageController),
           },
           {
             key: "wikipediaImage",
-            text: "Wikipedia Image",
+            text: strings.wikipediaImageButtonLabel,
             onClick: () => handleWikipediaImage(notebookPageController),
           },
         ],

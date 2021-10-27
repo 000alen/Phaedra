@@ -16,6 +16,7 @@ import {
   handleUndo,
 } from "../../../actions/HomeActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { strings } from "../../../strings";
 
 export default function HomeItems() {
   const notebookPageController = React.useContext(NotebookPageController);
@@ -58,13 +59,13 @@ export default function HomeItems() {
         items: [
           {
             key: "undo",
-            text: "Undo",
+            text: strings.undoButtonLabel,
             iconProps: { iconName: "Undo" },
             onClick: () => handleUndo(notebookPageController),
           },
           {
             key: "redo",
-            text: "Redo",
+            text: strings.redoButtonLabel,
             iconProps: { iconName: "Redo" },
             onClick: () => handleRedo(notebookPageController),
           },
@@ -78,19 +79,19 @@ export default function HomeItems() {
         items: [
           {
             key: "cut",
-            text: "Cut",
+            text: strings.cutButtonLabel,
             iconProps: { iconName: "Cut" },
             onClick: () => handleCut(notebookPageController),
           },
           {
             key: "copy",
-            text: "Copy",
+            text: strings.copyButtonLabel,
             iconProps: { iconName: "Copy" },
             onClick: () => handleCopy(notebookPageController),
           },
           {
             key: "paste",
-            text: "Paste",
+            text: strings.pasteButtonLabel,
             iconProps: { iconName: "Paste" },
             onClick: () => handlePaste(notebookPageController),
           },

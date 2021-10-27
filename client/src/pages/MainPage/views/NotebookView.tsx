@@ -5,6 +5,7 @@ import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { openJson } from "../../../IO/NotebookIO";
 import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { strings } from "../../../strings";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
@@ -47,8 +48,8 @@ export default function NotebookView({ id }: MainPageViewProps) {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={openIcon}
-          title="Open Notebook"
-          subtitle="Open a JSON Notebook"
+          title={strings.openNotebookButtonLabel}
+          subtitle={strings.openNotebookButtonDescription}
           onClick={handleOpen}
         />
       </div>

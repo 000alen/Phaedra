@@ -26,19 +26,3 @@ export function removeMessage(
 ): IMessage[] {
   return messages.filter((message) => message.id !== id);
 }
-
-export function populateMessages(messages: IMessage[], _do: Function) {
-  return messages.map((message) => (
-    <MessageBar
-      key={message.id}
-      id={message.id}
-      isMultiline={false}
-      messageBarType={message.type}
-      onDismiss={() => {
-        _do(removeMessage, { id: message.id });
-      }}
-    >
-      {message.text}
-    </MessageBar>
-  ));
-}

@@ -9,30 +9,31 @@ import TabsComponent from "./components/Tabs/TabsComponent";
 import TopBarComponent from "./components/TopBarComponent";
 import { AppController } from "./contexts/AppController";
 import { AppProps, AppState } from "./IApp";
+import { EmptyPage } from "./pages/EmptyPage";
+import { MainPage } from "./pages/MainPage/MainPage";
+import { AppShortcuts } from "./shortcuts/AppShortcuts";
 import {
   IClipboard,
   IClipboardCommand,
   IClipboardManipulation,
-} from "./manipulation/IClipboardManipulation";
+} from "./structures/clipboard/IClipboardManipulation";
 import {
   ITab,
   ITabsCommand,
   ITabsManipulation,
-} from "./manipulation/ITabsManipulation";
+} from "./structures/tabs/ITabsManipulation";
+import { createTab } from "./structures/tabs/TabsConstructors";
+import { getTabContent } from "./structures/tabs/TabsQueries";
 import {
   ITask,
   ITasksCommand,
   ITasksManipulation,
-} from "./manipulation/ITasksManipulation";
+} from "./structures/tasks/ITasksManipulation";
 import {
   IWidget,
   IWidgetsCommand,
   IWidgetsManipulation,
-} from "./manipulation/IWidgetsManipulation";
-import { createTab, getTabContent } from "./manipulation/TabsManipulation";
-import { EmptyPage } from "./pages/EmptyPage";
-import { MainPage } from "./pages/MainPage/MainPage";
-import { AppShortcuts } from "./shortcuts/AppShortcuts";
+} from "./structures/widgets/IWidgetsManipulation";
 
 export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -183,7 +184,7 @@ export default class App extends Component<AppProps, AppState> {
     if (activeTab === undefined) {
       content = <MainPage id={uuidv4()} />;
     } else {
-      content = getTabContent(tabs, { id: activeTab });
+      content = getTabContent(tabs, activeTab);
     }
 
     return (

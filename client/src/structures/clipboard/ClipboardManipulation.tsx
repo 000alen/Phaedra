@@ -1,17 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 
+import { ICell, IPage } from "../notebook/INotebookManipulation";
 import { IClipboard, IClipboardElement } from "./IClipboardManipulation";
-import { ICell, IPage } from "./INotebookManipulation";
 
 export function clipboardPush(
   clipboard: IClipboard,
   { element }: { element: IClipboardElement }
 ): IClipboard {
   return [...clipboard, element];
-}
-
-export function clipboardTop(clipboard: IClipboard): IClipboardElement {
-  return clipboard[clipboard.length - 1];
 }
 
 export function clipboardPop(clipboard: IClipboard): IClipboard {

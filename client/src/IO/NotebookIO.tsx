@@ -8,26 +8,73 @@ import {
 } from "../API/ElectronAPI";
 import { OpenDialogOptions } from "../API/IElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
-import { INotebook } from "../manipulation/INotebookManipulation";
+import { strings } from "../strings";
+import { INotebook } from "../structures/notebook/INotebookManipulation";
 import { INotebookIO } from "./INotebookIO";
 
-export function openPdf(): Promise<INotebookIO> {
-  const openDialogOptions: OpenDialogOptions = {
-    properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["pdf"] }],
-  };
+const openPdfDialogOptions: OpenDialogOptions = {
+  properties: ["openFile"],
+  filters: [{ name: strings.notebooksFilterName, extensions: ["pdf"] }],
+};
 
+const openJsonDialogOptions: OpenDialogOptions = {
+  properties: ["openFile"],
+  filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
+};
+
+const openTextDialogOptions: OpenDialogOptions = {
+  properties: ["openFile"],
+  filters: [{ name: strings.notebooksFilterName, extensions: ["txt"] }],
+};
+
+const openFileDialogOptions: OpenDialogOptions = {
+  properties: ["openFile"],
+  filters: [
+    { name: strings.notebooksFilterName, extensions: ["pdf", "json", "txt"] },
+  ],
+};
+
+export function loadPdf(path: string): Promise<INotebookIO> {
   return new Promise((resolve, reject) => {
-    showOpenDialog(openDialogOptions).then((results) => {
+    readFileSync(path).then((content) => {
+      base64(content as Uint8Array).then((base64) => {
+        notebookFromPdf(path, base64).then((notebook) => {
+          resolve({ notebook: notebook, notebookPath: undefined });
+        });
+      });
+    });
+  });
+}
+
+export function loadJson(path: string): Promise<INotebookIO> {
+  return new Promise((resolve, reject) => {
+    readFileSync(path, "utf-8").then((content) => {
+      let notebook = JSON.parse(content as string);
+
+      addRecent(path, notebook.name);
+
+      resolve({ notebook: notebook, notebookPath: path });
+    });
+  });
+}
+
+export function loadText(path: string): Promise<INotebookIO> {
+  return new Promise((resolve, reject) => {
+    readFileSync(path, "utf-8").then((text) => {
+      notebookFromText(text as string).then((notebook) => {
+        resolve({ notebook: notebook, notebookPath: undefined });
+      });
+    });
+  });
+}
+
+export function openPdf(): Promise<INotebookIO> {
+  return new Promise((resolve, reject) => {
+    showOpenDialog(openPdfDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
-
-        readFileSync(path).then((content) => {
-          base64(content as Uint8Array).then((base64) => {
-            notebookFromPdf(path, base64).then((notebook) => {
-              resolve({ notebook: notebook, notebookPath: undefined });
-            });
-          });
+        loadPdf(path).then(({ notebook, notebookPath }) => {
+          resolve({ notebook, notebookPath });
         });
       }
     });
@@ -35,22 +82,12 @@ export function openPdf(): Promise<INotebookIO> {
 }
 
 export function openJson(): Promise<INotebookIO> {
-  const openDialogOptions: OpenDialogOptions = {
-    properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["json"] }],
-  };
-
   return new Promise((resolve, reject) => {
-    showOpenDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openJsonDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
-
-        readFileSync(path, "utf-8").then((_notebook) => {
-          let notebook = JSON.parse(_notebook as string);
-
-          addRecent(path, notebook.name);
-
-          resolve({ notebook: notebook, notebookPath: path });
+        loadJson(path).then(({ notebook, notebookPath }) => {
+          resolve({ notebook, notebookPath });
         });
       }
     });
@@ -58,19 +95,12 @@ export function openJson(): Promise<INotebookIO> {
 }
 
 export function openText(): Promise<INotebookIO> {
-  const openDialogOptions: OpenDialogOptions = {
-    properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["txt"] }],
-  };
-
   return new Promise((resolve, reject) => {
-    showOpenDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openTextDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
-        readFileSync(path, "utf-8").then((text) => {
-          notebookFromText(text as string).then((notebook) => {
-            resolve({ notebook: notebook, notebookPath: undefined });
-          });
+        loadText(path).then(({ notebook, notebookPath }) => {
+          resolve({ notebook, notebookPath });
         });
       }
     });
@@ -78,63 +108,31 @@ export function openText(): Promise<INotebookIO> {
 }
 
 export function openFile(): Promise<INotebookIO> {
-  const openDialogOptions: OpenDialogOptions = {
-    properties: ["openFile"],
-    filters: [{ name: "Notebooks", extensions: ["pdf", "json", "txt"] }],
-  };
-
-  const handleOpenPdf = (path: string) => {
-    return new Promise((resolve, reject) => {
-      readFileSync(path).then((content) => {
-        base64(content as Uint8Array).then((base64) => {
-          notebookFromPdf(path, base64).then((notebook) => {
-            resolve({ notebook: notebook, notebookPath: undefined });
-          });
-        });
-      });
-    });
-  };
-
-  const handleOpenJson = (path: string) => {
-    return new Promise((resolve, reject) => {
-      readFileSync(path, "utf-8").then((_notebook) => {
-        let notebook = JSON.parse(_notebook as string);
-
-        addRecent(path, notebook.name);
-
-        resolve({ notebook: notebook, notebookPath: path });
-      });
-    });
-  };
-
-  const handleOpenText = (path: string) => {
-    return new Promise((resolve, reject) => {
-      readFileSync(path, "utf-8").then((text) => {
-        notebookFromText(text as string).then((notebook) => {
-          resolve({ notebook: notebook, notebookPath: undefined });
-        });
-      });
-    });
-  };
-
   return new Promise((resolve, reject) => {
-    showOpenDialog(openDialogOptions).then((results) => {
+    showOpenDialog(openFileDialogOptions).then((results) => {
       if (!results.canceled) {
         const path = results.filePaths[0];
         const extension = path.split(".").pop()!.toLowerCase();
 
-        let handler;
-        if (extension === "pdf") {
-          handler = handleOpenPdf(path);
-        } else if (extension === "json") {
-          handler = handleOpenJson(path);
-        } else {
-          handler = handleOpenText(path);
+        switch (extension) {
+          case "pdf":
+            loadPdf(path).then(({ notebook, notebookPath }) => {
+              resolve({ notebook, notebookPath });
+            });
+            break;
+          case "json":
+            loadJson(path).then(({ notebook, notebookPath }) => {
+              resolve({ notebook, notebookPath });
+            });
+            break;
+          case "txt":
+            loadText(path).then(({ notebook, notebookPath }) => {
+              resolve({ notebook, notebookPath });
+            });
+            break;
+          default:
+            throw new Error("Unreachable");
         }
-
-        handler.then((results) => {
-          resolve(results as INotebookIO);
-        });
       }
     });
   });
@@ -145,7 +143,7 @@ export function saveNotebook(
   notebookPath: string | undefined
 ): Promise<string> {
   const saveDialogOptions = {
-    filters: [{ name: "Notebooks", extensions: ["json"] }],
+    filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
   };
 
   return new Promise((resolve, reject) => {

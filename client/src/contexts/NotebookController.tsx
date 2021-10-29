@@ -1,9 +1,9 @@
 import React from "react";
 
 import {
-  INotebookCommand,
   INotebookManipulation,
-} from "../manipulation/INotebookManipulation";
+  INotebookManipulationArguments,
+} from "../structures/notebook/INotebookManipulation";
 import { INotebookController } from "./INotebookController";
 
 export const NotebookController = React.createContext<INotebookController>({
@@ -12,7 +12,14 @@ export const NotebookController = React.createContext<INotebookController>({
   toggleEditing: () => {},
   undo: () => {},
   redo: () => {},
-  do: (action: INotebookManipulation, args: INotebookCommand) => {},
+  do: (
+    action: INotebookManipulation,
+    args: INotebookManipulationArguments
+  ) => {},
+  doSync: (
+    action: INotebookManipulation,
+    args: INotebookManipulationArguments
+  ) => {},
   getNotebookPageController: () => undefined,
   getActiveCell: () => undefined,
   getActivePage: () => undefined,

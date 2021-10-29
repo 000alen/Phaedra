@@ -20,11 +20,11 @@
 - [ ] Cache components for better performance
 - [ ] Key bindings
 - [ ] Collaborative editing ([inspiration](https://www.youtube.com/watch?v=Exr0iY_D-vw))
-- [ ] Extract strings to strings.ts
 - [ ] Extract styles
-- [ ] Splash screen
 - [ ] TextSourceComponent
 - [ ] Better DocumentSourceComponent
+- [x] Extract strings to strings.ts
+- [x] Splash screen
 - [x] Recent files
 - [x] Pinned files
 - [x] Tabs overflow

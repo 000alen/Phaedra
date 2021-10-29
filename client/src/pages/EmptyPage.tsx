@@ -8,13 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 import CardComponent from "../components/CardComponent";
 import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
-import { createNotebook } from "../manipulation/NotebookManipulation";
-import { setTabContent } from "../manipulation/TabsManipulation";
-import {
-  addTask,
-  createTask,
-  removeTask,
-} from "../manipulation/TasksManipulation";
+import { strings } from "../strings";
+import { createNotebook } from "../structures/notebook/NotebookConstructors";
+import { setTabContent } from "../structures/tabs/TabsManipulation";
+import { createTask } from "../structures/tasks/TasksConstructors";
+import { addTask, removeTask } from "../structures/tasks/TasksManipulation";
 import { EmptyPageProps } from "./IEmptyPage";
 import NotebookPage from "./NotebookPage/NotebookPage";
 
@@ -36,7 +34,7 @@ export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
 
     const taskId = uuidv4();
     appController.tasksDo(addTask, {
-      task: createTask({ id: id, name: "Opening file" }),
+      task: createTask({ id: id, name: strings.openingFileTaskLabel }),
     });
     setDialogOpen(true);
 
@@ -74,15 +72,15 @@ export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={openIcon}
-          title="Open file"
-          subtitle="Open a PDF document or a JSON notebook"
+          title={strings.openFileButtonLabel}
+          subtitle={strings.openFileButtonDescription}
           onClick={handleOpen}
         />
 
         <CardComponent
           iconProps={newIcon}
-          title="Create new file"
-          subtitle="Create a JSON notebook"
+          title={strings.createNotebookButtonLabel}
+          subtitle={strings.createNotebookButtonDescription}
           onClick={handleNew}
         />
       </div>

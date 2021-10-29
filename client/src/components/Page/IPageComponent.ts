@@ -1,4 +1,4 @@
-import { ICell } from "../../manipulation/INotebookManipulation";
+import { ICell } from "../../structures/notebook/INotebookManipulation";
 import { DocumentFile } from "../Notebook/INotebookComponent";
 
 export interface PageComponentProps {

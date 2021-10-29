@@ -4,7 +4,9 @@ import { v4 as uuidv4 } from "uuid";
 import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
 import { openPdf } from "../../../IO/NotebookIO";
-import { addTab, createTab } from "../../../manipulation/TabsManipulation";
+import { strings } from "../../../strings";
+import { createTab } from "../../../structures/tabs/TabsConstructors";
+import { addTab } from "../../../structures/tabs/TabsManipulation";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 
@@ -40,8 +42,8 @@ export default function FromPdfView({ id }: MainPageViewProps) {
       <div className="flex flex-row space-x-1">
         <CardComponent
           iconProps={openIcon}
-          title="Open PDF file"
-          subtitle="Create a Notebook from a PDF file"
+          title={strings.openPdfFileButtonLabel}
+          subtitle={strings.openPdfFileButtonDescription}
           onClick={handleOpen}
         />
       </div>

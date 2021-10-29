@@ -1,36 +1,38 @@
 import { MessageBarType } from "@fluentui/react";
 
 import { INotebookPageController } from "../contexts/INotebookPageController";
+import { strings } from "../strings";
 import {
   clipboardPush,
-  clipboardTop,
   makeCellUnique,
   makePageUnique,
-} from "../manipulation/ClipboardManipulation";
-import { ICell, IPage } from "../manipulation/INotebookManipulation";
+} from "../structures/clipboard/ClipboardManipulation";
+import { clipboardTop } from "../structures/clipboard/ClipboardQueries";
+import { createMessage } from "../structures/messages/MessagesConstructors";
+import { addMessage } from "../structures/messages/MessagesManipulation";
+import { ICell, IPage } from "../structures/notebook/INotebookManipulation";
 import {
-  addMessage,
-  createMessage,
-} from "../manipulation/MessagesManipulation";
-import {
-  addCell,
-  addGenerateCell,
-  addPage,
-  addQuestionCell,
   createCell,
   createPage,
+} from "../structures/notebook/NotebookConstructors";
+import {
+  addCellSync,
+  addGenerateCell,
+  addPageSync,
+  addQuestionCell,
+  insertCellSync,
+  insertPageSync,
+  removeCellSync,
+  removePageSync,
+} from "../structures/notebook/NotebookManipulation";
+import {
   getCell,
   getPage,
   indexCell,
   indexPage,
-  insertCell,
-  insertPage,
   isCell,
   isPage,
-  removeCell,
-  removePage,
-} from "../manipulation/NotebookManipulation";
-import { strings } from "../strings";
+} from "../structures/notebook/NotebookQueries";
 
 export function handleSave(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
@@ -46,15 +48,13 @@ export function handleInsertPage(
   const activePage = notebookController.getActivePage();
 
   if (activePage) {
-    const activePageIndex = indexPage(notebook, {
-      pageId: activePage,
-    });
-    notebookController.do(insertPage, {
+    const activePageIndex = indexPage(notebook, activePage);
+    notebookController.doSync(insertPageSync, {
       page: createPage({}),
       index: activePageIndex + 1,
     });
   } else {
-    notebookController.do(addPage, {
+    notebookController.doSync(addPageSync, {
       page: createPage({}),
     });
   }
@@ -69,17 +69,14 @@ export function handleInsertCell(
   const activePage = notebookController.getActivePage()!;
 
   if (activeCell) {
-    const activeCellIndex = indexCell(notebook, {
-      pageId: activePage,
-      cellId: activeCell,
-    });
-    notebookController.do(insertCell, {
+    const activeCellIndex = indexCell(notebook, activePage, activeCell);
+    notebookController.doSync(insertCellSync, {
       pageId: activePage,
       cell: createCell({}),
       index: activeCellIndex + 1,
     });
   } else if (activePage) {
-    notebookController.do(addCell, {
+    notebookController.doSync(addCellSync, {
       pageId: activePage,
       cell: createCell({}),
     });
@@ -99,12 +96,12 @@ export function handleDelete(notebookPageController: INotebookPageController) {
   const activePage = notebookController.getActivePage()!;
 
   if (activeCell) {
-    notebookController.do(removeCell, {
+    notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
   } else if (activePage) {
-    notebookController.do(removePage, {
+    notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
   } else {
@@ -137,21 +134,16 @@ export function handleCut(notebookPageController: INotebookPageController) {
   const activePage = notebookController.getActivePage()!;
 
   if (activeCell) {
-    const cell = getCell(notebook, {
-      pageId: activePage,
-      cellId: activeCell,
-    });
+    const cell = getCell(notebook, activePage, activeCell);
     appController.clipboardDo(clipboardPush, { element: cell! });
-    notebookController.do(removeCell, {
+    notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
   } else if (activePage) {
-    const page = getPage(notebook, {
-      pageId: activePage,
-    });
+    const page = getPage(notebook, activePage);
     appController.clipboardDo(clipboardPush, { element: page! });
-    notebookController.do(removePage, {
+    notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
   } else {
@@ -172,15 +164,10 @@ export function handleCopy(notebookPageController: INotebookPageController) {
   const activePage = notebookController.getActivePage()!;
 
   if (activeCell) {
-    const cell = getCell(notebook, {
-      pageId: activePage,
-      cellId: activeCell,
-    });
+    const cell = getCell(notebook, activePage, activeCell);
     appController.clipboardDo(clipboardPush, { element: cell! });
   } else if (activePage) {
-    const page = getPage(notebook, {
-      pageId: activePage,
-    });
+    const page = getPage(notebook, activePage);
     appController.clipboardDo(clipboardPush, { element: page! });
   } else {
     notebookPageController.messagesDo(addMessage, {
@@ -203,18 +190,14 @@ export function handlePaste(notebookPageController: INotebookPageController) {
   if (isCell(top)) {
     const cell = makeCellUnique(top as ICell);
     if (activeCell) {
-      const index =
-        indexCell(notebook, {
-          pageId: activePage,
-          cellId: activeCell,
-        }) + 1;
-      notebookController.do(insertCell, {
+      const index = indexCell(notebook, activePage, activeCell) + 1;
+      notebookController.doSync(insertCellSync, {
         pageId: activePage,
         cell: cell,
         index,
       });
     } else if (activePage) {
-      notebookController.do(addCell, {
+      notebookController.doSync(addCellSync, {
         pageId: activePage,
         cell: cell,
       });
@@ -229,11 +212,8 @@ export function handlePaste(notebookPageController: INotebookPageController) {
   } else if (isPage(top)) {
     const page = makePageUnique(top as IPage);
     if (activePage) {
-      const index =
-        indexPage(notebook, {
-          pageId: activePage,
-        }) + 1;
-      notebookController.do(insertPage, {
+      const index = indexPage(notebook, activePage) + 1;
+      notebookController.doSync(insertPageSync, {
         page: page,
         index,
       });

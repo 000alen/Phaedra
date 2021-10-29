@@ -28,8 +28,7 @@ function createWindow() {
     height: 400,
     frame: false,
     title: "Phaedra",
-    alwaysOnTop: true,
-    // transparent: true,
+    // alwaysOnTop: true,
     icon: icon,
   });
 

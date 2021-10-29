@@ -8,6 +8,7 @@ import {
   handleSynonym,
 } from "../../../actions/ReviewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { strings } from "../../../strings";
 
 export default function ReviewItems() {
   const notebookPageController = React.useContext(NotebookPageController);
@@ -15,23 +16,23 @@ export default function ReviewItems() {
   const reviewItems = [
     {
       key: "dictionary",
-      text: "Dictionary",
+      text: strings.dictionaryButtonLabel,
       iconProps: { iconName: "Dictionary" },
       subMenuProps: {
         items: [
           {
             key: "meaning",
-            text: "Meaning",
+            text: strings.meaningButtonLabel,
             onClick: () => handleMeaning(notebookPageController),
           },
           {
             key: "synonyms",
-            text: "Synonyms",
+            text: strings.synonymsButtonLabel,
             onClick: () => handleSynonym(notebookPageController),
           },
           {
             key: "antonyms",
-            text: "Antonyms",
+            text: strings.antonymsButtonLabel,
             onClick: () => handleAntonym(notebookPageController),
           },
         ],

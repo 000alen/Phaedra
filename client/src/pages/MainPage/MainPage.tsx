@@ -7,6 +7,7 @@ import { INavLink, Nav } from "@fluentui/react";
 
 import { AppController } from "../../contexts/AppController";
 import { MainPageShortcuts } from "../../shortcuts/MainPageShortcuts";
+import { strings } from "../../strings";
 import { MainPageProps, MainPageState } from "./IMainPage";
 import BackendView from "./views/BackendView";
 import EmptyView from "./views/EmptyView";
@@ -18,27 +19,31 @@ import RecentView from "./views/RecentView";
 
 const navLinkGroups = [
   {
-    name: "Home",
+    name: strings.navigationHomeGroupTitle,
     links: [
-      { name: "Recent", key: "recent", url: "#" },
-      { name: "Pinned", key: "pinned", url: "#" },
+      { name: strings.navigationRecentItemTitle, key: "recent", url: "#" },
+      { name: strings.navigationPinnedItemTitle, key: "pinned", url: "#" },
     ],
   },
   {
-    name: "New",
+    name: strings.navigationNewGroupTitle,
     links: [
-      { name: "Empty", key: "empty", url: "#" },
-      { name: "From PDF", key: "from_pdf", url: "#" },
-      { name: "From text", key: "from_text", url: "#" },
+      { name: strings.navigationEmptyItemTitle, key: "empty", url: "#" },
+      { name: strings.navigationFromPdfItemTitle, key: "from_pdf", url: "#" },
+      { name: strings.navigationFromTextItemTitle, key: "from_text", url: "#" },
     ],
   },
   {
-    name: "Open",
-    links: [{ name: "Notebook", key: "notebook", url: "#" }],
+    name: strings.navigationOpenGroupTitle,
+    links: [
+      { name: strings.navigationNotebookItemTitle, key: "notebook", url: "#" },
+    ],
   },
   {
-    name: "Settings",
-    links: [{ name: "Connect to a backend", key: "backend", url: "#" }],
+    name: strings.navigationSettingsGroupTitle,
+    links: [
+      { name: strings.navigationBackendItemTitle, key: "backend", url: "#" },
+    ],
   },
 ];
 
@@ -100,7 +105,6 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
       <div className="mainPage">
         <div className="mainPageSideBar">
           <Nav
-            ariaLabel="Nav example with custom group headers"
             groups={navLinkGroups}
             onLinkClick={this.handleClick}
             selectedKey={selectedKey}

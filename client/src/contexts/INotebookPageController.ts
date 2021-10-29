@@ -6,7 +6,7 @@ import CommandBoxComponent from "../components/CommandBoxComponent";
 import {
   IMessagesCommand,
   IMessagesManipulation,
-} from "../manipulation/IMessagesManipulation";
+} from "../structures/messages/IMessagesManipulation";
 import { IAppController } from "./IAppController";
 import { INotebookController } from "./INotebookController";
 

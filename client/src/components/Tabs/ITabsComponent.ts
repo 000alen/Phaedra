@@ -1,4 +1,4 @@
-import { ITab } from "../../manipulation/ITabsManipulation";
+import { ITab } from "../../structures/tabs/ITabsManipulation";
 
 export interface TabsComponentProps {
   tabs: ITab[];

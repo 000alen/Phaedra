@@ -3,7 +3,14 @@ import "../../css/pages/NotebookPage.css";
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
-import { PivotItem } from "@fluentui/react";
+import {
+  IconButton,
+  IOverflowSetItemProps,
+  Label,
+  MessageBar,
+  OverflowSet,
+  PivotItem,
+} from "@fluentui/react";
 
 import CommandBoxComponent from "../../components/CommandBoxComponent";
 import NotebookComponent from "../../components/Notebook/NotebookComponent";
@@ -12,14 +19,16 @@ import { AppController } from "../../contexts/AppController";
 import { IAppController } from "../../contexts/IAppController";
 import { INotebookController } from "../../contexts/INotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
 import {
   IMessagesCommand,
   IMessagesManipulation,
-} from "../../manipulation/IMessagesManipulation";
-import { populateMessages } from "../../manipulation/MessagesManipulation";
-import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
+} from "../../structures/messages/IMessagesManipulation";
+import { removeMessage } from "../../structures/messages/MessagesManipulation";
 import { NotebookPageProps, NotebookPageState } from "./INotebookPage";
 import { FileView } from "./views/FileView";
+
+const numberOfMessages = 3;
 
 export default class NotebookPage extends Component<
   NotebookPageProps,
@@ -41,6 +50,9 @@ export default class NotebookPage extends Component<
     this.getNotebookController = this.getNotebookController.bind(this);
     this.getRibbonKey = this.getRibbonKey.bind(this);
     this.setRibbonKey = this.setRibbonKey.bind(this);
+
+    this.onRenderMessage = this.onRenderMessage.bind(this);
+    this.onRenderMessageOverflow = this.onRenderMessageOverflow.bind(this);
 
     this.notebookRef = React.createRef();
     this.commandBoxRef = React.createRef();
@@ -127,11 +139,70 @@ export default class NotebookPage extends Component<
     });
   }
 
+  onRenderMessage(item: IOverflowSetItemProps) {
+    return (
+      <MessageBar
+        key={item.id}
+        id={item.id}
+        isMultiline={false}
+        messageBarType={item.type}
+        onDismiss={() => {
+          this.messagesDo(removeMessage, { id: item.id });
+        }}
+      >
+        {item.text}
+      </MessageBar>
+    );
+  }
+
+  onRenderMessageOverflow(overflowItems: IOverflowSetItemProps[] | undefined) {
+    return (
+      <IconButton
+        menuIconProps={{ iconName: "More" }}
+        menuProps={{ items: overflowItems! }}
+      />
+    );
+  }
+
   render(): JSX.Element {
-    const displayableMessages = this.state.messages.slice(0, 3);
+    const { messages } = this.state;
+
+    const messagesItems = messages.slice(0, numberOfMessages).map((message) => {
+      return {
+        key: message.id,
+        id: message.id,
+        text: message.text,
+        type: message.type,
+      };
+    });
+
+    const messageOverflowItems = messages
+      .slice(numberOfMessages)
+      .map((message) => {
+        return {
+          key: message.id,
+          id: message.id,
+          name: message.text,
+          onRender: () => {
+            return (
+              <div className="flex flex-row items-center ml-2">
+                <Label>{message.text}</Label>
+                <IconButton
+                  iconProps={{ iconName: "Cancel" }}
+                  onClick={() =>
+                    this.messagesDo(removeMessage, { id: message.id })
+                  }
+                />
+              </div>
+            );
+          },
+        };
+      });
 
     const notebookPageContentStyle = {
-      height: `calc(100% - 88px - ${displayableMessages.length * 32}px)`,
+      height: `calc(100% - 88px - ${messagesItems.length * 32}px - ${
+        messageOverflowItems.length ? 32 : 0
+      }px)`,
     };
 
     return (
@@ -141,7 +212,15 @@ export default class NotebookPage extends Component<
         <div className="notebookPage">
           <RibbonComponent ribbonKey={this.state.ribbonKey} />
 
-          <div>{populateMessages(displayableMessages, this.messagesDo)}</div>
+          <div>
+            <OverflowSet
+              vertical
+              items={messagesItems}
+              overflowItems={messageOverflowItems}
+              onRenderItem={this.onRenderMessage}
+              onRenderOverflowButton={this.onRenderMessageOverflow}
+            />
+          </div>
 
           <div className="notebookPageContent" style={notebookPageContentStyle}>
             {this.state.ribbonKey === "file" ? (

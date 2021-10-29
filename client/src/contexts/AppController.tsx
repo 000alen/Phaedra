@@ -3,19 +3,19 @@ import React from "react";
 import {
   IClipboardCommand,
   IClipboardManipulation,
-} from "../manipulation/IClipboardManipulation";
+} from "../structures/clipboard/IClipboardManipulation";
 import {
   ITabsCommand,
   ITabsManipulation,
-} from "../manipulation/ITabsManipulation";
+} from "../structures/tabs/ITabsManipulation";
 import {
   ITasksCommand,
   ITasksManipulation,
-} from "../manipulation/ITasksManipulation";
+} from "../structures/tasks/ITasksManipulation";
 import {
   IWidgetsCommand,
   IWidgetsManipulation,
-} from "../manipulation/IWidgetsManipulation";
+} from "../structures/widgets/IWidgetsManipulation";
 import { IAppController } from "./IAppController";
 
 export const AppController = React.createContext<IAppController>({

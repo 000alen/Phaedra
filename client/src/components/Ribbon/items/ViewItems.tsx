@@ -4,6 +4,7 @@ import { CommandBar } from "@fluentui/react";
 
 import { handleExport } from "../../../actions/ViewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { strings } from "../../../strings";
 
 export default function ViewItems() {
   const notebookPageController = React.useContext(NotebookPageController);
@@ -11,7 +12,7 @@ export default function ViewItems() {
   const viewItems = [
     {
       key: "export",
-      name: "Export",
+      text: strings.exportButtonLabel,
       iconProps: { iconName: "Export" },
       onClick: () => handleExport(notebookPageController),
     },

@@ -4,6 +4,7 @@ import { CommandBar } from "@fluentui/react";
 
 import { handleTest } from "../../../actions/FileActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
+import { strings } from "../../../strings";
 
 export default function FileItems() {
   const notebookPageController = React.useContext(NotebookPageController);
@@ -11,7 +12,7 @@ export default function FileItems() {
   const fileItems = [
     {
       key: "test",
-      name: "Test",
+      text: strings.testButtonLabel,
       iconProps: {
         iconName: "TestCase",
       },

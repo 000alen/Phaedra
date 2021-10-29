@@ -8,48 +8,32 @@ import { INotebookPageController } from "../../contexts/INotebookPageController"
 import { NotebookController } from "../../contexts/NotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { saveNotebook } from "../../IO/NotebookIO";
+import { strings } from "../../strings";
 import {
   historyDo,
   historyRedo,
   historyUndo,
-} from "../../manipulation/HistoryManipulation";
-import { IHistoryInformation } from "../../manipulation/IHistoryManipulation";
+} from "../../structures/history/HistoryManipulation";
+import { IHistoryInformation } from "../../structures/history/IHistoryManipulation";
+import { createMessage } from "../../structures/messages/MessagesConstructors";
+import { addMessage } from "../../structures/messages/MessagesManipulation";
 import {
   INotebook,
-  INotebookCommand,
   INotebookManipulation,
-} from "../../manipulation/INotebookManipulation";
+  INotebookManipulationArguments,
+} from "../../structures/notebook/INotebookManipulation";
 import {
-  addMessage,
-  createMessage,
-} from "../../manipulation/MessagesManipulation";
-import {
-  addAntonymCell,
-  addEntitiesCell,
-  addGenerateCell,
-  addMeaningCell,
-  addPlaceholderCell,
-  addQuestionCell,
-  addSparseQuestionCell,
-  addSynonymCell,
-  addWikipediaImageCell,
-  addWikipediaSuggestionsCell,
-  addWikipediaSummaryCell,
-  getCell,
-  getCellContent,
-  getCellData,
-  getPage,
-  indexCell,
-  indexPage,
+  addPlaceholderCellSync,
   redo,
   undo,
-} from "../../manipulation/NotebookManipulation";
+} from "../../structures/notebook/NotebookManipulation";
 import {
-  addTask,
-  createTask,
-  removeTask,
-} from "../../manipulation/TasksManipulation";
-import { strings } from "../../strings";
+  collectComplementaryArguments,
+  getRedoManipulation,
+  isAsync,
+} from "../../structures/notebook/NotebookQueries";
+import { createTask } from "../../structures/tasks/TasksConstructors";
+import { addTask, removeTask } from "../../structures/tasks/TasksManipulation";
 import PageComponent from "../Page/PageComponent";
 import {
   NotebookComponentProps,
@@ -72,8 +56,7 @@ export default class NotebookComponent extends Component<
     this.toggleEditing = this.toggleEditing.bind(this);
 
     this.do = this.do.bind(this);
-    this.wrapDo = this.wrapDo.bind(this);
-    this.handleDo = this.handleDo.bind(this);
+    this.doSync = this.doSync.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
@@ -102,6 +85,7 @@ export default class NotebookComponent extends Component<
         undo: this.undo,
         redo: this.redo,
         do: this.do,
+        doSync: this.doSync,
         getNotebookPageController: this.getNotebookPageController,
         getActiveCell: this.getActiveCell,
         getActivePage: this.getActivePage,
@@ -141,7 +125,7 @@ export default class NotebookComponent extends Component<
 
     const taskId = uuidv4();
     appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: "Loading document" }),
+      task: createTask({ id: taskId, name: strings.loadingDocumentTaskLabel }),
     });
 
     readFileSync(this.state.documentPath!)
@@ -173,7 +157,7 @@ export default class NotebookComponent extends Component<
 
     const taskId = uuidv4();
     appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: "Loading document" }),
+      task: createTask({ id: taskId, name: strings.savingNotebookTaskLabel }),
     });
 
     saveNotebook(this.state.notebook, this.state.notebookPath)
@@ -189,7 +173,7 @@ export default class NotebookComponent extends Component<
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
           message: createMessage({
-            text: "Could not save file",
+            text: strings.savingNotebookTaskError,
             type: MessageBarType.error,
           }),
         });
@@ -230,88 +214,29 @@ export default class NotebookComponent extends Component<
     });
   }
 
-  do(manipulation: INotebookManipulation, args: INotebookCommand) {
-    let notebook = this.state.notebook;
-    switch (manipulation.name) {
-      case "removePage":
-        const page = getPage(notebook, { pageId: args.pageId });
-        const pageIndex = indexPage(notebook, {
-          pageId: args.pageId,
-        });
-        args = { ...args, page: page, pageIndex: pageIndex };
-        break;
-      case "removeCell":
-        const cell = getCell(notebook, {
-          pageId: args.pageId,
-          cellId: args.cellId,
-        });
-        const cellIndex = indexCell(notebook, {
-          pageId: args.pageId,
-          cellId: args.cellId,
-        });
-        args = { ...args, cell: cell, cellIndex: cellIndex };
-        break;
-      case "setCellContent":
-        const previousContent = getCellContent(notebook, {
-          pageId: args.pageId,
-          cellId: args.cellId,
-        });
-        args = { ...args, previousContent: previousContent };
-        break;
-      case "setCellData":
-        const previousData = getCellData(notebook, {
-          pageId: args.pageId,
-          cellId: args.cellId,
-        });
-        args = { ...args, previousData: previousData };
-        break;
-      default:
-        break;
-    }
-
-    switch (manipulation.name) {
-      case "addEntitiesCell":
-      case "addQuestionCell":
-      case "addSparseQuestionCell":
-      case "addGenerateCell":
-      case "addWikipediaSummaryCell":
-      case "addWikipediaSuggestionsCell":
-      case "addWikipediaImageCell":
-      case "addMeaningCell":
-      case "addSynonymCell":
-      case "addAntonymCell":
-        this.wrapDo(manipulation, args);
-        break;
-      default:
-        this.handleDo(
-          manipulation,
-          args,
-          manipulation(notebook, args) as INotebook
-        );
-        break;
-    }
-  }
-
-  wrapDo(manipulation: INotebookManipulation, args: INotebookCommand) {
+  do(
+    manipulation: INotebookManipulation,
+    args: INotebookManipulationArguments
+  ) {
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
-
     let notebook = this.state.notebook;
-
     let { pageId, cellId } = args;
+
+    let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
     if (pageId === undefined) {
       const lastPage = notebook.pages[notebook.pages.length - 1];
       if (lastPage === undefined) throw new Error("No page.");
-      args.pageId = lastPage.id;
+      newArgs.pageId = lastPage.id;
     }
 
     if (cellId === undefined) {
-      let [_notebook, id] = addPlaceholderCell(notebook, {
-        pageId: args.pageId,
+      let [_notebook, id] = addPlaceholderCellSync(notebook, {
+        pageId: newArgs.pageId,
       });
       notebook = _notebook;
-      args.cellId = id;
+      newArgs.cellId = id;
     }
 
     this.setState((state) => {
@@ -323,9 +248,22 @@ export default class NotebookComponent extends Component<
       task: createTask({ id: taskId, name: manipulation.name }),
     });
 
-    (manipulation(notebook, args) as Promise<INotebook>)
+    (manipulation(notebook, newArgs) as Promise<INotebook>)
       .then((_notebook: INotebook) => {
-        this.handleDo(manipulation, args, _notebook);
+        let { history, historyIndex } = this.state;
+
+        const newHistoryInformation = historyDo(history, historyIndex, {
+          command: { ...newArgs, action: manipulation.name },
+        });
+
+        this.setState((state) => {
+          return {
+            ...state,
+            ...newHistoryInformation,
+            notebook: _notebook,
+            isSaved: false,
+          };
+        });
       })
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
@@ -340,22 +278,25 @@ export default class NotebookComponent extends Component<
       });
   }
 
-  handleDo(
+  doSync(
     manipulation: INotebookManipulation,
-    args: INotebookCommand,
-    notebook: INotebook
+    args: INotebookManipulationArguments
   ) {
-    let { history, historyIndex } = this.state;
+    let { notebook, history, historyIndex } = this.state;
+
+    let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
     const newHistoryInformation = historyDo(history, historyIndex, {
-      command: { ...args, action: manipulation.name },
+      command: { ...newArgs, action: manipulation.name },
     });
+
+    const newNotebook = manipulation(notebook, newArgs);
 
     this.setState((state) => {
       return {
         ...state,
         ...newHistoryInformation,
-        notebook: notebook,
+        notebook: newNotebook as INotebook,
         isSaved: false,
       };
     });
@@ -377,33 +318,37 @@ export default class NotebookComponent extends Component<
   }
 
   redo() {
-    let { notebook, history, historyIndex } = this.state;
-    const [command, newHistoryInformation] = historyRedo(history, historyIndex);
+    let { history, historyIndex } = this.state;
+    const [command, historyInformation] = historyRedo(history, historyIndex);
 
-    switch (command.action) {
-      case "addEntitiesCell":
-      case "addQuestionCell":
-      case "addSparseQuestionCell":
-      case "addGenerateCell":
-      case "addWikipediaSummaryCell":
-      case "addWikipediaSuggestionsCell":
-      case "addWikipediaImageCell":
-      case "addMeaningCell":
-      case "addSynonymCell":
-      case "addAntonymCell":
-        this.wrapRedo(command, newHistoryInformation);
-        break;
-      default:
-        this.handleRedo(
-          newHistoryInformation,
-          redo(notebook, command) as INotebook
-        );
-        break;
+    if (isAsync(command)) {
+      this.redoAsync(command, historyInformation);
+    } else {
+      this.redoSync(command, historyInformation);
     }
   }
 
-  // TODO
-  wrapRedo(command: INotebookCommand, historyInformation: IHistoryInformation) {
+  redoSync(
+    command: INotebookManipulationArguments,
+    historyInformation: IHistoryInformation
+  ) {
+    let notebook = this.state.notebook;
+    let newNotebook = redo(notebook, command) as INotebook;
+
+    this.setState((state) => {
+      return {
+        ...state,
+        ...historyInformation,
+        notebook: newNotebook,
+        isSaved: false,
+      };
+    });
+  }
+
+  redoAsync(
+    command: INotebookManipulationArguments,
+    historyInformation: IHistoryInformation
+  ) {
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
 
@@ -418,7 +363,7 @@ export default class NotebookComponent extends Component<
     }
 
     if (cellId === undefined) {
-      let [_notebook, id] = addPlaceholderCell(notebook, {
+      let [_notebook, id] = addPlaceholderCellSync(notebook, {
         pageId: command.pageId,
       });
       notebook = _notebook;
@@ -434,45 +379,18 @@ export default class NotebookComponent extends Component<
       task: createTask({ id: taskId, name: command.action }),
     });
 
-    let manipulation: INotebookManipulation;
-    switch (command.action) {
-      case "addEntitiesCell":
-        manipulation = addEntitiesCell;
-        break;
-      case "addQuestionCell":
-        manipulation = addQuestionCell;
-        break;
-      case "addSparseQuestionCell":
-        manipulation = addSparseQuestionCell;
-        break;
-      case "addGenerateCell":
-        manipulation = addGenerateCell;
-        break;
-      case "addWikipediaSummaryCell":
-        manipulation = addWikipediaSummaryCell;
-        break;
-      case "addWikipediaSuggestionsCell":
-        manipulation = addWikipediaSuggestionsCell;
-        break;
-      case "addWikipediaImageCell":
-        manipulation = addWikipediaImageCell;
-        break;
-      case "addMeaningCell":
-        manipulation = addMeaningCell;
-        break;
-      case "addSynonymCell":
-        manipulation = addSynonymCell;
-        break;
-      case "addAntonymCell":
-        manipulation = addAntonymCell;
-        break;
-      default:
-        throw new Error("Invalid action.");
-    }
+    let redoManipulation = getRedoManipulation(command);
 
-    (manipulation(notebook, command) as Promise<INotebook>)
+    (redoManipulation(notebook, command) as Promise<INotebook>)
       .then((_notebook: INotebook) => {
-        this.handleRedo(historyInformation, _notebook);
+        this.setState((state) => {
+          return {
+            ...state,
+            ...historyInformation,
+            notebook: _notebook,
+            isSaved: false,
+          };
+        });
       })
       .catch((error) => {
         notebookPageController.messagesDo(addMessage, {
@@ -485,17 +403,6 @@ export default class NotebookComponent extends Component<
       .finally(() => {
         appController!.tasksDo(removeTask, { id: taskId });
       });
-  }
-
-  handleRedo(historyInformation: IHistoryInformation, notebook: INotebook) {
-    this.setState((state) => {
-      return {
-        ...state,
-        ...historyInformation,
-        notebook: notebook,
-        isSaved: false,
-      };
-    });
   }
 
   getNotebookPageController() {

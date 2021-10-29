@@ -1,4 +1,4 @@
-import { INotebook } from "../manipulation/INotebookManipulation";
+import { INotebook } from "../structures/notebook/INotebookManipulation";
 
 const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };

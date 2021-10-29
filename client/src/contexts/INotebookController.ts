@@ -1,8 +1,8 @@
 import {
   INotebook,
-  INotebookCommand,
   INotebookManipulation,
-} from "../manipulation/INotebookManipulation";
+  INotebookManipulationArguments,
+} from "../structures/notebook/INotebookManipulation";
 import { INotebookPageController } from "./INotebookPageController";
 
 export interface INotebookController {
@@ -11,7 +11,14 @@ export interface INotebookController {
   toggleEditing: () => void;
   undo: () => void;
   redo: () => void;
-  do: (action: INotebookManipulation, args: INotebookCommand) => void;
+  do: (
+    action: INotebookManipulation,
+    args: INotebookManipulationArguments
+  ) => void;
+  doSync: (
+    action: INotebookManipulation,
+    args: INotebookManipulationArguments
+  ) => void;
   getNotebookPageController: () => INotebookPageController | undefined;
   getActiveCell: () => string | undefined;
   getActivePage: () => string | undefined;

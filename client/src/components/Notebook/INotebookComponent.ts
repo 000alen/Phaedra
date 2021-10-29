@@ -1,5 +1,5 @@
 import { INotebookController } from "../../contexts/INotebookController";
-import { INotebook } from "../../manipulation/INotebookManipulation";
+import { INotebook } from "../../structures/notebook/INotebookManipulation";
 
 export interface DocumentFile {
   url: string;

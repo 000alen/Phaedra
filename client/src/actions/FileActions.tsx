@@ -8,10 +8,7 @@ export function handleTest(notebookPageController: INotebookPageController) {
   const activeCell = notebookController!.getActiveCell()!;
   const activePage = notebookController!.getActivePage()!;
 
-  let data = getCellData(notebook, {
-    pageId: activePage,
-    cellId: activeCell,
-  });
+  let data = getCellData(notebook, activePage, activeCell);
 
   if (data.loading === undefined) data.loading = true;
 

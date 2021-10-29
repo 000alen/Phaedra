@@ -184,7 +184,7 @@ export default class App extends Component<AppProps, AppState> {
     if (activeTab === undefined) {
       content = <MainPage id={uuidv4()} />;
     } else {
-      content = getTabContent(tabs, { id: activeTab });
+      content = getTabContent(tabs, activeTab);
     }
 
     return (

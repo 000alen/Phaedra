@@ -10,10 +10,7 @@ export function handleSeamless(
   const activePage = notebookController!.getActivePage()!;
   const activeCell = notebookController!.getActiveCell()!;
 
-  let data = getCellData(notebook, {
-    pageId: activePage,
-    cellId: activeCell,
-  });
+  let data = getCellData(notebook, activePage, activeCell);
 
   if (data.seamless === undefined) data.seamless = false;
 

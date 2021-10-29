@@ -93,11 +93,7 @@ export function insertCellSync(
   if (cell === undefined) throw new Error("Cell is undefined.");
   if (index === undefined) throw new Error("Index is undefined.");
 
-  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.splice(
-    index,
-    0,
-    cell
-  );
+  notebook.pages[indexPage(notebook, pageId)].cells.splice(index, 0, cell);
   return notebook;
 }
 
@@ -118,7 +114,7 @@ export function addCellSync(
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
 
-  notebook.pages[indexPage(notebook, { pageId: pageId })].cells.push(cell);
+  notebook.pages[indexPage(notebook, pageId)].cells.push(cell);
   return notebook;
 }
 
@@ -139,10 +135,9 @@ export function removeCellSync(
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
 
-  notebook.pages[indexPage(notebook, { pageId: pageId })].cells =
-    notebook.pages[indexPage(notebook, { pageId: pageId })].cells.filter(
-      (cell) => cell.id !== cellId
-    );
+  notebook.pages[indexPage(notebook, pageId)].cells = notebook.pages[
+    indexPage(notebook, pageId)
+  ].cells.filter((cell) => cell.id !== cellId);
   return notebook;
 }
 
@@ -404,8 +399,8 @@ export function setCellContentSync(
   if (cellId === undefined) throw new Error("CellId is undefined.");
   if (content === undefined) throw new Error("Content is undefined.");
 
-  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  notebook.pages[indexPage(notebook, pageId)].cells[
+    indexCell(notebook, pageId, cellId)
   ].content = content;
   return notebook;
 }
@@ -434,8 +429,8 @@ export function setCellDataSync(
   if (cellId === undefined) throw new Error("CellId is undefined.");
   if (data === undefined) throw new Error("Data is undefined.");
 
-  notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  notebook.pages[indexPage(notebook, pageId)].cells[
+    indexCell(notebook, pageId, cellId)
   ].data = data;
   return notebook;
 }

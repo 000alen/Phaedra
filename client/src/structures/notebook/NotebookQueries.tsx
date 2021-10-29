@@ -44,69 +44,54 @@ import {
   undoSetCellDataSync,
 } from "./NotebookManipulation";
 
-export function indexPage(
-  notebook: INotebook,
-  { pageId }: Partial<INotebookManipulationArguments>
-): number {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
+export function indexPage(notebook: INotebook, pageId: string): number {
   return notebook.pages.findIndex((page) => page.id === pageId);
 }
 
 export function getPage(
   notebook: INotebook,
-  { pageId }: Partial<INotebookManipulationArguments>
+  pageId: string
 ): IPage | undefined {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return notebook.pages.find((page) => page.id === pageId);
 }
 
 export function indexCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  pageId: string,
+  cellId: string
 ): number {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[
-    indexPage(notebook, { pageId: pageId })
-  ].cells.findIndex((cell) => cell.id === cellId);
+  return notebook.pages[indexPage(notebook, pageId)].cells.findIndex(
+    (cell) => cell.id === cellId
+  );
 }
 
 export function getCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  pageId: string,
+  cellId: string
 ): ICell | undefined {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells.find(
+  return notebook.pages[indexPage(notebook, pageId)].cells.find(
     (cell) => cell.id === cellId
   );
 }
 
 export function getCellContent(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  pageId: string,
+  cellId: string
 ): string {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  return notebook.pages[indexPage(notebook, pageId)].cells[
+    indexCell(notebook, pageId, cellId)
   ].content;
 }
 
 export function getCellData(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  pageId: string,
+  cellId: string
 ): any {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
+  return notebook.pages[indexPage(notebook, pageId)].cells[
+    indexCell(notebook, pageId, cellId)
   ].data;
 }
 
@@ -119,35 +104,25 @@ export function collectComplementaryArguments(
 
   switch (manipulation.name) {
     case "removePage":
-      const page = getPage(notebook, { pageId: args.pageId });
-      const pageIndex = indexPage(notebook, {
-        pageId: args.pageId,
-      });
+      const page = getPage(notebook, args.pageId!);
+      const pageIndex = indexPage(notebook, args.pageId!);
       newArgs = { ...newArgs, page: page, pageIndex: pageIndex };
       break;
     case "removeCell":
-      const cell = getCell(notebook, {
-        pageId: args.pageId,
-        cellId: args.cellId,
-      });
-      const cellIndex = indexCell(notebook, {
-        pageId: args.pageId,
-        cellId: args.cellId,
-      });
+      const cell = getCell(notebook, args.pageId!, args.cellId!);
+      const cellIndex = indexCell(notebook, args.pageId!, args.cellId!);
       newArgs = { ...newArgs, cell: cell, cellIndex: cellIndex };
       break;
     case "setCellContent":
-      const previousContent = getCellContent(notebook, {
-        pageId: args.pageId,
-        cellId: args.cellId,
-      });
+      const previousContent = getCellContent(
+        notebook,
+        args.pageId!,
+        args.cellId!
+      );
       newArgs = { ...newArgs, previousContent: previousContent };
       break;
     case "setCellData":
-      const previousData = getCellData(notebook, {
-        pageId: args.pageId,
-        cellId: args.cellId,
-      });
+      const previousData = getCellData(notebook, args.pageId!, args.cellId!);
       newArgs = { ...newArgs, previousData: previousData };
       break;
     default:

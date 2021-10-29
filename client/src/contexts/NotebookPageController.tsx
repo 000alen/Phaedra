@@ -5,7 +5,7 @@ import { PivotItem } from "@fluentui/react";
 import {
   IMessagesCommand,
   IMessagesManipulation,
-} from "../manipulation/IMessagesManipulation";
+} from "../structures/messages/IMessagesManipulation";
 import { INotebookPageController } from "./INotebookPageController";
 
 export const NotebookPageController =

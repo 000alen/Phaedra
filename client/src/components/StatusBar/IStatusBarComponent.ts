@@ -1,5 +1,5 @@
-import { ITask } from "../../manipulation/ITasksManipulation";
-import { IWidget } from "../../manipulation/IWidgetsManipulation";
+import { ITask } from "../../structures/tasks/ITasksManipulation";
+import { IWidget } from "../../structures/widgets/IWidgetsManipulation";
 
 export interface StatusBarComponentProps {
   tasks: ITask[];

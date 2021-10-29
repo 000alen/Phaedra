@@ -3,7 +3,7 @@ import React from "react";
 import { IconButton } from "@fluentui/react";
 
 import { theme } from "../../index";
-import { removeTab, selectTab } from "../../manipulation/TabsManipulation";
+import { removeTab, selectTab } from "../../structures/tabs/TabsManipulation";
 import { TabComponentProps } from "./ITabComponent";
 
 export const iconButtonStyles = {

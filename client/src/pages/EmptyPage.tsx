@@ -8,14 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 import CardComponent from "../components/CardComponent";
 import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
-import { createNotebook } from "../manipulation/NotebookManipulation";
-import { setTabContent } from "../manipulation/TabsManipulation";
-import {
-  addTask,
-  createTask,
-  removeTask,
-} from "../manipulation/TasksManipulation";
 import { strings } from "../strings";
+import { createNotebook } from "../structures/notebook/NotebookConstructors";
+import { setTabContent } from "../structures/tabs/TabsManipulation";
+import { createTask } from "../structures/tasks/TasksConstructors";
+import { addTask, removeTask } from "../structures/tasks/TasksManipulation";
 import { EmptyPageProps } from "./IEmptyPage";
 import NotebookPage from "./NotebookPage/NotebookPage";
 

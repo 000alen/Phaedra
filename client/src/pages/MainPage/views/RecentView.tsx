@@ -6,8 +6,9 @@ import { DetailsList } from "@fluentui/react";
 import { getRecent, readFileSync } from "../../../API/ElectronAPI";
 import { StoreFile } from "../../../API/IElectronAPI";
 import { AppController } from "../../../contexts/AppController";
-import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 import { strings } from "../../../strings";
+import { createTab } from "../../../structures/tabs/TabsConstructors";
+import { addTab } from "../../../structures/tabs/TabsManipulation";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 

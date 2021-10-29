@@ -24,7 +24,7 @@ from Phaedra.Language.Utils import chop
 from Phaedra.Notebook.Page import Page, PageJson
 from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
-from backend.Phaedra.Notebook.Schema import is_valid_notebook
+from Phaedra.Notebook.Schema import is_valid_notebook
 
 __all__ = ("Notebook",)
 
@@ -357,6 +357,16 @@ class Notebook:
         assert page is not None
 
         return page.get_cell(cell_id)
+
+    def get_cell_index(self, page_id: str, cell_id: str) -> Optional[int]:
+        page = self.get_page(page_id)
+
+        assert page is not None
+
+        for i, cell in enumerate(page.cells):
+            if cell.id == cell_id:
+                return i
+        return None
 
     def remove_cell(self, page_id: str, cell_id: str):
         """Removes a cell from the Notebook.
@@ -791,3 +801,19 @@ class Notebook:
             cell.content = content
 
         return cell_id
+
+    def move_page(self, page_id: str, index: int):
+        page_index = self.get_page_index(page_id)
+        assert page_index is not None
+
+        self.pages.insert(index, self.pages.pop(page_index))
+
+    def move_cell(self, page_id: str, cell_id: str, index: int):
+        page_index = self.get_page_index(page_id)
+        assert page_index is not None
+
+        cell_index = self.get_cell_index(page_id, cell_id)
+        assert cell_index is not None
+
+        page = self.pages[page_index]
+        page.cells.insert(index, page.cells.pop(cell_index))

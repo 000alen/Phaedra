@@ -13,7 +13,8 @@ import {
 export function handleMeaning(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
-  const activePage = notebookController?.getActivePage()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -30,6 +31,7 @@ export function handleMeaning(notebookPageController: INotebookPageController) {
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -42,7 +44,8 @@ export function handleMeaning(notebookPageController: INotebookPageController) {
 export function handleSynonym(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
-  const activePage = notebookController.getActivePage()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -59,6 +62,7 @@ export function handleSynonym(notebookPageController: INotebookPageController) {
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -70,8 +74,9 @@ export function handleSynonym(notebookPageController: INotebookPageController) {
 
 export function handleAntonym(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -88,6 +93,7 @@ export function handleAntonym(notebookPageController: INotebookPageController) {
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,

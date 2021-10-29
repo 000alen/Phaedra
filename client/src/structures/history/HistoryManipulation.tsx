@@ -21,7 +21,10 @@ export function historyDo(
 export function historyUndo(
   history: IHistory,
   historyIndex: number
-): [INotebookManipulationArguments, IHistoryInformation] {
+): [INotebookManipulationArguments | undefined, IHistoryInformation] {
+  if (historyIndex === 0)
+    return [undefined, { history: history, historyIndex: 0 }];
+
   let command = history[historyIndex];
   historyIndex--;
   return [command, { history: history, historyIndex: historyIndex }];
@@ -30,7 +33,10 @@ export function historyUndo(
 export function historyRedo(
   history: IHistory,
   historyIndex: number
-): [INotebookManipulationArguments, IHistoryInformation] {
+): [INotebookManipulationArguments | undefined, IHistoryInformation] {
+  if (historyIndex === history.length - 1)
+    return [undefined, { history: history, historyIndex: history.length - 1 }];
+
   let command = history[historyIndex];
   historyIndex++;
   return [command, { history: history, historyIndex: historyIndex }];

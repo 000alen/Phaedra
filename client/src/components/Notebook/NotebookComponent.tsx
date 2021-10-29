@@ -60,8 +60,7 @@ export default class NotebookComponent extends Component<
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
-    this.getActiveCell = this.getActiveCell.bind(this);
-    this.getActivePage = this.getActivePage.bind(this);
+    this.getActive = this.getActive.bind(this);
     this.getNotebook = this.getNotebook.bind(this);
 
     const { tabId, notebook, notebookPath } = props;
@@ -87,8 +86,7 @@ export default class NotebookComponent extends Component<
         do: this.do,
         doSync: this.doSync,
         getNotebookPageController: this.getNotebookPageController,
-        getActiveCell: this.getActiveCell,
-        getActivePage: this.getActivePage,
+        getActive: this.getActive,
         getNotebook: this.getNotebook,
       },
     };
@@ -304,7 +302,10 @@ export default class NotebookComponent extends Component<
 
   undo() {
     let { notebook, history, historyIndex } = this.state;
+
     const [command, newHistoryInformation] = historyUndo(history, historyIndex);
+    if (command === undefined) return;
+
     const newNotebook = undo(notebook, command);
 
     this.setState((state) => {
@@ -319,7 +320,9 @@ export default class NotebookComponent extends Component<
 
   redo() {
     let { history, historyIndex } = this.state;
+
     const [command, historyInformation] = historyRedo(history, historyIndex);
+    if (command === undefined) return;
 
     if (isAsync(command)) {
       this.redoAsync(command, historyInformation);
@@ -409,12 +412,8 @@ export default class NotebookComponent extends Component<
     return this.context;
   }
 
-  getActiveCell(): string | undefined {
-    return this.state.activeCell;
-  }
-
-  getActivePage(): string | undefined {
-    return this.state.activePage;
+  getActive(): [string | undefined, string | undefined] {
+    return [this.state.activePage, this.state.activeCell];
   }
 
   getNotebook(): INotebook {

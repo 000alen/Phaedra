@@ -1,5 +1,5 @@
+import { INotebookCommand } from "../notebook/INotebookManipulation";
 import { IHistory, IHistoryInformation } from "./IHistoryManipulation";
-import { INotebookCommand } from "./INotebookManipulation";
 
 export function historyDo(
   history: IHistory,

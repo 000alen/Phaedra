@@ -3,9 +3,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import CardComponent from "../../../components/CardComponent";
 import { AppController } from "../../../contexts/AppController";
-import { createNotebook } from "../../../manipulation/NotebookManipulation";
-import { addTab, createTab } from "../../../manipulation/TabsManipulation";
 import { strings } from "../../../strings";
+import { createNotebook } from "../../../structures/notebook/NotebookConstructors";
+import { createTab } from "../../../structures/tabs/TabsConstructors";
+import { addTab } from "../../../structures/tabs/TabsManipulation";
 import NotebookPage from "../../NotebookPage/NotebookPage";
 import { MainPageViewProps } from "../IMainPage";
 

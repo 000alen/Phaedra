@@ -1,6 +1,6 @@
 import { INotebookPageController } from "../../contexts/INotebookPageController";
-import { IMessage } from "../../manipulation/IMessagesManipulation";
-import { INotebook } from "../../manipulation/INotebookManipulation";
+import { IMessage } from "../../structures/messages/IMessagesManipulation";
+import { INotebook } from "../../structures/notebook/INotebookManipulation";
 
 export interface NotebookPageProps {
   id: string;

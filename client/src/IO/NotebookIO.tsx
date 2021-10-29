@@ -10,8 +10,8 @@ import {
 } from "../API/ElectronAPI";
 import { OpenDialogOptions } from "../API/IElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
-import { INotebook } from "../manipulation/INotebookManipulation";
 import { strings } from "../strings";
+import { INotebook } from "../structures/notebook/INotebookManipulation";
 import { INotebookIO } from "./INotebookIO";
 
 export function openPdf(): Promise<INotebookIO> {

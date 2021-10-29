@@ -19,12 +19,12 @@ import { AppController } from "../../contexts/AppController";
 import { IAppController } from "../../contexts/IAppController";
 import { INotebookController } from "../../contexts/INotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
+import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
 import {
   IMessagesCommand,
   IMessagesManipulation,
-} from "../../manipulation/IMessagesManipulation";
-import { removeMessage } from "../../manipulation/MessagesManipulation";
-import { NotebookPageShortcuts } from "../../shortcuts/NotebookPageShortcuts";
+} from "../../structures/messages/IMessagesManipulation";
+import { removeMessage } from "../../structures/messages/MessagesManipulation";
 import { NotebookPageProps, NotebookPageState } from "./INotebookPage";
 import { FileView } from "./views/FileView";
 

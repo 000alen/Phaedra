@@ -3,7 +3,7 @@ import React from "react";
 import {
   INotebookCommand,
   INotebookManipulation,
-} from "../manipulation/INotebookManipulation";
+} from "../structures/notebook/INotebookManipulation";
 import { INotebookController } from "./INotebookController";
 
 export const NotebookController = React.createContext<INotebookController>({

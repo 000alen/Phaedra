@@ -12,7 +12,7 @@ import {
   addTab,
   removeTab,
   selectTab,
-} from "../../manipulation/TabsManipulation";
+} from "../../structures/tabs/TabsManipulation";
 import { TabsComponentProps } from "./ITabsComponent";
 import { iconButtonStyles, TabComponent } from "./TabComponent";
 

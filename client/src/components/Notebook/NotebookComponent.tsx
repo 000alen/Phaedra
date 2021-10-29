@@ -8,21 +8,20 @@ import { INotebookPageController } from "../../contexts/INotebookPageController"
 import { NotebookController } from "../../contexts/NotebookController";
 import { NotebookPageController } from "../../contexts/NotebookPageController";
 import { saveNotebook } from "../../IO/NotebookIO";
+import { strings } from "../../strings";
 import {
   historyDo,
   historyRedo,
   historyUndo,
-} from "../../manipulation/HistoryManipulation";
-import { IHistoryInformation } from "../../manipulation/IHistoryManipulation";
+} from "../../structures/history/HistoryManipulation";
+import { IHistoryInformation } from "../../structures/history/IHistoryManipulation";
+import { createMessage } from "../../structures/messages/MessagesConstructors";
+import { addMessage } from "../../structures/messages/MessagesManipulation";
 import {
   INotebook,
   INotebookCommand,
   INotebookManipulation,
-} from "../../manipulation/INotebookManipulation";
-import {
-  addMessage,
-  createMessage,
-} from "../../manipulation/MessagesManipulation";
+} from "../../structures/notebook/INotebookManipulation";
 import {
   addAntonymCell,
   addEntitiesCell,
@@ -35,21 +34,19 @@ import {
   addWikipediaImageCell,
   addWikipediaSuggestionsCell,
   addWikipediaSummaryCell,
+  redo,
+  undo,
+} from "../../structures/notebook/NotebookManipulation";
+import {
   getCell,
   getCellContent,
   getCellData,
   getPage,
   indexCell,
   indexPage,
-  redo,
-  undo,
-} from "../../manipulation/NotebookManipulation";
-import {
-  addTask,
-  createTask,
-  removeTask,
-} from "../../manipulation/TasksManipulation";
-import { strings } from "../../strings";
+} from "../../structures/notebook/NotebookQueries";
+import { createTask } from "../../structures/tasks/TasksConstructors";
+import { addTask, removeTask } from "../../structures/tasks/TasksManipulation";
 import PageComponent from "../Page/PageComponent";
 import {
   NotebookComponentProps,

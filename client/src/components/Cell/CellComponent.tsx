@@ -5,7 +5,7 @@ import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
 import { NotebookController } from "../../contexts/NotebookController";
 import { theme } from "../../index";
-import { setCellContent } from "../../manipulation/NotebookManipulation";
+import { setCellContent } from "../../structures/notebook/NotebookManipulation";
 import { CellToolbarComponent } from "./CellToolbarComponent";
 import { CellComponentProps, CellComponentState } from "./ICellComponent";
 

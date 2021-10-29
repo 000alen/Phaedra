@@ -1,8 +1,8 @@
 import { IAppController } from "./contexts/IAppController";
-import { IClipboard } from "./manipulation/IClipboardManipulation";
-import { ITab } from "./manipulation/ITabsManipulation";
-import { ITask } from "./manipulation/ITasksManipulation";
-import { IWidget } from "./manipulation/IWidgetsManipulation";
+import { IClipboard } from "./structures/clipboard/IClipboardManipulation";
+import { ITab } from "./structures/tabs/ITabsManipulation";
+import { ITask } from "./structures/tasks/ITasksManipulation";
+import { IWidget } from "./structures/widgets/IWidgetsManipulation";
 
 export interface AppProps {}
 

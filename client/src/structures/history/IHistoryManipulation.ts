@@ -1,4 +1,4 @@
-import { INotebookCommand } from "./INotebookManipulation";
+import { INotebookCommand } from "../notebook/INotebookManipulation";
 
 export type IHistory = INotebookCommand[];
 

@@ -13,98 +13,15 @@ import {
   addWikipediaImageCell as _addWikipediaImageCell,
   addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
   addWikipediaSummaryCell as _addWikipediaSummaryCell,
-} from "../API/PhaedraAPI";
-import { strings } from "../strings";
+} from "../../API/PhaedraAPI";
 import {
   ICell,
   INotebook,
   INotebookCommand,
   IPage,
 } from "./INotebookManipulation";
-
-export function createNotebook({
-  id,
-  name,
-  document_path,
-  pages,
-}: Partial<INotebook>): INotebook {
-  if (id === undefined) id = uuidv4();
-  if (name === undefined) name = strings.newNotebookTitle;
-  if (document_path === undefined) document_path = undefined;
-  if (pages === undefined)
-    pages = [
-      {
-        id: uuidv4(),
-        data: {},
-        cells: [],
-      },
-    ];
-
-  return {
-    id: id,
-    name: name,
-    document_path: document_path,
-    pages: pages,
-  };
-}
-
-export function createPage({ id, data, cells }: Partial<IPage>): IPage {
-  if (id === undefined) id = uuidv4();
-  if (data === undefined) data = {};
-  if (cells === undefined) cells = [];
-
-  return {
-    id: id,
-    data: data,
-    cells: cells,
-  };
-}
-
-export function createCell({ id, data, content }: Partial<ICell>): ICell {
-  if (id === undefined) id = uuidv4();
-  if (data === undefined) data = {};
-  if (content === undefined) content = strings.newCellContent;
-
-  return {
-    id: id,
-    data: data,
-    content: content,
-  };
-}
-
-export function createCommand({
-  action,
-  page,
-  pageId,
-  cell,
-  cellId,
-  index,
-  question,
-  prompt,
-  query,
-  content,
-  previousContent,
-  data,
-  previousData,
-  word,
-}: Partial<INotebookCommand>): INotebookCommand {
-  return {
-    action: action,
-    page: page,
-    pageId: pageId,
-    cell: cell,
-    cellId: cellId,
-    index: index,
-    question: question,
-    prompt: prompt,
-    query: query,
-    content: content,
-    previousContent: previousContent,
-    data: data,
-    previousData: previousData,
-    word: word,
-  };
-}
+import { createCell } from "./NotebookConstructors";
+import { indexCell, indexPage } from "./NotebookQueries";
 
 export function insertPage(
   notebook: INotebook,
@@ -143,24 +60,6 @@ export function undoAddPage(
   if (page === undefined) throw new Error("Page is undefined.");
 
   return removePage(notebook, { pageId: page.id });
-}
-
-export function indexPage(
-  notebook: INotebook,
-  { pageId }: Partial<INotebookCommand>
-): number {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
-  return notebook.pages.findIndex((page) => page.id === pageId);
-}
-
-export function getPage(
-  notebook: INotebook,
-  { pageId }: Partial<INotebookCommand>
-): IPage | undefined {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
-  return notebook.pages.find((page) => page.id === pageId);
 }
 
 export function removePage(
@@ -228,30 +127,6 @@ export function undoAddCell(
   if (cell === undefined) throw new Error("Cell is undefined.");
 
   return removeCell(notebook, { pageId: pageId, cellId: cell.id });
-}
-
-export function indexCell(
-  notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
-): number {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[
-    indexPage(notebook, { pageId: pageId })
-  ].cells.findIndex((cell) => cell.id === cellId);
-}
-
-export function getCell(
-  notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
-): ICell | undefined {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells.find(
-    (cell) => cell.id === cellId
-  );
 }
 
 export function removeCell(
@@ -518,18 +393,6 @@ export function undoAddAntonymCell(
   return removeCell(notebook, { pageId: pageId, cellId: cellId });
 }
 
-export function getCellContent(
-  notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
-): string {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
-  ].content;
-}
-
 export function setCellContent(
   notebook: INotebook,
   { pageId, cellId, content }: Partial<INotebookCommand>
@@ -558,18 +421,6 @@ export function undoSetCellContent(
     cellId: cellId,
     content: previousContent,
   });
-}
-
-export function getCellData(
-  notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
-): any {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
-  return notebook.pages[indexPage(notebook, { pageId: pageId })].cells[
-    indexCell(notebook, { pageId: pageId, cellId: cellId })
-  ].data;
 }
 
 export function setCellData(

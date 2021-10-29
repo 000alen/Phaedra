@@ -2,22 +2,22 @@ import {
   IClipboard,
   IClipboardCommand,
   IClipboardManipulation,
-} from "../manipulation/IClipboardManipulation";
+} from "../structures/clipboard/IClipboardManipulation";
 import {
   ITab,
   ITabsCommand,
   ITabsManipulation,
-} from "../manipulation/ITabsManipulation";
+} from "../structures/tabs/ITabsManipulation";
 import {
   ITask,
   ITasksCommand,
   ITasksManipulation,
-} from "../manipulation/ITasksManipulation";
+} from "../structures/tasks/ITasksManipulation";
 import {
   IWidget,
   IWidgetsCommand,
   IWidgetsManipulation,
-} from "../manipulation/IWidgetsManipulation";
+} from "../structures/widgets/IWidgetsManipulation";
 
 export interface IAppController {
   tabsDo: (action: ITabsManipulation, args: ITabsCommand) => void;

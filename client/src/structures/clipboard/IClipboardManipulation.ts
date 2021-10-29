@@ -1,4 +1,4 @@
-import { ICell, IPage } from "./INotebookManipulation";
+import { ICell, IPage } from "../notebook/INotebookManipulation";
 
 export type IClipboardElement = IPage | ICell;
 export type IClipboard = IClipboardElement[];

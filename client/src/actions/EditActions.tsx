@@ -1,5 +1,6 @@
 import { INotebookPageController } from "../contexts/INotebookPageController";
-import { getCellData, setCellData } from "../manipulation/NotebookManipulation";
+import { setCellData } from "../structures/notebook/NotebookManipulation";
+import { getCellData } from "../structures/notebook/NotebookQueries";
 
 export function handleSeamless(
   notebookPageController: INotebookPageController

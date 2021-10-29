@@ -1,19 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
-
-import { strings } from "../strings";
 import { ITab, ITabsCommand, ITabsInformation } from "./ITabsManipulation";
-
-export function createTab({ id, title, content }: Partial<ITab>): ITab {
-  if (id === undefined) id = uuidv4();
-  if (title === undefined) title = strings.newTabTitle;
-  if (content === undefined) content = undefined;
-
-  return {
-    id: id,
-    title: title,
-    content: content,
-  };
-}
 
 export function insertTab(
   tabs: ITab[],
@@ -99,27 +84,4 @@ export function setTabContent(
     }),
     activeTab: activeTab,
   };
-}
-
-export function indexTab(tabs: ITab[], { id }: ITabsCommand): number {
-  return tabs.findIndex((tab) => tab.id === id);
-}
-
-export function getTab(tabs: ITab[], { id }: ITabsCommand): ITab | undefined {
-  return tabs.find((tab) => tab.id === id);
-}
-
-export function getTabTitle(tabs: ITab[], { id }: ITabsCommand): string {
-  let tab = tabs.find((tab) => tab.id === id);
-
-  return tab!.title;
-}
-
-export function getTabContent(
-  tabs: ITab[],
-  { id }: ITabsCommand
-): JSX.Element | undefined {
-  let tab = tabs.find((tab) => tab.id === id);
-
-  return tab!.content;
 }

@@ -2,7 +2,7 @@ import {
   INotebook,
   INotebookCommand,
   INotebookManipulation,
-} from "../manipulation/INotebookManipulation";
+} from "../structures/notebook/INotebookManipulation";
 import { INotebookPageController } from "./INotebookPageController";
 
 export interface INotebookController {

@@ -4,7 +4,7 @@ import { strings } from "../../strings";
 import {
   ICell,
   INotebook,
-  INotebookCommand,
+  INotebookManipulationArguments,
   IPage,
 } from "./INotebookManipulation";
 
@@ -73,7 +73,7 @@ export function createCommand({
   data,
   previousData,
   word,
-}: Partial<INotebookCommand>): INotebookCommand {
+}: Partial<INotebookManipulationArguments>): INotebookManipulationArguments {
   return {
     action: action,
     page: page,

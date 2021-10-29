@@ -17,7 +17,7 @@ export function handleSeamless(
 
   if (data.seamless === undefined) data.seamless = false;
 
-  notebookController!.do(setCellDataSync, {
+  notebookController!.doSync(setCellDataSync, {
     pageId: activePage,
     cellId: activeCell,
     data: {

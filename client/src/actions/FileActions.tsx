@@ -15,7 +15,7 @@ export function handleTest(notebookPageController: INotebookPageController) {
 
   if (data.loading === undefined) data.loading = true;
 
-  notebookController!.do(setCellDataSync, {
+  notebookController!.doSync(setCellDataSync, {
     pageId: activePage,
     cellId: activeCell,
     data: {

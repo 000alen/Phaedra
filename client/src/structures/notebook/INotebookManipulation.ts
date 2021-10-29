@@ -17,7 +17,7 @@ export interface INotebook {
   pages: IPage[];
 }
 
-export interface INotebookCommand {
+export interface INotebookManipulationArguments {
   action?: string;
   page?: IPage;
   pageId?: string;
@@ -38,5 +38,5 @@ export interface INotebookCommand {
 
 export type INotebookManipulation = (
   notebook: INotebook,
-  notebookCommand: INotebookCommand
+  notebookCommand: INotebookManipulationArguments
 ) => INotebook | Promise<INotebook>;

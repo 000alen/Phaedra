@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 
 import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
+import { INotebookController } from "../../contexts/INotebookController";
 import { NotebookController } from "../../contexts/NotebookController";
 import { theme } from "../../index";
 import { setCellContentSync } from "../../structures/notebook/NotebookManipulation";
@@ -35,10 +36,10 @@ export default class CellComponent extends Component<
     event: FormEvent<HTMLInputElement | HTMLTextAreaElement>,
     newValue: string | undefined
   ) {
-    const notebookController = this.context;
+    const notebookController: INotebookController = this.context;
     const { id, pageId } = this.props;
 
-    notebookController.do(setCellContentSync, {
+    notebookController.doSync(setCellContentSync, {
       pageId: pageId,
       cellId: id,
       content: newValue!,

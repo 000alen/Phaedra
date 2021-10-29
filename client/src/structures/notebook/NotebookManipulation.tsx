@@ -14,13 +14,21 @@ import {
   addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
   addWikipediaSummaryCell as _addWikipediaSummaryCell,
 } from "../../API/PhaedraAPI";
-import { INotebook, INotebookCommand } from "./INotebookManipulation";
+import {
+  INotebook,
+  INotebookManipulationArguments,
+} from "./INotebookManipulation";
 import { createCell } from "./NotebookConstructors";
-import { indexCell, indexPage } from "./NotebookQueries";
+import {
+  getRedoManipulation,
+  getUndoManipulation,
+  indexCell,
+  indexPage,
+} from "./NotebookQueries";
 
 export function insertPageSync(
   notebook: INotebook,
-  { page, index }: Partial<INotebookCommand>
+  { page, index }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (page === undefined) throw new Error("Page is undefined.");
   if (index === undefined) throw new Error("Index is undefined.");
@@ -31,7 +39,7 @@ export function insertPageSync(
 
 export function undoInsertPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookCommand>
+  { page }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (page === undefined) throw new Error("Page is undefined.");
 
@@ -40,7 +48,7 @@ export function undoInsertPageSync(
 
 export function addPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookCommand>
+  { page }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (page === undefined) throw new Error("Page is undefined.");
 
@@ -50,7 +58,7 @@ export function addPageSync(
 
 export function undoAddPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookCommand>
+  { page }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (page === undefined) throw new Error("Page is undefined.");
 
@@ -59,7 +67,7 @@ export function undoAddPageSync(
 
 export function removePageSync(
   notebook: INotebook,
-  { pageId }: Partial<INotebookCommand>
+  { pageId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
@@ -69,7 +77,7 @@ export function removePageSync(
 
 export function undoRemovePageSync(
   notebook: INotebook,
-  { page, index }: Partial<INotebookCommand>
+  { page, index }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (page === undefined) throw new Error("Page is undefined.");
   if (index === undefined) throw new Error("Index is undefined.");
@@ -79,7 +87,7 @@ export function undoRemovePageSync(
 
 export function insertCellSync(
   notebook: INotebook,
-  { pageId, cell, index }: Partial<INotebookCommand>
+  { pageId, cell, index }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
@@ -95,7 +103,7 @@ export function insertCellSync(
 
 export function undoInsertCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookCommand>
+  { pageId, cell }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
@@ -105,7 +113,7 @@ export function undoInsertCellSync(
 
 export function addCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookCommand>
+  { pageId, cell }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
@@ -116,7 +124,7 @@ export function addCellSync(
 
 export function undoAddCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookCommand>
+  { pageId, cell }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
@@ -126,7 +134,7 @@ export function undoAddCellSync(
 
 export function removeCellSync(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -140,7 +148,7 @@ export function removeCellSync(
 
 export function undoRemoveCellSync(
   notebook: INotebook,
-  { pageId, cell, index }: Partial<INotebookCommand>
+  { pageId, cell, index }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cell === undefined) throw new Error("Cell is undefined.");
@@ -151,7 +159,7 @@ export function undoRemoveCellSync(
 
 export function insertPlaceholderCellSync(
   notebook: INotebook,
-  { pageId, index }: Partial<INotebookCommand>
+  { pageId, index }: Partial<INotebookManipulationArguments>
 ): [INotebook, string] {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (index === undefined) throw new Error("Index is undefined.");
@@ -174,7 +182,7 @@ export function insertPlaceholderCellSync(
 
 export function addPlaceholderCellSync(
   notebook: INotebook,
-  { pageId }: Partial<INotebookCommand>
+  { pageId }: Partial<INotebookManipulationArguments>
 ): [INotebook, string] {
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
@@ -192,7 +200,7 @@ export function addPlaceholderCellSync(
 
 export function addEntitiesCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
@@ -201,7 +209,7 @@ export function addEntitiesCell(
 
 export function undoAddEntitiesCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -211,7 +219,7 @@ export function undoAddEntitiesCell(
 
 export function addQuestionCell(
   notebook: INotebook,
-  { question, pageId, cellId }: Partial<INotebookCommand>
+  { question, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (question === undefined) throw new Error("Question is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -221,7 +229,7 @@ export function addQuestionCell(
 
 export function undoAddQuestionCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -231,7 +239,7 @@ export function undoAddQuestionCell(
 
 export function addSparseQuestionCell(
   notebook: INotebook,
-  { question, pageId, cellId }: Partial<INotebookCommand>
+  { question, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (question === undefined) throw new Error("Question is undefined.");
 
@@ -240,7 +248,7 @@ export function addSparseQuestionCell(
 
 export function undoAddSparseQuestionCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -250,7 +258,7 @@ export function undoAddSparseQuestionCell(
 
 export function addGenerateCell(
   notebook: INotebook,
-  { prompt, pageId, cellId }: Partial<INotebookCommand>
+  { prompt, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (prompt === undefined) throw new Error("Prompt is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -260,7 +268,7 @@ export function addGenerateCell(
 
 export function undoAddGenerateCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -270,7 +278,7 @@ export function undoAddGenerateCell(
 
 export function addWikipediaSummaryCell(
   notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookCommand>
+  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -280,7 +288,7 @@ export function addWikipediaSummaryCell(
 
 export function undoAddWikipediaSummaryCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -290,7 +298,7 @@ export function undoAddWikipediaSummaryCell(
 
 export function addWikipediaSuggestionsCell(
   notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookCommand>
+  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -300,7 +308,7 @@ export function addWikipediaSuggestionsCell(
 
 export function undoAddWikipediaSuggestionsCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -310,7 +318,7 @@ export function undoAddWikipediaSuggestionsCell(
 
 export function addWikipediaImageCell(
   notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookCommand>
+  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -320,7 +328,7 @@ export function addWikipediaImageCell(
 
 export function undoAddWikipediaImageCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -330,7 +338,7 @@ export function undoAddWikipediaImageCell(
 
 export function addMeaningCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookCommand>
+  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -340,7 +348,7 @@ export function addMeaningCell(
 
 export function undoAddMeaningCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -350,7 +358,7 @@ export function undoAddMeaningCell(
 
 export function addSynonymCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookCommand>
+  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -360,7 +368,7 @@ export function addSynonymCell(
 
 export function undoAddSynonymCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -370,7 +378,7 @@ export function undoAddSynonymCell(
 
 export function addAntonymCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookCommand>
+  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
 ): Promise<INotebook> {
   if (word === undefined) throw new Error("Word is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
@@ -380,7 +388,7 @@ export function addAntonymCell(
 
 export function undoAddAntonymCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookCommand>
+  { pageId, cellId }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -390,7 +398,7 @@ export function undoAddAntonymCell(
 
 export function setCellContentSync(
   notebook: INotebook,
-  { pageId, cellId, content }: Partial<INotebookCommand>
+  { pageId, cellId, content }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -404,7 +412,7 @@ export function setCellContentSync(
 
 export function undoSetCellContentSync(
   notebook: INotebook,
-  { pageId, cellId, previousContent }: Partial<INotebookCommand>
+  { pageId, cellId, previousContent }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -420,7 +428,7 @@ export function undoSetCellContentSync(
 
 export function setCellDataSync(
   notebook: INotebook,
-  { pageId, cellId, data }: Partial<INotebookCommand>
+  { pageId, cellId, data }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -434,7 +442,7 @@ export function setCellDataSync(
 
 export function undoSetCellDataSync(
   notebook: INotebook,
-  { pageId, cellId, previousData }: Partial<INotebookCommand>
+  { pageId, cellId, previousData }: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (pageId === undefined) throw new Error("PageId is undefined.");
   if (cellId === undefined) throw new Error("CellId is undefined.");
@@ -449,96 +457,20 @@ export function undoSetCellDataSync(
 
 export function undo(
   notebook: INotebook,
-  command: Partial<INotebookCommand>
+  command: Partial<INotebookManipulationArguments>
 ): INotebook {
   if (command.action === undefined) throw new Error("Action is undefined.");
 
-  switch (command.action) {
-    case "insertPageSync":
-      return undoInsertPageSync(notebook, command);
-    case "addPageSync":
-      return undoAddPageSync(notebook, command);
-    case "removePageSync":
-      return undoRemovePageSync(notebook, command);
-    case "insertCellSync":
-      return undoInsertCellSync(notebook, command);
-    case "addCellSync":
-      return undoAddCellSync(notebook, command);
-    case "removeCellSync":
-      return undoRemoveCellSync(notebook, command);
-    case "setCellContentSync":
-      return undoSetCellContentSync(notebook, command);
-    case "setCellDataSync":
-      return undoSetCellDataSync(notebook, command);
-    case "addEntitiesCell":
-      return undoAddEntitiesCell(notebook, command);
-    case "addQuestionCell":
-      return undoAddQuestionCell(notebook, command);
-    case "addSparseQuestionCell":
-      return undoAddSparseQuestionCell(notebook, command);
-    case "addGenerateCell":
-      return undoAddGenerateCell(notebook, command);
-    case "addWikipediaSummaryCell":
-      return undoAddWikipediaSummaryCell(notebook, command);
-    case "addWikipediaSuggestionsCell":
-      return undoAddWikipediaSuggestionsCell(notebook, command);
-    case "addWikipediaImageCell":
-      return undoAddWikipediaImageCell(notebook, command);
-    case "addMeaningCell":
-      return undoAddMeaningCell(notebook, command);
-    case "addSynonymCell":
-      return undoAddSynonymCell(notebook, command);
-    case "addAntonymCell":
-      return undoAddAntonymCell(notebook, command);
-    default:
-      throw new Error("Unreachable");
-  }
+  let undoManipulation = getUndoManipulation(command);
+  return undoManipulation(notebook, command) as INotebook;
 }
 
 export function redo(
   notebook: INotebook,
-  command: Partial<INotebookCommand>
+  command: Partial<INotebookManipulationArguments>
 ): INotebook | Promise<INotebook> {
   if (command.action === undefined) throw new Error("Action is undefined.");
 
-  switch (command.action) {
-    case "insertPageSync":
-      return insertPageSync(notebook, command);
-    case "addPageSync":
-      return addPageSync(notebook, command);
-    case "removePageSync":
-      return removePageSync(notebook, command);
-    case "insertCellSync":
-      return insertCellSync(notebook, command);
-    case "addCellSync":
-      return addCellSync(notebook, command);
-    case "removeCellSync":
-      return removeCellSync(notebook, command);
-    case "setCellContentSync":
-      return setCellContentSync(notebook, command);
-    case "setCellDataSync":
-      return setCellDataSync(notebook, command);
-    case "addEntitiesCell":
-      return addEntitiesCell(notebook, command);
-    case "addQuestionCell":
-      return addQuestionCell(notebook, command);
-    case "addSparseQuestionCell":
-      return addSparseQuestionCell(notebook, command);
-    case "addGenerateCell":
-      return addGenerateCell(notebook, command);
-    case "addWikipediaSummaryCell":
-      return addWikipediaSummaryCell(notebook, command);
-    case "addWikipediaSuggestionsCell":
-      return addWikipediaSuggestionsCell(notebook, command);
-    case "addWikipediaImageCell":
-      return addWikipediaImageCell(notebook, command);
-    case "addMeaningCell":
-      return addMeaningCell(notebook, command);
-    case "addSynonymCell":
-      return addSynonymCell(notebook, command);
-    case "addAntonymCell":
-      return addAntonymCell(notebook, command);
-    default:
-      throw new Error("Unreachable");
-  }
+  let redoManipulation = getRedoManipulation(command);
+  return redoManipulation(notebook, command);
 }

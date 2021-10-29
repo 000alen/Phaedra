@@ -51,12 +51,12 @@ export function handleInsertPage(
     const activePageIndex = indexPage(notebook, {
       pageId: activePage,
     });
-    notebookController.do(insertPageSync, {
+    notebookController.doSync(insertPageSync, {
       page: createPage({}),
       index: activePageIndex + 1,
     });
   } else {
-    notebookController.do(addPageSync, {
+    notebookController.doSync(addPageSync, {
       page: createPage({}),
     });
   }
@@ -75,13 +75,13 @@ export function handleInsertCell(
       pageId: activePage,
       cellId: activeCell,
     });
-    notebookController.do(insertCellSync, {
+    notebookController.doSync(insertCellSync, {
       pageId: activePage,
       cell: createCell({}),
       index: activeCellIndex + 1,
     });
   } else if (activePage) {
-    notebookController.do(addCellSync, {
+    notebookController.doSync(addCellSync, {
       pageId: activePage,
       cell: createCell({}),
     });
@@ -101,12 +101,12 @@ export function handleDelete(notebookPageController: INotebookPageController) {
   const activePage = notebookController.getActivePage()!;
 
   if (activeCell) {
-    notebookController.do(removeCellSync, {
+    notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
   } else if (activePage) {
-    notebookController.do(removePageSync, {
+    notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
   } else {
@@ -144,7 +144,7 @@ export function handleCut(notebookPageController: INotebookPageController) {
       cellId: activeCell,
     });
     appController.clipboardDo(clipboardPush, { element: cell! });
-    notebookController.do(removeCellSync, {
+    notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
@@ -153,7 +153,7 @@ export function handleCut(notebookPageController: INotebookPageController) {
       pageId: activePage,
     });
     appController.clipboardDo(clipboardPush, { element: page! });
-    notebookController.do(removePageSync, {
+    notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
   } else {
@@ -210,13 +210,13 @@ export function handlePaste(notebookPageController: INotebookPageController) {
           pageId: activePage,
           cellId: activeCell,
         }) + 1;
-      notebookController.do(insertCellSync, {
+      notebookController.doSync(insertCellSync, {
         pageId: activePage,
         cell: cell,
         index,
       });
     } else if (activePage) {
-      notebookController.do(addCellSync, {
+      notebookController.doSync(addCellSync, {
         pageId: activePage,
         cell: cell,
       });
@@ -235,7 +235,7 @@ export function handlePaste(notebookPageController: INotebookPageController) {
         indexPage(notebook, {
           pageId: activePage,
         }) + 1;
-      notebookController.do(insertPageSync, {
+      notebookController.doSync(insertPageSync, {
         page: page,
         index,
       });

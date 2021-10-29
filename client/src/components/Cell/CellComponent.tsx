@@ -5,7 +5,7 @@ import { mergeStyles, Shimmer, TextField } from "@fluentui/react";
 
 import { NotebookController } from "../../contexts/NotebookController";
 import { theme } from "../../index";
-import { setCellContent } from "../../structures/notebook/NotebookManipulation";
+import { setCellContentSync } from "../../structures/notebook/NotebookManipulation";
 import { CellToolbarComponent } from "./CellToolbarComponent";
 import { CellComponentProps, CellComponentState } from "./ICellComponent";
 
@@ -38,7 +38,7 @@ export default class CellComponent extends Component<
     const notebookController = this.context;
     const { id, pageId } = this.props;
 
-    notebookController.do(setCellContent, {
+    notebookController.do(setCellContentSync, {
       pageId: pageId,
       cellId: id,
       content: newValue!,

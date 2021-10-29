@@ -70,3 +70,15 @@ export function getCellData(
     indexCell(notebook, { pageId: pageId, cellId: cellId })
   ].data;
 }
+
+export function isCell(element: ICell | IPage | INotebook): boolean {
+  return "id" in element && "data" in element && "content" in element;
+}
+
+export function isPage(element: ICell | IPage | INotebook): boolean {
+  return "id" in element && "data" in element && "cells" in element;
+}
+
+export function isNotebook(element: ICell | IPage | INotebook): boolean {
+  return "id" in element && "pages" in element;
+}

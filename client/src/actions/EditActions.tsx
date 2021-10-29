@@ -1,5 +1,5 @@
 import { INotebookPageController } from "../contexts/INotebookPageController";
-import { setCellData } from "../structures/notebook/NotebookManipulation";
+import { setCellDataSync } from "../structures/notebook/NotebookManipulation";
 import { getCellData } from "../structures/notebook/NotebookQueries";
 
 export function handleSeamless(
@@ -17,7 +17,7 @@ export function handleSeamless(
 
   if (data.seamless === undefined) data.seamless = false;
 
-  notebookController!.do(setCellData, {
+  notebookController!.do(setCellDataSync, {
     pageId: activePage,
     cellId: activeCell,
     data: {

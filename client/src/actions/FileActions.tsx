@@ -1,5 +1,5 @@
 import { INotebookPageController } from "../contexts/INotebookPageController";
-import { setCellData } from "../structures/notebook/NotebookManipulation";
+import { setCellDataSync } from "../structures/notebook/NotebookManipulation";
 import { getCellData } from "../structures/notebook/NotebookQueries";
 
 export function handleTest(notebookPageController: INotebookPageController) {
@@ -15,7 +15,7 @@ export function handleTest(notebookPageController: INotebookPageController) {
 
   if (data.loading === undefined) data.loading = true;
 
-  notebookController!.do(setCellData, {
+  notebookController!.do(setCellDataSync, {
     pageId: activePage,
     cellId: activeCell,
     data: {

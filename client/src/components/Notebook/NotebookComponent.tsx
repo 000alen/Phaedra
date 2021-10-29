@@ -27,7 +27,7 @@ import {
   addEntitiesCell,
   addGenerateCell,
   addMeaningCell,
-  addPlaceholderCell,
+  addPlaceholderCellSync,
   addQuestionCell,
   addSparseQuestionCell,
   addSynonymCell,
@@ -304,7 +304,7 @@ export default class NotebookComponent extends Component<
     }
 
     if (cellId === undefined) {
-      let [_notebook, id] = addPlaceholderCell(notebook, {
+      let [_notebook, id] = addPlaceholderCellSync(notebook, {
         pageId: args.pageId,
       });
       notebook = _notebook;
@@ -415,7 +415,7 @@ export default class NotebookComponent extends Component<
     }
 
     if (cellId === undefined) {
-      let [_notebook, id] = addPlaceholderCell(notebook, {
+      let [_notebook, id] = addPlaceholderCellSync(notebook, {
         pageId: command.pageId,
       });
       notebook = _notebook;

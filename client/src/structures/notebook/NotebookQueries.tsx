@@ -103,17 +103,17 @@ export function collectComplementaryArguments(
   let newArgs = { ...args };
 
   switch (manipulation.name) {
-    case "removePage":
+    case "removePageSync":
       const page = getPage(notebook, args.pageId!);
       const pageIndex = indexPage(notebook, args.pageId!);
       newArgs = { ...newArgs, page: page, pageIndex: pageIndex };
       break;
-    case "removeCell":
+    case "removeCellSync":
       const cell = getCell(notebook, args.pageId!, args.cellId!);
       const cellIndex = indexCell(notebook, args.pageId!, args.cellId!);
       newArgs = { ...newArgs, cell: cell, cellIndex: cellIndex };
       break;
-    case "setCellContent":
+    case "setCellContentSync":
       const previousContent = getCellContent(
         notebook,
         args.pageId!,
@@ -121,7 +121,7 @@ export function collectComplementaryArguments(
       );
       newArgs = { ...newArgs, previousContent: previousContent };
       break;
-    case "setCellData":
+    case "setCellDataSync":
       const previousData = getCellData(notebook, args.pageId!, args.cellId!);
       newArgs = { ...newArgs, previousData: previousData };
       break;

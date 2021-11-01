@@ -15,8 +15,9 @@ export function handleWikipediaSummary(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -33,6 +34,7 @@ export function handleWikipediaSummary(
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -46,8 +48,9 @@ export function handleWikipediaSuggestions(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -64,6 +67,7 @@ export function handleWikipediaSuggestions(
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -77,8 +81,9 @@ export function handleWikipediaImage(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -95,6 +100,7 @@ export function handleWikipediaImage(
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -108,11 +114,13 @@ export function handleEntities(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage) {
     notebookController.do(addEntitiesCell, { pageId: activePage });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,

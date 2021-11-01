@@ -95,4 +95,6 @@ export const strings = {
   backendUrlLabel: "Backend URL",
 
   openingFileTaskLabel: "Opening file",
+
+  welcome: "Welcome to Phaedra!",
 };

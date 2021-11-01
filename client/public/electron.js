@@ -1,4 +1,10 @@
-const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  globalShortcut,
+  shell,
+} = require("electron");
 const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
 const { register } = require("./ElectronAPI");
@@ -67,7 +73,7 @@ function createWindow() {
 
   mainWindow.webContents.on("new-window", function (e, url) {
     e.preventDefault();
-    require("electron").shell.openExternal(url);
+    shell.openExternal(url);
   });
 }
 

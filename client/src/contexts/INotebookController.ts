@@ -20,7 +20,6 @@ export interface INotebookController {
     args: INotebookManipulationArguments
   ) => void;
   getNotebookPageController: () => INotebookPageController | undefined;
-  getActiveCell: () => string | undefined;
-  getActivePage: () => string | undefined;
+  getActive: () => [string | undefined, string | undefined];
   getNotebook: () => INotebook | undefined;
 }

@@ -44,11 +44,12 @@ export function handleInsertPage(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const notebook = notebookController.getNotebook()!;
-  const activePage = notebookController.getActivePage();
+  const notebook = notebookController.getNotebook();
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage) {
-    const activePageIndex = indexPage(notebook, activePage);
+    const activePageIndex = indexPage(notebook!, activePage);
     notebookController.doSync(insertPageSync, {
       page: createPage({}),
       index: activePageIndex + 1,
@@ -65,22 +66,23 @@ export function handleInsertCell(
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
   const notebook = notebookController.getNotebook()!;
-  const activeCell = notebookController.getActiveCell()!;
-  const activePage = notebookController.getActivePage()!;
 
-  if (activeCell) {
-    const activeCellIndex = indexCell(notebook, activePage, activeCell);
+  const [activePage, activeCell] = notebookController.getActive();
+
+  if (activeCell !== undefined) {
+    const activeCellIndex = indexCell(notebook, activePage!, activeCell!);
     notebookController.doSync(insertCellSync, {
       pageId: activePage,
       cell: createCell({}),
       index: activeCellIndex + 1,
     });
-  } else if (activePage) {
+  } else if (activePage !== undefined) {
     notebookController.doSync(addCellSync, {
       pageId: activePage,
       cell: createCell({}),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -92,15 +94,14 @@ export function handleInsertCell(
 
 export function handleDelete(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activeCell = notebookController.getActiveCell()!;
-  const activePage = notebookController.getActivePage()!;
+  const [activePage, activeCell] = notebookController.getActive();
 
-  if (activeCell) {
+  if (activeCell !== undefined) {
     notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
-  } else if (activePage) {
+  } else if (activePage !== undefined) {
     notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
@@ -116,13 +117,11 @@ export function handleDelete(notebookPageController: INotebookPageController) {
 
 export function handleUndo(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
-
   notebookController.undo();
 }
 
 export function handleRedo(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
-
   notebookController.redo();
 }
 
@@ -130,29 +129,28 @@ export function handleCut(notebookPageController: INotebookPageController) {
   const appController = notebookPageController.getAppController()!;
   const notebookController = notebookPageController.getNotebookController()!;
   const notebook = notebookController.getNotebook()!;
-  const activeCell = notebookController.getActiveCell()!;
-  const activePage = notebookController.getActivePage()!;
+  const [activePage, activeCell] = notebookController.getActive();
 
-  if (activeCell) {
-    const cell = getCell(notebook, activePage, activeCell);
+  if (activeCell !== undefined) {
+    const cell = getCell(notebook, activePage!, activeCell!);
     appController.clipboardDo(clipboardPush, { element: cell! });
     notebookController.doSync(removeCellSync, {
       pageId: activePage,
       cellId: activeCell,
     });
-  } else if (activePage) {
+  } else if (activePage !== undefined) {
     const page = getPage(notebook, activePage);
     appController.clipboardDo(clipboardPush, { element: page! });
     notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
   } else {
-    notebookPageController.messagesDo(addMessage, {
-      message: createMessage({
-        type: MessageBarType.error,
-        text: strings.noActiveCellOrPage,
-      }),
-    });
+    // notebookPageController.messagesDo(addMessage, {
+    //   message: createMessage({
+    //     type: MessageBarType.error,
+    //     text: strings.noActiveCellOrPage,
+    //   }),
+    // });
   }
 }
 
@@ -160,22 +158,22 @@ export function handleCopy(notebookPageController: INotebookPageController) {
   const appController = notebookPageController.getAppController()!;
   const notebookController = notebookPageController.getNotebookController()!;
   const notebook = notebookController.getNotebook()!;
-  const activeCell = notebookController.getActiveCell()!;
-  const activePage = notebookController.getActivePage()!;
 
-  if (activeCell) {
-    const cell = getCell(notebook, activePage, activeCell);
+  const [activePage, activeCell] = notebookController.getActive();
+
+  if (activeCell !== undefined) {
+    const cell = getCell(notebook, activePage!, activeCell!);
     appController.clipboardDo(clipboardPush, { element: cell! });
   } else if (activePage) {
     const page = getPage(notebook, activePage);
     appController.clipboardDo(clipboardPush, { element: page! });
   } else {
-    notebookPageController.messagesDo(addMessage, {
-      message: createMessage({
-        type: MessageBarType.error,
-        text: strings.noActiveCellOrPage,
-      }),
-    });
+    // notebookPageController.messagesDo(addMessage, {
+    //   message: createMessage({
+    //     type: MessageBarType.error,
+    //     text: strings.noActiveCellOrPage,
+    //   }),
+    // });
   }
 }
 
@@ -184,24 +182,25 @@ export function handlePaste(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const top = clipboardTop(appController.getClipboard()!);
   const notebook = notebookController.getNotebook()!;
-  const activeCell = notebookController.getActiveCell()!;
-  const activePage = notebookController.getActivePage()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (isCell(top)) {
     const cell = makeCellUnique(top as ICell);
-    if (activeCell) {
-      const index = indexCell(notebook, activePage, activeCell) + 1;
+    if (activeCell !== undefined) {
+      const index = indexCell(notebook, activePage!, activeCell!) + 1;
       notebookController.doSync(insertCellSync, {
         pageId: activePage,
         cell: cell,
         index,
       });
-    } else if (activePage) {
+    } else if (activePage !== undefined) {
       notebookController.doSync(addCellSync, {
         pageId: activePage,
         cell: cell,
       });
     } else {
+      // TODO: Select page on viewport
       notebookPageController.messagesDo(addMessage, {
         message: createMessage({
           type: MessageBarType.error,
@@ -211,13 +210,14 @@ export function handlePaste(notebookPageController: INotebookPageController) {
     }
   } else if (isPage(top)) {
     const page = makePageUnique(top as IPage);
-    if (activePage) {
+    if (activePage !== undefined) {
       const index = indexPage(notebook, activePage) + 1;
       notebookController.doSync(insertPageSync, {
         page: page,
         index,
       });
     } else {
+      // TODO: Select page on viewport
       notebookPageController.messagesDo(addMessage, {
         message: createMessage({
           type: MessageBarType.error,
@@ -226,12 +226,13 @@ export function handlePaste(notebookPageController: INotebookPageController) {
       });
     }
   } else {
-    notebookPageController.messagesDo(addMessage, {
-      message: createMessage({
-        type: MessageBarType.error,
-        text: strings.unknownError,
-      }),
-    });
+    throw new Error("Unreachable");
+    // notebookPageController.messagesDo(addMessage, {
+    //   message: createMessage({
+    //     type: MessageBarType.error,
+    //     text: strings.unknownError,
+    //   }),
+    // });
   }
 }
 
@@ -239,8 +240,9 @@ export function handleQuestion(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
@@ -257,6 +259,7 @@ export function handleQuestion(
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,
@@ -270,8 +273,9 @@ export function handleGenerate(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
-  const activePage = notebookController.getActivePage()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
+
+  const [activePage, activeCell] = notebookController.getActive();
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
@@ -288,6 +292,7 @@ export function handleGenerate(
       }),
     });
   } else {
+    // TODO: Select page on viewport
     notebookPageController.messagesDo(addMessage, {
       message: createMessage({
         type: MessageBarType.error,

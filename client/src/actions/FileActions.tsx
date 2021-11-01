@@ -5,8 +5,9 @@ import { getCellData } from "../structures/notebook/NotebookQueries";
 export function handleTest(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController();
   const notebook = notebookController!.getNotebook()!;
-  const activeCell = notebookController!.getActiveCell()!;
-  const activePage = notebookController!.getActivePage()!;
+
+  const [activePage, activeCell] = notebookController!.getActive();
+  if (activePage === undefined || activeCell === undefined) return;
 
   let data = getCellData(notebook, activePage, activeCell);
 

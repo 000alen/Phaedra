@@ -7,8 +7,9 @@ export function handleSeamless(
 ) {
   const notebookController = notebookPageController.getNotebookController();
   const notebook = notebookController!.getNotebook()!;
-  const activePage = notebookController!.getActivePage()!;
-  const activeCell = notebookController!.getActiveCell()!;
+
+  const [activePage, activeCell] = notebookController!.getActive();
+  if (activePage === undefined || activeCell === undefined) return;
 
   let data = getCellData(notebook, activePage, activeCell);
 

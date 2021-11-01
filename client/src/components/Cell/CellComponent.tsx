@@ -54,10 +54,11 @@ export default class CellComponent extends Component<
     if (active && editing) return ["m-2 space-y-2", {}];
 
     const classes = `p-2 m-2 rounded-sm text-justify ${
-      seamless && "shadow-md"
+      !seamless && "shadow-sm"
     }`;
 
     const style = {
+      minHeight: "32px",
       backgroundColor: seamless ? "transparent" : theme.palette.neutralLight,
       border: `1px solid ${
         active

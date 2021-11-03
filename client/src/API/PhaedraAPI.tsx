@@ -18,40 +18,28 @@ export async function notebookFromPdf(
   path: string,
   base64: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/notebook/from_pdf`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        path: path,
-        base64: base64,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/notebook/from_pdf`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      path: path,
+      base64: base64,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function notebookFromText(text: string): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/notebook/from_text`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        text: text,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/notebook/from_text`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      text: text,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addEntitiesCell(
@@ -59,23 +47,17 @@ export async function addEntitiesCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/entities`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/entities`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addQuestionCell(
@@ -84,24 +66,18 @@ export async function addQuestionCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/question`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        question: question,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/question`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      question: question,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addSparseQuestionCell(
@@ -110,24 +86,18 @@ export async function addSparseQuestionCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/sparse_question`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        question: question,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/sparse_question`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      question: question,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addGenerateCell(
@@ -136,102 +106,78 @@ export async function addGenerateCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/generate`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        prompt: prompt,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/generate`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      prompt: prompt,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
-export async function addWikipediaSummaryCell(
+export async function addSummaryCell(
   notebook_json: INotebook,
   query: string,
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        query: query,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      query: query,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
-export async function addWikipediaSuggestionsCell(
+export async function addSuggestionsCell(
   notebook_json: INotebook,
   query: string,
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/wikipedia_suggestions`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        query: query,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/wikipedia_suggestions`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      query: query,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
-export async function addWikipediaImageCell(
+export async function addImageCell(
   notebook_json: INotebook,
   query: string,
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/wikipedia_image`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        query: query,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/wikipedia_image`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      query: query,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addMeaningCell(
@@ -240,24 +186,18 @@ export async function addMeaningCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/meaning`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        word: word,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/meaning`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      word: word,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addSynonymCell(
@@ -266,24 +206,18 @@ export async function addSynonymCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/synonym`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        word: word,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/synonym`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      word: word,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function addAntonymCell(
@@ -292,24 +226,18 @@ export async function addAntonymCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return new Promise((resolve, reject) => {
-    fetch(`${getApiUrl()}/cell/add/antonym`, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify({
-        notebook: JSON.stringify(notebook_json),
-        word: word,
-        page_id: page_id,
-        cell_id: cell_id,
-      }),
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+  return fetch(`${getApiUrl()}/cell/add/antonym`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify({
+      notebook: JSON.stringify(notebook_json),
+      word: word,
+      page_id: page_id,
+      cell_id: cell_id,
+    }),
+  })
+    .then((response) => response.json())
+    .catch((error) => error);
 }
 
 export async function kill() {

@@ -25,6 +25,7 @@
 - [ ] Extract styles
 - [ ] TextSourceComponent
 - [ ] Better DocumentSourceComponent
+- [ ] Add panels
 - [x] Extract strings to strings.ts
 - [x] Splash screen
 - [x] Recent files

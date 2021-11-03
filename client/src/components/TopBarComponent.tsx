@@ -15,7 +15,7 @@ import TabsComponent from "./TabsComponent";
 
 export interface TopBarComponentProps {
   tabs: ITab[];
-  activeTab: string | undefined;
+  activeTabId: string | undefined;
   tabsDo: (
     manipulation: ITabsManipulation,
     args: ITabsManipulationArguments
@@ -76,7 +76,7 @@ export default class TopBarComponent extends Component<
   }
 
   render() {
-    const { tabs, activeTab, tabsDo } = this.props;
+    const { tabs, activeTabId: activeTab, tabsDo } = this.props;
 
     const topBarStyle = {
       backgroundColor: theme.palette.white,

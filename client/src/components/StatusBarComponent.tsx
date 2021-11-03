@@ -9,12 +9,12 @@ import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 
 export interface StatusBarComponentProps {
   tasks: ITask[];
-  widgets: IWidget[];
+  statusBarWidgets: IWidget[];
 }
 
 export function StatusBarComponent({
   tasks,
-  widgets,
+  statusBarWidgets: widgets,
 }: StatusBarComponentProps): JSX.Element {
   let task;
   if (tasks.length > 0) task = tasks[0];

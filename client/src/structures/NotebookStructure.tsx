@@ -6,13 +6,13 @@ import {
   addAntonymCell as _addAntonymCell,
   addEntitiesCell as _addEntitiesCell,
   addGenerateCell as _addGenerateCell,
+  addImageCell as _addImageCell,
   addMeaningCell as _addMeaningCell,
   addQuestionCell as _addQuestionCell,
   addSparseQuestionCell as _addSparseQuestionCell,
+  addSuggestionsCell as _addSuggestionsCell,
+  addSummaryCell as _addSummaryCell,
   addSynonymCell as _addSynonymCell,
-  addWikipediaImageCell as _addWikipediaImageCell,
-  addWikipediaSuggestionsCell as _addWikipediaSuggestionsCell,
-  addWikipediaSummaryCell as _addWikipediaSummaryCell,
 } from "../API/PhaedraAPI";
 import { strings } from "../resources/strings";
 
@@ -395,7 +395,7 @@ export function addWikipediaSummaryCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return _addWikipediaSummaryCell(notebook, query, pageId!, cellId!);
+  return _addSummaryCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaSummaryCell(
@@ -415,7 +415,7 @@ export function addWikipediaSuggestionsCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return _addWikipediaSuggestionsCell(notebook, query, pageId!, cellId!);
+  return _addSuggestionsCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaSuggestionsCell(
@@ -435,7 +435,7 @@ export function addWikipediaImageCell(
   if (query === undefined) throw new Error("Query is undefined.");
   if (pageId === undefined) throw new Error("PageId is undefined.");
 
-  return _addWikipediaImageCell(notebook, query, pageId!, cellId!);
+  return _addImageCell(notebook, query, pageId!, cellId!);
 }
 
 export function undoAddWikipediaImageCell(

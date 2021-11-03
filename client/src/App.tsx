@@ -37,9 +37,9 @@ export interface AppProps {}
 
 export interface AppState {
   tabs: ITab[];
-  activeTab: string | undefined;
+  activeTabId: string | undefined;
   tasks: ITask[];
-  widgets: IWidget[];
+  statusBarWidgets: IWidget[];
   clipboard: IClipboard;
   appController: IAppController;
 }
@@ -51,29 +51,29 @@ export default class App extends Component<AppProps, AppState> {
     this.tabsDo = this.tabsDo.bind(this);
     this.clipboardDo = this.clipboardDo.bind(this);
     this.tasksDo = this.tasksDo.bind(this);
-    this.widgetsDo = this.widgetsDo.bind(this);
+    this.statusBarWidgetsDo = this.statusBarWidgetsDo.bind(this);
     this.getTabs = this.getTabs.bind(this);
-    this.getActiveTab = this.getActiveTab.bind(this);
+    this.getActiveTabId = this.getActiveTabId.bind(this);
     this.getClipboard = this.getClipboard.bind(this);
     this.getTasks = this.getTasks.bind(this);
-    this.getWidgets = this.getWidgets.bind(this);
+    this.getStatusBarWidgets = this.getStatusBarWidgets.bind(this);
 
     this.state = {
       tabs: [],
-      activeTab: undefined,
+      activeTabId: undefined,
       clipboard: [],
       tasks: [],
-      widgets: [],
+      statusBarWidgets: [],
       appController: {
         tabsDo: this.tabsDo,
         clipboardDo: this.clipboardDo,
         tasksDo: this.tasksDo,
-        widgetsDo: this.widgetsDo,
+        widgetsDo: this.statusBarWidgetsDo,
         getTabs: this.getTabs,
-        getActiveTab: this.getActiveTab,
+        getActiveTab: this.getActiveTabId,
         getClipboard: this.getClipboard,
         getTasks: this.getTasks,
-        getWidgets: this.getWidgets,
+        getWidgets: this.getStatusBarWidgets,
       },
     };
   }
@@ -103,7 +103,7 @@ export default class App extends Component<AppProps, AppState> {
   ): void {
     if (args === undefined) args = {};
 
-    let { tabs, activeTab } = this.state;
+    let { tabs, activeTabId: activeTab } = this.state;
 
     switch (manipulation.name) {
       case "addTab":
@@ -160,17 +160,17 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  widgetsDo(
+  statusBarWidgetsDo(
     manipulation: IWidgetsManipulation,
     args: IWidgetsManipulationArguments
   ): void {
-    const widgets = this.state.widgets;
+    const widgets = this.state.statusBarWidgets;
     const currentWidgets = manipulation(widgets, args);
 
     this.setState((state) => {
       return {
         ...state,
-        widgets: currentWidgets,
+        statusBarWidgets: currentWidgets,
       };
     });
   }
@@ -179,8 +179,8 @@ export default class App extends Component<AppProps, AppState> {
     return this.state.tabs;
   }
 
-  getActiveTab(): string | undefined {
-    return this.state.activeTab;
+  getActiveTabId(): string | undefined {
+    return this.state.activeTabId;
   }
 
   getClipboard(): IClipboard {
@@ -191,18 +191,18 @@ export default class App extends Component<AppProps, AppState> {
     return this.state.tasks;
   }
 
-  getWidgets(): IWidget[] {
-    return this.state.widgets;
+  getStatusBarWidgets(): IWidget[] {
+    return this.state.statusBarWidgets;
   }
 
   render(): JSX.Element {
-    const { tabs, activeTab, tasks, widgets } = this.state;
+    const { tabs, activeTabId, tasks, statusBarWidgets } = this.state;
 
     let content;
-    if (activeTab === undefined) {
+    if (activeTabId === undefined) {
       content = <MainPage id={uuidv4()} />;
     } else {
-      content = getTabContent(tabs, activeTab);
+      content = getTabContent(tabs, activeTabId);
     }
 
     return (
@@ -210,13 +210,16 @@ export default class App extends Component<AppProps, AppState> {
         <div className="app">
           <TopBarComponent
             tabs={tabs}
-            activeTab={activeTab}
+            activeTabId={activeTabId}
             tabsDo={this.tabsDo}
           />
 
           <div className="appContent">{content}</div>
 
-          <StatusBarComponent tasks={tasks} widgets={widgets} />
+          <StatusBarComponent
+            tasks={tasks}
+            statusBarWidgets={statusBarWidgets}
+          />
         </div>
       </AppController.Provider>
     );

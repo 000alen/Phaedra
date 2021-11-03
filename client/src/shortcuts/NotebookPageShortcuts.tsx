@@ -8,7 +8,7 @@ import {
   handleSave,
   handleUndo,
 } from "../actions/HomeActions";
-import { INotebookPageController } from "../contexts/INotebookPageController";
+import { INotebookPageController } from "../contexts/NotebookPageController";
 import { IShortcuts } from "./IShortcuts";
 
 export const NotebookPageShortcuts: IShortcuts = {

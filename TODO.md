@@ -13,6 +13,8 @@
 
 ## Client
 
+- [ ] Use Quill
+- [ ] Migrate to Fast.js
 - [ ] Fix history
 - [ ] Add empty Notebook view
 - [ ] Error handling

@@ -8,7 +8,7 @@ import {
   handleSynonym,
 } from "../../../actions/ReviewActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { strings } from "../../../strings";
+import { strings } from "../../../resources/strings";
 
 export default function ReviewItems() {
   const notebookPageController = React.useContext(NotebookPageController);

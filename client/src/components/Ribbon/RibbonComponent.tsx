@@ -5,15 +5,20 @@ import React from "react";
 import { Pivot, PivotItem } from "@fluentui/react";
 
 import { NotebookPageController } from "../../contexts/NotebookPageController";
-import { theme } from "../../index";
-import { strings } from "../../strings";
-import { RibbonProps } from "./IRibbonComponent";
+import { strings } from "../../resources/strings";
+import { theme } from "../../resources/theme";
 import EditItems from "./items/EditItems";
 import FileItems from "./items/FileItems";
 import HomeItems from "./items/HomeItems";
 import InsertItems from "./items/InsertItems";
 import ReviewItems from "./items/ReviewItems";
 import ViewItems from "./items/ViewItems";
+
+export interface RibbonProps {
+  ribbonKey: string;
+}
+
+export interface RibbonItemsProps {}
 
 export function RibbonComponent({ ribbonKey }: RibbonProps) {
   const notebookPageController = React.useContext(NotebookPageController);

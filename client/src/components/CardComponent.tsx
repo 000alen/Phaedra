@@ -4,12 +4,20 @@ import {
   DocumentCard,
   DocumentCardImage,
   DocumentCardTitle,
+  IIconProps,
 } from "@fluentui/react";
 import { mergeStyles } from "@fluentui/react/lib/Styling";
 
-import { CardComponentProps } from "./ICardComponent";
+export interface CardComponentProps {
+  iconProps: IIconProps;
+  title: string;
+  subtitle: string;
+  onClick: (
+    event: React.SyntheticEvent<HTMLElement, Event> | undefined
+  ) => void;
+}
 
-const conversationTileClass = mergeStyles({
+const cardInnerClasses = mergeStyles({
   height: "auto",
   paddingBottom: "10px",
 });
@@ -28,7 +36,7 @@ export default function CardComponent({
     <div>
       <DocumentCard styles={cardStyles} onClick={onClick}>
         <DocumentCardImage height={150} iconProps={iconProps} />
-        <div className={conversationTileClass}>
+        <div className={cardInnerClasses}>
           <DocumentCardTitle title={title} shouldTruncate />
           <DocumentCardTitle
             title={subtitle}

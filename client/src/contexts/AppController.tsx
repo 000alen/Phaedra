@@ -1,28 +1,61 @@
 import React from "react";
 
 import {
-  IClipboardCommand,
+  IClipboard,
   IClipboardManipulation,
-} from "../structures/clipboard/IClipboardManipulation";
+  IClipboardManipulationArguments,
+} from "../structures/ClipboardStructure";
 import {
-  ITabsCommand,
+  ITab,
   ITabsManipulation,
-} from "../structures/tabs/ITabsManipulation";
+  ITabsManipulationArguments,
+} from "../structures/TabsStructure";
 import {
-  ITasksCommand,
+  ITask,
   ITasksManipulation,
-} from "../structures/tasks/ITasksManipulation";
+  ITasksManipulationArguments,
+} from "../structures/TasksStructure";
 import {
-  IWidgetsCommand,
+  IWidget,
   IWidgetsManipulation,
-} from "../structures/widgets/IWidgetsManipulation";
-import { IAppController } from "./IAppController";
+  IWidgetsManipulationArguments,
+} from "../structures/WidgetsStructure";
+
+export interface IAppController {
+  tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => void;
+  clipboardDo: (
+    action: IClipboardManipulation,
+    args: IClipboardManipulationArguments
+  ) => void;
+  tasksDo: (
+    action: ITasksManipulation,
+    args: ITasksManipulationArguments
+  ) => void;
+  widgetsDo: (
+    action: IWidgetsManipulation,
+    args: IWidgetsManipulationArguments
+  ) => void;
+  getTabs: () => ITab[] | undefined;
+  getActiveTab: () => string | undefined;
+  getClipboard: () => IClipboard | undefined;
+  getTasks: () => ITask[] | undefined;
+  getWidgets: () => IWidget[] | undefined;
+}
 
 export const AppController = React.createContext<IAppController>({
-  tabsDo: (action: ITabsManipulation, args: ITabsCommand) => {},
-  clipboardDo: (action: IClipboardManipulation, args: IClipboardCommand) => {},
-  tasksDo: (action: ITasksManipulation, args: ITasksCommand) => {},
-  widgetsDo: (action: IWidgetsManipulation, args: IWidgetsCommand) => {},
+  tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => {},
+  clipboardDo: (
+    action: IClipboardManipulation,
+    args: IClipboardManipulationArguments
+  ) => {},
+  tasksDo: (
+    action: ITasksManipulation,
+    args: ITasksManipulationArguments
+  ) => {},
+  widgetsDo: (
+    action: IWidgetsManipulation,
+    args: IWidgetsManipulationArguments
+  ) => {},
   getTabs: () => undefined,
   getActiveTab: () => undefined,
   getClipboard: () => undefined,

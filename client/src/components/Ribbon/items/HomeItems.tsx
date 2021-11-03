@@ -16,7 +16,7 @@ import {
   handleUndo,
 } from "../../../actions/HomeActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { strings } from "../../../strings";
+import { strings } from "../../../resources/strings";
 
 export default function HomeItems() {
   const notebookPageController = React.useContext(NotebookPageController);

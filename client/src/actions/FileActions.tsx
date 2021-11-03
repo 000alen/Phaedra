@@ -1,6 +1,5 @@
-import { INotebookPageController } from "../contexts/INotebookPageController";
-import { setCellDataSync } from "../structures/notebook/NotebookManipulation";
-import { getCellData } from "../structures/notebook/NotebookQueries";
+import { INotebookPageController } from "../contexts/NotebookPageController";
+import { getCellData, setCellDataSync } from "../structures/NotebookStructure";
 
 export function handleTest(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController();

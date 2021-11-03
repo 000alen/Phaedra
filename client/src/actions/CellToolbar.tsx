@@ -1,4 +1,4 @@
-import { INotebookController } from "../contexts/INotebookController";
+import { INotebookController } from "../contexts/NotebookController";
 
 export function handleMoveUp(notebookController: INotebookController) {
   const [activePage, activeCell] = notebookController.getActive();

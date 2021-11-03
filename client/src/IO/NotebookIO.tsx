@@ -1,16 +1,20 @@
 import {
   addRecent,
   base64,
+  OpenDialogOptions,
   readFileSync,
   showOpenDialog,
   showSaveDialog,
   writeFileSync,
 } from "../API/ElectronAPI";
-import { OpenDialogOptions } from "../API/IElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
-import { strings } from "../strings";
-import { INotebook } from "../structures/notebook/INotebookManipulation";
-import { INotebookIO } from "./INotebookIO";
+import { strings } from "../resources/strings";
+import { INotebook } from "../structures/NotebookStructure";
+
+export interface INotebookIO {
+  notebook: INotebook;
+  notebookPath: string | undefined;
+}
 
 const openPdfDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],

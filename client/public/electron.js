@@ -7,7 +7,7 @@ const {
 } = require("electron");
 const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
-const { register } = require("./ElectronAPI");
+const { register } = require("./electronAPI");
 
 let splashWindow;
 let mainWindow;

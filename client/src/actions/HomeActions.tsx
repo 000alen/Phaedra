@@ -1,38 +1,34 @@
 import { MessageBarType } from "@fluentui/react";
 
-import { INotebookPageController } from "../contexts/INotebookPageController";
-import { strings } from "../strings";
+import { INotebookPageController } from "../contexts/NotebookPageController";
+import { strings } from "../resources/strings";
 import {
   clipboardPush,
+  clipboardTop,
   makeCellUnique,
   makePageUnique,
-} from "../structures/clipboard/ClipboardManipulation";
-import { clipboardTop } from "../structures/clipboard/ClipboardQueries";
-import { createMessage } from "../structures/messages/MessagesConstructors";
-import { addMessage } from "../structures/messages/MessagesManipulation";
-import { ICell, IPage } from "../structures/notebook/INotebookManipulation";
-import {
-  createCell,
-  createPage,
-} from "../structures/notebook/NotebookConstructors";
+} from "../structures/ClipboardStructure";
+import { addMessage, createMessage } from "../structures/MessagesStructure";
 import {
   addCellSync,
   addGenerateCell,
   addPageSync,
   addQuestionCell,
-  insertCellSync,
-  insertPageSync,
-  removeCellSync,
-  removePageSync,
-} from "../structures/notebook/NotebookManipulation";
-import {
+  createCell,
+  createPage,
   getCell,
   getPage,
+  ICell,
   indexCell,
   indexPage,
+  insertCellSync,
+  insertPageSync,
+  IPage,
   isCell,
   isPage,
-} from "../structures/notebook/NotebookQueries";
+  removeCellSync,
+  removePageSync,
+} from "../structures/NotebookStructure";
 
 export function handleSave(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;

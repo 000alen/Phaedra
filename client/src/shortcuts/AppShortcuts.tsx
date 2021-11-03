@@ -1,9 +1,8 @@
 import { v4 } from "uuid";
 
-import { IAppController } from "../contexts/IAppController";
+import { IAppController } from "../contexts/AppController";
 import { EmptyPage } from "../pages/EmptyPage";
-import { createTab } from "../structures/tabs/TabsConstructors";
-import { addTab, removeTab } from "../structures/tabs/TabsManipulation";
+import { addTab, createTab, removeTab } from "../structures/TabsStructure";
 import { IShortcuts } from "./IShortcuts";
 
 export const AppShortcuts: IShortcuts = {

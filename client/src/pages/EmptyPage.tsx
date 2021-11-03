@@ -8,13 +8,15 @@ import { v4 as uuidv4 } from "uuid";
 import CardComponent from "../components/CardComponent";
 import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
-import { strings } from "../strings";
-import { createNotebook } from "../structures/notebook/NotebookConstructors";
-import { setTabContent } from "../structures/tabs/TabsManipulation";
-import { createTask } from "../structures/tasks/TasksConstructors";
-import { addTask, removeTask } from "../structures/tasks/TasksManipulation";
-import { EmptyPageProps } from "./IEmptyPage";
-import NotebookPage from "./NotebookPage/NotebookPage";
+import { strings } from "../resources/strings";
+import { createNotebook } from "../structures/NotebookStructure";
+import { setTabContent } from "../structures/TabsStructure";
+import { addTask, createTask, removeTask } from "../structures/TasksStructure";
+import NotebookPage from "./NotebookPage";
+
+export interface EmptyPageProps {
+  id: string;
+}
 
 const openIcon = {
   iconName: "OpenFile",

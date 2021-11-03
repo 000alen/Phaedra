@@ -1,99 +1,144 @@
 import "../css/components/TopBarComponent.css";
 
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 
-import { IconButton } from "@fluentui/react";
+import { IconButton, SearchBox } from "@fluentui/react";
 
-import { ipcRenderer, theme } from "../index";
-import { TopBarComponentProps } from "./ITopBarComponent";
+import { ipcRenderer } from "../index";
+import { theme } from "../resources/theme";
+import {
+  ITab,
+  ITabsManipulation,
+  ITabsManipulationArguments,
+} from "../structures/TabsStructure";
+import TabsComponent from "./TabsComponent";
 
-export default function TopBarComponent({
-  children,
-}: TopBarComponentProps): JSX.Element {
-  const [showMaximize, setShowMaximize] = useState(true);
+export interface TopBarComponentProps {
+  tabs: ITab[];
+  activeTab: string | undefined;
+  tabsDo: (
+    manipulation: ITabsManipulation,
+    args: ITabsManipulationArguments
+  ) => void;
+}
 
-  const changeMaximizeRestoreButton = (isMaximizedApp: boolean) => {
-    if (isMaximizedApp) {
-      setShowMaximize(false);
-    } else {
-      setShowMaximize(true);
-    }
-  };
+export interface TopBarComponentState {
+  showMaximize: boolean;
+}
 
-  const handleMinimizeButtonClick = () => {
-    ipcRenderer.send("minimizeApp");
-  };
+export default class TopBarComponent extends Component<
+  TopBarComponentProps,
+  TopBarComponentState
+> {
+  constructor(props: TopBarComponentProps) {
+    super(props);
 
-  const handleMaximizeRestoreButtonClick = () => {
-    ipcRenderer.send("maximizeRestoreApp");
-  };
+    this.setMaximizeRestoreButton = this.setMaximizeRestoreButton.bind(this);
+    this.handleMinimizeButtonClick = this.handleMinimizeButtonClick.bind(this);
+    this.handleCloseButtonClick = this.handleCloseButtonClick.bind(this);
+    this.handleMaximizeRestoreButtonClick =
+      this.handleMaximizeRestoreButtonClick.bind(this);
 
-  const handleCloseButtonClick = () => {
+    this.state = {
+      showMaximize: true,
+    };
+  }
+
+  componentDidMount() {
+    ipcRenderer.on("isMaximized", () => {
+      this.setMaximizeRestoreButton(true);
+    });
+
+    ipcRenderer.on("isRestored", () => {
+      this.setMaximizeRestoreButton(false);
+    });
+  }
+
+  handleCloseButtonClick() {
     ipcRenderer.send("closeApp");
-  };
+  }
 
-  ipcRenderer.on("isMaximized", () => {
-    changeMaximizeRestoreButton(true);
-  });
+  setMaximizeRestoreButton(isMaximizedApp: boolean) {
+    this.setState((state) => {
+      return {
+        ...state,
+        showMaximize: !isMaximizedApp,
+      };
+    });
+  }
 
-  ipcRenderer.on("isRestored", () => {
-    changeMaximizeRestoreButton(false);
-  });
+  handleMinimizeButtonClick() {
+    ipcRenderer.send("minimizeApp");
+  }
 
-  const topBarStyle = {
-    backgroundColor: theme.palette.white,
-  };
+  handleMaximizeRestoreButtonClick() {
+    ipcRenderer.send("maximizeRestoreApp");
+  }
 
-  const minimizeIcon = {
-    iconName: "ChromeMinimize",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
-  const maximizeIcon = {
-    iconName: "ChromeFullScreen",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
+  render() {
+    const { tabs, activeTab, tabsDo } = this.props;
 
-  const restoreIcon = {
-    iconName: "ChromeRestore",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
+    const topBarStyle = {
+      backgroundColor: theme.palette.white,
+    };
 
-  const closeIcon = {
-    iconName: "ChromeClose",
-    styles: {
-      root: { color: theme.palette.black },
-    },
-  };
+    const minimizeIcon = {
+      iconName: "ChromeMinimize",
+      styles: {
+        root: { color: theme.palette.black },
+      },
+    };
+    const maximizeIcon = {
+      iconName: "ChromeFullScreen",
+      styles: {
+        root: { color: theme.palette.black },
+      },
+    };
 
-  return (
-    <div className="topBar" style={topBarStyle}>
-      <div className="titleBar">
-        <div className="titleBarChildren">{children}</div>
+    const restoreIcon = {
+      iconName: "ChromeRestore",
+      styles: {
+        root: { color: theme.palette.black },
+      },
+    };
+
+    const closeIcon = {
+      iconName: "ChromeClose",
+      styles: {
+        root: { color: theme.palette.black },
+      },
+    };
+
+    return (
+      <div className="topBar flex items-center" style={topBarStyle}>
+        <div className="titleBar">
+          <div className="titleBarChildren">
+            <TabsComponent tabs={tabs} activeTab={activeTab} tabsDo={tabsDo} />
+          </div>
+        </div>
+
+        <div className="m-2">
+          <SearchBox />
+        </div>
+
+        <div className="titleBarButtons">
+          <IconButton
+            className="topButton"
+            iconProps={minimizeIcon}
+            onClick={this.handleMinimizeButtonClick}
+          />
+          <IconButton
+            className="topButton"
+            iconProps={this.state.showMaximize ? maximizeIcon : restoreIcon}
+            onClick={this.handleMaximizeRestoreButtonClick}
+          />
+          <IconButton
+            className="topButton"
+            iconProps={closeIcon}
+            onClick={this.handleCloseButtonClick}
+          />
+        </div>
       </div>
-
-      <div className="titleBarButtons">
-        <IconButton
-          className="topButton"
-          iconProps={minimizeIcon}
-          onClick={handleMinimizeButtonClick}
-        />
-        <IconButton
-          className="topButton"
-          iconProps={showMaximize ? maximizeIcon : restoreIcon}
-          onClick={handleMaximizeRestoreButtonClick}
-        />
-        <IconButton
-          className="topButton"
-          iconProps={closeIcon}
-          onClick={handleCloseButtonClick}
-        />
-      </div>
-    </div>
-  );
+    );
+  }
 }

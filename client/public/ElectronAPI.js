@@ -1,30 +1,39 @@
 const { ipcMain, dialog } = require("electron");
-const { recentStore, pinnedStore } = require("./store");
+const Store = require("electron-store");
 const fs = require("fs");
+
+const recentStore = new Store({
+  configName: "recent",
+  defaults: {
+    files: [],
+  },
+});
+
+const pinnedStore = new Store({
+  configName: "pinned",
+  defaults: {
+    files: [],
+  },
+});
 
 function register() {
   ipcMain.handle("readFileSync", (event, path, options) => {
-    // readFileSync(path: PathLike | number, options: { encoding: BufferEncoding; flag?: string | undefined; } | BufferEncoding): string;
     return fs.readFileSync(path, options);
   });
 
   ipcMain.handle("writeFileSync", (event, path, data, options) => {
-    // writeFileSync(path: PathLike | number, data: string | NodeJS.ArrayBufferView, options?: WriteFileOptions): void;
     fs.writeFileSync(path, data, options);
   });
 
   ipcMain.handle("showOpenDialog", async (event, options) => {
-    // showOpenDialog(options: OpenDialogOptions): Promise<Electron.OpenDialogReturnValue>;
     return await dialog.showOpenDialog(options);
   });
 
   ipcMain.handle("showSaveDialog", async (event, options) => {
-    // showSaveDialog(options: SaveDialogOptions): Promise<Electron.SaveDialogReturnValue>;
     return await dialog.showSaveDialog(options);
   });
 
   ipcMain.handle("base64", async (event, data) => {
-    // from(data: Uint8Array | ReadonlyArray<number>): Buffer;
     return Buffer.from(data).toString("base64");
   });
 

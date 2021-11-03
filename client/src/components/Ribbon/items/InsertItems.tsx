@@ -9,7 +9,7 @@ import {
   handleWikipediaSummary,
 } from "../../../actions/InsertActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { strings } from "../../../strings";
+import { strings } from "../../../resources/strings";
 
 export default function InsertItems() {
   const notebookPageController = React.useContext(NotebookPageController);

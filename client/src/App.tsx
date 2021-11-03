@@ -4,36 +4,45 @@ import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { StatusBarComponent } from "./components/StatusBar/StatusBarComponent";
-import TabsComponent from "./components/Tabs/TabsComponent";
+import { StatusBarComponent } from "./components/StatusBarComponent";
 import TopBarComponent from "./components/TopBarComponent";
-import { AppController } from "./contexts/AppController";
-import { AppProps, AppState } from "./IApp";
+import { AppController, IAppController } from "./contexts/AppController";
 import { EmptyPage } from "./pages/EmptyPage";
-import { MainPage } from "./pages/MainPage/MainPage";
+import { MainPage } from "./pages/MainPage";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
 import {
   IClipboard,
-  IClipboardCommand,
   IClipboardManipulation,
-} from "./structures/clipboard/IClipboardManipulation";
+  IClipboardManipulationArguments,
+} from "./structures/ClipboardStructure";
 import {
+  createTab,
+  getTabContent,
   ITab,
-  ITabsCommand,
   ITabsManipulation,
-} from "./structures/tabs/ITabsManipulation";
-import { createTab } from "./structures/tabs/TabsConstructors";
-import { getTabContent } from "./structures/tabs/TabsQueries";
+  ITabsManipulationArguments,
+} from "./structures/TabsStructure";
 import {
   ITask,
-  ITasksCommand,
   ITasksManipulation,
-} from "./structures/tasks/ITasksManipulation";
+  ITasksManipulationArguments,
+} from "./structures/TasksStructure";
 import {
   IWidget,
-  IWidgetsCommand,
   IWidgetsManipulation,
-} from "./structures/widgets/IWidgetsManipulation";
+  IWidgetsManipulationArguments,
+} from "./structures/WidgetsStructure";
+
+export interface AppProps {}
+
+export interface AppState {
+  tabs: ITab[];
+  activeTab: string | undefined;
+  tasks: ITask[];
+  widgets: IWidget[];
+  clipboard: IClipboard;
+  appController: IAppController;
+}
 
 export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
@@ -88,7 +97,10 @@ export default class App extends Component<AppProps, AppState> {
     }
   }
 
-  tabsDo(manipulation: ITabsManipulation, args: ITabsCommand): void {
+  tabsDo(
+    manipulation: ITabsManipulation,
+    args: ITabsManipulationArguments
+  ): void {
     if (args === undefined) args = {};
 
     let { tabs, activeTab } = this.state;
@@ -120,7 +132,7 @@ export default class App extends Component<AppProps, AppState> {
 
   clipboardDo(
     manipulation: IClipboardManipulation,
-    args: IClipboardCommand
+    args: IClipboardManipulationArguments
   ): void {
     const clipboard = this.state.clipboard;
     const currentClipboard = manipulation(clipboard, args);
@@ -133,7 +145,10 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  tasksDo(manipulation: ITasksManipulation, args: ITasksCommand): void {
+  tasksDo(
+    manipulation: ITasksManipulation,
+    args: ITasksManipulationArguments
+  ): void {
     const tasks = this.state.tasks;
     const currentTasks = manipulation(tasks, args);
 
@@ -145,7 +160,10 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  widgetsDo(manipulation: IWidgetsManipulation, args: IWidgetsCommand): void {
+  widgetsDo(
+    manipulation: IWidgetsManipulation,
+    args: IWidgetsManipulationArguments
+  ): void {
     const widgets = this.state.widgets;
     const currentWidgets = manipulation(widgets, args);
 
@@ -190,13 +208,11 @@ export default class App extends Component<AppProps, AppState> {
     return (
       <AppController.Provider value={this.state.appController}>
         <div className="app">
-          <TopBarComponent>
-            <TabsComponent
-              tabs={tabs}
-              activeTab={activeTab}
-              onAction={this.tabsDo}
-            />
-          </TopBarComponent>
+          <TopBarComponent
+            tabs={tabs}
+            activeTab={activeTab}
+            tabsDo={this.tabsDo}
+          />
 
           <div className="appContent">{content}</div>
 

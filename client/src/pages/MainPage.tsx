@@ -1,4 +1,4 @@
-import "../css/pages/MainPage.css";
+import "../css/MainPage.css";
 
 import Mousetrap from "mousetrap";
 import React, { Component, MouseEvent } from "react";

@@ -1,4 +1,4 @@
-import "../css/pages/NotebookPage.css";
+import "../css/NotebookPage.css";
 
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";

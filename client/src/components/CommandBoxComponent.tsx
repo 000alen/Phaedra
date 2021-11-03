@@ -1,4 +1,4 @@
-import "../css/components/CommandBoxComponent.css";
+import "../css/CommandBoxComponent.css";
 
 import React, { Component, FormEvent } from "react";
 

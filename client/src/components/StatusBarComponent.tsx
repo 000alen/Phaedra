@@ -1,4 +1,4 @@
-import "../css/components/StatusBarComponent.css";
+import "../css/StatusBarComponent.css";
 
 import React from "react";
 

@@ -1,4 +1,4 @@
-import "../../css/components/RibbonComponent.css";
+import "../../css/RibbonComponent.css";
 
 import React from "react";
 

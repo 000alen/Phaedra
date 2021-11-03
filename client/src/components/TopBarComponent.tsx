@@ -1,4 +1,4 @@
-import "../css/components/TopBarComponent.css";
+import "../css/TopBarComponent.css";
 
 import React, { Component, useState } from "react";
 

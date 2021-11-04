@@ -19,6 +19,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-pdf": "^5.0.8",
     "@types/uuid": "^8.3.1",
+    "@uifabric/react-hooks": "^7.14.0",
     "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
     "electron-window-manager": "^1.0.6",

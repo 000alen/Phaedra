@@ -16,9 +16,9 @@ export const AppShortcuts: IShortcuts = {
     });
   },
   "ctrl+w": (appController: IAppController) => {
-    const activeTab = appController.getActiveTab();
+    const activeTabId = appController.getActiveTabId();
     appController.tabsDo(removeTab, {
-      id: activeTab,
+      id: activeTabId,
     });
   },
 };

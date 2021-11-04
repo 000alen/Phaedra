@@ -4,9 +4,9 @@ import { CommandBar } from "@fluentui/react";
 
 import {
   handleEntities,
-  handleWikipediaImage,
-  handleWikipediaSuggestions,
-  handleWikipediaSummary,
+  handleImage,
+  handleSuggestions,
+  handleSummary,
 } from "../../../actions/InsertActions";
 import { NotebookPageController } from "../../../contexts/NotebookPageController";
 import { strings } from "../../../resources/strings";
@@ -30,17 +30,17 @@ export default function InsertItems() {
           {
             key: "wikipediaSummary",
             text: strings.wikipediaSummaryButtonLabel,
-            onClick: () => handleWikipediaSummary(notebookPageController),
+            onClick: () => handleSummary(notebookPageController),
           },
           {
             key: "wikipediaSuggestions",
             text: strings.wikipediaSuggestionsButtonLabel,
-            onClick: () => handleWikipediaSuggestions(notebookPageController),
+            onClick: () => handleSuggestions(notebookPageController),
           },
           {
             key: "wikipediaImage",
             text: strings.wikipediaImageButtonLabel,
-            onClick: () => handleWikipediaImage(notebookPageController),
+            onClick: () => handleImage(notebookPageController),
           },
         ],
       },

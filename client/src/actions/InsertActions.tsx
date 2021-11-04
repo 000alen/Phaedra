@@ -5,22 +5,20 @@ import { strings } from "../resources/strings";
 import { addMessage, createMessage } from "../structures/MessagesStructure";
 import {
   addEntitiesCell,
-  addWikipediaImageCell,
-  addWikipediaSuggestionsCell,
-  addWikipediaSummaryCell,
+  addImageCell,
+  addSuggestionsCell,
+  addSummaryCell,
 } from "../structures/NotebookStructure";
 
-export function handleWikipediaSummary(
-  notebookPageController: INotebookPageController
-) {
+export function handleSummary(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaSummaryCell, {
+    notebookController.do(addSummaryCell, {
       query: command,
       pageId: activePage,
     });
@@ -43,17 +41,17 @@ export function handleWikipediaSummary(
   }
 }
 
-export function handleWikipediaSuggestions(
+export function handleSuggestions(
   notebookPageController: INotebookPageController
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaSuggestionsCell, {
+    notebookController.do(addSuggestionsCell, {
       query: command,
       pageId: activePage,
     });
@@ -76,17 +74,15 @@ export function handleWikipediaSuggestions(
   }
 }
 
-export function handleWikipediaImage(
-  notebookPageController: INotebookPageController
-) {
+export function handleImage(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
-    notebookController.do(addWikipediaImageCell, {
+    notebookController.do(addImageCell, {
       query: command,
       pageId: activePage,
     });
@@ -114,7 +110,7 @@ export function handleEntities(
 ) {
   const notebookController = notebookPageController.getNotebookController()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage) {
     notebookController.do(addEntitiesCell, { pageId: activePage });

@@ -83,43 +83,43 @@ def add_generate_cell():
     """Adds a generate cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_generate_cell(
+    notebook.add_generation_cell(
         request.json["prompt"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/wikipedia_summary", methods=["POST"])
-def add_wikipedia_summary_cell():
+@app.route("/cell/add/summary", methods=["POST"])
+def add_summary_cell():
     """Adds Wikipedia summary cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_summary_cell(
+    notebook.add_summary_cell(
         request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/wikipedia_suggestions", methods=["POST"])
-def add_wikipedia_suggestions_cell():
+@app.route("/cell/add/suggestions", methods=["POST"])
+def add_suggestions_cell():
     """Adds Wikipedia suggestions cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_suggestions_cell(
+    notebook.add_suggestions_cell(
         request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/wikipedia_image", methods=["POST"])
-def add_wikipedia_image_cell():
+@app.route("/cell/add/image", methods=["POST"])
+def add_image_cell():
     """Adds Wikipedia image cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_image_cell(
+    notebook.add_image_cell(
         request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()

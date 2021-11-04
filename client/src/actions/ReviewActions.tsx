@@ -13,7 +13,7 @@ export function handleMeaning(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -44,7 +44,7 @@ export function handleSynonym(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;
@@ -75,7 +75,7 @@ export function handleAntonym(notebookPageController: INotebookPageController) {
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef.current) {
     const { command } = commandBoxRef.current.state;

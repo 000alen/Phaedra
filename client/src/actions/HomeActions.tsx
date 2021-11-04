@@ -11,7 +11,7 @@ import {
 import { addMessage, createMessage } from "../structures/MessagesStructure";
 import {
   addCellSync,
-  addGenerateCell,
+  addGenerationCell,
   addPageSync,
   addQuestionCell,
   createCell,
@@ -42,7 +42,7 @@ export function handleInsertPage(
   const notebookController = notebookPageController.getNotebookController()!;
   const notebook = notebookController.getNotebook();
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage) {
     const activePageIndex = indexPage(notebook!, activePage);
@@ -68,7 +68,7 @@ export function handleInsertCell(
   if (activeCell !== undefined) {
     const activeCellIndex = indexCell(notebook, activePage!, activeCell!);
     notebookController.doSync(insertCellSync, {
-      pageId: activePage,
+      pageId: activePage!,
       cell: createCell({}),
       index: activeCellIndex + 1,
     });
@@ -94,8 +94,8 @@ export function handleDelete(notebookPageController: INotebookPageController) {
 
   if (activeCell !== undefined) {
     notebookController.doSync(removeCellSync, {
-      pageId: activePage,
-      cellId: activeCell,
+      pageId: activePage!,
+      cellId: activeCell!,
     });
   } else if (activePage !== undefined) {
     notebookController.doSync(removePageSync, {
@@ -131,8 +131,8 @@ export function handleCut(notebookPageController: INotebookPageController) {
     const cell = getCell(notebook, activePage!, activeCell!);
     appController.clipboardDo(clipboardPush, { element: cell! });
     notebookController.doSync(removeCellSync, {
-      pageId: activePage,
-      cellId: activeCell,
+      pageId: activePage!,
+      cellId: activeCell!,
     });
   } else if (activePage !== undefined) {
     const page = getPage(notebook, activePage);
@@ -140,13 +140,6 @@ export function handleCut(notebookPageController: INotebookPageController) {
     notebookController.doSync(removePageSync, {
       pageId: activePage,
     });
-  } else {
-    // notebookPageController.messagesDo(addMessage, {
-    //   message: createMessage({
-    //     type: MessageBarType.error,
-    //     text: strings.noActiveCellOrPage,
-    //   }),
-    // });
   }
 }
 
@@ -163,13 +156,6 @@ export function handleCopy(notebookPageController: INotebookPageController) {
   } else if (activePage) {
     const page = getPage(notebook, activePage);
     appController.clipboardDo(clipboardPush, { element: page! });
-  } else {
-    // notebookPageController.messagesDo(addMessage, {
-    //   message: createMessage({
-    //     type: MessageBarType.error,
-    //     text: strings.noActiveCellOrPage,
-    //   }),
-    // });
   }
 }
 
@@ -186,7 +172,7 @@ export function handlePaste(notebookPageController: INotebookPageController) {
     if (activeCell !== undefined) {
       const index = indexCell(notebook, activePage!, activeCell!) + 1;
       notebookController.doSync(insertCellSync, {
-        pageId: activePage,
+        pageId: activePage!,
         cell: cell,
         index,
       });
@@ -222,13 +208,12 @@ export function handlePaste(notebookPageController: INotebookPageController) {
       });
     }
   } else {
-    throw new Error("Unreachable");
-    // notebookPageController.messagesDo(addMessage, {
-    //   message: createMessage({
-    //     type: MessageBarType.error,
-    //     text: strings.unknownError,
-    //   }),
-    // });
+    notebookPageController.messagesDo(addMessage, {
+      message: createMessage({
+        type: MessageBarType.error,
+        text: strings.unknownError,
+      }),
+    });
   }
 }
 
@@ -238,7 +223,7 @@ export function handleQuestion(
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
@@ -271,11 +256,11 @@ export function handleGenerate(
   const notebookController = notebookPageController.getNotebookController()!;
   const commandBoxRef = notebookPageController.getCommandBoxRef()!;
 
-  const [activePage, activeCell] = notebookController.getActive();
+  const [activePage] = notebookController.getActive();
 
   if (activePage && commandBoxRef!.current) {
     const { command } = commandBoxRef!.current.state;
-    notebookController.do(addGenerateCell, {
+    notebookController.do(addGenerationCell, {
       prompt: command,
       pageId: activePage,
     });

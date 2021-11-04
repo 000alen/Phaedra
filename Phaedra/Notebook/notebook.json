@@ -16,9 +16,65 @@
       "type": "array",
       "description": "The Pages in the Notebook",
       "items": {
-        "$ref": "phaedra.page.json"
+        "$ref": "#/definitions/page"
       }
     }
   },
-  "required": ["id", "name", "pages"]
+  "required": ["id", "name", "pages"],
+  "definitions": {
+    "page": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/page_data"
+        },
+        "cells": {
+          "items": {
+            "$ref": "#/definitions/cell"
+          }
+        }
+      },
+      "required": ["id", "data", "cells"]
+    },
+    "page_data": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "document_page_number": {
+          "type": "integer"
+        }
+      }
+    },
+    "cell": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/cell_data"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "data", "content"]
+    },
+    "cell_data": {
+      "type": "object",
+      "properties": {
+        "seamless": {
+          "type": "boolean"
+        },
+        "loading": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
 }

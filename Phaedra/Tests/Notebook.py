@@ -236,7 +236,7 @@ class TestNotebook(unittest.TestCase):
         prompt = "Jupiter is"
         page_id = notebook.pages[0].id
 
-        generated = notebook._generate(prompt, page_id)
+        generated = notebook._generation(prompt, page_id)
 
         self.assertIsInstance(generated, str)
 
@@ -278,7 +278,7 @@ class TestNotebook(unittest.TestCase):
         prompt = "Jupiter is"
         page_id = notebook_a.pages[0].id
 
-        notebook_a.add_generate_cell(prompt, page_id)
+        notebook_a.add_generation_cell(prompt, page_id)
 
         self.assertFalse(notebook_a == notebook_b)
 
@@ -289,7 +289,7 @@ class TestNotebook(unittest.TestCase):
         query = "Jupiter"
         page_id = notebook_a.pages[0].id
 
-        notebook_a.add_wikipedia_summary_cell(query, page_id)
+        notebook_a.add_summary_cell(query, page_id)
 
         self.assertFalse(notebook_a == notebook_b)
 
@@ -300,7 +300,7 @@ class TestNotebook(unittest.TestCase):
         query = "Jupiter"
         page_id = notebook_a.pages[0].id
 
-        notebook_a.add_wikipedia_suggestions_cell(query, page_id)
+        notebook_a.add_suggestions_cell(query, page_id)
 
         self.assertFalse(notebook_a == notebook_b)
 
@@ -311,7 +311,7 @@ class TestNotebook(unittest.TestCase):
         query = "Jupiter"
         page_id = notebook_a.pages[0].id
 
-        notebook_a.add_wikipedia_image_cell(query, page_id)
+        notebook_a.add_image_cell(query, page_id)
 
         self.assertFalse(notebook_a == notebook_b)
 

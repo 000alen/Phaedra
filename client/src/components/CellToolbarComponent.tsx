@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import { IconButton } from "@fluentui/react";
 
 import { handleMoveDown, handleMoveUp } from "../actions/CellToolbar";
+import { handleDelete } from "../actions/HomeActions";
 import { NotebookController } from "../contexts/NotebookController";
 
 export interface CellToolbarProps {}
@@ -32,7 +33,13 @@ export function CellToolbarComponent() {
           onClick={() => handleMoveDown(notebookController)}
         />
 
-        <IconButton style={style} iconProps={{ iconName: "Cancel" }} />
+        <IconButton
+          style={style}
+          iconProps={{ iconName: "Cancel" }}
+          onClick={() =>
+            handleDelete(notebookController.getNotebookPageController()!)
+          }
+        />
 
         <IconButton style={style} iconProps={{ iconName: "CollapseMenu" }} />
       </div>

@@ -36,7 +36,7 @@ export interface IAppController {
     args: IWidgetsManipulationArguments
   ) => void;
   getTabs: () => ITab[] | undefined;
-  getActiveTab: () => string | undefined;
+  getActiveTabId: () => string | undefined;
   getClipboard: () => IClipboard | undefined;
   getTasks: () => ITask[] | undefined;
   getWidgets: () => IWidget[] | undefined;
@@ -57,7 +57,7 @@ export const AppController = React.createContext<IAppController>({
     args: IWidgetsManipulationArguments
   ) => {},
   getTabs: () => undefined,
-  getActiveTab: () => undefined,
+  getActiveTabId: () => undefined,
   getClipboard: () => undefined,
   getTasks: () => undefined,
   getWidgets: () => undefined,

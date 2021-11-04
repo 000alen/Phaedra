@@ -5181,6 +5181,11 @@ electron-builder@^22.13.1:
     update-notifier "^5.1.0"
     yargs "^17.0.1"
 
+electron-localshortcut@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/electron-localshortcut/-/electron-localshortcut-0.6.1.tgz#c4e268c38a6e42f40de5618fc906d1ed608f11aa"
+  integrity sha1-xOJow4puQvQN5WGPyQbR7WCPEao=
+
 electron-osx-sign@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/electron-osx-sign/-/electron-osx-sign-0.5.0.tgz#fc258c5e896859904bbe3d01da06902c04b51c3a"
@@ -5215,6 +5220,15 @@ electron-to-chromium@^1.3.867:
   version "1.3.877"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.877.tgz#956870eea7c9d8cf43cc54ea40687fee4dc0c12a"
   integrity sha512-fT5mW5Giw5iyVukeHb2XvB4joBKvzHtl8Vs3QzE7APATpFMt/T7RWyUcIKSZzYkKQgpMbu+vDBTCHfQZvh8klA==
+
+electron-window-manager@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/electron-window-manager/-/electron-window-manager-1.0.6.tgz#106adc66d3a31af6b7e1ead4a2fd39accb8bdd9c"
+  integrity sha512-hiHuZmqeBSgrfPdqWhXUaqhsczbU2lwv3SlJaLgMhA3lYNDlT3PkkpYTF12vbuyikcpKlFBoVv0mhacs2C/PYQ==
+  dependencies:
+    electron-localshortcut "^0.6.1"
+    melanke-watchjs "^1.3.1"
+    underscore "^1.8.3"
 
 electron@*, electron@^15.3.0:
   version "15.3.0"
@@ -8532,6 +8546,11 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
   integrity sha1-hxDXrwqmJvj/+hzgAWhUUmMlV0g=
+
+melanke-watchjs@^1.3.1:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/melanke-watchjs/-/melanke-watchjs-1.5.2.tgz#acc1c85fc04f3832bb9366896c844143ac686787"
+  integrity sha512-yNo8NiKkZd4K0Y/SNhbeW5PAmylfaClrOPpNTRibybRTe93Ozv1/emTanP6xwxi9TO0FS9b9F94/JQedJ1/j9g==
 
 memory-fs@^0.4.1:
   version "0.4.1"
@@ -12978,6 +12997,11 @@ typescript@^4.1.2:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
+
+underscore@^1.8.3:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.1.tgz#0c1c6bd2df54b6b69f2314066d65b6cde6fcf9d1"
+  integrity sha512-hzSoAVtJF+3ZtiFX0VgfFPHEDRm7Y/QPjGyNo4TVdnDTdft3tr8hEkD25a1jC+TjTuE7tkHGKkhwCgs9dgBB2g==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"

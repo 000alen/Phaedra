@@ -18,7 +18,7 @@ import { iconButtonStyles, TabComponent } from "./TabComponent";
 
 export interface TabsComponentProps {
   tabs: ITab[];
-  activeTab: string | undefined;
+  activeTabId: string | undefined;
   tabsDo: Function;
 }
 
@@ -49,7 +49,7 @@ const onRenderOverflowButton = (
 
 export default function TabsComponent({
   tabs,
-  activeTab,
+  activeTabId,
   tabsDo,
 }: TabsComponentProps) {
   const handleAdd = () => {
@@ -68,7 +68,7 @@ export default function TabsComponent({
       key: tab.id,
       id: tab.id,
       name: tab.title,
-      active: tab.id === activeTab,
+      active: tab.id === activeTabId,
       onAction: tabsDo,
     };
   });
@@ -78,7 +78,7 @@ export default function TabsComponent({
       key: tab.id,
       id: tab.id,
       name: tab.title,
-      active: tab.id === activeTab,
+      active: tab.id === activeTabId,
       onAction: tabsDo,
       onClick: () => tabsDo(selectTab, { id: tab.id }),
       onRender: () => {

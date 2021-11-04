@@ -35,30 +35,6 @@ export interface INotebook {
   pages: IPage[];
 }
 
-export interface INotebookManipulationArguments {
-  action?: string;
-  page?: IPage;
-  pageId?: string;
-  cell?: ICell;
-  cellId?: string;
-  index?: number;
-  question?: string;
-  prompt?: string;
-  query?: string;
-  content?: string;
-  previousContent?: string;
-  data?: any;
-  previousData?: any;
-  word?: string;
-  pageIndex?: number;
-  cellIndex?: number;
-}
-
-export type INotebookManipulation = (
-  notebook: INotebook,
-  manipulationArguments: INotebookManipulationArguments
-) => INotebook | Promise<INotebook>;
-
 export function createNotebook({
   id,
   name,
@@ -109,173 +85,166 @@ export function createCell({ id, data, content }: Partial<ICell>): ICell {
   };
 }
 
-export function createArguments({
-  action,
-  page,
-  pageId,
-  cell,
-  cellId,
-  index,
-  question,
-  prompt,
-  query,
-  content,
-  previousContent,
-  data,
-  previousData,
-  word,
-}: Partial<INotebookManipulationArguments>): INotebookManipulationArguments {
-  return {
-    action: action,
-    page: page,
-    pageId: pageId,
-    cell: cell,
-    cellId: cellId,
-    index: index,
-    question: question,
-    prompt: prompt,
-    query: query,
-    content: content,
-    previousContent: previousContent,
-    data: data,
-    previousData: previousData,
-    word: word,
-  };
+interface IInsertPageSyncArguments {
+  page: IPage;
+  index: number;
 }
 
 export function insertPageSync(
   notebook: INotebook,
-  { page, index }: Partial<INotebookManipulationArguments>
+  { page, index }: IInsertPageSyncArguments
 ): INotebook {
-  if (page === undefined) throw new Error("Page is undefined.");
-  if (index === undefined) throw new Error("Index is undefined.");
-
   notebook.pages.splice(index, 0, page);
   return notebook;
 }
 
+interface IUndoInsertPageSyncArguments {
+  page: IPage;
+}
+
 export function undoInsertPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookManipulationArguments>
+  { page }: IUndoInsertPageSyncArguments
 ): INotebook {
-  if (page === undefined) throw new Error("Page is undefined.");
-
   return removePageSync(notebook, { pageId: page.id });
+}
+
+interface IAddPageSyncArguments {
+  page: IPage;
 }
 
 export function addPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookManipulationArguments>
+  { page }: IAddPageSyncArguments
 ): INotebook {
-  if (page === undefined) throw new Error("Page is undefined.");
-
   notebook.pages.push(page);
   return notebook;
 }
 
+interface IUndoAddPageSyncArguments {
+  page: IPage;
+}
+
 export function undoAddPageSync(
   notebook: INotebook,
-  { page }: Partial<INotebookManipulationArguments>
+  { page }: IUndoAddPageSyncArguments
 ): INotebook {
-  if (page === undefined) throw new Error("Page is undefined.");
-
   return removePageSync(notebook, { pageId: page.id });
+}
+
+interface IRemovePageSyncArguments {
+  pageId: string;
 }
 
 export function removePageSync(
   notebook: INotebook,
-  { pageId }: Partial<INotebookManipulationArguments>
+  { pageId }: IRemovePageSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   notebook.pages = notebook.pages.filter((page) => page.id !== pageId);
   return notebook;
 }
 
+interface IUndoRemovePageSyncArguments {
+  page: IPage;
+  index: number;
+}
+
 export function undoRemovePageSync(
   notebook: INotebook,
-  { page, index }: Partial<INotebookManipulationArguments>
+  { page, index }: IUndoRemovePageSyncArguments
 ): INotebook {
-  if (page === undefined) throw new Error("Page is undefined.");
-  if (index === undefined) throw new Error("Index is undefined.");
-
   return insertPageSync(notebook, { page, index });
+}
+
+interface IInsertCellSyncArguments {
+  pageId: string;
+  cell: ICell;
+  index: number;
 }
 
 export function insertCellSync(
   notebook: INotebook,
-  { pageId, cell, index }: Partial<INotebookManipulationArguments>
+  { pageId, cell, index }: IInsertCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cell === undefined) throw new Error("Cell is undefined.");
-  if (index === undefined) throw new Error("Index is undefined.");
-
   notebook.pages[indexPage(notebook, pageId)].cells.splice(index, 0, cell);
   return notebook;
 }
 
+interface IUndoInsertCellSyncArguments {
+  pageId: string;
+  cell: ICell;
+}
+
 export function undoInsertCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookManipulationArguments>
+  { pageId, cell }: IUndoInsertCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cell === undefined) throw new Error("Cell is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cell.id });
+}
+
+interface IAddCellSyncArguments {
+  pageId: string;
+  cell: ICell;
 }
 
 export function addCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookManipulationArguments>
+  { pageId, cell }: IAddCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cell === undefined) throw new Error("Cell is undefined.");
-
   notebook.pages[indexPage(notebook, pageId)].cells.push(cell);
   return notebook;
 }
 
+interface IUndoAddCellSyncArguments {
+  pageId: string;
+  cell: ICell;
+}
+
 export function undoAddCellSync(
   notebook: INotebook,
-  { pageId, cell }: Partial<INotebookManipulationArguments>
+  { pageId, cell }: IUndoAddCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cell === undefined) throw new Error("Cell is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cell.id });
+}
+
+interface IRemoveCellSyncArguments {
+  pageId: string;
+  cellId: string;
 }
 
 export function removeCellSync(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   notebook.pages[indexPage(notebook, pageId)].cells = notebook.pages[
     indexPage(notebook, pageId)
   ].cells.filter((cell) => cell.id !== cellId);
   return notebook;
 }
 
+interface IUndoRemoveCellSyncArguments {
+  pageId: string;
+  cell: ICell;
+  index: number;
+}
+
 export function undoRemoveCellSync(
   notebook: INotebook,
-  { pageId, cell, index }: Partial<INotebookManipulationArguments>
+  { pageId, cell, index }: IUndoRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cell === undefined) throw new Error("Cell is undefined.");
-  if (index === undefined) throw new Error("Index is undefined.");
-
   return insertCellSync(notebook, { pageId: pageId, cell: cell, index: index });
 }
 
+interface IInsertPlaceholderSyncArguments {
+  pageId: string;
+  index: number;
+}
+
+// * This is not a NotebookManipulation, but it is a helper function async NotebookManipulations
 export function insertPlaceholderCellSync(
   notebook: INotebook,
-  { pageId, index }: Partial<INotebookManipulationArguments>
+  { pageId, index }: IInsertPlaceholderSyncArguments
 ): [INotebook, string] {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (index === undefined) throw new Error("Index is undefined.");
-
   const id = uuidv4();
   const cell = createCell({
     id: id,
@@ -288,16 +257,25 @@ export function insertPlaceholderCellSync(
     cell: cell,
     index: index,
   });
-
   return [newNotebook, id];
 }
 
+export function undoInsertPlaceholderCellSync(
+  notebook: INotebook,
+  { pageId, cellId }: IRemoveCellSyncArguments
+): INotebook {
+  return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddPlaceholderSyncArguments {
+  pageId: string;
+}
+
+// * This is not a NotebookManipulation, but it is a helper function async NotebookManipulations
 export function addPlaceholderCellSync(
   notebook: INotebook,
-  { pageId }: Partial<INotebookManipulationArguments>
+  { pageId }: IAddPlaceholderSyncArguments
 ): [INotebook, string] {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   const id = uuidv4();
   const cell = createCell({
     id: id,
@@ -306,228 +284,241 @@ export function addPlaceholderCellSync(
     },
   });
   const newNotebook = addCellSync(notebook, { pageId: pageId, cell: cell });
-
   return [newNotebook, id];
+}
+
+export function undoAddPlaceholderCellSync(
+  notebook: INotebook,
+  { pageId, cellId }: IRemoveCellSyncArguments
+): INotebook {
+  return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddEntitiesCellArguments {
+  pageId: string;
+  cellId?: string;
 }
 
 export function addEntitiesCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IAddEntitiesCellArguments
 ): Promise<INotebook> {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return _addEntitiesCell(notebook, pageId!, cellId!);
 }
 
 export function undoAddEntitiesCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddQuestionCellArguments {
+  question: string;
+  pageId: string;
+  cellId?: string;
 }
 
 export function addQuestionCell(
   notebook: INotebook,
-  { question, pageId, cellId }: Partial<INotebookManipulationArguments>
+  { question, pageId, cellId }: IAddQuestionCellArguments
 ): Promise<INotebook> {
-  if (question === undefined) throw new Error("Question is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return _addQuestionCell(notebook, question, pageId!, cellId!);
 }
 
 export function undoAddQuestionCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddSparseQuestionCellArguments {
+  question: string;
+  pageId: string;
+  cellId?: string;
 }
 
 export function addSparseQuestionCell(
   notebook: INotebook,
-  { question, pageId, cellId }: Partial<INotebookManipulationArguments>
+  { question, pageId, cellId }: IAddSparseQuestionCellArguments
 ): Promise<INotebook> {
-  if (question === undefined) throw new Error("Question is undefined.");
-
   return _addSparseQuestionCell(notebook, question, pageId!, cellId!);
 }
 
 export function undoAddSparseQuestionCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
 }
 
-export function addGenerateCell(
-  notebook: INotebook,
-  { prompt, pageId, cellId }: Partial<INotebookManipulationArguments>
-): Promise<INotebook> {
-  if (prompt === undefined) throw new Error("Prompt is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
+interface IAddGenerationCellArguments {
+  prompt: string;
+  pageId: string;
+  cellId?: string;
+}
 
+export function addGenerationCell(
+  notebook: INotebook,
+  { prompt, pageId, cellId }: IAddGenerationCellArguments
+): Promise<INotebook> {
   return _addGenerateCell(notebook, prompt, pageId!, cellId!);
 }
 
 export function undoAddGenerateCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
 }
 
-export function addWikipediaSummaryCell(
-  notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
-): Promise<INotebook> {
-  if (query === undefined) throw new Error("Query is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
+interface IAddSummaryCellArguments {
+  query: string;
+  pageId: string;
+  cellId?: string;
+}
 
+export function addSummaryCell(
+  notebook: INotebook,
+  { query, pageId, cellId }: IAddSummaryCellArguments
+): Promise<INotebook> {
   return _addSummaryCell(notebook, query, pageId!, cellId!);
 }
 
-export function undoAddWikipediaSummaryCell(
+export function undoAddSummaryCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
 }
 
-export function addWikipediaSuggestionsCell(
-  notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
-): Promise<INotebook> {
-  if (query === undefined) throw new Error("Query is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
+interface IAddSuggestionsCellArguments {
+  query: string;
+  pageId: string;
+  cellId?: string;
+}
 
+export function addSuggestionsCell(
+  notebook: INotebook,
+  { query, pageId, cellId }: IAddSuggestionsCellArguments
+): Promise<INotebook> {
   return _addSuggestionsCell(notebook, query, pageId!, cellId!);
 }
 
-export function undoAddWikipediaSuggestionsCell(
+export function undoAddSuggestionsCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
 }
 
-export function addWikipediaImageCell(
-  notebook: INotebook,
-  { query, pageId, cellId }: Partial<INotebookManipulationArguments>
-): Promise<INotebook> {
-  if (query === undefined) throw new Error("Query is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
+interface IAddImageCellArguments {
+  query: string;
+  pageId: string;
+  cellId?: string;
+}
 
+export function addImageCell(
+  notebook: INotebook,
+  { query, pageId, cellId }: IAddImageCellArguments
+): Promise<INotebook> {
   return _addImageCell(notebook, query, pageId!, cellId!);
 }
 
-export function undoAddWikipediaImageCell(
+export function undoAddImageCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddMeaningCellArguments {
+  word: string;
+  pageId: string;
+  cellId?: string;
 }
 
 export function addMeaningCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
+  { word, pageId, cellId }: IAddMeaningCellArguments
 ): Promise<INotebook> {
-  if (word === undefined) throw new Error("Word is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return _addMeaningCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddMeaningCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddSynonymCellArguments {
+  word: string;
+  pageId: string;
+  cellId?: string;
 }
 
 export function addSynonymCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
+  { word, pageId, cellId }: IAddSynonymCellArguments
 ): Promise<INotebook> {
-  if (word === undefined) throw new Error("Word is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return _addSynonymCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddSynonymCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface IAddAntonymCellArguments {
+  word: string;
+  pageId: string;
+  cellId?: string;
 }
 
 export function addAntonymCell(
   notebook: INotebook,
-  { word, pageId, cellId }: Partial<INotebookManipulationArguments>
+  { word, pageId, cellId }: IAddAntonymCellArguments
 ): Promise<INotebook> {
-  if (word === undefined) throw new Error("Word is undefined.");
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-
   return _addAntonymCell(notebook, word, pageId!, cellId!);
 }
 
 export function undoAddAntonymCell(
   notebook: INotebook,
-  { pageId, cellId }: Partial<INotebookManipulationArguments>
+  { pageId, cellId }: IRemoveCellSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-
   return removeCellSync(notebook, { pageId: pageId, cellId: cellId });
+}
+
+interface ISetCellContentSyncArguments {
+  pageId: string;
+  cellId: string;
+  content: string;
 }
 
 export function setCellContentSync(
   notebook: INotebook,
-  { pageId, cellId, content }: Partial<INotebookManipulationArguments>
+  { pageId, cellId, content }: ISetCellContentSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-  if (content === undefined) throw new Error("Content is undefined.");
-
   notebook.pages[indexPage(notebook, pageId)].cells[
     indexCell(notebook, pageId, cellId)
   ].content = content;
   return notebook;
 }
 
+interface IUndoSetCellContentSyncArguments {
+  pageId: string;
+  cellId: string;
+  previousContent: string;
+}
+
 export function undoSetCellContentSync(
   notebook: INotebook,
-  { pageId, cellId, previousContent }: Partial<INotebookManipulationArguments>
+  { pageId, cellId, previousContent }: IUndoSetCellContentSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
   if (previousContent === undefined)
     throw new Error("PreviousContent is undefined.");
 
@@ -538,28 +529,32 @@ export function undoSetCellContentSync(
   });
 }
 
+interface ISetCellDataSyncArguments {
+  pageId: string;
+  cellId: string;
+  data: any;
+}
+
 export function setCellDataSync(
   notebook: INotebook,
-  { pageId, cellId, data }: Partial<INotebookManipulationArguments>
+  { pageId, cellId, data }: ISetCellDataSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-  if (data === undefined) throw new Error("Data is undefined.");
-
   notebook.pages[indexPage(notebook, pageId)].cells[
     indexCell(notebook, pageId, cellId)
   ].data = data;
   return notebook;
 }
 
+interface IUndoSetCellDataSyncArguments {
+  pageId: string;
+  cellId: string;
+  previousData: any;
+}
+
 export function undoSetCellDataSync(
   notebook: INotebook,
-  { pageId, cellId, previousData }: Partial<INotebookManipulationArguments>
+  { pageId, cellId, previousData }: IUndoSetCellDataSyncArguments
 ): INotebook {
-  if (pageId === undefined) throw new Error("PageId is undefined.");
-  if (cellId === undefined) throw new Error("CellId is undefined.");
-  if (previousData === undefined) throw new Error("PreviousData is undefined.");
-
   return setCellDataSync(notebook, {
     pageId: pageId,
     cellId: cellId,
@@ -567,11 +562,139 @@ export function undoSetCellDataSync(
   });
 }
 
+interface IMovePageSyncArguments {
+  pageId: string;
+  index: number;
+}
+
+export function movePageSync(
+  notebook: INotebook,
+  { pageId, index }: IMovePageSyncArguments
+) {
+  const currentIndex = indexPage(notebook, pageId);
+  const page = notebook.pages[currentIndex];
+  notebook.pages.splice(currentIndex, 1);
+  notebook.pages.splice(index, 0, page);
+  return notebook;
+}
+
+interface IUndoMovePageSyncArguments {
+  pageId: string;
+  previousIndex: number;
+}
+
+export function undoMovePageSync(
+  notebook: INotebook,
+  { pageId, previousIndex }: IUndoMovePageSyncArguments
+) {
+  const currentIndex = indexPage(notebook, pageId);
+  const page = notebook.pages[currentIndex];
+  notebook.pages.splice(currentIndex, 1);
+  notebook.pages.splice(previousIndex, 0, page);
+  return notebook;
+}
+
+interface IMoveCellSyncArguments {
+  pageId: string;
+  cellId: string;
+  index: number;
+}
+
+export function moveCellSync(
+  notebook: INotebook,
+  { pageId, cellId, index }: IMoveCellSyncArguments
+) {
+  const currentPageIndex = indexPage(notebook, pageId);
+  const currentCellIndex = indexCell(notebook, pageId, cellId);
+  const cell = notebook.pages[currentPageIndex].cells[currentCellIndex];
+  notebook.pages[currentPageIndex].cells.splice(currentCellIndex, 1);
+  notebook.pages[currentPageIndex].cells.splice(index, 0, cell);
+  return notebook;
+}
+
+interface IUndoMoveCellSyncArguments {
+  pageId: string;
+  cellId: string;
+  previousIndex: number;
+}
+
+export function undoMoveCellSync(
+  notebook: INotebook,
+  { pageId, cellId, previousIndex }: IUndoMoveCellSyncArguments
+) {
+  const currentPageIndex = indexPage(notebook, pageId);
+  const currentCellIndex = indexCell(notebook, pageId, cellId);
+  const cell = notebook.pages[currentPageIndex].cells[currentCellIndex];
+  notebook.pages[currentPageIndex].cells.splice(currentCellIndex, 1);
+  notebook.pages[currentPageIndex].cells.splice(previousIndex, 0, cell);
+  return notebook;
+}
+
+const syncManipulations = [
+  insertPageSync,
+  addPageSync,
+  removePageSync,
+  insertCellSync,
+  addCellSync,
+  removeCellSync,
+  setCellContentSync,
+  setCellDataSync,
+  movePageSync,
+  moveCellSync,
+];
+
+const syncManipulationsNames = syncManipulations.map(
+  (manipulation) => manipulation.name
+);
+
+const undoSyncManipulations = [
+  undoInsertPageSync,
+  undoAddPageSync,
+  undoRemovePageSync,
+  undoInsertCellSync,
+  undoAddCellSync,
+  undoRemoveCellSync,
+  undoSetCellContentSync,
+  undoSetCellDataSync,
+  undoMovePageSync,
+  undoMoveCellSync,
+];
+
+const asyncManipulations = [
+  addEntitiesCell,
+  addQuestionCell,
+  addSparseQuestionCell,
+  addGenerationCell,
+  addSummaryCell,
+  addSuggestionsCell,
+  addImageCell,
+  addMeaningCell,
+  addSynonymCell,
+  addAntonymCell,
+];
+
+const asyncManipulationsNames = asyncManipulations.map(
+  (manipulation) => manipulation.name
+);
+
+const undoAsyncManipulations = [
+  undoAddEntitiesCell,
+  undoAddQuestionCell,
+  undoAddSparseQuestionCell,
+  undoAddGenerateCell,
+  undoAddSummaryCell,
+  undoAddSuggestionsCell,
+  undoAddImageCell,
+  undoAddMeaningCell,
+  undoAddSynonymCell,
+  undoAddAntonymCell,
+];
+
 export function undo(
   notebook: INotebook,
-  command: Partial<INotebookManipulationArguments>
+  command: INotebookManipulationAction
 ): INotebook {
-  if (command.action === undefined) throw new Error("Action is undefined.");
+  if (command.name === undefined) throw new Error("Action is undefined.");
 
   let undoManipulation = getUndoManipulation(command);
   return undoManipulation(notebook, command) as INotebook;
@@ -579,9 +702,9 @@ export function undo(
 
 export function redo(
   notebook: INotebook,
-  command: Partial<INotebookManipulationArguments>
+  command: INotebookManipulationAction
 ): INotebook | Promise<INotebook> {
-  if (command.action === undefined) throw new Error("Action is undefined.");
+  if (command.name === undefined) throw new Error("Action is undefined.");
 
   let redoManipulation = getRedoManipulation(command);
   return redoManipulation(notebook, command);
@@ -638,150 +761,159 @@ export function getCellData(
   ].data;
 }
 
-export function collectComplementaryArguments(
+export type INotebookManipulationSyncArguments =
+  | IInsertPageSyncArguments
+  | IAddPageSyncArguments
+  | IRemovePageSyncArguments
+  | IInsertCellSyncArguments
+  | IAddCellSyncArguments
+  | IRemoveCellSyncArguments
+  | ISetCellContentSyncArguments
+  | ISetCellDataSyncArguments
+  | IMovePageSyncArguments
+  | IMoveCellSyncArguments;
+
+export type INotebookUndoManipulationSyncArguments =
+  | IUndoInsertPageSyncArguments
+  | IUndoAddPageSyncArguments
+  | IUndoRemovePageSyncArguments
+  | IUndoInsertCellSyncArguments
+  | IUndoAddCellSyncArguments
+  | IUndoRemoveCellSyncArguments
+  | IUndoSetCellContentSyncArguments
+  | IUndoSetCellDataSyncArguments
+  | IUndoMovePageSyncArguments
+  | IUndoMoveCellSyncArguments;
+
+export type INotebookManipulationAsyncArguments =
+  | IAddEntitiesCellArguments
+  | IAddQuestionCellArguments
+  | IAddSparseQuestionCellArguments
+  | IAddGenerationCellArguments
+  | IAddSummaryCellArguments
+  | IAddSuggestionsCellArguments
+  | IAddImageCellArguments
+  | IAddMeaningCellArguments
+  | IAddSynonymCellArguments
+  | IAddAntonymCellArguments;
+
+export type INotebookUndoManipulationAsyncArguments = IRemoveCellSyncArguments;
+
+export type INotebookManipulationArguments =
+  | INotebookManipulationSyncArguments
+  | INotebookUndoManipulationSyncArguments
+  | INotebookManipulationAsyncArguments
+  | INotebookUndoManipulationAsyncArguments;
+
+export type INotebookManipulationSyncAction =
+  INotebookManipulationSyncArguments & { name: string };
+
+export type INotebookManipulationAsyncAction =
+  INotebookManipulationAsyncArguments & { name: string };
+
+export type INotebookManipulationAction =
+  | INotebookManipulationSyncAction
+  | INotebookManipulationAsyncAction;
+
+export type INotebookManipulation<T extends INotebookManipulationArguments> = (
   notebook: INotebook,
-  manipulation: INotebookManipulation,
-  args: INotebookManipulationArguments
-) {
+  args: T
+) => INotebook | Promise<INotebook>;
+
+export function collectComplementaryArguments<
+  T extends INotebookManipulationArguments
+>(notebook: INotebook, manipulation: INotebookManipulation<T>, args: T) {
   let newArgs = { ...args };
 
   switch (manipulation.name) {
     case "removePageSync":
-      const page = getPage(notebook, args.pageId!);
-      const pageIndex = indexPage(notebook, args.pageId!);
-      newArgs = { ...newArgs, page: page, pageIndex: pageIndex };
+      const page = getPage(notebook, (args as IRemovePageSyncArguments).pageId);
+      const pageIndex = indexPage(
+        notebook,
+        (args as IRemovePageSyncArguments).pageId
+      );
+      newArgs = { ...newArgs, page: page!, index: pageIndex };
       break;
     case "removeCellSync":
-      const cell = getCell(notebook, args.pageId!, args.cellId!);
-      const cellIndex = indexCell(notebook, args.pageId!, args.cellId!);
-      newArgs = { ...newArgs, cell: cell, cellIndex: cellIndex };
+      const cell = getCell(
+        notebook,
+        (args as IRemoveCellSyncArguments).pageId,
+        (args as IRemoveCellSyncArguments).cellId
+      );
+      const cellIndex = indexCell(
+        notebook,
+        (args as IRemoveCellSyncArguments).pageId,
+        (args as IRemoveCellSyncArguments).cellId
+      );
+      newArgs = { ...newArgs, cell: cell!, index: cellIndex };
       break;
     case "setCellContentSync":
       const previousContent = getCellContent(
         notebook,
-        args.pageId!,
-        args.cellId!
+        (args as ISetCellContentSyncArguments).pageId,
+        (args as ISetCellContentSyncArguments).cellId
       );
       newArgs = { ...newArgs, previousContent: previousContent };
       break;
     case "setCellDataSync":
-      const previousData = getCellData(notebook, args.pageId!, args.cellId!);
+      const previousData = getCellData(
+        notebook,
+        (args as ISetCellDataSyncArguments).pageId,
+        (args as ISetCellDataSyncArguments).cellId
+      );
       newArgs = { ...newArgs, previousData: previousData };
+      break;
+    case "movePageSync":
+      const previousPageIndex = indexPage(
+        notebook,
+        (args as IMovePageSyncArguments).pageId
+      );
+      newArgs = { ...newArgs, previousIndex: previousPageIndex };
+      break;
+    case "moveCellSync":
+      const previousCellIndex = indexCell(
+        notebook,
+        (args as IMoveCellSyncArguments).pageId,
+        (args as IMoveCellSyncArguments).cellId
+      );
+      newArgs = { ...newArgs, previousIndex: previousCellIndex };
       break;
     default:
       break;
   }
+
   return newArgs;
 }
 
-export function getUndoManipulation(
-  args: INotebookManipulationArguments
-): INotebookManipulation {
-  switch (args.action) {
-    case "insertPageSync":
-      return undoInsertPageSync;
-    case "addPageSync":
-      return undoAddPageSync;
-    case "removePageSync":
-      return undoRemovePageSync;
-    case "insertCellSync":
-      return undoInsertCellSync;
-    case "addCellSync":
-      return undoAddCellSync;
-    case "removeCellSync":
-      return undoRemoveCellSync;
-    case "setCellContentSync":
-      return undoSetCellContentSync;
-    case "setCellDataSync":
-      return undoSetCellDataSync;
-    case "addEntitiesCell":
-      return undoAddEntitiesCell;
-    case "addQuestionCell":
-      return undoAddQuestionCell;
-    case "addSparseQuestionCell":
-      return undoAddSparseQuestionCell;
-    case "addGenerateCell":
-      return undoAddGenerateCell;
-    case "addWikipediaSummaryCell":
-      return undoAddWikipediaSummaryCell;
-    case "addWikipediaSuggestionsCell":
-      return undoAddWikipediaSuggestionsCell;
-    case "addWikipediaImageCell":
-      return undoAddWikipediaImageCell;
-    case "addMeaningCell":
-      return undoAddMeaningCell;
-    case "addSynonymCell":
-      return undoAddSynonymCell;
-    case "addAntonymCell":
-      return undoAddAntonymCell;
-    default:
-      throw new Error("Unreachable");
+export function getUndoManipulation<T extends INotebookManipulationAction>(
+  args: T
+): INotebookManipulation<T> {
+  if (asyncManipulationsNames.includes(args.name)) {
+    // @ts-ignore
+    return undoAsyncManipulations[asyncManipulationsNames.indexOf(args.name)];
+  } else {
+    // @ts-ignore
+    return undoSyncManipulations[syncManipulationsNames.indexOf(args.name)];
   }
 }
 
-export function getRedoManipulation(
-  args: INotebookManipulationArguments
-): INotebookManipulation {
-  switch (args.action) {
-    case "insertPageSync":
-      return insertPageSync;
-    case "addPageSync":
-      return addPageSync;
-    case "removePageSync":
-      return removePageSync;
-    case "insertCellSync":
-      return insertCellSync;
-    case "addCellSync":
-      return addCellSync;
-    case "removeCellSync":
-      return removeCellSync;
-    case "setCellContentSync":
-      return setCellContentSync;
-    case "setCellDataSync":
-      return setCellDataSync;
-    case "addEntitiesCell":
-      return addEntitiesCell;
-    case "addQuestionCell":
-      return addQuestionCell;
-    case "addSparseQuestionCell":
-      return addSparseQuestionCell;
-    case "addGenerateCell":
-      return addGenerateCell;
-    case "addWikipediaSummaryCell":
-      return addWikipediaSummaryCell;
-    case "addWikipediaSuggestionsCell":
-      return addWikipediaSuggestionsCell;
-    case "addWikipediaImageCell":
-      return addWikipediaImageCell;
-    case "addMeaningCell":
-      return addMeaningCell;
-    case "addSynonymCell":
-      return addSynonymCell;
-    case "addAntonymCell":
-      return addAntonymCell;
-    default:
-      throw new Error("Unreachable");
+export function getRedoManipulation<T extends INotebookManipulationAction>(
+  args: T
+): INotebookManipulation<T> {
+  if (asyncManipulationsNames.includes(args.name)) {
+    // @ts-ignore
+    return asyncManipulations[asyncManipulationsNames.indexOf(args.name)];
+  } else {
+    // @ts-ignore
+    return syncManipulations[syncManipulationsNames.indexOf(args.name)];
   }
 }
 
-export function isAsync(args: INotebookManipulationArguments): boolean {
-  switch (args.action) {
-    case "addEntitiesCell":
-    case "addQuestionCell":
-    case "addSparseQuestionCell":
-    case "addGenerateCell":
-    case "addWikipediaSummaryCell":
-    case "addWikipediaSuggestionsCell":
-    case "addWikipediaImageCell":
-    case "addMeaningCell":
-    case "addSynonymCell":
-    case "addAntonymCell":
-      return true;
-    default:
-      return false;
-  }
+export function isAsync(args: INotebookManipulationAction): boolean {
+  return asyncManipulationsNames.includes(args.name);
 }
 
+// TODO
 export function isCell(element: ICell | IPage | INotebook): boolean {
   return "id" in element && "data" in element && "content" in element;
 }

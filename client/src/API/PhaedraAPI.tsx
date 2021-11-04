@@ -126,7 +126,7 @@ export async function addSummaryCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/wikipedia_summary`, {
+  return fetch(`${getApiUrl()}/cell/add/summary`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
@@ -146,7 +146,7 @@ export async function addSuggestionsCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/wikipedia_suggestions`, {
+  return fetch(`${getApiUrl()}/cell/add/suggestions`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({
@@ -166,7 +166,7 @@ export async function addImageCell(
   page_id: string,
   cell_id: string
 ): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/wikipedia_image`, {
+  return fetch(`${getApiUrl()}/cell/add/image`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({

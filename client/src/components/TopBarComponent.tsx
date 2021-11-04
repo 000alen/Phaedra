@@ -1,8 +1,8 @@
 import "../css/TopBarComponent.css";
 
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 
-import { IconButton, SearchBox } from "@fluentui/react";
+import { IconButton } from "@fluentui/react";
 
 import { ipcRenderer } from "../index";
 import { theme } from "../resources/theme";
@@ -76,7 +76,7 @@ export default class TopBarComponent extends Component<
   }
 
   render() {
-    const { tabs, activeTabId: activeTab, tabsDo } = this.props;
+    const { tabs, activeTabId, tabsDo } = this.props;
 
     const topBarStyle = {
       backgroundColor: theme.palette.white,
@@ -113,12 +113,12 @@ export default class TopBarComponent extends Component<
       <div className="topBar flex items-center" style={topBarStyle}>
         <div className="titleBar">
           <div className="titleBarChildren">
-            <TabsComponent tabs={tabs} activeTab={activeTab} tabsDo={tabsDo} />
+            <TabsComponent
+              tabs={tabs}
+              activeTabId={activeTabId}
+              tabsDo={tabsDo}
+            />
           </div>
-        </div>
-
-        <div className="m-2">
-          <SearchBox />
         </div>
 
         <div className="titleBarButtons">

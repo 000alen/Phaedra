@@ -70,7 +70,7 @@ export default class App extends Component<AppProps, AppState> {
         tasksDo: this.tasksDo,
         widgetsDo: this.statusBarWidgetsDo,
         getTabs: this.getTabs,
-        getActiveTab: this.getActiveTabId,
+        getActiveTabId: this.getActiveTabId,
         getClipboard: this.getClipboard,
         getTasks: this.getTasks,
         getWidgets: this.getStatusBarWidgets,
@@ -103,7 +103,7 @@ export default class App extends Component<AppProps, AppState> {
   ): void {
     if (args === undefined) args = {};
 
-    let { tabs, activeTabId: activeTab } = this.state;
+    let { tabs, activeTabId } = this.state;
 
     switch (manipulation.name) {
       case "addTab":
@@ -120,7 +120,7 @@ export default class App extends Component<AppProps, AppState> {
         break;
     }
 
-    let tabsInformation = manipulation(tabs, activeTab!, args);
+    let tabsInformation = manipulation(tabs, activeTabId!, args);
 
     this.setState((state) => {
       return {

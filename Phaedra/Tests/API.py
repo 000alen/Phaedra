@@ -110,7 +110,7 @@ class TestAPI(unittest.TestCase):
 
         with app.test_client() as c:
             response = c.post(
-                "/cell/add/wikipedia_summary",
+                "/cell/add/summary",
                 json={
                     "notebook": json.dumps(notebook.json()),
                     "page_id": page_id,
@@ -130,7 +130,7 @@ class TestAPI(unittest.TestCase):
 
         with app.test_client() as c:
             response = c.post(
-                "/cell/add/wikipedia_suggestions",
+                "/cell/add/suggestions",
                 json={
                     "notebook": json.dumps(notebook.json()),
                     "page_id": page_id,
@@ -150,7 +150,7 @@ class TestAPI(unittest.TestCase):
 
         with app.test_client() as c:
             response = c.post(
-                "/cell/add/wikipedia_image",
+                "/cell/add/image",
                 json={
                     "notebook": json.dumps(notebook.json()),
                     "page_id": page_id,

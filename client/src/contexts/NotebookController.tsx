@@ -3,7 +3,8 @@ import React from "react";
 import {
   INotebook,
   INotebookManipulation,
-  INotebookManipulationArguments,
+  INotebookManipulationAsyncArguments,
+  INotebookManipulationSyncArguments,
 } from "../structures/NotebookStructure";
 import { INotebookPageController } from "./NotebookPageController";
 
@@ -13,13 +14,13 @@ export interface INotebookController {
   toggleEditing: () => void;
   undo: () => void;
   redo: () => void;
-  do: (
-    action: INotebookManipulation,
-    args: INotebookManipulationArguments
+  do: <T extends INotebookManipulationAsyncArguments>(
+    action: INotebookManipulation<T>,
+    args: T
   ) => void;
-  doSync: (
-    action: INotebookManipulation,
-    args: INotebookManipulationArguments
+  doSync: <T extends INotebookManipulationSyncArguments>(
+    action: INotebookManipulation<T>,
+    args: T
   ) => void;
   getNotebookPageController: () => INotebookPageController | undefined;
   getActive: () => [string | undefined, string | undefined];
@@ -32,13 +33,13 @@ export const NotebookController = React.createContext<INotebookController>({
   toggleEditing: () => {},
   undo: () => {},
   redo: () => {},
-  do: (
-    action: INotebookManipulation,
-    args: INotebookManipulationArguments
+  do: <T extends INotebookManipulationAsyncArguments>(
+    action: INotebookManipulation<T>,
+    args: T
   ) => {},
-  doSync: (
-    action: INotebookManipulation,
-    args: INotebookManipulationArguments
+  doSync: <T extends INotebookManipulationSyncArguments>(
+    action: INotebookManipulation<T>,
+    args: T
   ) => {},
   getNotebookPageController: () => undefined,
   getActive: () => [undefined, undefined],

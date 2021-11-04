@@ -10,7 +10,7 @@ export interface ITab {
 
 export interface ITabsInformation {
   tabs: ITab[];
-  activeTab?: string;
+  activeTabId?: string;
 }
 
 export interface ITabsManipulationArguments {
@@ -23,7 +23,7 @@ export interface ITabsManipulationArguments {
 
 export type ITabsManipulation = (
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   tabsManipulationArguments: ITabsManipulationArguments
 ) => ITabsInformation;
 
@@ -41,61 +41,61 @@ export function createTab({ id, title, content }: Partial<ITab>): ITab {
 
 export function insertTab(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { tab, index }: ITabsManipulationArguments
 ): ITabsInformation {
   let newTabs = [...tabs];
   newTabs.splice(index!, 0, tab!);
   return {
     tabs: newTabs,
-    activeTab: tab!.id,
+    activeTabId: tab!.id,
   };
 }
 
 export function addTab(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { tab }: ITabsManipulationArguments
 ): ITabsInformation {
   return {
     tabs: [...tabs!, tab!],
-    activeTab: tab!.id,
+    activeTabId: tab!.id,
   };
 }
 
 export function removeTab(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { id }: ITabsManipulationArguments
 ): ITabsInformation {
   let activeTabIndex = tabs.findIndex((tab) => tab.id === id);
 
   let newTabs = tabs.filter((tab) => tab.id !== id);
-  let newActiveTab = activeTab;
+  let newActiveTab = activeTabId;
   if (newTabs.length && activeTabIndex !== 0) {
     newActiveTab = newTabs[activeTabIndex - 1].id;
   }
 
   return {
     tabs: newTabs,
-    activeTab: newTabs.length ? newActiveTab : undefined,
+    activeTabId: newTabs.length ? newActiveTab : undefined,
   };
 }
 
 export function selectTab(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { id }: ITabsManipulationArguments
 ): ITabsInformation {
   return {
     tabs: tabs,
-    activeTab: id,
+    activeTabId: id,
   };
 }
 
 export function setTabTitle(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { id, title }: ITabsManipulationArguments
 ): ITabsInformation {
   return {
@@ -105,13 +105,13 @@ export function setTabTitle(
         title: tab.id === id ? title! : tab.title,
       };
     }),
-    activeTab: activeTab,
+    activeTabId: activeTabId,
   };
 }
 
 export function setTabContent(
   tabs: ITab[],
-  activeTab: string,
+  activeTabId: string,
   { id, content }: ITabsManipulationArguments
 ): ITabsInformation {
   return {
@@ -121,7 +121,7 @@ export function setTabContent(
         content: tab.id === id ? content : tab.content,
       };
     }),
-    activeTab: activeTab,
+    activeTabId: activeTabId,
   };
 }
 

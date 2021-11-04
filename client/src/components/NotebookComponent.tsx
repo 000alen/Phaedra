@@ -27,7 +27,11 @@ import {
   getRedoManipulation,
   INotebook,
   INotebookManipulation,
-  INotebookManipulationArguments,
+  INotebookManipulationAction,
+  INotebookManipulationAsyncAction,
+  INotebookManipulationAsyncArguments,
+  INotebookManipulationSyncAction,
+  INotebookManipulationSyncArguments,
   isAsync,
   redo,
   undo,
@@ -233,24 +237,23 @@ export default class NotebookComponent extends Component<
     });
   }
 
-  do(
-    manipulation: INotebookManipulation,
-    args: INotebookManipulationArguments
+  do<T extends INotebookManipulationAsyncArguments>(
+    manipulation: INotebookManipulation<T>,
+    args: T
   ) {
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
     let notebook = this.state.notebook;
-    let { pageId, cellId } = args;
 
     let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
-    if (pageId === undefined) {
+    if (!("pageId" in args)) {
       const lastPage = notebook.pages[notebook.pages.length - 1];
       if (lastPage === undefined) throw new Error("No page.");
       newArgs.pageId = lastPage.id;
     }
 
-    if (cellId === undefined) {
+    if (!("pageId" in args)) {
       let [_notebook, id] = addPlaceholderCellSync(notebook, {
         pageId: newArgs.pageId,
       });
@@ -272,7 +275,7 @@ export default class NotebookComponent extends Component<
         let { history, historyIndex } = this.state;
 
         const newHistoryInformation = historyDo(history, historyIndex, {
-          command: { ...newArgs, action: manipulation.name },
+          command: { ...newArgs, name: manipulation.name },
         });
 
         this.setState((state) => {
@@ -297,16 +300,16 @@ export default class NotebookComponent extends Component<
       });
   }
 
-  doSync(
-    manipulation: INotebookManipulation,
-    args: INotebookManipulationArguments
+  doSync<T extends INotebookManipulationSyncArguments>(
+    manipulation: INotebookManipulation<T>,
+    args: T
   ) {
     let { notebook, history, historyIndex } = this.state;
 
     let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
     const newHistoryInformation = historyDo(history, historyIndex, {
-      command: { ...newArgs, action: manipulation.name },
+      command: { ...newArgs, name: manipulation.name },
     });
 
     const newNotebook = manipulation(notebook, newArgs);
@@ -346,14 +349,20 @@ export default class NotebookComponent extends Component<
     if (command === undefined) return;
 
     if (isAsync(command)) {
-      this.redoAsync(command, historyInformation);
+      this.redoAsync(
+        command as INotebookManipulationAsyncAction,
+        historyInformation
+      );
     } else {
-      this.redoSync(command, historyInformation);
+      this.redoSync(
+        command as INotebookManipulationSyncAction,
+        historyInformation
+      );
     }
   }
 
   redoSync(
-    command: INotebookManipulationArguments,
+    command: INotebookManipulationAction,
     historyInformation: IHistoryInformation
   ) {
     let notebook = this.state.notebook;
@@ -370,7 +379,7 @@ export default class NotebookComponent extends Component<
   }
 
   redoAsync(
-    command: INotebookManipulationArguments,
+    command: INotebookManipulationAsyncAction,
     historyInformation: IHistoryInformation
   ) {
     const notebookPageController: INotebookPageController = this.context;
@@ -378,20 +387,20 @@ export default class NotebookComponent extends Component<
 
     let notebook = this.state.notebook;
 
-    let { pageId, cellId } = command;
+    let newCommand = { ...command };
 
-    if (pageId === undefined) {
+    if (!("pageId" in command)) {
       const lastPage = notebook.pages[notebook.pages.length - 1];
       if (lastPage === undefined) throw new Error("No page.");
-      command.pageId = lastPage.id;
+      newCommand.pageId = lastPage.id;
     }
 
-    if (cellId === undefined) {
+    if (!("cellId" in command)) {
       let [_notebook, id] = addPlaceholderCellSync(notebook, {
-        pageId: command.pageId,
+        pageId: newCommand.pageId,
       });
       notebook = _notebook;
-      command.cellId = id;
+      newCommand.cellId = id;
     }
 
     this.setState((state) => {
@@ -400,12 +409,12 @@ export default class NotebookComponent extends Component<
 
     const taskId = uuidv4();
     appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: command.action }),
+      task: createTask({ id: taskId, name: newCommand.name }),
     });
 
-    let redoManipulation = getRedoManipulation(command);
+    let redoManipulation = getRedoManipulation(newCommand);
 
-    (redoManipulation(notebook, command) as Promise<INotebook>)
+    (redoManipulation(notebook, newCommand) as Promise<INotebook>)
       .then((_notebook: INotebook) => {
         this.setState((state) => {
           return {

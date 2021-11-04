@@ -453,7 +453,7 @@ class Notebook:
 
         return answers
 
-    def _generate(self, prompt: str, page_id: str) -> str:
+    def _generation(self, prompt: str, page_id: str) -> str:
         """Generates text from a given prompt with context (from page.data["source"]).
 
         :param prompt: Prompt to generate text from.
@@ -567,7 +567,7 @@ class Notebook:
 
         return cell_id
 
-    def add_generate_cell(
+    def add_generation_cell(
         self, prompt: str, page_id: str, cell_id: Optional[str] = None
     ) -> Optional[str]:
         """Adds generate cell to the Notebook.
@@ -583,7 +583,7 @@ class Notebook:
 
         assert page is not None
 
-        content = titled_text(prompt, self._generate(prompt, page_id))
+        content = titled_text(prompt, self._generation(prompt, page_id))
 
         if cell_id is None:
             cell_id = str(uuid.uuid4())
@@ -599,7 +599,7 @@ class Notebook:
 
         return cell_id
 
-    def add_wikipedia_summary_cell(
+    def add_summary_cell(
         self, query: str, page_id: str, cell_id: Optional[str] = None
     ) -> Optional[str]:
         """Adds Wikipedia summary cell to the Notebook.
@@ -631,7 +631,7 @@ class Notebook:
 
         return cell_id
 
-    def add_wikipedia_suggestions_cell(
+    def add_suggestions_cell(
         self, query: str, page_id: str, cell_id: Optional[str] = None
     ) -> Optional[str]:
         """Adds Wikipedia suggestions cell to the Notebook.
@@ -665,7 +665,7 @@ class Notebook:
 
         return cell_id
 
-    def add_wikipedia_image_cell(
+    def add_image_cell(
         self, query: str, page_id: str, cell_id: Optional[str] = None
     ) -> Optional[str]:
         """Adds Wikipedia image cell to the Notebook.

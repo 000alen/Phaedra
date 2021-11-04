@@ -42,11 +42,13 @@ export default class CommandBoxComponent extends Component<
   }
 
   render() {
+    const { command } = this.state;
+
     return (
       <div className="commandBox w-96">
         <TextField
           placeholder={strings.commandBoxPlaceholder}
-          value={this.state.command}
+          value={command}
           onChange={this.handleChange}
         />
       </div>

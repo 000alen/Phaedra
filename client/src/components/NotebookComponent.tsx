@@ -28,6 +28,7 @@ import {
   INotebook,
   INotebookManipulation,
   INotebookManipulationAction,
+  INotebookManipulationArguments,
   INotebookManipulationAsyncAction,
   INotebookManipulationAsyncArguments,
   INotebookManipulationSyncAction,
@@ -45,23 +46,22 @@ export interface DocumentFile {
 }
 
 export interface NotebookComponentProps {
-  tabId: string;
   notebook: INotebook;
   notebookPath: string | undefined;
 }
 
 export interface NotebookComponentState {
-  tabId: string;
   notebook: INotebook;
   notebookPath: string | undefined;
   documentPath: string | undefined;
   documentFile: DocumentFile | undefined;
-  activePage: string | undefined;
-  activeCell: string | undefined;
+
+  selected: { [key: string]: string[] };
+
   editing: boolean;
-  history: any; // XXX
+  history: INotebookManipulationAction[];
   historyIndex: number;
-  isSaved: boolean;
+  saved: boolean;
   notebookController: INotebookController;
 }
 
@@ -75,53 +75,83 @@ export default class NotebookComponent extends Component<
     super(props);
 
     this.loadDocument = this.loadDocument.bind(this);
-    this.save = this.save.bind(this);
 
-    this.handleSelection = this.handleSelection.bind(this);
-    this.toggleEditing = this.toggleEditing.bind(this);
+    this.save = this.save.bind(this);
+    this.isSaved = this.isSaved.bind(this);
+
+    this.getSelected = this.getSelected.bind(this);
+    this.selectPage = this.selectPage.bind(this);
+    this.selectCell = this.selectCell.bind(this);
+    this.deselectPage = this.deselectPage.bind(this);
+    this.deselectCell = this.deselectCell.bind(this);
+    this.isPageSelected = this.isPageSelected.bind(this);
+    this.isCellSelected = this.isCellSelected.bind(this);
+
+    this.enterEditing = this.enterEditing.bind(this);
+    this.exitEditing = this.exitEditing.bind(this);
+    this.isEditing = this.isEditing.bind(this);
 
     this.do = this.do.bind(this);
+    this.doAsync = this.doAsync.bind(this);
     this.doSync = this.doSync.bind(this);
     this.undo = this.undo.bind(this);
     this.redo = this.redo.bind(this);
+    this.redoAsync = this.redoAsync.bind(this);
+    this.redoSync = this.redoSync.bind(this);
+
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
-    this.getActive = this.getActive.bind(this);
     this.getNotebook = this.getNotebook.bind(this);
 
-    const { tabId, notebook, notebookPath } = props;
+    const { notebook, notebookPath } = props;
 
     this.state = {
-      tabId: tabId,
       notebook: notebook,
       notebookPath: notebookPath,
+
       documentPath: notebook.document_path,
       documentFile: undefined,
-      activePage: undefined,
-      activeCell: undefined,
+
+      selected: {},
       editing: false,
+
+      // ! TODO
       history: [],
       historyIndex: -1,
-      isSaved: true,
+
+      saved: true,
       notebookController: {
         save: this.save,
-        handleSelection: this.handleSelection,
-        toggleEditing: this.toggleEditing,
+        isSaved: this.isSaved,
+
+        getSelected: this.getSelected,
+        selectPage: this.selectPage,
+        selectCell: this.selectCell,
+        deselectPage: this.deselectPage,
+        deselectCell: this.deselectCell,
+        isPageSelected: this.isPageSelected,
+        isCellSelected: this.isCellSelected,
+
+        enterEditing: this.enterEditing,
+        exitEditing: this.exitEditing,
+        isEditing: this.isEditing,
+
+        do: this.do,
         undo: this.undo,
         redo: this.redo,
-        do: this.do,
-        doSync: this.doSync,
+
         getNotebookPageController: this.getNotebookPageController,
-        getActive: this.getActive,
         getNotebook: this.getNotebook,
       },
     };
   }
 
+  // ! TODO
   componentDidMount() {
-    if (this.state.documentPath && !this.state.documentFile)
-      this.loadDocument();
+    const { documentPath, documentFile, notebook } = this.state;
 
-    let unparsedState = window.localStorage.getItem(this.state.notebook.name);
+    if (documentPath && !documentFile) this.loadDocument();
+
+    let unparsedState = window.localStorage.getItem(notebook.name);
 
     if (unparsedState !== null) {
       let state = JSON.parse(unparsedState);
@@ -134,15 +164,16 @@ export default class NotebookComponent extends Component<
     }
   }
 
+  // ! TODO
   componentWillUnmount() {
+    const { notebook } = this.state;
     let state = { ...this.state };
-    window.localStorage.setItem(
-      this.state.notebook.name,
-      JSON.stringify(state)
-    );
+    window.localStorage.setItem(notebook.name, JSON.stringify(state));
   }
 
-  loadDocument() {
+  // TODO: Move to NotebookIO
+  async loadDocument() {
+    const { documentPath } = this.state;
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
 
@@ -151,30 +182,29 @@ export default class NotebookComponent extends Component<
       task: createTask({ id: taskId, name: strings.loadingDocumentTaskLabel }),
     });
 
-    readFileSync(this.state.documentPath!)
-      .then((documentContent) => {
-        this.setState((state) => {
-          const documentFile = {
-            url: this.state.documentPath!,
-            data: documentContent as Uint8Array,
-          };
-          return { ...state, documentFile: documentFile };
-        });
-      })
-      .catch((error) => {
-        notebookPageController.messagesDo(addMessage, {
-          message: createMessage({
-            text: strings.documentLoadingError,
-            type: MessageBarType.error,
-          }),
-        });
-      })
-      .finally(() => {
-        appController!.tasksDo(removeTask, { id: taskId });
+    try {
+      const documentContent = await readFileSync(documentPath!);
+      const documentFile = {
+        url: documentPath!,
+        data: documentContent as Uint8Array,
+      };
+      this.setState((state) => {
+        return { ...state, documentFile: documentFile };
       });
+    } catch (error) {
+      notebookPageController.messagesDo(addMessage, {
+        message: createMessage({
+          text: strings.documentLoadingError,
+          type: MessageBarType.error,
+        }),
+      });
+    } finally {
+      appController!.tasksDo(removeTask, { id: taskId });
+    }
   }
 
-  save() {
+  async save() {
+    const { notebook, notebookPath } = this.state;
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
 
@@ -183,69 +213,166 @@ export default class NotebookComponent extends Component<
       task: createTask({ id: taskId, name: strings.savingNotebookTaskLabel }),
     });
 
-    saveNotebook(this.state.notebook, this.state.notebookPath)
-      .then((notebookPath) => {
-        this.setState((state) => {
-          return {
-            ...state,
-            notebookPath: notebookPath as string,
-            isSaved: true,
-          };
-        });
-      })
-      .catch((error) => {
-        notebookPageController.messagesDo(addMessage, {
-          message: createMessage({
-            text: strings.savingNotebookTaskError,
-            type: MessageBarType.error,
-          }),
-        });
-      })
-      .finally(() => {
-        appController!.tasksDo(removeTask, { id: taskId });
-      });
-  }
-
-  handleSelection(pageId: string, cellId: string) {
-    if (this.state.activePage === pageId && this.state.activeCell === cellId) {
-      this.context.hideCommandBox();
+    try {
+      const finalNotebookPath = await saveNotebook(notebook, notebookPath);
       this.setState((state) => {
-        return { ...state, activePage: undefined, activeCell: undefined };
+        return {
+          ...state,
+          notebookPath: finalNotebookPath,
+          saved: true,
+        };
       });
-    } else if (
-      this.state.activePage === pageId &&
-      this.state.activeCell !== cellId
-    ) {
-      this.context.showCommandBox();
-      this.setState((state) => {
-        return { ...state, activePage: pageId, activeCell: cellId };
+    } catch (error) {
+      notebookPageController.messagesDo(addMessage, {
+        message: createMessage({
+          text: strings.savingNotebookTaskError,
+          type: MessageBarType.error,
+        }),
       });
-    } else {
-      this.context.showCommandBox();
-      this.setState((state) => {
-        return { ...state, activePage: pageId, activeCell: cellId };
-      });
+    } finally {
+      appController!.tasksDo(removeTask, { id: taskId });
     }
   }
 
-  toggleEditing() {
+  isSaved(): boolean {
+    return this.state.saved;
+  }
+
+  getSelected(): { [key: string]: string[] } {
+    return this.state.selected;
+  }
+
+  selectPage(pageId: string) {
+    const { selected } = this.state;
+
+    if (pageId in selected) return;
+
     this.setState((state) => {
       return {
         ...state,
-        editing: !state.editing,
+        selected: {
+          ...selected,
+          [pageId]: [],
+        },
       };
     });
   }
 
-  do<T extends INotebookManipulationAsyncArguments>(
+  selectCell(pageId: string, cellId: string) {
+    const { selected } = this.state;
+
+    if (pageId in selected && selected[pageId].includes(cellId)) return;
+
+    if (pageId in selected) {
+      this.setState((state) => {
+        return {
+          ...state,
+          selected: {
+            ...selected,
+            [pageId]: [...selected[pageId], cellId],
+          },
+        };
+      });
+    } else {
+      this.setState((state) => {
+        return {
+          ...state,
+          selected: {
+            ...selected,
+            [pageId]: [cellId],
+          },
+        };
+      });
+    }
+  }
+
+  deselectPage(pageId: string) {
+    const { selected } = this.state;
+
+    if (!(pageId in selected)) return;
+
+    this.setState((state) => {
+      delete selected[pageId];
+      return {
+        ...state,
+        selected: selected,
+      };
+    });
+  }
+
+  deselectCell(pageId: string, cellId: string) {
+    const { selected } = this.state;
+
+    if (!(pageId in selected)) return;
+    if (!selected[pageId].includes(cellId)) return;
+
+    this.setState((state) => {
+      return {
+        ...state,
+        selected: {
+          ...selected,
+          [pageId]: selected[pageId].filter((id) => id !== cellId),
+        },
+      };
+    });
+  }
+
+  isPageSelected(pageId: string): boolean {
+    const { selected } = this.state;
+    return pageId in selected;
+  }
+
+  isCellSelected(pageId: string, cellId: string): boolean {
+    const { selected } = this.state;
+    if (!(pageId in selected)) return false;
+    return selected[pageId].includes(cellId);
+  }
+
+  enterEditing() {
+    this.setState((state) => {
+      return {
+        ...state,
+        isEditing: true,
+      };
+    });
+  }
+
+  exitEditing() {
+    this.setState((state) => {
+      return {
+        ...state,
+        isEditing: false,
+      };
+    });
+  }
+
+  isEditing(): boolean {
+    return this.state.editing;
+  }
+
+  do<T extends INotebookManipulationArguments>(
+    manipulation: INotebookManipulation<T>,
+    args: T
+  ) {
+    if (isAsync({ ...args, name: manipulation.name })) {
+      this.doAsync(
+        manipulation as INotebookManipulation<INotebookManipulationAsyncArguments>,
+        args as INotebookManipulationAsyncArguments
+      );
+    } else {
+      this.doSync(manipulation, args);
+    }
+  }
+
+  doAsync<T extends INotebookManipulationAsyncArguments>(
     manipulation: INotebookManipulation<T>,
     args: T
   ) {
     const notebookPageController: INotebookPageController = this.context;
-    const appController = notebookPageController.getAppController();
-    let notebook = this.state.notebook;
+    const appController = notebookPageController.getAppController()!;
+    const { notebook } = this.state;
 
-    let newArgs = collectComplementaryArguments(notebook, manipulation, args);
+    const newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
     if (!("pageId" in args)) {
       const lastPage = notebook.pages[notebook.pages.length - 1];
@@ -253,51 +380,57 @@ export default class NotebookComponent extends Component<
       newArgs.pageId = lastPage.id;
     }
 
+    let intermediateNotebook = notebook;
     if (!("pageId" in args)) {
-      let [_notebook, id] = addPlaceholderCellSync(notebook, {
-        pageId: newArgs.pageId,
-      });
-      notebook = _notebook;
-      newArgs.cellId = id;
+      let [_intermediateNotebook, placeholderCellId] = addPlaceholderCellSync(
+        notebook,
+        {
+          pageId: newArgs.pageId,
+        }
+      );
+      intermediateNotebook = _intermediateNotebook;
+      newArgs.cellId = placeholderCellId;
     }
 
-    this.setState((state) => {
-      return { ...state, notebook: notebook };
-    });
+    this.setState(
+      (state) => {
+        return { ...state, notebook: intermediateNotebook };
+      },
+      async () => {
+        const taskId = uuidv4();
 
-    const taskId = uuidv4();
-    appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: manipulation.name }),
-    });
-
-    (manipulation(notebook, newArgs) as Promise<INotebook>)
-      .then((_notebook: INotebook) => {
-        let { history, historyIndex } = this.state;
-
-        const newHistoryInformation = historyDo(history, historyIndex, {
-          command: { ...newArgs, name: manipulation.name },
+        appController.tasksDo(addTask, {
+          task: createTask({ id: taskId, name: manipulation.name }),
         });
 
-        this.setState((state) => {
-          return {
-            ...state,
-            ...newHistoryInformation,
-            notebook: _notebook,
-            isSaved: false,
-          };
-        });
-      })
-      .catch((error) => {
-        notebookPageController.messagesDo(addMessage, {
-          message: createMessage({
-            text: strings.notebookManipulationError,
-            type: MessageBarType.error,
-          }),
-        });
-      })
-      .finally(() => {
-        appController!.tasksDo(removeTask, { id: taskId });
-      });
+        try {
+          let finalNotebook = await manipulation(notebook, newArgs);
+          let { history, historyIndex } = this.state;
+
+          const finalHistoryInformation = historyDo(history, historyIndex, {
+            command: { ...newArgs, name: manipulation.name },
+          });
+
+          this.setState((state) => {
+            return {
+              ...state,
+              ...finalHistoryInformation,
+              notebook: finalNotebook,
+              saved: false,
+            };
+          });
+        } catch (error) {
+          notebookPageController.messagesDo(addMessage, {
+            message: createMessage({
+              text: strings.notebookManipulationError,
+              type: MessageBarType.error,
+            }),
+          });
+        } finally {
+          appController!.tasksDo(removeTask, { id: taskId });
+        }
+      }
+    );
   }
 
   doSync<T extends INotebookManipulationSyncArguments>(
@@ -308,18 +441,18 @@ export default class NotebookComponent extends Component<
 
     let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
-    const newHistoryInformation = historyDo(history, historyIndex, {
+    const finalHistoryInformation = historyDo(history, historyIndex, {
       command: { ...newArgs, name: manipulation.name },
     });
 
-    const newNotebook = manipulation(notebook, newArgs);
+    const finalNotebook = manipulation(notebook, newArgs);
 
     this.setState((state) => {
       return {
         ...state,
-        ...newHistoryInformation,
-        notebook: newNotebook as INotebook,
-        isSaved: false,
+        ...finalHistoryInformation,
+        notebook: finalNotebook as INotebook,
+        saved: false,
       };
     });
   }
@@ -337,7 +470,7 @@ export default class NotebookComponent extends Component<
         ...state,
         ...newHistoryInformation,
         notebook: newNotebook,
-        isSaved: false,
+        saved: false,
       };
     });
   }
@@ -361,31 +494,13 @@ export default class NotebookComponent extends Component<
     }
   }
 
-  redoSync(
-    command: INotebookManipulationAction,
-    historyInformation: IHistoryInformation
-  ) {
-    let notebook = this.state.notebook;
-    let newNotebook = redo(notebook, command) as INotebook;
-
-    this.setState((state) => {
-      return {
-        ...state,
-        ...historyInformation,
-        notebook: newNotebook,
-        isSaved: false,
-      };
-    });
-  }
-
-  redoAsync(
+  async redoAsync(
     command: INotebookManipulationAsyncAction,
     historyInformation: IHistoryInformation
   ) {
+    let { notebook } = this.state;
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController();
-
-    let notebook = this.state.notebook;
 
     let newCommand = { ...command };
 
@@ -414,36 +529,47 @@ export default class NotebookComponent extends Component<
 
     let redoManipulation = getRedoManipulation(newCommand);
 
-    (redoManipulation(notebook, newCommand) as Promise<INotebook>)
-      .then((_notebook: INotebook) => {
-        this.setState((state) => {
-          return {
-            ...state,
-            ...historyInformation,
-            notebook: _notebook,
-            isSaved: false,
-          };
-        });
-      })
-      .catch((error) => {
-        notebookPageController.messagesDo(addMessage, {
-          message: createMessage({
-            text: strings.notebookManipulationError,
-            type: MessageBarType.error,
-          }),
-        });
-      })
-      .finally(() => {
-        appController!.tasksDo(removeTask, { id: taskId });
+    try {
+      const finalNotebook = await redoManipulation(notebook, newCommand);
+      this.setState((state) => {
+        return {
+          ...state,
+          ...historyInformation,
+          notebook: finalNotebook,
+          saved: false,
+        };
       });
+    } catch (error) {
+      notebookPageController.messagesDo(addMessage, {
+        message: createMessage({
+          text: strings.notebookManipulationError,
+          type: MessageBarType.error,
+        }),
+      });
+    } finally {
+      appController!.tasksDo(removeTask, { id: taskId });
+    }
+  }
+
+  redoSync(
+    command: INotebookManipulationAction,
+    historyInformation: IHistoryInformation
+  ) {
+    let { notebook } = this.state;
+    let newNotebook = redo(notebook, command) as INotebook;
+
+    this.setState((state) => {
+      return {
+        ...state,
+        ...historyInformation,
+        notebook: newNotebook,
+        saved: false,
+      };
+    });
   }
 
   getNotebookPageController() {
     return this.context;
-  }
-
-  getActive(): [string | undefined, string | undefined] {
-    return [this.state.activePage, this.state.activeCell];
   }
 
   getNotebook(): INotebook {
@@ -451,19 +577,34 @@ export default class NotebookComponent extends Component<
   }
 
   render() {
+    const notebookPageController: INotebookPageController = this.context;
+    const { notebookController, notebook, documentFile, selected, editing } =
+      this.state;
+
+    if (
+      Object.keys(selected).length > 0 &&
+      !notebookPageController.isCommandBoxShown()
+    ) {
+      notebookPageController.showCommandBox();
+    } else if (
+      Object.keys(selected).length === 0 &&
+      notebookPageController.isCommandBoxShown()
+    ) {
+      notebookPageController.hideCommandBox();
+    }
+
     return (
-      <NotebookController.Provider value={this.state.notebookController}>
+      <NotebookController.Provider value={notebookController}>
         <div className="notebook" id="notebook">
-          {this.state.notebook.pages.map((page) => (
+          {notebook.pages.map((page) => (
             <PageComponent
               key={page.id}
               id={page.id}
               data={page.data}
-              document={this.state.documentFile}
+              document={documentFile}
               cells={page.cells}
-              active={this.state.activePage === page.id}
-              activeCell={this.state.activeCell}
-              editing={this.state.editing}
+              selected={selected}
+              editing={editing}
             />
           ))}
         </div>

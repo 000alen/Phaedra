@@ -99,11 +99,13 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   componentDidMount(): void {
+    const { appController } = this.state;
+
     for (const [keys, action] of Object.entries(AppShortcuts)) {
       Mousetrap.bind(
         keys,
         (event) => {
-          action(this.state.appController);
+          action(appController);
           event.preventDefault();
         },
         "keyup"
@@ -154,7 +156,7 @@ export default class App extends Component<AppProps, AppState> {
     manipulation: IClipboardManipulation,
     args: IClipboardManipulationArguments
   ): void {
-    const clipboard = this.state.clipboard;
+    const { clipboard } = this.state;
     const currentClipboard = manipulation(clipboard, args);
 
     this.setState((state) => {
@@ -169,7 +171,7 @@ export default class App extends Component<AppProps, AppState> {
     manipulation: ITasksManipulation,
     args: ITasksManipulationArguments
   ): void {
-    const tasks = this.state.tasks;
+    const { tasks } = this.state;
     const currentTasks = manipulation(tasks, args);
 
     this.setState((state) => {
@@ -184,8 +186,8 @@ export default class App extends Component<AppProps, AppState> {
     manipulation: IWidgetsManipulation,
     args: IWidgetsManipulationArguments
   ): void {
-    const widgets = this.state.statusBarWidgets;
-    const currentWidgets = manipulation(widgets, args);
+    const { statusBarWidgets } = this.state;
+    const currentWidgets = manipulation(statusBarWidgets, args);
 
     this.setState((state) => {
       return {
@@ -260,7 +262,15 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   render(): JSX.Element {
-    const { tabs, activeTabId, tasks, statusBarWidgets } = this.state;
+    const {
+      appController,
+      clipboardPanelShown,
+      tasksPanelShown,
+      tabs,
+      activeTabId,
+      tasks,
+      statusBarWidgets,
+    } = this.state;
 
     let content;
     if (activeTabId === undefined) {
@@ -270,7 +280,7 @@ export default class App extends Component<AppProps, AppState> {
     }
 
     return (
-      <AppController.Provider value={this.state.appController}>
+      <AppController.Provider value={appController}>
         <div className="app">
           <TopBarComponent
             tabs={tabs}
@@ -288,7 +298,7 @@ export default class App extends Component<AppProps, AppState> {
           <Panel
             isLightDismiss
             type={PanelType.smallFixedNear}
-            isOpen={this.state.clipboardPanelShown}
+            isOpen={clipboardPanelShown}
             onDismiss={this.hideClipboardPanel}
           >
             <p>Clipboard panel!</p>
@@ -297,7 +307,7 @@ export default class App extends Component<AppProps, AppState> {
           <Panel
             isLightDismiss
             type={PanelType.smallFixedNear}
-            isOpen={this.state.tasksPanelShown}
+            isOpen={tasksPanelShown}
             onDismiss={this.hideTasksPanel}
           >
             <p>Tasks panel!</p>

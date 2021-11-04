@@ -61,6 +61,7 @@ export default class NotebookPage extends Component<
     super(props);
 
     this.messagesDo = this.messagesDo.bind(this);
+    this.isCommandBoxShown = this.isCommandBoxShown.bind(this);
     this.showCommandBox = this.showCommandBox.bind(this);
     this.hideCommandBox = this.hideCommandBox.bind(this);
     this.getAppController = this.getAppController.bind(this);
@@ -81,6 +82,7 @@ export default class NotebookPage extends Component<
       commandBoxShown: false,
       notebookPageController: {
         messagesDo: this.messagesDo,
+        isCommandBoxShown: this.isCommandBoxShown,
         showCommandBox: this.showCommandBox,
         hideCommandBox: this.hideCommandBox,
         getAppController: this.getAppController,
@@ -93,11 +95,12 @@ export default class NotebookPage extends Component<
   }
 
   componentDidMount(): void {
+    const { notebookPageController } = this.state;
     for (const [keys, action] of Object.entries(NotebookPageShortcuts)) {
       Mousetrap.bind(
         keys,
         (event) => {
-          action(this.state.notebookPageController);
+          action(notebookPageController);
           event.preventDefault();
         },
         "keyup"
@@ -115,7 +118,7 @@ export default class NotebookPage extends Component<
     manipulation: IMessagesManipulation,
     args: IMessagesManipulationArguments
   ) {
-    const messages = this.state.messages;
+    const { messages } = this.state;
     const currentMessages = manipulation(messages, args);
 
     this.setState((state) => {
@@ -124,6 +127,10 @@ export default class NotebookPage extends Component<
         messages: currentMessages,
       };
     });
+  }
+
+  isCommandBoxShown(): boolean {
+    return this.state.commandBoxShown;
   }
 
   showCommandBox(): void {
@@ -186,7 +193,8 @@ export default class NotebookPage extends Component<
   }
 
   render(): JSX.Element {
-    const { messages } = this.state;
+    const { messages, notebookPageController, ribbonKey, commandBoxShown } =
+      this.state;
 
     const messagesItems = messages.slice(0, numberOfMessages).map((message) => {
       return {
@@ -227,11 +235,9 @@ export default class NotebookPage extends Component<
     };
 
     return (
-      <NotebookPageController.Provider
-        value={this.state.notebookPageController}
-      >
+      <NotebookPageController.Provider value={notebookPageController}>
         <div className="notebookPage">
-          <RibbonComponent ribbonKey={this.state.ribbonKey} />
+          <RibbonComponent ribbonKey={ribbonKey} />
 
           <div>
             <OverflowSet
@@ -244,19 +250,18 @@ export default class NotebookPage extends Component<
           </div>
 
           <div className="notebookPageContent" style={notebookPageContentStyle}>
-            {this.state.ribbonKey === "file" ? (
+            {ribbonKey === "file" ? (
               <FileView />
             ) : (
               <NotebookComponent
                 key={this.props.id}
                 ref={this.notebookRef}
-                tabId={this.props.id}
                 notebook={this.props.notebook}
                 notebookPath={this.props.notebookPath}
               />
             )}
 
-            {this.state.commandBoxShown && (
+            {commandBoxShown && (
               <CommandBoxComponent ref={this.commandBoxRef} />
             )}
           </div>

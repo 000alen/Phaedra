@@ -4,28 +4,34 @@ import { getCellData, setCellDataSync } from "../structures/NotebookStructure";
 export function handleSeamless(
   notebookPageController: INotebookPageController
 ) {
-  const notebookController = notebookPageController.getNotebookController();
-  const notebook = notebookController!.getNotebook()!;
+  const notebookController = notebookPageController.getNotebookController()!;
+  const notebook = notebookController.getNotebook()!;
 
-  const [activePage, activeCell] = notebookController!.getActive();
-  if (activePage === undefined || activeCell === undefined) return;
+  for (const [pageId, cellIds] of Object.entries(
+    notebookController.getSelected()!
+  )) {
+    for (const cellId of cellIds) {
+      const data = getCellData(notebook, pageId, cellId);
 
-  let data = getCellData(notebook, activePage, activeCell);
+      if (data.seamless === undefined) data.seamless = false;
 
-  if (data.seamless === undefined) data.seamless = false;
-
-  notebookController!.doSync(setCellDataSync, {
-    pageId: activePage,
-    cellId: activeCell,
-    data: {
-      ...data,
-      seamless: !data.seamless,
-    },
-  });
+      notebookController!.do(setCellDataSync, {
+        pageId: pageId,
+        cellId: cellId,
+        data: {
+          ...data,
+          seamless: !data.seamless,
+        },
+      });
+    }
+  }
 }
 
 export function handleEdit(notebookPageController: INotebookPageController) {
-  const notebookController = notebookPageController.getNotebookController();
-
-  notebookController!.toggleEditing();
+  const notebookController = notebookPageController.getNotebookController()!;
+  if (notebookController.isEditing()) {
+    notebookController.exitEditing();
+  } else {
+    notebookController.enterEditing();
+  }
 }

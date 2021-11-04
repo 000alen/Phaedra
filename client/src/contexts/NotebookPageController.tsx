@@ -15,6 +15,7 @@ export interface INotebookPageController {
     manipulation: IMessagesManipulation,
     args: IMessagesManipulationArguments
   ) => void;
+  isCommandBoxShown: () => boolean | undefined;
   showCommandBox: () => void;
   hideCommandBox: () => void;
   getCommandBoxRef: () => React.RefObject<CommandBoxComponent> | undefined;
@@ -30,6 +31,7 @@ export const NotebookPageController =
       manipulation: IMessagesManipulation,
       args: IMessagesManipulationArguments
     ) => {},
+    isCommandBoxShown: () => undefined,
     showCommandBox: () => {},
     hideCommandBox: () => {},
     getCommandBoxRef: () => undefined,

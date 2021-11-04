@@ -76,6 +76,7 @@ export default class TopBarComponent extends Component<
   }
 
   render() {
+    const { showMaximize } = this.state;
     const { tabs, activeTabId, tabsDo } = this.props;
 
     const topBarStyle = {
@@ -129,7 +130,7 @@ export default class TopBarComponent extends Component<
           />
           <IconButton
             className="topButton"
-            iconProps={this.state.showMaximize ? maximizeIcon : restoreIcon}
+            iconProps={showMaximize ? maximizeIcon : restoreIcon}
             onClick={this.handleMaximizeRestoreButtonClick}
           />
           <IconButton

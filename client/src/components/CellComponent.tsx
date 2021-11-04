@@ -16,7 +16,7 @@ export interface CellComponentProps {
   data: any;
   content: string;
   pageId: string;
-  active: boolean;
+  selected: string[];
   editing: boolean;
 }
 
@@ -31,16 +31,23 @@ export default class CellComponent extends Component<
   constructor(props: CellComponentProps) {
     super(props);
 
-    this.handleSelection = this.handleSelection.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getStyles = this.getStyles.bind(this);
   }
 
-  handleSelection(event: MouseEvent<HTMLDivElement>) {
-    const notebookController = this.context;
-    const { id, pageId } = this.props;
+  handleClick(event: MouseEvent<HTMLDivElement>) {
+    const notebookController: INotebookController = this.context;
+    const { id, pageId, selected } = this.props;
 
-    notebookController.handleSelection(pageId, id);
+    if (selected === undefined) return;
+
+    if (selected.includes(id)) {
+      notebookController.deselectCell(pageId, id);
+    } else {
+      notebookController.selectCell(pageId, id);
+    }
+
     event.stopPropagation();
   }
 
@@ -51,7 +58,7 @@ export default class CellComponent extends Component<
     const notebookController: INotebookController = this.context;
     const { id, pageId } = this.props;
 
-    notebookController.doSync(setCellContentSync, {
+    notebookController.do(setCellContentSync, {
       pageId: pageId,
       cellId: id,
       content: newValue!,
@@ -85,8 +92,12 @@ export default class CellComponent extends Component<
   }
 
   renderLoading() {
-    const { data, active, editing } = this.props;
-    const [classes, style] = this.getStyles(data.seamless, active, editing);
+    const { id, data, selected, editing } = this.props;
+    const [classes, style] = this.getStyles(
+      data.seamless,
+      selected.includes(id),
+      editing
+    );
 
     const wrapperClass = mergeStyles({
       padding: 2,
@@ -101,7 +112,7 @@ export default class CellComponent extends Component<
       <div
         className={`cell ${classes} ${wrapperClass}`}
         style={style}
-        onClick={this.handleSelection}
+        onClick={this.handleClick}
       >
         <Shimmer />
         <Shimmer />
@@ -111,16 +122,20 @@ export default class CellComponent extends Component<
   }
 
   renderViewing() {
-    const { data, content, active, editing } = this.props;
-    const [classes, style] = this.getStyles(data.seamless, active, editing);
+    const { id, data, content, selected, editing } = this.props;
+    const [classes, style] = this.getStyles(
+      data.seamless,
+      selected.includes(id),
+      editing
+    );
 
     return (
       <div
         className={`cell ${classes}`}
         style={style}
-        onClick={this.handleSelection}
+        onClick={this.handleClick}
       >
-        {active && <CellToolbarComponent />}
+        {selected.includes(id) && <CellToolbarComponent />}
 
         <ReactMarkdown children={content} linkTarget="_blank" />
       </div>
@@ -128,8 +143,12 @@ export default class CellComponent extends Component<
   }
 
   renderEditing() {
-    const { data, content, active, editing } = this.props;
-    const [classes, style] = this.getStyles(data.seamless, active, editing);
+    const { id, data, content, selected, editing } = this.props;
+    const [classes, style] = this.getStyles(
+      data.seamless,
+      selected.includes(id),
+      editing
+    );
 
     return (
       <div className={`cell ${classes}`} style={style}>
@@ -145,13 +164,13 @@ export default class CellComponent extends Component<
   }
 
   render() {
-    const { data, active, editing } = this.props;
+    const { id, data, selected, editing } = this.props;
 
     const loading = data.loading;
 
     if (loading) {
       return this.renderLoading();
-    } else if (active && editing) {
+    } else if (selected.includes(id) && editing) {
       return this.renderEditing();
     } else {
       return this.renderViewing();

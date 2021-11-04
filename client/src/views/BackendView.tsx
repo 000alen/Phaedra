@@ -3,12 +3,9 @@ import React, { useState } from "react";
 import {
   CompoundButton,
   DefaultButton,
-  Panel,
-  PanelType,
   PrimaryButton,
   TextField,
 } from "@fluentui/react";
-import { useBoolean } from "@uifabric/react-hooks";
 
 import { getApiUrl, setApiUrl } from "../API/PhaedraAPI";
 import { MainPageViewProps } from "../pages/MainPage";
@@ -31,9 +28,6 @@ export default function BackendView({ id }: MainPageViewProps) {
   const textFieldStyles = {
     root: { width: "500px" },
   };
-
-  const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] =
-    useBoolean(false);
 
   return (
     <div className="space-y-2">
@@ -58,18 +52,6 @@ export default function BackendView({ id }: MainPageViewProps) {
         <PrimaryButton text={strings.setButtonLabel} onClick={handleSetUrl} />
         <DefaultButton text={strings.pingApiButtonLabel} />
       </div>
-
-      <DefaultButton text="Open panel" onClick={openPanel} />
-      <Panel
-        isLightDismiss
-        type={PanelType.smallFixedNear}
-        isOpen={isOpen}
-        onDismiss={dismissPanel}
-        closeButtonAriaLabel="Close"
-        headerText="Light dismiss panel"
-      >
-        <p>Hello, World!</p>
-      </Panel>
     </div>
   );
 }

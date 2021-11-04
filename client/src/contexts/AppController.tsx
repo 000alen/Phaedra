@@ -40,6 +40,13 @@ export interface IAppController {
   getClipboard: () => IClipboard | undefined;
   getTasks: () => ITask[] | undefined;
   getWidgets: () => IWidget[] | undefined;
+
+  isClipboardPanelShown: () => boolean | undefined;
+  showClipboardPanel: () => void;
+  hideClipboardPanel: () => void;
+  isTasksPanelShown: () => boolean | undefined;
+  showTasksPanel: () => void;
+  hideTasksPanel: () => void;
 }
 
 export const AppController = React.createContext<IAppController>({
@@ -61,4 +68,10 @@ export const AppController = React.createContext<IAppController>({
   getClipboard: () => undefined,
   getTasks: () => undefined,
   getWidgets: () => undefined,
+  isClipboardPanelShown: () => undefined,
+  showClipboardPanel: () => {},
+  hideClipboardPanel: () => {},
+  isTasksPanelShown: () => undefined,
+  showTasksPanel: () => {},
+  hideTasksPanel: () => {},
 });

@@ -4,6 +4,8 @@ import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import { Panel, PanelType } from "@fluentui/react";
+
 import { StatusBarComponent } from "./components/StatusBarComponent";
 import TopBarComponent from "./components/TopBarComponent";
 import { AppController, IAppController } from "./contexts/AppController";
@@ -41,6 +43,8 @@ export interface AppState {
   tasks: ITask[];
   statusBarWidgets: IWidget[];
   clipboard: IClipboard;
+  clipboardPanelShown: boolean;
+  tasksPanelShown: boolean;
   appController: IAppController;
 }
 
@@ -57,6 +61,12 @@ export default class App extends Component<AppProps, AppState> {
     this.getClipboard = this.getClipboard.bind(this);
     this.getTasks = this.getTasks.bind(this);
     this.getStatusBarWidgets = this.getStatusBarWidgets.bind(this);
+    this.isClipboardPanelShown = this.isClipboardPanelShown.bind(this);
+    this.showClipboardPanel = this.showClipboardPanel.bind(this);
+    this.hideClipboardPanel = this.hideClipboardPanel.bind(this);
+    this.isTasksPanelShown = this.isTasksPanelShown.bind(this);
+    this.showTasksPanel = this.showTasksPanel.bind(this);
+    this.hideTasksPanel = this.hideTasksPanel.bind(this);
 
     this.state = {
       tabs: [],
@@ -64,6 +74,10 @@ export default class App extends Component<AppProps, AppState> {
       clipboard: [],
       tasks: [],
       statusBarWidgets: [],
+
+      clipboardPanelShown: false,
+      tasksPanelShown: false,
+
       appController: {
         tabsDo: this.tabsDo,
         clipboardDo: this.clipboardDo,
@@ -74,6 +88,12 @@ export default class App extends Component<AppProps, AppState> {
         getClipboard: this.getClipboard,
         getTasks: this.getTasks,
         getWidgets: this.getStatusBarWidgets,
+        isClipboardPanelShown: this.isClipboardPanelShown,
+        showClipboardPanel: this.showClipboardPanel,
+        hideClipboardPanel: this.hideClipboardPanel,
+        isTasksPanelShown: this.isTasksPanelShown,
+        showTasksPanel: this.showTasksPanel,
+        hideTasksPanel: this.hideTasksPanel,
       },
     };
   }
@@ -195,6 +215,50 @@ export default class App extends Component<AppProps, AppState> {
     return this.state.statusBarWidgets;
   }
 
+  isClipboardPanelShown(): boolean {
+    return this.state.clipboardPanelShown;
+  }
+
+  showClipboardPanel() {
+    this.setState((state) => {
+      return {
+        ...state,
+        clipboardPanelShown: true,
+      };
+    });
+  }
+
+  hideClipboardPanel() {
+    this.setState((state) => {
+      return {
+        ...state,
+        clipboardPanelShown: false,
+      };
+    });
+  }
+
+  isTasksPanelShown(): boolean {
+    return this.state.tasksPanelShown;
+  }
+
+  showTasksPanel() {
+    this.setState((state) => {
+      return {
+        ...state,
+        tasksPanelShown: true,
+      };
+    });
+  }
+
+  hideTasksPanel() {
+    this.setState((state) => {
+      return {
+        ...state,
+        tasksPanelShown: false,
+      };
+    });
+  }
+
   render(): JSX.Element {
     const { tabs, activeTabId, tasks, statusBarWidgets } = this.state;
 
@@ -220,6 +284,24 @@ export default class App extends Component<AppProps, AppState> {
             tasks={tasks}
             statusBarWidgets={statusBarWidgets}
           />
+
+          <Panel
+            isLightDismiss
+            type={PanelType.smallFixedNear}
+            isOpen={this.state.clipboardPanelShown}
+            onDismiss={this.hideClipboardPanel}
+          >
+            <p>Clipboard panel!</p>
+          </Panel>
+
+          <Panel
+            isLightDismiss
+            type={PanelType.smallFixedNear}
+            isOpen={this.state.tasksPanelShown}
+            onDismiss={this.hideTasksPanel}
+          >
+            <p>Tasks panel!</p>
+          </Panel>
         </div>
       </AppController.Provider>
     );

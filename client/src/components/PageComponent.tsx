@@ -1,10 +1,13 @@
 import React, { Component, MouseEvent } from "react";
+// @ts-ignore
+import { createReactEditorJS } from "react-editor-js";
 
 import {
   INotebookController,
   NotebookController,
 } from "../contexts/NotebookController";
 import { theme } from "../resources/theme";
+import { tools } from "../resources/tools";
 import { ICell } from "../structures/NotebookStructure";
 import CellComponent from "./CellComponent";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
@@ -20,6 +23,8 @@ export interface PageComponentProps {
 }
 
 export interface PageComponentState {}
+
+const ReactEditorJS = createReactEditorJS();
 
 export default class PageComponent extends Component<
   PageComponentProps,
@@ -46,50 +51,69 @@ export default class PageComponent extends Component<
     }
   }
 
-  renderWithDocument() {
-    const { id, data, cells, selected, document, editing } = this.props;
+  // renderWithSource() {
+  //   const { id, data, cells, selected, document, editing } = this.props;
 
-    const paperStyle = {
-      backgroundColor: theme.palette.white,
-      border:
-        id in selected
-          ? `1px solid ${theme.palette.themePrimary}`
-          : `1px solid ${theme.palette.white}`,
-    };
+  //   const paperStyle = {
+  //     backgroundColor: theme.palette.white,
+  //     border:
+  //       id in selected
+  //         ? `1px solid ${theme.palette.themePrimary}`
+  //         : `1px solid ${theme.palette.white}`,
+  //   };
 
-    return (
-      <div className="grid grid-cols-2">
-        <div>
-          <div
-            className="m-2 p-2 rounded-sm shadow-sm"
-            style={paperStyle}
-            onClick={this.handleClick}
-          >
-            {cells.map((cell) => (
-              <CellComponent
-                key={cell.id}
-                id={cell.id}
-                data={cell.data}
-                content={cell.content}
-                pageId={id}
-                selected={id in selected ? selected[id] : []}
-                editing={editing}
-              />
-            ))}
-          </div>
+  //   return (
+  //     <div className="grid grid-cols-2">
+  //       <div>
+  //         <div className="m-2 p-2 rounded-sm shadow-sm" style={paperStyle}>
+  //           {/* <ReactEditorJS
+  //             tools={tools}
+  //             defaultValue={{
+  //               time: 1635603431943,
+  //               blocks: [
+  //                 {
+  //                   id: "sheNwCUP5A",
+  //                   type: "header",
+  //                   data: {
+  //                     text: "Editor.js",
+  //                     level: 2,
+  //                   },
+  //                 },
+  //                 {
+  //                   id: "12iM3lqzcm",
+  //                   type: "paragraph",
+  //                   data: {
+  //                     text: "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text.",
+  //                   },
+  //                 },
+  //               ],
+  //             }}
+  //           /> */}
+  //           {cells.map((cell) => (
+  //             <CellComponent
+  //               key={cell.id}
+  //               id={cell.id}
+  //               data={cell.data}
+  //               content={cell.content}
+  //               pageId={id}
+  //               selected={id in selected ? selected[id] : []}
+  //               editing={editing}
+  //             />
+  //           ))}
+  //         </div>
 
-          <div className="m-2">
-            <DocumentSourceComponent
-              document={document!}
-              pageNumber={data.document_page_number}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  //         <div className="m-2">
+  //           <DocumentSourceComponent
+  //             document={document!}
+  //             pageNumber={data.document_page_number}
+  //           />
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
-  renderWithoutDocument() {
+  renderWithoutSource() {
     const { id, cells, selected, editing } = this.props;
 
     const pageStyle = {
@@ -101,35 +125,35 @@ export default class PageComponent extends Component<
     };
 
     return (
-      <div
-        className="p-2 m-2 rounded-sm shadow-sm"
-        style={pageStyle}
-        onClick={this.handleClick}
-      >
-        <div>
-          {cells.map((cell) => (
-            <CellComponent
-              key={cell.id}
-              id={cell.id}
-              data={cell.data}
-              content={cell.content}
-              pageId={id}
-              selected={id in selected ? selected[id] : []}
-              editing={editing}
-            />
-          ))}
-        </div>
+      <div className="px-2 py-10 m-2 rounded-sm shadow-sm" style={pageStyle}>
+        <ReactEditorJS
+          tools={tools}
+          defaultValue={{
+            time: 1635603431943,
+            blocks: [
+              {
+                id: "sheNwCUP5A",
+                type: "header",
+                data: {
+                  text: "Editor.js",
+                  level: 2,
+                },
+              },
+              {
+                id: "12iM3lqzcm",
+                type: "paragraph",
+                data: {
+                  text: "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text.",
+                },
+              },
+            ],
+          }}
+        />
       </div>
     );
   }
 
   render() {
-    const { document, data } = this.props;
-
-    if (document && data.document_page_number) {
-      return this.renderWithDocument();
-    } else {
-      return this.renderWithoutDocument();
-    }
+    return this.renderWithoutSource();
   }
 }

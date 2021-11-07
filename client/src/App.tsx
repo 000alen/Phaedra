@@ -95,15 +95,33 @@ export default class App extends Component<AppProps, AppState> {
       statusBarWidgets: [
         {
           id: uuidv4(),
-          element: <StatusBarButtonComponent text="Button 1" icon="Cancel" />,
+          element: (
+            <StatusBarButtonComponent
+              key="widget1"
+              text="Button 1"
+              icon="Cancel"
+            />
+          ),
         },
         {
           id: uuidv4(),
-          element: <StatusBarButtonComponent text="Button 2" icon="Cancel" />,
+          element: (
+            <StatusBarButtonComponent
+              key="widget2"
+              text="Button 2"
+              icon="Cancel"
+            />
+          ),
         },
         {
           id: uuidv4(),
-          element: <StatusBarButtonComponent text="Button 3" icon="Cancel" />,
+          element: (
+            <StatusBarButtonComponent
+              key="widget3"
+              text="Button 3"
+              icon="Cancel"
+            />
+          ),
         },
       ],
 

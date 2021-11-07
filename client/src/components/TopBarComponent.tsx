@@ -122,7 +122,7 @@ export default class TopBarComponent extends Component<
           </div>
         </div>
 
-        <div className="titleBarButtons">
+        <div className="titleBarButtons mx-2">
           <IconButton
             className="topButton"
             iconProps={minimizeIcon}

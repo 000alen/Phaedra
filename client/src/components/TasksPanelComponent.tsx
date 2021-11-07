@@ -26,6 +26,7 @@ export default function TasksPanelComponent({
       <div className="space-y-2">
         {tasks.map((task) => (
           <Spinner
+            key={task.id}
             label={task.name}
             labelPosition="right"
             size={SpinnerSize.xSmall}

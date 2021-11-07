@@ -261,9 +261,9 @@ export default class NotebookPage extends Component<
               />
             )}
 
-            {commandBoxShown && (
+            {/* {commandBoxShown && (
               <CommandBoxComponent ref={this.commandBoxRef} />
-            )}
+            )} */}
           </div>
         </div>
       </NotebookPageController.Provider>

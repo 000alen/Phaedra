@@ -24,8 +24,8 @@ export default function ClipboardPanelComponent({
     >
       <Label>Clipboard panel!</Label>
       <div className="space-y-2">
-        {clipboard.map((item) => (
-          <Label>{item.type}</Label>
+        {clipboard.map((item, index) => (
+          <Label key={`clipboardElement${index}`}>{item.type}</Label>
         ))}
       </div>
     </Panel>

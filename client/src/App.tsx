@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Panel, PanelType } from "@fluentui/react";
 
 import ClipboardPanelComponent from "./components/ClipboardPanelComponent";
+import { StatusBarButtonComponent } from "./components/StatusBarButtonComponent";
 import { StatusBarComponent } from "./components/StatusBarComponent";
 import TasksPanelComponent from "./components/TasksPanelComponent";
 import TopBarComponent from "./components/TopBarComponent";
@@ -91,7 +92,20 @@ export default class App extends Component<AppProps, AppState> {
           name: "Task 3",
         },
       ],
-      statusBarWidgets: [],
+      statusBarWidgets: [
+        {
+          id: uuidv4(),
+          element: <StatusBarButtonComponent text="Button 1" icon="Cancel" />,
+        },
+        {
+          id: uuidv4(),
+          element: <StatusBarButtonComponent text="Button 2" icon="Cancel" />,
+        },
+        {
+          id: uuidv4(),
+          element: <StatusBarButtonComponent text="Button 3" icon="Cancel" />,
+        },
+      ],
 
       clipboardPanelShown: false,
       tasksPanelShown: false,
@@ -315,6 +329,7 @@ export default class App extends Component<AppProps, AppState> {
           <div className="appContent">{content}</div>
 
           <StatusBarComponent
+            onShowTasksPanel={this.showTasksPanel}
             tasks={tasks}
             statusBarWidgets={statusBarWidgets}
           />

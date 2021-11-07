@@ -10,11 +10,13 @@ import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 export interface StatusBarComponentProps {
   tasks: ITask[];
   statusBarWidgets: IWidget[];
+  onShowTasksPanel: () => void;
 }
 
 export function StatusBarComponent({
   tasks,
   statusBarWidgets: widgets,
+  onShowTasksPanel,
 }: StatusBarComponentProps): JSX.Element {
   let task;
   if (tasks.length > 0) task = tasks[0];
@@ -29,7 +31,12 @@ export function StatusBarComponent({
       style={statusBarStyle}
     >
       <div className="statusBarMessageSection">
-        {task && <StatusBarLoadingComponent text={task.name} />}
+        {task && (
+          <StatusBarLoadingComponent
+            text={task.name}
+            onShowTasksPanel={onShowTasksPanel}
+          />
+        )}
       </div>
 
       <div className="statusBarButtonsSection flex flex-row-reverse space-x-2">

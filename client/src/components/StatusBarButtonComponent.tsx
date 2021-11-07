@@ -4,7 +4,7 @@ import { Icon, Text } from "@fluentui/react";
 
 export interface StatusBarButtonComponentProps {
   text: string;
-  icon: string;
+  icon?: string;
 }
 
 export function StatusBarButtonComponent({

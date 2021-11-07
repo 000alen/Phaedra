@@ -14,6 +14,7 @@ import {
 } from "../contexts/NotebookPageController";
 import { saveNotebook } from "../IO/NotebookIO";
 import { strings } from "../resources/strings";
+import { theme } from "../resources/theme";
 import {
   historyDo,
   historyRedo,
@@ -173,7 +174,7 @@ export default class NotebookComponent extends Component<
     window.localStorage.setItem(notebook.name, JSON.stringify(state));
   }
 
-  // TODO: Move to NotebookIO
+  // ! TODO: Move to NotebookIO
   async loadDocument() {
     const { documentPath } = this.state;
     const notebookPageController: INotebookPageController = this.context;
@@ -586,9 +587,17 @@ export default class NotebookComponent extends Component<
       notebookPageController.hideCommandBox();
     }
 
+    const containerStyle = {
+      backgroundColor: theme.palette.neutralLight,
+    };
+
     return (
       <NotebookController.Provider value={notebookController}>
-        <div className="notebook" id="notebook">
+        <div
+          className="notebook flex justify-center"
+          id="notebook"
+          style={containerStyle}
+        >
           {notebook.pages.map((page) => (
             <PageComponent
               key={page.id}

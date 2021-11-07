@@ -5,6 +5,10 @@
   z-index: 100;
 }
 
+.statusBarMessageSection {
+  width: 100%;
+}
+
 .statusBarButtonsSection {
   width: 100%;
   height: 100%;

@@ -49,10 +49,6 @@ export default class PageComponent extends Component<
   renderWithDocument() {
     const { id, data, cells, selected, document, editing } = this.props;
 
-    const containerStyle = {
-      backgroundColor: theme.palette.neutralLight,
-    };
-
     const paperStyle = {
       backgroundColor: theme.palette.white,
       border:
@@ -62,58 +58,13 @@ export default class PageComponent extends Component<
     };
 
     return (
-      <div className="page grid grid-cols-2" style={containerStyle}>
-        <div
-          className="m-2 p-2 rounded-sm shadow-sm"
-          style={paperStyle}
-          onClick={this.handleClick}
-        >
-          {cells.map((cell) => (
-            <CellComponent
-              key={cell.id}
-              id={cell.id}
-              data={cell.data}
-              content={cell.content}
-              pageId={id}
-              selected={id in selected ? selected[id] : []}
-              editing={editing}
-            />
-          ))}
-        </div>
-
-        <div className="m-2">
-          <DocumentSourceComponent
-            document={document!}
-            pageNumber={data.document_page_number}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  renderWithoutDocument() {
-    const { id, cells, selected, editing } = this.props;
-
-    const containerStyle = {
-      backgroundColor: theme.palette.neutralLight,
-    };
-
-    const pageStyle = {
-      width: "8.5in",
-      minHeight: "11in",
-      backgroundColor: theme.palette.white,
-      border:
-        id in selected ? `1px solid ${theme.palette.themePrimary}` : undefined,
-    };
-
-    return (
-      <div className="flex items-center justify-center" style={containerStyle}>
-        <div
-          className="page p-2 m-2 rounded-sm shadow-sm"
-          style={pageStyle}
-          onClick={this.handleClick}
-        >
-          <div>
+      <div className="grid grid-cols-2">
+        <div>
+          <div
+            className="m-2 p-2 rounded-sm shadow-sm"
+            style={paperStyle}
+            onClick={this.handleClick}
+          >
             {cells.map((cell) => (
               <CellComponent
                 key={cell.id}
@@ -126,6 +77,47 @@ export default class PageComponent extends Component<
               />
             ))}
           </div>
+
+          <div className="m-2">
+            <DocumentSourceComponent
+              document={document!}
+              pageNumber={data.document_page_number}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderWithoutDocument() {
+    const { id, cells, selected, editing } = this.props;
+
+    const pageStyle = {
+      width: "8.5in",
+      minHeight: "11in",
+      backgroundColor: theme.palette.white,
+      border:
+        id in selected ? `1px solid ${theme.palette.themePrimary}` : undefined,
+    };
+
+    return (
+      <div
+        className="p-2 m-2 rounded-sm shadow-sm"
+        style={pageStyle}
+        onClick={this.handleClick}
+      >
+        <div>
+          {cells.map((cell) => (
+            <CellComponent
+              key={cell.id}
+              id={cell.id}
+              data={cell.data}
+              content={cell.content}
+              pageId={id}
+              selected={id in selected ? selected[id] : []}
+              editing={editing}
+            />
+          ))}
         </div>
       </div>
     );

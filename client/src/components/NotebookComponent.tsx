@@ -18,7 +18,7 @@ import {
   historyDo,
   historyRedo,
   historyUndo,
-  IHistoryInformation,
+  IHistory,
 } from "../structures/HistoryStructure";
 import { addMessage, createMessage } from "../structures/MessagesStructure";
 import {
@@ -59,8 +59,9 @@ export interface NotebookComponentState {
   selected: { [key: string]: string[] };
 
   editing: boolean;
-  history: INotebookManipulationAction[];
-  historyIndex: number;
+
+  history: IHistory;
+
   saved: boolean;
   notebookController: INotebookController;
 }
@@ -114,9 +115,10 @@ export default class NotebookComponent extends Component<
       selected: {},
       editing: false,
 
-      // ! TODO
-      history: [],
-      historyIndex: -1,
+      history: {
+        actions: [],
+        index: -1,
+      },
 
       saved: true,
       notebookController: {
@@ -405,16 +407,16 @@ export default class NotebookComponent extends Component<
 
         try {
           let finalNotebook = await manipulation(notebook, newArgs);
-          let { history, historyIndex } = this.state;
+          let { history } = this.state;
 
-          const finalHistoryInformation = historyDo(history, historyIndex, {
-            command: { ...newArgs, name: manipulation.name },
+          const finalHistory = historyDo(history, {
+            manipulationAction: { ...newArgs, name: manipulation.name },
           });
 
           this.setState((state) => {
             return {
               ...state,
-              ...finalHistoryInformation,
+              history: finalHistory,
               notebook: finalNotebook,
               saved: false,
             };
@@ -437,12 +439,12 @@ export default class NotebookComponent extends Component<
     manipulation: INotebookManipulation<T>,
     args: T
   ) {
-    let { notebook, history, historyIndex } = this.state;
+    let { notebook, history } = this.state;
 
     let newArgs = collectComplementaryArguments(notebook, manipulation, args);
 
-    const finalHistoryInformation = historyDo(history, historyIndex, {
-      command: { ...newArgs, name: manipulation.name },
+    const finalHistory = historyDo(history, {
+      manipulationAction: { ...newArgs, name: manipulation.name },
     });
 
     const finalNotebook = manipulation(notebook, newArgs);
@@ -450,7 +452,7 @@ export default class NotebookComponent extends Component<
     this.setState((state) => {
       return {
         ...state,
-        ...finalHistoryInformation,
+        history: finalHistory,
         notebook: finalNotebook as INotebook,
         saved: false,
       };
@@ -458,9 +460,9 @@ export default class NotebookComponent extends Component<
   }
 
   undo() {
-    let { notebook, history, historyIndex } = this.state;
+    let { notebook, history } = this.state;
 
-    const [command, newHistoryInformation] = historyUndo(history, historyIndex);
+    const [command, newHistory] = historyUndo(history);
     if (command === undefined) return;
 
     const newNotebook = undo(notebook, command);
@@ -468,7 +470,7 @@ export default class NotebookComponent extends Component<
     this.setState((state) => {
       return {
         ...state,
-        ...newHistoryInformation,
+        history: newHistory,
         notebook: newNotebook,
         saved: false,
       };
@@ -476,27 +478,21 @@ export default class NotebookComponent extends Component<
   }
 
   redo() {
-    let { history, historyIndex } = this.state;
+    let { history } = this.state;
 
-    const [command, historyInformation] = historyRedo(history, historyIndex);
+    const [command, newHistory] = historyRedo(history);
     if (command === undefined) return;
 
     if (isAsync(command)) {
-      this.redoAsync(
-        command as INotebookManipulationAsyncAction,
-        historyInformation
-      );
+      this.redoAsync(command as INotebookManipulationAsyncAction, newHistory);
     } else {
-      this.redoSync(
-        command as INotebookManipulationSyncAction,
-        historyInformation
-      );
+      this.redoSync(command as INotebookManipulationSyncAction, newHistory);
     }
   }
 
   async redoAsync(
     command: INotebookManipulationAsyncAction,
-    historyInformation: IHistoryInformation
+    history: IHistory
   ) {
     let { notebook } = this.state;
     const notebookPageController: INotebookPageController = this.context;
@@ -534,7 +530,7 @@ export default class NotebookComponent extends Component<
       this.setState((state) => {
         return {
           ...state,
-          ...historyInformation,
+          history: history,
           notebook: finalNotebook,
           saved: false,
         };
@@ -551,17 +547,14 @@ export default class NotebookComponent extends Component<
     }
   }
 
-  redoSync(
-    command: INotebookManipulationAction,
-    historyInformation: IHistoryInformation
-  ) {
+  redoSync(command: INotebookManipulationAction, history: IHistory) {
     let { notebook } = this.state;
     let newNotebook = redo(notebook, command) as INotebook;
 
     this.setState((state) => {
       return {
         ...state,
-        ...historyInformation,
+        history: history,
         notebook: newNotebook,
         saved: false,
       };

@@ -1,5 +1,3 @@
-// TODO: refactor and add schema validation
-
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -82,6 +80,29 @@ export function createCell({ id, data, content }: Partial<ICell>): ICell {
     id: id,
     data: data,
     content: content,
+  };
+}
+
+export function makeNotebookUnique(notebook: INotebook): INotebook {
+  return {
+    ...notebook,
+    id: uuidv4(),
+    pages: notebook.pages.map(makePageUnique),
+  };
+}
+
+export function makePageUnique(page: IPage): IPage {
+  return {
+    ...page,
+    id: uuidv4(),
+    cells: page.cells.map(makeCellUnique),
+  };
+}
+
+export function makeCellUnique(cell: ICell): ICell {
+  return {
+    ...cell,
+    id: uuidv4(),
   };
 }
 
@@ -913,15 +934,17 @@ export function isAsync(args: INotebookManipulationAction): boolean {
   return asyncManipulationsNames.includes(args.name);
 }
 
-// TODO
+// ! TODO
 export function isCell(element: ICell | IPage | INotebook): boolean {
   return "id" in element && "data" in element && "content" in element;
 }
 
+// ! TODO
 export function isPage(element: ICell | IPage | INotebook): boolean {
   return "id" in element && "data" in element && "cells" in element;
 }
 
+// ! TODO
 export function isNotebook(element: ICell | IPage | INotebook): boolean {
   return "id" in element && "pages" in element;
 }

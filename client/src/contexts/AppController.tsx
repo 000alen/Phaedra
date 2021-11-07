@@ -2,6 +2,7 @@ import React from "react";
 
 import {
   IClipboard,
+  IClipboardElement,
   IClipboardManipulation,
   IClipboardManipulationArguments,
 } from "../structures/ClipboardStructure";
@@ -38,6 +39,7 @@ export interface IAppController {
   getTabs: () => ITab[] | undefined;
   getActiveTabId: () => string | undefined;
   getClipboard: () => IClipboard | undefined;
+  getClipboardTop: () => IClipboardElement | undefined;
   getTasks: () => ITask[] | undefined;
   getWidgets: () => IWidget[] | undefined;
 
@@ -66,6 +68,7 @@ export const AppController = React.createContext<IAppController>({
   getTabs: () => undefined,
   getActiveTabId: () => undefined,
   getClipboard: () => undefined,
+  getClipboardTop: () => undefined,
   getTasks: () => undefined,
   getWidgets: () => undefined,
   isClipboardPanelShown: () => undefined,

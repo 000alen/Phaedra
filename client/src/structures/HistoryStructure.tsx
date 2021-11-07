@@ -1,49 +1,43 @@
 import { INotebookManipulationAction } from "./NotebookStructure";
 
-export type IHistory = INotebookManipulationAction[];
-
-export interface IHistoryInformation {
-  history: IHistory;
-  historyIndex: number;
+export interface IHistory {
+  actions: INotebookManipulationAction[];
+  index: number;
 }
 
 export function historyDo(
   history: IHistory,
-  historyIndex: number,
-  { command }: { command: INotebookManipulationAction }
-): IHistoryInformation {
-  if (historyIndex === history.length - 1) {
-    history.push(command);
+  { manipulationAction }: { manipulationAction: INotebookManipulationAction }
+): IHistory {
+  if (history.index === history.actions.length - 1) {
+    history.actions.push(manipulationAction);
   } else {
-    history.splice(historyIndex, history.length - historyIndex, command);
+    history.actions.splice(
+      history.index,
+      history.actions.length - history.index,
+      manipulationAction
+    );
   }
-  historyIndex++;
-  return {
-    history: history,
-    historyIndex: historyIndex,
-  };
+  history.index++;
+  return history;
 }
 
 export function historyUndo(
-  history: IHistory,
-  historyIndex: number
-): [INotebookManipulationAction | undefined, IHistoryInformation] {
-  if (historyIndex === 0)
-    return [undefined, { history: history, historyIndex: 0 }];
+  history: IHistory
+): [INotebookManipulationAction | undefined, IHistory] {
+  if (history.index === 0) return [undefined, history];
 
-  let command = history[historyIndex];
-  historyIndex--;
-  return [command, { history: history, historyIndex: historyIndex }];
+  let manipulationAction = history.actions[history.index];
+  history.index--;
+  return [manipulationAction, history];
 }
 
 export function historyRedo(
-  history: IHistory,
-  historyIndex: number
-): [INotebookManipulationAction | undefined, IHistoryInformation] {
-  if (historyIndex === history.length - 1)
-    return [undefined, { history: history, historyIndex: history.length - 1 }];
+  history: IHistory
+): [INotebookManipulationAction | undefined, IHistory] {
+  if (history.index === history.actions.length - 1) return [undefined, history];
 
-  let command = history[historyIndex];
-  historyIndex++;
-  return [command, { history: history, historyIndex: historyIndex }];
+  let manipulationAction = history.actions[history.index];
+  history.index++;
+  return [manipulationAction, history];
 }

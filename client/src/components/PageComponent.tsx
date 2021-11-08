@@ -1,22 +1,17 @@
-import React, { Component, MouseEvent } from "react";
+import React, { Component } from "react";
 
-import {
-  INotebookController,
-  NotebookController,
-} from "../contexts/NotebookController";
-import { ICell } from "../structures/NotebookStructure";
+import { NotebookController } from "../contexts/NotebookController";
+import { IBlock, IData, IReference } from "../structures/NotebookStructure";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
-import { DocumentFile } from "./NotebookComponent";
 import PaperComponent from "./PaperComponent";
 import SplitViewComponent from "./SplitView/SplitViewComponent";
 
 export interface PageComponentProps {
   id: string;
-  data: any;
-  cells: ICell[];
-  selected: { [key: string]: string[] };
-  document: DocumentFile | undefined;
-  editing: boolean;
+  references: IReference[];
+  data: IData;
+  blocks: IBlock[];
+  onBlocks: (pageId: string, blocks: IBlock[]) => void;
 }
 
 export interface PageComponentState {}
@@ -27,32 +22,15 @@ export default class PageComponent extends Component<
 > {
   static contextType = NotebookController;
 
-  constructor(props: PageComponentProps) {
-    super(props);
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  handleClick(event: MouseEvent<HTMLDivElement>) {
-    const { id, selected, editing } = this.props;
-    const notebookController: INotebookController = this.context;
-
-    if (id in selected && editing) return;
-
-    if (id in selected) {
-      notebookController.deselectPage(id);
-    } else {
-      notebookController.selectPage(id);
-    }
-  }
-
   render() {
+    const { id, blocks, onBlocks } = this.props;
+
     return (
       <div>
         <SplitViewComponent
           left={
             <div className="flex justify-center">
-              <PaperComponent />
+              <PaperComponent id={id} blocks={blocks} onBlocks={onBlocks} />
             </div>
           }
           right={

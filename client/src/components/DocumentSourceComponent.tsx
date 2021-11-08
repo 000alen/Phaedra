@@ -3,10 +3,11 @@ import React from "react";
 import { mergeStyles, Shimmer } from "@fluentui/react";
 
 import { theme } from "../resources/theme";
-import { DocumentFile } from "./NotebookComponent";
+
+// import { DocumentFile } from "./NotebookComponent";
 
 export interface DocumentSourceComponentProps {
-  document?: DocumentFile;
+  // document?: DocumentFile;
   pageNumber?: number;
 }
 
@@ -20,7 +21,7 @@ const wrapperClass = mergeStyles({
 });
 
 export function DocumentSourceComponent({
-  document,
+  // document,
   pageNumber,
 }: DocumentSourceComponentProps) {
   const pageStyle = {

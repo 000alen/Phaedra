@@ -3,29 +3,24 @@ import React, { Component, createRef } from "react";
 import EditorJS, { API, BlockAPI, OutputData } from "@editorjs/editorjs";
 
 import { tools } from "../resources/tools";
-
-const DEFAULT_INITIAL_DATA = () => {
-  return {
-    time: new Date().getTime(),
-    blocks: [
-      {
-        type: "header",
-        data: {
-          text: "This is my awesome editor!",
-          level: 1,
-        },
-      },
-    ],
-  };
-};
+import { IBlock } from "../structures/NotebookStructure";
 
 interface EditorProps {
   id: string;
+  blocks: IBlock[];
+  onBlocks: (pageId: string, blocks: IBlock[]) => void;
 }
 
 interface EditorState {
   editorData: OutputData;
   holder: string;
+}
+
+function wrapBlocks(blocks: IBlock[]): OutputData {
+  return {
+    time: new Date().getTime(),
+    blocks: blocks,
+  };
 }
 
 export default class Editor extends Component<EditorProps, EditorState> {
@@ -34,13 +29,15 @@ export default class Editor extends Component<EditorProps, EditorState> {
   constructor(props: EditorProps) {
     super(props);
 
+    this.onChange = this.onChange.bind(this);
+
     this.editorInstance = createRef<EditorJS>();
 
-    const { id } = props;
+    const { id, blocks } = props;
 
     this.state = {
-      editorData: DEFAULT_INITIAL_DATA(),
-      holder: `editorJS_${id}`,
+      editorData: wrapBlocks(blocks),
+      holder: `editor_${id}`,
     };
   }
 
@@ -52,6 +49,7 @@ export default class Editor extends Component<EditorProps, EditorState> {
 
   componentWillUnmount() {
     this.editorInstance.current!.destroy();
+
     // @ts-ignore
     this.editorInstance.current = null;
   }
@@ -66,18 +64,20 @@ export default class Editor extends Component<EditorProps, EditorState> {
         // @ts-ignore
         this.editorInstance.current = editor;
       },
-      onChange: async (api: API, block: BlockAPI) => {
-        let content = await api.saver.save();
-        this.setEditorData(content);
-      },
+      onChange: this.onChange,
       autofocus: true,
       tools: tools,
     });
   }
 
-  setEditorData(data: OutputData) {
-    this.setState({
-      editorData: data,
+  onChange(api: API, block: BlockAPI) {
+    const { id, onBlocks } = this.props;
+
+    api.saver.save().then((data) => {
+      onBlocks(id, data.blocks);
+      this.setState({
+        editorData: data,
+      });
     });
   }
 

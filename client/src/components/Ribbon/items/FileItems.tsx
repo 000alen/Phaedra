@@ -1,24 +1,9 @@
 import React from "react";
 
-import { CommandBar } from "@fluentui/react";
-
-import { handleTest } from "../../../actions/FileActions";
-import { NotebookPageController } from "../../../contexts/NotebookPageController";
-import { strings } from "../../../resources/strings";
+import { CommandBar, ICommandBarItemProps } from "@fluentui/react";
 
 export default function FileItems() {
-  const notebookPageController = React.useContext(NotebookPageController);
-
-  const fileItems = [
-    {
-      key: "test",
-      text: strings.testButtonLabel,
-      iconProps: {
-        iconName: "TestCase",
-      },
-      onClick: () => handleTest(notebookPageController),
-    },
-  ];
+  const fileItems: ICommandBarItemProps[] = [];
 
   return <CommandBar items={fileItems} />;
 }

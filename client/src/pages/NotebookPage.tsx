@@ -44,6 +44,7 @@ export interface NotebookPageState {
 
 export interface NotebookPageViewProps {}
 
+// TODO: Extract constants to a preferences file
 const numberOfMessages = 3;
 
 export default class NotebookPage extends Component<
@@ -171,6 +172,7 @@ export default class NotebookPage extends Component<
       };
     });
 
+    // TODO: extract to a function
     const messageOverflowItems = messages
       .slice(numberOfMessages)
       .map((message) => {

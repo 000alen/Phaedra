@@ -1,6 +1,6 @@
 """Page dataclass for Phaedra Notebook."""
 
-from typing import Any, List, Dict, NamedTuple
+from typing import Any, List, Dict
 from dataclasses import dataclass
 
 from uuid import uuid4
@@ -30,14 +30,14 @@ class Page:
     id: str
     references: List[Reference]
     data: Dict
-    content: Dict
+    blocks: List
 
     def __init__(
         self,
         id: str = None,
         references: List[Reference] = None,
         data: Dict = None,
-        content: Dict = None,
+        blocks: List = None,
     ):
         if id is None:
             id = str(uuid4())
@@ -48,13 +48,13 @@ class Page:
         if data is None:
             data = {}
 
-        if content is None:
-            content = {}
+        if blocks is None:
+            blocks = {}
 
         self.id = id
         self.references = references
         self.data = data
-        self.content = content
+        self.blocks = blocks
 
     def __eq__(self, other: object) -> bool:
         if type(other) is not Page:
@@ -64,7 +64,7 @@ class Page:
             self.id == other.id
             and self.references == other.references
             and self.data == other.data
-            and self.content == other.content
+            and self.blocks == other.blocks
         )
 
     @classmethod
@@ -85,7 +85,7 @@ class Page:
                 for reference in _json["references"]
             ],
             data=_json["data"],
-            content=_json["content"],
+            blocks=_json["blocks"],
         )
 
     def json(self) -> PageJson:
@@ -106,5 +106,5 @@ class Page:
                 for reference in self.references
             ],
             "data": self.data,
-            "content": self.content,
+            "blocks": self.blocks,
         }

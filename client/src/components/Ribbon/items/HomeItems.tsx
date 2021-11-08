@@ -3,13 +3,10 @@ import React from "react";
 import { CommandBar } from "@fluentui/react";
 
 import {
-  handleCopy,
-  handleCut,
   handleDelete,
   handleGenerate,
   handleInsertCell,
   handleInsertPage,
-  handlePaste,
   handleQuestion,
   handleRedo,
   handleSave,

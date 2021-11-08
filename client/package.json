@@ -2,6 +2,7 @@
   "name": "phaedra",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {

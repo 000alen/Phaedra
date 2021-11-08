@@ -2,7 +2,6 @@ import React from "react";
 
 import { PivotItem } from "@fluentui/react";
 
-import CommandBoxComponent from "../components/CommandBoxComponent";
 import {
   IMessagesManipulation,
   IMessagesManipulationArguments,
@@ -15,10 +14,6 @@ export interface INotebookPageController {
     manipulation: IMessagesManipulation,
     args: IMessagesManipulationArguments
   ) => void;
-  isCommandBoxShown: () => boolean | undefined;
-  showCommandBox: () => void;
-  hideCommandBox: () => void;
-  getCommandBoxRef: () => React.RefObject<CommandBoxComponent> | undefined;
   getAppController: () => IAppController | undefined;
   getNotebookController: () => INotebookController | undefined;
   getRibbonKey: () => string | undefined;
@@ -31,10 +26,6 @@ export const NotebookPageController =
       manipulation: IMessagesManipulation,
       args: IMessagesManipulationArguments
     ) => {},
-    isCommandBoxShown: () => undefined,
-    showCommandBox: () => {},
-    hideCommandBox: () => {},
-    getCommandBoxRef: () => undefined,
     getAppController: () => undefined,
     getNotebookController: () => undefined,
     getRibbonKey: () => undefined,

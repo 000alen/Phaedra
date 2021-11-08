@@ -1,9 +1,6 @@
 import { handleEdit, handleSeamless } from "../actions/EditActions";
 import {
-  handleCopy,
-  handleCut,
   handleInsertCell,
-  handlePaste,
   handleRedo,
   handleSave,
   handleUndo,
@@ -16,12 +13,6 @@ export const NotebookPageShortcuts: IShortcuts = {
     handleSave(notebookPageController),
   "ctrl+i": (notebookPageController: INotebookPageController) =>
     handleEdit(notebookPageController),
-  "ctrl+c": (notebookPageController: INotebookPageController) =>
-    handleCopy(notebookPageController),
-  "ctrl+v": (notebookPageController: INotebookPageController) =>
-    handlePaste(notebookPageController),
-  "ctrl+x": (notebookPageController: INotebookPageController) =>
-    handleCut(notebookPageController),
   "ctrl+z": (notebookPageController: INotebookPageController) =>
     handleUndo(notebookPageController),
   "ctrl+y": (notebookPageController: INotebookPageController) =>

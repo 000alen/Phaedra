@@ -4,8 +4,6 @@ import {
   INotebook,
   INotebookManipulation,
   INotebookManipulationArguments,
-  INotebookManipulationAsyncArguments,
-  INotebookManipulationSyncArguments,
 } from "../structures/NotebookStructure";
 import { INotebookPageController } from "./NotebookPageController";
 

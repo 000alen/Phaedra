@@ -26,7 +26,6 @@
 .titleBarButtons {
   display: flex;
   flex-direction: row;
-  width: 75px;
   height: 25px;
 }
 

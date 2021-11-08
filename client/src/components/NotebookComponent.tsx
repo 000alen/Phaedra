@@ -571,21 +571,8 @@ export default class NotebookComponent extends Component<
   }
 
   render() {
-    const notebookPageController: INotebookPageController = this.context;
     const { notebookController, notebook, documentFile, selected, editing } =
       this.state;
-
-    if (
-      Object.keys(selected).length > 0 &&
-      !notebookPageController.isCommandBoxShown()
-    ) {
-      notebookPageController.showCommandBox();
-    } else if (
-      Object.keys(selected).length === 0 &&
-      notebookPageController.isCommandBoxShown()
-    ) {
-      notebookPageController.hideCommandBox();
-    }
 
     const containerStyle = {
       backgroundColor: theme.palette.neutralLight,

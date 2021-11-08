@@ -12,7 +12,6 @@ import {
   PivotItem,
 } from "@fluentui/react";
 
-import CommandBoxComponent from "../components/CommandBoxComponent";
 import NotebookComponent from "../components/NotebookComponent";
 import { RibbonComponent } from "../components/Ribbon/RibbonComponent";
 import { AppController, IAppController } from "../contexts/AppController";
@@ -40,7 +39,6 @@ export interface NotebookPageProps {
 export interface NotebookPageState {
   messages: IMessage[];
   ribbonKey: string;
-  commandBoxShown: boolean;
   notebookPageController: INotebookPageController;
 }
 
@@ -55,17 +53,12 @@ export default class NotebookPage extends Component<
   static contextType = AppController;
 
   notebookRef: React.RefObject<NotebookComponent>;
-  commandBoxRef: React.RefObject<CommandBoxComponent>;
 
   constructor(props: NotebookPageProps) {
     super(props);
 
     this.messagesDo = this.messagesDo.bind(this);
-    this.isCommandBoxShown = this.isCommandBoxShown.bind(this);
-    this.showCommandBox = this.showCommandBox.bind(this);
-    this.hideCommandBox = this.hideCommandBox.bind(this);
     this.getAppController = this.getAppController.bind(this);
-    this.getCommandBoxRef = this.getCommandBoxRef.bind(this);
     this.getNotebookController = this.getNotebookController.bind(this);
     this.getRibbonKey = this.getRibbonKey.bind(this);
     this.setRibbonKey = this.setRibbonKey.bind(this);
@@ -74,19 +67,13 @@ export default class NotebookPage extends Component<
     this.onRenderMessageOverflow = this.onRenderMessageOverflow.bind(this);
 
     this.notebookRef = React.createRef();
-    this.commandBoxRef = React.createRef();
 
     this.state = {
       messages: [],
       ribbonKey: "home",
-      commandBoxShown: false,
       notebookPageController: {
         messagesDo: this.messagesDo,
-        isCommandBoxShown: this.isCommandBoxShown,
-        showCommandBox: this.showCommandBox,
-        hideCommandBox: this.hideCommandBox,
         getAppController: this.getAppController,
-        getCommandBoxRef: this.getCommandBoxRef,
         getNotebookController: this.getNotebookController,
         getRibbonKey: this.getRibbonKey,
         setRibbonKey: this.setRibbonKey,
@@ -127,26 +114,6 @@ export default class NotebookPage extends Component<
         messages: currentMessages,
       };
     });
-  }
-
-  isCommandBoxShown(): boolean {
-    return this.state.commandBoxShown;
-  }
-
-  showCommandBox(): void {
-    this.setState((state) => {
-      return { ...state, commandBoxShown: true };
-    });
-  }
-
-  hideCommandBox(): void {
-    this.setState((state) => {
-      return { ...state, commandBoxShown: false };
-    });
-  }
-
-  getCommandBoxRef(): React.RefObject<CommandBoxComponent> {
-    return this.commandBoxRef;
   }
 
   getAppController(): IAppController {
@@ -193,8 +160,7 @@ export default class NotebookPage extends Component<
   }
 
   render(): JSX.Element {
-    const { messages, notebookPageController, ribbonKey, commandBoxShown } =
-      this.state;
+    const { messages, notebookPageController, ribbonKey } = this.state;
 
     const messagesItems = messages.slice(0, numberOfMessages).map((message) => {
       return {
@@ -260,10 +226,6 @@ export default class NotebookPage extends Component<
                 notebookPath={this.props.notebookPath}
               />
             )}
-
-            {/* {commandBoxShown && (
-              <CommandBoxComponent ref={this.commandBoxRef} />
-            )} */}
           </div>
         </div>
       </NotebookPageController.Provider>

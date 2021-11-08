@@ -4,9 +4,6 @@ import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { Panel, PanelType } from "@fluentui/react";
-
-import { StatusBarButtonComponent } from "./components/StatusBarButtonComponent";
 import { StatusBarComponent } from "./components/StatusBarComponent";
 import TasksPanelComponent from "./components/TasksPanelComponent";
 import TopBarComponent from "./components/TopBarComponent";
@@ -61,52 +58,8 @@ export default class App extends Component<AppProps, AppState> {
     this.state = {
       tabs: [],
       activeTabId: undefined,
-      tasks: [
-        {
-          id: uuidv4(),
-          name: "Task 1",
-        },
-        {
-          id: uuidv4(),
-          name: "Task 2",
-        },
-        {
-          id: uuidv4(),
-          name: "Task 3",
-        },
-      ],
-      statusBarWidgets: [
-        {
-          id: uuidv4(),
-          element: (
-            <StatusBarButtonComponent
-              key="widget1"
-              text="Button 1"
-              icon="Cancel"
-            />
-          ),
-        },
-        {
-          id: uuidv4(),
-          element: (
-            <StatusBarButtonComponent
-              key="widget2"
-              text="Button 2"
-              icon="Cancel"
-            />
-          ),
-        },
-        {
-          id: uuidv4(),
-          element: (
-            <StatusBarButtonComponent
-              key="widget3"
-              text="Button 3"
-              icon="Cancel"
-            />
-          ),
-        },
-      ],
+      tasks: [],
+      statusBarWidgets: [],
 
       tasksPanelShown: false,
 

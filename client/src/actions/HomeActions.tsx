@@ -42,15 +42,6 @@ export function handleRedo(notebookPageController: INotebookPageController) {
 }
 
 // ! TODO
-export function handleCut(notebookPageController: INotebookPageController) {}
-
-// ! TODO
-export function handleCopy(notebookPageController: INotebookPageController) {}
-
-// ! TODO
-export function handlePaste(notebookPageController: INotebookPageController) {}
-
-// ! TODO
 export function handleQuestion(
   notebookPageController: INotebookPageController
 ) {}

@@ -4,8 +4,6 @@ import {
   INotebookController,
   NotebookController,
 } from "../contexts/NotebookController";
-import { theme } from "../resources/theme";
-import { tools } from "../resources/tools";
 import { ICell } from "../structures/NotebookStructure";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
 import { DocumentFile } from "./NotebookComponent";

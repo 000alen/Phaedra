@@ -593,11 +593,7 @@ export default class NotebookComponent extends Component<
 
     return (
       <NotebookController.Provider value={notebookController}>
-        <div
-          className="notebook flex justify-center"
-          id="notebook"
-          style={containerStyle}
-        >
+        <div className="notebook" id="notebook" style={containerStyle}>
           {notebook.pages.map((page) => (
             <PageComponent
               key={page.id}

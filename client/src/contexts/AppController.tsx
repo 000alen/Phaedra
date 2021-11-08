@@ -1,12 +1,6 @@
 import React from "react";
 
 import {
-  IClipboard,
-  IClipboardElement,
-  IClipboardManipulation,
-  IClipboardManipulationArguments,
-} from "../structures/ClipboardStructure";
-import {
   ITab,
   ITabsManipulation,
   ITabsManipulationArguments,
@@ -24,10 +18,6 @@ import {
 
 export interface IAppController {
   tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => void;
-  clipboardDo: (
-    action: IClipboardManipulation,
-    args: IClipboardManipulationArguments
-  ) => void;
   tasksDo: (
     action: ITasksManipulation,
     args: ITasksManipulationArguments
@@ -38,14 +28,8 @@ export interface IAppController {
   ) => void;
   getTabs: () => ITab[] | undefined;
   getActiveTabId: () => string | undefined;
-  getClipboard: () => IClipboard | undefined;
-  getClipboardTop: () => IClipboardElement | undefined;
   getTasks: () => ITask[] | undefined;
   getWidgets: () => IWidget[] | undefined;
-
-  isClipboardPanelShown: () => boolean | undefined;
-  showClipboardPanel: () => void;
-  hideClipboardPanel: () => void;
   isTasksPanelShown: () => boolean | undefined;
   showTasksPanel: () => void;
   hideTasksPanel: () => void;
@@ -53,10 +37,6 @@ export interface IAppController {
 
 export const AppController = React.createContext<IAppController>({
   tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => {},
-  clipboardDo: (
-    action: IClipboardManipulation,
-    args: IClipboardManipulationArguments
-  ) => {},
   tasksDo: (
     action: ITasksManipulation,
     args: ITasksManipulationArguments
@@ -67,13 +47,8 @@ export const AppController = React.createContext<IAppController>({
   ) => {},
   getTabs: () => undefined,
   getActiveTabId: () => undefined,
-  getClipboard: () => undefined,
-  getClipboardTop: () => undefined,
   getTasks: () => undefined,
   getWidgets: () => undefined,
-  isClipboardPanelShown: () => undefined,
-  showClipboardPanel: () => {},
-  hideClipboardPanel: () => {},
   isTasksPanelShown: () => undefined,
   showTasksPanel: () => {},
   hideTasksPanel: () => {},

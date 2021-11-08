@@ -72,32 +72,6 @@ export default function HomeItems() {
         ],
       },
     },
-    {
-      key: "clipboard",
-      iconProps: { iconName: "ClipboardSolid" },
-      subMenuProps: {
-        items: [
-          {
-            key: "cut",
-            text: strings.cutButtonLabel,
-            iconProps: { iconName: "Cut" },
-            onClick: () => handleCut(notebookPageController),
-          },
-          {
-            key: "copy",
-            text: strings.copyButtonLabel,
-            iconProps: { iconName: "Copy" },
-            onClick: () => handleCopy(notebookPageController),
-          },
-          {
-            key: "paste",
-            text: strings.pasteButtonLabel,
-            iconProps: { iconName: "Paste" },
-            onClick: () => handlePaste(notebookPageController),
-          },
-        ],
-      },
-    },
   ];
 
   const homeFarItems = [

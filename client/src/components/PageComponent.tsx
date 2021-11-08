@@ -7,7 +7,6 @@ import {
 import { theme } from "../resources/theme";
 import { tools } from "../resources/tools";
 import { ICell } from "../structures/NotebookStructure";
-import CellComponent from "./CellComponent";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
 import { DocumentFile } from "./NotebookComponent";
 import PaperComponent from "./PaperComponent";
@@ -58,7 +57,11 @@ export default class PageComponent extends Component<
               <PaperComponent />
             </div>
           }
-          right={<h1>aa</h1>}
+          right={
+            <div className="flex justify-center">
+              <DocumentSourceComponent />
+            </div>
+          }
         />
       </div>
     );

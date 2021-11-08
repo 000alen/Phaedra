@@ -6,7 +6,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import { Panel, PanelType } from "@fluentui/react";
 
-import ClipboardPanelComponent from "./components/ClipboardPanelComponent";
 import { StatusBarButtonComponent } from "./components/StatusBarButtonComponent";
 import { StatusBarComponent } from "./components/StatusBarComponent";
 import TasksPanelComponent from "./components/TasksPanelComponent";
@@ -15,13 +14,6 @@ import { AppController, IAppController } from "./contexts/AppController";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
-import {
-  clipboardTop,
-  IClipboard,
-  IClipboardElement,
-  IClipboardManipulation,
-  IClipboardManipulationArguments,
-} from "./structures/ClipboardStructure";
 import {
   createTab,
   getTabContent,
@@ -47,8 +39,6 @@ export interface AppState {
   activeTabId: string | undefined;
   tasks: ITask[];
   statusBarWidgets: IWidget[];
-  clipboard: IClipboard;
-  clipboardPanelShown: boolean;
   tasksPanelShown: boolean;
   appController: IAppController;
 }
@@ -58,18 +48,12 @@ export default class App extends Component<AppProps, AppState> {
     super(props);
 
     this.tabsDo = this.tabsDo.bind(this);
-    this.clipboardDo = this.clipboardDo.bind(this);
     this.tasksDo = this.tasksDo.bind(this);
     this.statusBarWidgetsDo = this.statusBarWidgetsDo.bind(this);
     this.getTabs = this.getTabs.bind(this);
     this.getActiveTabId = this.getActiveTabId.bind(this);
-    this.getClipboard = this.getClipboard.bind(this);
-    this.getClipboardTop = this.getClipboardTop.bind(this);
     this.getTasks = this.getTasks.bind(this);
     this.getStatusBarWidgets = this.getStatusBarWidgets.bind(this);
-    this.isClipboardPanelShown = this.isClipboardPanelShown.bind(this);
-    this.showClipboardPanel = this.showClipboardPanel.bind(this);
-    this.hideClipboardPanel = this.hideClipboardPanel.bind(this);
     this.isTasksPanelShown = this.isTasksPanelShown.bind(this);
     this.showTasksPanel = this.showTasksPanel.bind(this);
     this.hideTasksPanel = this.hideTasksPanel.bind(this);
@@ -77,7 +61,6 @@ export default class App extends Component<AppProps, AppState> {
     this.state = {
       tabs: [],
       activeTabId: undefined,
-      clipboard: [],
       tasks: [
         {
           id: uuidv4(),
@@ -125,23 +108,16 @@ export default class App extends Component<AppProps, AppState> {
         },
       ],
 
-      clipboardPanelShown: false,
       tasksPanelShown: false,
 
       appController: {
         tabsDo: this.tabsDo,
-        clipboardDo: this.clipboardDo,
         tasksDo: this.tasksDo,
         widgetsDo: this.statusBarWidgetsDo,
         getTabs: this.getTabs,
         getActiveTabId: this.getActiveTabId,
-        getClipboard: this.getClipboard,
-        getClipboardTop: this.getClipboardTop,
         getTasks: this.getTasks,
         getWidgets: this.getStatusBarWidgets,
-        isClipboardPanelShown: this.isClipboardPanelShown,
-        showClipboardPanel: this.showClipboardPanel,
-        hideClipboardPanel: this.hideClipboardPanel,
         isTasksPanelShown: this.isTasksPanelShown,
         showTasksPanel: this.showTasksPanel,
         hideTasksPanel: this.hideTasksPanel,
@@ -203,21 +179,6 @@ export default class App extends Component<AppProps, AppState> {
     });
   }
 
-  clipboardDo(
-    manipulation: IClipboardManipulation,
-    args: IClipboardManipulationArguments
-  ): void {
-    const { clipboard } = this.state;
-    const currentClipboard = manipulation(clipboard, args);
-
-    this.setState((state) => {
-      return {
-        ...state,
-        clipboard: currentClipboard,
-      };
-    });
-  }
-
   tasksDo(
     manipulation: ITasksManipulation,
     args: ITasksManipulationArguments
@@ -256,42 +217,12 @@ export default class App extends Component<AppProps, AppState> {
     return this.state.activeTabId;
   }
 
-  getClipboard(): IClipboard {
-    return this.state.clipboard;
-  }
-
-  getClipboardTop(): IClipboardElement {
-    return clipboardTop(this.getClipboard());
-  }
-
   getTasks(): ITask[] {
     return this.state.tasks;
   }
 
   getStatusBarWidgets(): IWidget[] {
     return this.state.statusBarWidgets;
-  }
-
-  isClipboardPanelShown(): boolean {
-    return this.state.clipboardPanelShown;
-  }
-
-  showClipboardPanel() {
-    this.setState((state) => {
-      return {
-        ...state,
-        clipboardPanelShown: true,
-      };
-    });
-  }
-
-  hideClipboardPanel() {
-    this.setState((state) => {
-      return {
-        ...state,
-        clipboardPanelShown: false,
-      };
-    });
   }
 
   isTasksPanelShown(): boolean {
@@ -319,13 +250,11 @@ export default class App extends Component<AppProps, AppState> {
   render(): JSX.Element {
     const {
       appController,
-      clipboardPanelShown,
       tasksPanelShown,
       tabs,
       activeTabId,
       tasks,
       statusBarWidgets,
-      clipboard,
     } = this.state;
 
     let content;
@@ -350,12 +279,6 @@ export default class App extends Component<AppProps, AppState> {
             onShowTasksPanel={this.showTasksPanel}
             tasks={tasks}
             statusBarWidgets={statusBarWidgets}
-          />
-
-          <ClipboardPanelComponent
-            clipboardPanelShown={clipboardPanelShown}
-            hideClipboardPanel={this.hideClipboardPanel}
-            clipboard={clipboard}
           />
 
           <TasksPanelComponent

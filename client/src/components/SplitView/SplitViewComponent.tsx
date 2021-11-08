@@ -15,8 +15,8 @@ interface SplitViewComponentState {
   separatorXPosition: number | undefined;
 }
 
-const MIN_WIDTH = 100;
-const SHOW_THRESHOLD = 300;
+const MIN_WIDTH = 50;
+const SHOW_THRESHOLD = 100;
 
 export default class SplitViewComponent extends Component<
   SplitViewComponentProps,
@@ -122,7 +122,7 @@ export default class SplitViewComponent extends Component<
           <div className="splitViewDivider" />
         </div>
 
-        {showRight && <div>{right}</div>}
+        {showRight && <div className="splitViewRightPane">{right}</div>}
       </div>
     );
   }

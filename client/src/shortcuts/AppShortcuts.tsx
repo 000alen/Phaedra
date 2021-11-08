@@ -21,9 +21,6 @@ export const AppShortcuts: IShortcuts = {
       id: activeTabId,
     });
   },
-  "ctrl+shift+v": (appController: IAppController) => {
-    appController.showClipboardPanel();
-  },
   "ctrl+shift+t": (AppController: IAppController) => {
     AppController.showTasksPanel();
   },

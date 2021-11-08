@@ -6,7 +6,7 @@ from typing import Dict
 import wikipedia
 
 
-def wikipedia_summary(query: str) -> str:
+def summary(query: str) -> str:
     """Returns Wikipedia summary.
 
     :param query: Query to search Wikipedia for.
@@ -19,7 +19,7 @@ def wikipedia_summary(query: str) -> str:
     return wikipedia.summary(query)
 
 
-def wikipedia_suggestions(query: str) -> Dict[str, str]:
+def suggestions(query: str) -> Dict[str, str]:
     """Returns Wikipedia suggestions.
 
     :param query: Query to search Wikipedia for.
@@ -33,7 +33,7 @@ def wikipedia_suggestions(query: str) -> Dict[str, str]:
     return {suggestion: wikipedia.page(suggestion).url for suggestion in suggestions}
 
 
-def wikipedia_image(query: str) -> str:
+def image(query: str) -> str:
     """Returns Wikipedia image.
 
     :param query: Query to search Wikipedia for.

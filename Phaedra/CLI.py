@@ -123,7 +123,7 @@ class CLI(CLIBase):
 
     def command_from_pdf(self, path: str):
         """Creates a Notebook from a PDF file."""
-        self.notebook = Notebook.from_pdf(document_path=path)
+        self.notebook = Notebook.from_pdf(pdf_path=path)
 
     def command_from_text(self, path: str):
         """Creates a Notebook from a text file."""

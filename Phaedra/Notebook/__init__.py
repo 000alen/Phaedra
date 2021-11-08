@@ -1,8 +1,9 @@
 """Dataclass for Phaedra Notebook."""
 
-import uuid
+from uuid import uuid4
 
-from typing import BinaryIO, List, Optional, Dict, Union
+from typing import Any, BinaryIO, List, Optional, Dict, Union
+from dataclasses import dataclass
 
 import names_generator  # type: ignore
 
@@ -18,11 +19,10 @@ from Phaedra.Language import (
     batch_summarize,
     batch_answer_same_question,
 )
-from Phaedra.Knowledge import wikipedia_summary, wikipedia_suggestions, wikipedia_image
+from Phaedra.Knowledge import summary, suggestions, image
 from Phaedra.Language.Base import summarizer_input_size, answerer_input_size
 from Phaedra.Language.Utils import chop
 from Phaedra.Notebook.Page import Page, PageJson
-from Phaedra.Notebook.Cell import Cell
 from Phaedra.Notebook.Markdown import text, titled_text, ordered_list, link, image
 from Phaedra.Notebook.Schema import is_valid_notebook
 
@@ -30,6 +30,14 @@ __all__ = ("Notebook",)
 
 
 NotebookJson = Dict[str, Union[Optional[str], List[PageJson]]]
+
+
+@dataclass
+class Source:
+    id: str
+    type: str
+    path: str
+    texts: List[str]
 
 
 class Notebook:
@@ -46,18 +54,18 @@ class Notebook:
 
     id: str
     name: str
+    sources: List[Source]
     pages: List[Page]
-    document_path: Optional[str]
 
     def __init__(
         self,
         id: str = None,
         name: str = None,
-        document_path: str = None,
+        sources: List[Source] = None,
         pages: List[Page] = None,
     ):
         if id is None:
-            id = str(uuid.uuid4())
+            id = str(uuid4())
 
         if name is None:
             name = names_generator.generate_name()
@@ -65,10 +73,13 @@ class Notebook:
         if pages is None:
             pages = []
 
+        if sources is None:
+            sources = []
+
         self.id = id
         self.name = name
-        self.document_path = document_path
         self.pages = pages
+        self.sources = sources
 
     def __eq__(self, other: object) -> bool:
         if type(other) is not Notebook:
@@ -77,16 +88,17 @@ class Notebook:
         return (
             self.id == other.id
             and self.name == other.name
-            and self.document_path == other.document_path
             and self.pages == other.pages
+            and self.sources == other.sources
         )
 
     @classmethod
     def from_pdf(
         cls,
-        document_stream: BinaryIO = None,
-        document_path: str = None,
+        pdf_stream: BinaryIO = None,
+        pdf_path: str = None,
         name: str = None,
+        id: str = None,
         do_preprocessing: bool = True,
     ) -> "Notebook":
         """Creates a Notebook from a PDF document.
@@ -104,31 +116,33 @@ class Notebook:
 
         """
 
-        if document_stream is None:
-            assert type(document_path) is str
-            document_stream = open(document_path, "rb")
+        if pdf_stream is None:
+            assert type(pdf_path) is str
+            pdf_stream = open(pdf_path, "rb")
 
-        sources = extract_text_from_pdf_to_pages(document_stream)
+        source_texts = extract_text_from_pdf_to_pages(pdf_stream)
 
         if do_preprocessing:
-            sources = list(preprocess_text(source) for source in sources)
+            source_texts = list(
+                preprocess_text(source_text) for source_text in source_texts
+            )
 
-        pages = [
-            Page(data={"source": source, "document_page_number": i + 1})
-            for i, source in enumerate(sources)
-        ]
+        source = Source(id=str(uuid4()), type="pdf", path=pdf_path, texts=source_texts)
 
-        indexes, sources = chop(
-            sources, get_summarizer_tokenizer(), summarizer_input_size
+        pages = [Page(references=[source.id, i]) for i in range(len(source.texts))]
+
+        indexes, source_texts = chop(
+            source_texts, get_summarizer_tokenizer(), summarizer_input_size
         )
 
-        summaries = batch_summarize(sources)
+        summaries = batch_summarize(source_texts)
 
         for i, summary in enumerate(summaries):
-            cell = Cell(content=summary)
-            pages[indexes[i]].add_cell(cell)
+            # cell = Cell(content=summary)
+            # pages[indexes[i]].add_cell(cell)
+            ...
 
-        return cls(pages=pages, name=name, document_path=document_path)
+        return cls(id=id, name=name, sources=[source], pages=pages)
 
     @classmethod
     def from_text(
@@ -160,8 +174,7 @@ class Notebook:
         summaries = batch_summarize(sources)
 
         for i, summary in enumerate(summaries):
-            cell = Cell(content=summary)
-            pages[indexes[i]].add_cell(cell)
+            ...
 
         return cls(pages=pages, name=name, document_path=None)
 
@@ -206,7 +219,7 @@ class Notebook:
         """
 
         string = ""
-        string += f"# {self.name} ({self.document_path})\n\n"
+        string += f"# {self.name} ({self.sources})\n\n"
 
         for i, page in enumerate(self.pages):
             string += f"## Page {i}\n"
@@ -231,8 +244,8 @@ class Notebook:
         json["id"] = self.id
         json["name"] = self.name
 
-        if self.document_path:
-            json["document_path"] = self.document_path
+        if self.sources:
+            json["document_path"] = self.sources
 
         json["pages"] = [page.json() for page in self.pages]
 
@@ -305,84 +318,6 @@ class Notebook:
         assert page is not None
 
         self.pages.remove(page)
-
-    def insert_cell(self, page_id: str, cell: Cell, index: int):
-        """Inserts a cell into the Notebook.
-
-        :param page_id: ID of the page.
-        :type page_id: str
-        :param cell: Cell to insert.
-        :type cell: Cell
-        :param index: Index to insert the cell.
-        :type index: int
-
-        """
-
-        page = self.get_page(page_id)
-
-        assert page is not None
-
-        page.insert_cell(cell, index)
-
-    def add_cell(self, page_id: str, cell: Cell):
-        """Adds a cell to the Notebook.
-
-        :param page_id: ID of the page.
-        :type page_id: str
-        :param cell: Cell to add.
-        :type cell: Cell
-
-        """
-
-        page = self.get_page(page_id)
-
-        assert page is not None
-
-        page.add_cell(cell)
-
-    def get_cell(self, page_id: str, cell_id: str) -> Optional[Cell]:
-        """Returns a cell from the Notebook.
-
-        :param page_id: ID of the page.
-        :type page_id: str
-        :param cell_id: ID of the cell.
-        :type cell_id: str
-        :return: Cell object.
-        :rtype: Optional[Cell]
-
-        """
-
-        page = self.get_page(page_id)
-
-        assert page is not None
-
-        return page.get_cell(cell_id)
-
-    def get_cell_index(self, page_id: str, cell_id: str) -> Optional[int]:
-        page = self.get_page(page_id)
-
-        assert page is not None
-
-        for i, cell in enumerate(page.cells):
-            if cell.id == cell_id:
-                return i
-        return None
-
-    def remove_cell(self, page_id: str, cell_id: str):
-        """Removes a cell from the Notebook.
-
-        :param page_id: ID of the page.
-        :type page_id: str
-        :param cell_id: ID of the cell.
-        :type cell_id: str
-
-        """
-
-        page = self.get_page(page_id)
-
-        assert page is not None
-
-        page.remove_cell(cell_id)
 
     def _entities(self, page_id: str) -> List[str]:
         """Returns the entities of a page (from page.data["source"]).
@@ -473,347 +408,350 @@ class Notebook:
 
         return generate(prompt, source)
 
-    def add_entities_cell(
-        self, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds entities cell to the Notebook.
+    # def add_entities_cell(
+    #     self, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds entities cell to the Notebook.
 
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text("Entities", ordered_list(self._entities(page_id)))
+    #     content = titled_text(
+    #         "Entities", ordered_list(self._entities(page_id)))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_question_cell(
-        self, question: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds question cell to the Notebook.
+    # def add_question_cell(
+    #     self, question: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds question cell to the Notebook.
 
-        :param question: Question to answer.
-        :type question: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param question: Question to answer.
+    #     :type question: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text(question, self._question(question, page_id))
+    #     content = titled_text(question, self._question(question, page_id))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_sparse_question_cell(
-        self,
-        question: str,
-        page_id: Optional[str] = None,
-        cell_id: Optional[str] = None,
-    ) -> Optional[str]:
-        """Adds sparse question cell to the Notebook.
+    # def add_sparse_question_cell(
+    #     self,
+    #     question: str,
+    #     page_id: Optional[str] = None,
+    #     cell_id: Optional[str] = None,
+    # ) -> Optional[str]:
+    #     """Adds sparse question cell to the Notebook.
 
-        :param question: Question to answer.
-        :type question: str
+    #     :param question: Question to answer.
+    #     :type question: str
 
-        """
+    #     """
 
-        content = titled_text(question, ordered_list(self._sparse_question(question)))
+    #     content = titled_text(question, ordered_list(
+    #         self._sparse_question(question)))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            self.pages[-1].add_cell(Cell(id=cell_id, content=content))
-        else:
-            assert page_id is not None
-            page = self.get_page(page_id)
-            assert page is not None
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         self.pages[-1].add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         assert page_id is not None
+    #         page = self.get_page(page_id)
+    #         assert page is not None
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_generation_cell(
-        self, prompt: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds generate cell to the Notebook.
+    # def add_generation_cell(
+    #     self, prompt: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds generate cell to the Notebook.
 
-        :param prompt: Prompt to generate text from.
-        :type prompt: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param prompt: Prompt to generate text from.
+    #     :type prompt: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text(prompt, self._generation(prompt, page_id))
+    #     content = titled_text(prompt, self._generation(prompt, page_id))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_summary_cell(
-        self, query: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds Wikipedia summary cell to the Notebook.
+    # def add_summary_cell(
+    #     self, query: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds Wikipedia summary cell to the Notebook.
 
-        :param query: Query to search Wikipedia for.
-        :type query: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param query: Query to search Wikipedia for.
+    #     :type query: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text(f"Wikipedia summary: {query}", wikipedia_summary(query))
+    #     content = titled_text(f"Wikipedia summary: {query}", summary(query))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_suggestions_cell(
-        self, query: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds Wikipedia suggestions cell to the Notebook.
+    # def add_suggestions_cell(
+    #     self, query: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds Wikipedia suggestions cell to the Notebook.
 
-        :param query: Query to search Wikipedia for.
-        :type query: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param query: Query to search Wikipedia for.
+    #     :type query: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        suggestions = wikipedia_suggestions(query)
-        links = [link(text, url) for text, url in suggestions.items()]
-        content = titled_text(f"Wikipedia suggestions: {query}", ordered_list(links))
+    #     suggestions = suggestions(query)
+    #     links = [link(text, url) for text, url in suggestions.items()]
+    #     content = titled_text(
+    #         f"Wikipedia suggestions: {query}", ordered_list(links))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_image_cell(
-        self, query: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds Wikipedia image cell to the Notebook.
+    # def add_image_cell(
+    #     self, query: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds Wikipedia image cell to the Notebook.
 
-        :param query: Query to search Wikipedia for.
-        :type query: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param query: Query to search Wikipedia for.
+    #     :type query: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        url = wikipedia_image(query)
-        content = image(query, url)
+    #     url = image(query)
+    #     content = image(query, url)
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_meaning_cell(
-        self, word: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds meaning cell to the Notebook.
+    # def add_meaning_cell(
+    #     self, word: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds meaning cell to the Notebook.
 
-        :param word: Word to get meaning of.
-        :type word: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param word: Word to get meaning of.
+    #     :type word: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        _meaning = meaning(word)
+    #     _meaning = meaning(word)
 
-        content = titled_text(
-            f"Meaning: {word}",
-            "\n\n".join(
-                titled_text(f"Type: {word_type}", ordered_list(meaning))
-                for word_type, meaning in _meaning.items()
-            ),
-        )
+    #     content = titled_text(
+    #         f"Meaning: {word}",
+    #         "\n\n".join(
+    #             titled_text(f"Type: {word_type}", ordered_list(meaning))
+    #             for word_type, meaning in _meaning.items()
+    #         ),
+    #     )
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_synonym_cell(
-        self, word: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds synonym cell to the Notebook.
+    # def add_synonym_cell(
+    #     self, word: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds synonym cell to the Notebook.
 
-        :param word: Word to get synonyms of.
-        :type word: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param word: Word to get synonyms of.
+    #     :type word: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text(f"Synonym: {word}", ordered_list(synonym(word)))
+    #     content = titled_text(f"Synonym: {word}", ordered_list(synonym(word)))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def add_antonym_cell(
-        self, word: str, page_id: str, cell_id: Optional[str] = None
-    ) -> Optional[str]:
-        """Adds antonym cell to the Notebook.
+    # def add_antonym_cell(
+    #     self, word: str, page_id: str, cell_id: Optional[str] = None
+    # ) -> Optional[str]:
+    #     """Adds antonym cell to the Notebook.
 
-        :param word: Word to get antonyms of.
-        :type word: str
-        :param page_id: ID of the page.
-        :type page_id: str
+    #     :param word: Word to get antonyms of.
+    #     :type word: str
+    #     :param page_id: ID of the page.
+    #     :type page_id: str
 
-        """
+    #     """
 
-        page = self.get_page(page_id)
+    #     page = self.get_page(page_id)
 
-        assert page is not None
+    #     assert page is not None
 
-        content = titled_text(f"Antonym: {word}", ordered_list(antonym(word)))
+    #     content = titled_text(f"Antonym: {word}", ordered_list(antonym(word)))
 
-        if cell_id is None:
-            cell_id = str(uuid.uuid4())
-            page.add_cell(Cell(id=cell_id, content=content))
-        else:
-            cell = page.get_cell(cell_id)
-            assert cell is not None
+    #     if cell_id is None:
+    #         cell_id = str(uuid4())
+    #         page.add_cell(Cell(id=cell_id, content=content))
+    #     else:
+    #         cell = page.get_cell(cell_id)
+    #         assert cell is not None
 
-            if "loading" in cell.data:
-                cell.data["loading"] = False
+    #         if "loading" in cell.data:
+    #             cell.data["loading"] = False
 
-            cell.content = content
+    #         cell.content = content
 
-        return cell_id
+    #     return cell_id
 
-    def move_page(self, page_id: str, index: int):
-        page_index = self.get_page_index(page_id)
-        assert page_index is not None
+    # def move_page(self, page_id: str, index: int):
+    #     page_index = self.get_page_index(page_id)
+    #     assert page_index is not None
 
-        self.pages.insert(index, self.pages.pop(page_index))
+    #     self.pages.insert(index, self.pages.pop(page_index))
 
-    def move_cell(self, page_id: str, cell_id: str, index: int):
-        page_index = self.get_page_index(page_id)
-        assert page_index is not None
+    # def move_cell(self, page_id: str, cell_id: str, index: int):
+    #     page_index = self.get_page_index(page_id)
+    #     assert page_index is not None
 
-        cell_index = self.get_cell_index(page_id, cell_id)
-        assert cell_index is not None
+    #     cell_index = self.get_cell_index(page_id, cell_id)
+    #     assert cell_index is not None
 
-        page = self.pages[page_index]
-        page.cells.insert(index, page.cells.pop(cell_index))
+    #     page = self.pages[page_index]
+    #     page.cells.insert(index, page.cells.pop(cell_index))

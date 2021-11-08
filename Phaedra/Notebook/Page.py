@@ -1,17 +1,20 @@
 """Page dataclass for Phaedra Notebook."""
 
-from typing import Any, List, Dict, Optional, Union
+from typing import Any, List, Dict, NamedTuple
+from dataclasses import dataclass
 
-import uuid
-
-from wikipedia.wikipedia import page  # type: ignore
-
-from Phaedra.Notebook.Cell import Cell, CellJson
+from uuid import uuid4
 
 __all__ = ("Page", "PageJson")
 
 
-PageJson = Dict[str, Union[str, List[CellJson], Dict[Any, Any]]]
+PageJson = Any  # ! TODO
+
+
+@dataclass
+class Reference:
+    source_id: str
+    text_index: int
 
 
 class Page:
@@ -25,22 +28,33 @@ class Page:
     """
 
     id: str
-    cells: List[Cell]
+    references: List[Reference]
     data: Dict
+    content: Dict
 
-    def __init__(self, id: str = None, cells: List[Cell] = None, data: Dict = None):
+    def __init__(
+        self,
+        id: str = None,
+        references: List[Reference] = None,
+        data: Dict = None,
+        content: Dict = None,
+    ):
         if id is None:
-            id = str(uuid.uuid4())
+            id = str(uuid4())
 
-        if cells is None:
-            cells = []
+        if references is None:
+            references = []
 
         if data is None:
             data = {}
 
+        if content is None:
+            content = {}
+
         self.id = id
-        self.cells = cells
+        self.references = references
         self.data = data
+        self.content = content
 
     def __eq__(self, other: object) -> bool:
         if type(other) is not Page:
@@ -48,8 +62,9 @@ class Page:
 
         return (
             self.id == other.id
-            and self.cells == other.cells
+            and self.references == other.references
             and self.data == other.data
+            and self.content == other.content
         )
 
     @classmethod
@@ -63,12 +78,15 @@ class Page:
 
         """
 
-        page = cls(
-            cells=[Cell.from_json(cell_json) for cell_json in _json["cells"]],
+        return cls(
+            id=_json["id"],
+            references=[
+                Reference(reference["source_id"], reference["text_index"])
+                for reference in _json["references"]
+            ],
             data=_json["data"],
+            content=_json["content"],
         )
-        page.id = _json["id"]
-        return page
 
     def json(self) -> PageJson:
         """Converts the Page to a JSON dictionary.
@@ -78,57 +96,15 @@ class Page:
 
         """
 
-        json: PageJson = {}
-        json["id"] = self.id
-        json["cells"] = [cell.json() for cell in self.cells]
-        json["data"] = self.data
-        return json
-
-    def insert_cell(self, cell: "Cell", index: int):
-        """Inserts a cell into the page.
-
-        :param cell: Cell to insert.
-        :type cell: Cell
-        :param index: Index to insert the cell at.
-        :type index: int
-
-        """
-
-        self.cells.insert(index, cell)
-
-    def add_cell(self, cell: Cell):
-        """Adds a cell to the page.
-
-        :param cell: Cell to add.
-        :type cell: Cell
-
-        """
-
-        self.cells.append(cell)
-
-    def get_cell(self, cell_id: str) -> Optional[Cell]:
-        """Gets a cell by its ID.
-
-        :param cell_id: Cell ID.
-        :type cell_id: str
-
-        """
-
-        for cell in self.cells:
-            if cell.id == cell_id:
-                return cell
-        return None
-
-    def remove_cell(self, cell_id: str):
-        """Removes a cell from the page.
-
-        :param cell_id: Cell ID.
-        :type cell_id: str
-
-        """
-
-        cell = self.get_cell(cell_id)
-
-        assert cell is not None
-
-        self.cells.remove(page)
+        return {
+            "id": self.id,
+            "references": [
+                {
+                    "source_id": reference["source_id"],
+                    "text_index": reference["text_index"],
+                }
+                for reference in self.references
+            ],
+            "data": self.data,
+            "content": self.content,
+        }

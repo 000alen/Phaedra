@@ -7,7 +7,6 @@ import { openPdf } from "../IO/NotebookIO";
 import { MainPageViewProps } from "../pages/MainPage";
 import NotebookPage from "../pages/NotebookPage";
 import { strings } from "../resources/strings";
-import { addTab, createTab } from "../structures/TabsStructure";
 
 const openIcon = {
   iconName: "OpenFile",
@@ -28,10 +27,10 @@ export default function FromPdfView({ id }: MainPageViewProps) {
 
       const id = uuidv4();
 
-      appController.tabsDo(addTab, {
-        tab: createTab({
-          content: <NotebookPage key={id} id={id} notebook={notebook} />,
-        }),
+      appController.addTab({
+        id: id,
+        title: strings.newTabTitle,
+        content: <NotebookPage key={id} id={id} notebook={notebook} />,
       });
     });
   };

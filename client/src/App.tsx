@@ -4,35 +4,51 @@ import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+  IconButton,
+  IOverflowSetItemProps,
+  Label,
+  MessageBar,
+  MessageBarType,
+  OverflowSet,
+} from "@fluentui/react";
+
 import { StatusBarComponent } from "./components/StatusBarComponent";
 import TasksPanelComponent from "./components/TasksPanelComponent";
 import TopBarComponent from "./components/TopBarComponent";
 import { AppController, IAppController } from "./contexts/AppController";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage";
+import { strings } from "./resources/strings";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
-import {
-  createTab,
-  getTabContent,
-  ITab,
-  ITabsManipulation,
-  ITabsManipulationArguments,
-} from "./structures/TabsStructure";
-import {
-  ITask,
-  ITasksManipulation,
-  ITasksManipulationArguments,
-} from "./structures/TasksStructure";
-import {
-  IWidget,
-  IWidgetsManipulation,
-  IWidgetsManipulationArguments,
-} from "./structures/WidgetsStructure";
+
+export interface ITab {
+  id: string;
+  title: string;
+  content: JSX.Element;
+}
+
+export interface IMessage {
+  id: string;
+  text: string;
+  type: MessageBarType;
+}
+
+export interface ITask {
+  id: string;
+  name: string;
+}
+
+export interface IWidget {
+  id: string;
+  element: JSX.Element;
+}
 
 export interface AppProps {}
 
 export interface AppState {
   tabs: ITab[];
+  messages: IMessage[];
   activeTabId: string | undefined;
   tasks: ITask[];
   statusBarWidgets: IWidget[];
@@ -40,40 +56,85 @@ export interface AppState {
   appController: IAppController;
 }
 
+// TODO: Extract constants to a preferences file
+const numberOfMessages = 3;
+
 export default class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
 
-    this.tabsDo = this.tabsDo.bind(this);
-    this.tasksDo = this.tasksDo.bind(this);
-    this.statusBarWidgetsDo = this.statusBarWidgetsDo.bind(this);
+    this.insertTab = this.insertTab.bind(this);
+    this.addTab = this.addTab.bind(this);
+    this.removeTab = this.removeTab.bind(this);
+    this.selectTab = this.selectTab.bind(this);
+    this.setTabTitle = this.setTabTitle.bind(this);
+    this.setTabContent = this.setTabContent.bind(this);
     this.getTabs = this.getTabs.bind(this);
     this.getActiveTabId = this.getActiveTabId.bind(this);
+    this.getTab = this.getTab.bind(this);
+    this.createEmptyTab = this.createEmptyTab.bind(this);
+
+    this.addMessage = this.addMessage.bind(this);
+    this.removeMessage = this.removeMessage.bind(this);
+    this.getMessages = this.getMessages.bind(this);
+    this.getMessage = this.getMessage.bind(this);
+    this.onRenderMessage = this.onRenderMessage.bind(this);
+    this.onRenderMessageOverflow = this.onRenderMessageOverflow.bind(this);
+    this.populateMessageItem = this.populateMessageItem.bind(this);
+    this.populateMessageOverflowItem =
+      this.populateMessageOverflowItem.bind(this);
+
+    this.addTask = this.addTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
     this.getTasks = this.getTasks.bind(this);
-    this.getStatusBarWidgets = this.getStatusBarWidgets.bind(this);
+    this.getTask = this.getTask.bind(this);
     this.isTasksPanelShown = this.isTasksPanelShown.bind(this);
     this.showTasksPanel = this.showTasksPanel.bind(this);
     this.hideTasksPanel = this.hideTasksPanel.bind(this);
 
+    this.addStatusBarWidget = this.addStatusBarWidget.bind(this);
+    this.removeStatusBarWidget = this.removeStatusBarWidget.bind(this);
+    this.getStatusBarWidgets = this.getStatusBarWidgets.bind(this);
+    this.getStatusBarWidget = this.getStatusBarWidget.bind(this);
+
     this.state = {
       tabs: [],
       activeTabId: undefined,
+      messages: [],
       tasks: [],
       statusBarWidgets: [],
 
       tasksPanelShown: false,
 
       appController: {
-        tabsDo: this.tabsDo,
-        tasksDo: this.tasksDo,
-        widgetsDo: this.statusBarWidgetsDo,
+        insertTab: this.insertTab,
+        addTab: this.addTab,
+        removeTab: this.removeTab,
+        selectTab: this.selectTab,
+        setTabTitle: this.setTabTitle,
+        setTabContent: this.setTabContent,
         getTabs: this.getTabs,
         getActiveTabId: this.getActiveTabId,
+        getTab: this.getTab,
+        createEmptyTab: this.createEmptyTab,
+
+        addMessage: this.addMessage,
+        removeMessage: this.removeMessage,
+        getMessages: this.getMessages,
+        getMessage: this.getMessage,
+
+        addTask: this.addTask,
+        removeTask: this.removeTask,
         getTasks: this.getTasks,
-        getWidgets: this.getStatusBarWidgets,
+        getTask: this.getTask,
         isTasksPanelShown: this.isTasksPanelShown,
         showTasksPanel: this.showTasksPanel,
         hideTasksPanel: this.hideTasksPanel,
+
+        addStatusBarWidget: this.addStatusBarWidget,
+        removeStatusBarWidget: this.removeStatusBarWidget,
+        getStatusBarWidgets: this.getStatusBarWidgets,
+        getStatusBarWidget: this.getStatusBarWidget,
       },
     };
   }
@@ -99,65 +160,94 @@ export default class App extends Component<AppProps, AppState> {
     }
   }
 
-  tabsDo(
-    manipulation: ITabsManipulation,
-    args: ITabsManipulationArguments
-  ): void {
-    if (args === undefined) args = {};
-
-    let { tabs, activeTabId } = this.state;
-
-    switch (manipulation.name) {
-      case "addTab":
-        const id = uuidv4();
-        if (args.tab === undefined) {
-          const tab = createTab({
-            id: id,
-            content: <EmptyPage key={id} id={id} />,
-          });
-          args = { ...args, tab: tab };
-        }
-        break;
-      default:
-        break;
-    }
-
-    let tabsInformation = manipulation(tabs, activeTabId!, args);
-
+  // #region Tabs
+  insertTab(tab: ITab, index: number) {
+    const { tabs } = this.state;
+    const newTabs = [...tabs];
+    newTabs.splice(index, 0, tab);
     this.setState((state) => {
       return {
         ...state,
-        ...tabsInformation,
+        tabs: newTabs,
+        activeTabId: tab.id,
       };
     });
   }
 
-  tasksDo(
-    manipulation: ITasksManipulation,
-    args: ITasksManipulationArguments
-  ): void {
-    const { tasks } = this.state;
-    const currentTasks = manipulation(tasks, args);
-
+  addTab(tab: ITab) {
+    const { tabs } = this.state;
+    const newTabs = [...tabs];
+    newTabs.push(tab);
     this.setState((state) => {
       return {
         ...state,
-        tasks: currentTasks,
+        tabs: newTabs,
+        activeTabId: tab.id,
       };
     });
   }
 
-  statusBarWidgetsDo(
-    manipulation: IWidgetsManipulation,
-    args: IWidgetsManipulationArguments
-  ): void {
-    const { statusBarWidgets } = this.state;
-    const currentWidgets = manipulation(statusBarWidgets, args);
+  removeTab(id: string) {
+    const { tabs, activeTabId } = this.state;
+    const newTabs = tabs.filter((tab) => tab.id !== id);
+    const activeTabIndex = newTabs.findIndex((tab) => tab.id === activeTabId);
+    const newActiveTab =
+      newTabs.length && activeTabIndex !== 0
+        ? newTabs[activeTabIndex - 1].id
+        : activeTabId;
 
     this.setState((state) => {
       return {
         ...state,
-        statusBarWidgets: currentWidgets,
+        tabs: newTabs,
+        activeTabId: newActiveTab,
+      };
+    });
+  }
+
+  selectTab(id: string) {
+    this.setState((state) => {
+      return {
+        ...state,
+        activeTabId: id,
+      };
+    });
+  }
+
+  setTabTitle(id: string, title: string) {
+    const { tabs } = this.state;
+    const newTabs = tabs.map((tab) =>
+      tab.id === id
+        ? {
+            ...tab,
+            title: title,
+          }
+        : tab
+    );
+
+    this.setState((state) => {
+      return {
+        ...state,
+        tabs: newTabs,
+      };
+    });
+  }
+
+  setTabContent(id: string, content: JSX.Element) {
+    const { tabs } = this.state;
+    const newTabs = tabs.map((tab) =>
+      tab.id === id
+        ? {
+            ...tab,
+            content: content,
+          }
+        : tab
+    );
+
+    this.setState((state) => {
+      return {
+        ...state,
+        tabs: newTabs,
       };
     });
   }
@@ -170,12 +260,141 @@ export default class App extends Component<AppProps, AppState> {
     return this.state.activeTabId;
   }
 
+  getTab(id: string): ITab | undefined {
+    const { tabs } = this.state;
+    return tabs.find((tab) => tab.id === id);
+  }
+
+  createEmptyTab(): ITab {
+    const id = uuidv4();
+    return {
+      id: id,
+      title: strings.newTabTitle,
+      content: <EmptyPage id={id} />,
+    };
+  }
+  // #endregion
+
+  // #region Messages
+  addMessage(message: IMessage) {
+    const { messages } = this.state;
+    const newMessages = [...messages];
+    newMessages.push(message);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        messages: newMessages,
+      };
+    });
+  }
+
+  removeMessage(id: string) {
+    const { messages } = this.state;
+    const newMessages = messages.filter((message) => message.id !== id);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        messages: newMessages,
+      };
+    });
+  }
+
+  getMessages(): IMessage[] {
+    return this.state.messages;
+  }
+
+  getMessage(id: string): IMessage | undefined {
+    const { messages } = this.state;
+    return messages.find((message) => message.id === id);
+  }
+
+  onRenderMessage(item: IOverflowSetItemProps) {
+    return (
+      <MessageBar
+        key={item.id}
+        id={item.id}
+        isMultiline={false}
+        messageBarType={item.type}
+        onDismiss={() => this.removeMessage(item.id)}
+      >
+        {item.text}
+      </MessageBar>
+    );
+  }
+
+  onRenderMessageOverflow(overflowItems: IOverflowSetItemProps[] | undefined) {
+    return (
+      <IconButton
+        menuIconProps={{ iconName: "More" }}
+        menuProps={{ items: overflowItems! }}
+      />
+    );
+  }
+
+  populateMessageItem(message: IMessage) {
+    return {
+      key: message.id,
+      id: message.id,
+      text: message.text,
+      type: message.type,
+    };
+  }
+
+  populateMessageOverflowItem(message: IMessage) {
+    return {
+      key: message.id,
+      id: message.id,
+      name: message.text,
+      onRender: () => {
+        return (
+          <div className="flex flex-row items-center ml-2">
+            <Label>{message.text}</Label>
+            <IconButton
+              iconProps={{ iconName: "Cancel" }}
+              onClick={() => this.removeMessage(message.id)}
+            />
+          </div>
+        );
+      },
+    };
+  }
+  // #endregion
+
+  // #region Tasks
+  addTask(task: ITask) {
+    const { tasks } = this.state;
+    const newTasks = [...tasks];
+    newTasks.push(task);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        tasks: newTasks,
+      };
+    });
+  }
+
+  removeTask(id: string) {
+    const { tasks } = this.state;
+    const newTasks = tasks.filter((task) => task.id !== id);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        tasks: newTasks,
+      };
+    });
+  }
+
   getTasks(): ITask[] {
     return this.state.tasks;
   }
 
-  getStatusBarWidgets(): IWidget[] {
-    return this.state.statusBarWidgets;
+  getTask(id: string): ITask | undefined {
+    const { tasks } = this.state;
+    return tasks.find((task) => task.id === id);
   }
 
   isTasksPanelShown(): boolean {
@@ -199,32 +418,92 @@ export default class App extends Component<AppProps, AppState> {
       };
     });
   }
+  // #endregion
+
+  // #region StatusBarWidgets
+  addStatusBarWidget(widget: IWidget) {
+    const { statusBarWidgets } = this.state;
+    const newStatusBarWidgets = [...statusBarWidgets];
+    newStatusBarWidgets.push(widget);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        statusBarWidgets: newStatusBarWidgets,
+      };
+    });
+  }
+
+  removeStatusBarWidget(id: string) {
+    const { statusBarWidgets } = this.state;
+    const newStatusBarWidgets = statusBarWidgets.filter(
+      (widget) => widget.id !== id
+    );
+
+    this.setState((state) => {
+      return {
+        ...state,
+        statusBarWidgets: newStatusBarWidgets,
+      };
+    });
+  }
+
+  getStatusBarWidgets(): IWidget[] {
+    return this.state.statusBarWidgets;
+  }
+
+  getStatusBarWidget(id: string): IWidget | undefined {
+    const { statusBarWidgets } = this.state;
+    return statusBarWidgets.find((widget) => widget.id === id);
+  }
+  // #endregion
 
   render(): JSX.Element {
     const {
       appController,
       tasksPanelShown,
       tabs,
+      messages,
       activeTabId,
       tasks,
       statusBarWidgets,
     } = this.state;
 
-    let content;
-    if (activeTabId === undefined) {
-      content = <MainPage id={uuidv4()} />;
-    } else {
-      content = getTabContent(tabs, activeTabId);
-    }
+    const messagesItems = messages
+      .slice(0, numberOfMessages)
+      .map(this.populateMessageItem);
+
+    const messageOverflowItems = messages
+      .slice(numberOfMessages)
+      .map(this.populateMessageOverflowItem);
+
+    // const appContentStyle = {
+    //   height: `calc(100% - ${messagesItems.length * 32}px - ${
+    //     messageOverflowItems.length ? 32 : 0
+    //   }px)`,
+    // };
+
+    const content =
+      activeTabId === undefined ? (
+        <MainPage id={uuidv4()} />
+      ) : (
+        this.getTab(activeTabId)?.content
+      );
 
     return (
       <AppController.Provider value={appController}>
         <div className="app">
-          <TopBarComponent
-            tabs={tabs}
-            activeTabId={activeTabId}
-            tabsDo={this.tabsDo}
-          />
+          <TopBarComponent tabs={tabs} activeTabId={activeTabId} />
+
+          <div>
+            <OverflowSet
+              vertical
+              items={messagesItems}
+              overflowItems={messageOverflowItems}
+              onRenderItem={this.onRenderMessage}
+              onRenderOverflowButton={this.onRenderMessageOverflow}
+            />
+          </div>
 
           <div className="appContent">{content}</div>
 

@@ -10,8 +10,6 @@ import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
 import { strings } from "../resources/strings";
 import { createNotebook } from "../structures/NotebookStructure";
-import { setTabContent } from "../structures/TabsStructure";
-import { addTask, createTask, removeTask } from "../structures/TasksStructure";
 import NotebookPage from "./NotebookPage";
 
 export interface EmptyPageProps {
@@ -35,38 +33,34 @@ export function EmptyPage({ id }: EmptyPageProps): JSX.Element {
     if (dialogOpen) return;
 
     const taskId = uuidv4();
-    appController.tasksDo(addTask, {
-      task: createTask({ id: id, name: strings.openingFileTaskLabel }),
-    });
+    appController.addTask({ id: id, name: strings.openingFileTaskLabel });
     setDialogOpen(true);
 
     openFile().then(({ notebook, notebookPath }) => {
-      appController.tasksDo(removeTask, { id: taskId });
+      appController.removeTask(taskId);
       setDialogOpen(false);
 
       if (!notebook) return;
 
-      appController.tabsDo(setTabContent, {
-        id: id,
-        content: (
-          <NotebookPage
-            key={id}
-            id={id}
-            notebook={notebook}
-            notebookPath={notebookPath}
-          />
-        ),
-      });
+      appController.setTabContent(
+        id,
+        <NotebookPage
+          key={id}
+          id={id}
+          notebook={notebook}
+          notebookPath={notebookPath}
+        />
+      );
     });
   };
 
   const handleNew = () => {
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });
 
-    appController.tabsDo(setTabContent, {
-      id: id,
-      content: <NotebookPage key={id} id={id} notebook={notebook} />,
-    });
+    appController.setTabContent(
+      id,
+      <NotebookPage key={id} id={id} notebook={notebook} />
+    );
   };
 
   return (

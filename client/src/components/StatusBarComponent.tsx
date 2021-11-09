@@ -2,9 +2,8 @@ import "../css/StatusBarComponent.css";
 
 import React from "react";
 
+import { ITask, IWidget } from "../App";
 import { theme } from "../resources/theme";
-import { ITask } from "../structures/TasksStructure";
-import { IWidget } from "../structures/WidgetsStructure";
 import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
 
 export interface StatusBarComponentProps {

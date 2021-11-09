@@ -4,22 +4,14 @@ import React, { Component } from "react";
 
 import { IconButton } from "@fluentui/react";
 
+import { ITab } from "../App";
 import { ipcRenderer } from "../index";
 import { theme } from "../resources/theme";
-import {
-  ITab,
-  ITabsManipulation,
-  ITabsManipulationArguments,
-} from "../structures/TabsStructure";
 import TabsComponent from "./TabsComponent";
 
 export interface TopBarComponentProps {
   tabs: ITab[];
   activeTabId: string | undefined;
-  tabsDo: (
-    manipulation: ITabsManipulation,
-    args: ITabsManipulationArguments
-  ) => void;
 }
 
 export interface TopBarComponentState {
@@ -77,7 +69,7 @@ export default class TopBarComponent extends Component<
 
   render() {
     const { showMaximize } = this.state;
-    const { tabs, activeTabId, tabsDo } = this.props;
+    const { tabs, activeTabId } = this.props;
 
     const topBarStyle = {
       backgroundColor: theme.palette.white,
@@ -112,13 +104,9 @@ export default class TopBarComponent extends Component<
 
     return (
       <div className="topBar flex items-center" style={topBarStyle}>
-        <div className="titleBar">
-          <div className="titleBarChildren">
-            <TabsComponent
-              tabs={tabs}
-              activeTabId={activeTabId}
-              tabsDo={tabsDo}
-            />
+        <div className="titleBar flex items-center">
+          <div className="titleBarChildren flex items-center ml-1">
+            <TabsComponent tabs={tabs} activeTabId={activeTabId} />
           </div>
         </div>
 

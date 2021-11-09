@@ -1,55 +1,65 @@
 import React from "react";
 
-import {
-  ITab,
-  ITabsManipulation,
-  ITabsManipulationArguments,
-} from "../structures/TabsStructure";
-import {
-  ITask,
-  ITasksManipulation,
-  ITasksManipulationArguments,
-} from "../structures/TasksStructure";
-import {
-  IWidget,
-  IWidgetsManipulation,
-  IWidgetsManipulationArguments,
-} from "../structures/WidgetsStructure";
+import { IMessage, ITab, ITask, IWidget } from "../App";
 
 export interface IAppController {
-  tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => void;
-  tasksDo: (
-    action: ITasksManipulation,
-    args: ITasksManipulationArguments
-  ) => void;
-  widgetsDo: (
-    action: IWidgetsManipulation,
-    args: IWidgetsManipulationArguments
-  ) => void;
+  insertTab: (tab: ITab, index: number) => void;
+  addTab: (tab: ITab) => void;
+  removeTab: (id: string) => void;
+  selectTab: (id: string) => void;
+  setTabTitle: (id: string, title: string) => void;
+  setTabContent: (id: string, content: JSX.Element) => void;
   getTabs: () => ITab[] | undefined;
   getActiveTabId: () => string | undefined;
+  getTab: (id: string) => ITab | undefined;
+  createEmptyTab: () => ITab | undefined;
+
+  addMessage: (message: IMessage) => void;
+  removeMessage: (id: string) => void;
+  getMessages: () => IMessage[] | undefined;
+  getMessage: (id: string) => IMessage | undefined;
+
+  addTask: (task: ITask) => void;
+  removeTask: (id: string) => void;
   getTasks: () => ITask[] | undefined;
-  getWidgets: () => IWidget[] | undefined;
+  getTask: (id: string) => ITask | undefined;
   isTasksPanelShown: () => boolean | undefined;
   showTasksPanel: () => void;
   hideTasksPanel: () => void;
+
+  addStatusBarWidget: (widget: IWidget) => void;
+  removeStatusBarWidget: (id: string) => void;
+  getStatusBarWidgets: () => IWidget[] | undefined;
+  getStatusBarWidget: (id: string) => IWidget | undefined;
 }
 
 export const AppController = React.createContext<IAppController>({
-  tabsDo: (action: ITabsManipulation, args: ITabsManipulationArguments) => {},
-  tasksDo: (
-    action: ITasksManipulation,
-    args: ITasksManipulationArguments
-  ) => {},
-  widgetsDo: (
-    action: IWidgetsManipulation,
-    args: IWidgetsManipulationArguments
-  ) => {},
+  insertTab: (tab: ITab, index: number) => {},
+  addTab: (tab: ITab) => {},
+  removeTab: (id: string) => {},
+  selectTab: (id: string) => {},
+  setTabTitle: (id: string, title: string) => {},
+  setTabContent: (id: string, content: JSX.Element) => {},
   getTabs: () => undefined,
   getActiveTabId: () => undefined,
+  getTab: (id: string) => undefined,
+  createEmptyTab: () => undefined,
+
+  addMessage: (message: IMessage) => {},
+  removeMessage: (id: string) => {},
+  getMessages: () => undefined,
+  getMessage: (id: string) => undefined,
+
+  addTask: (task: ITask) => {},
+  removeTask: (id: string) => {},
   getTasks: () => undefined,
-  getWidgets: () => undefined,
+  getTask: (id: string) => undefined,
   isTasksPanelShown: () => undefined,
   showTasksPanel: () => {},
   hideTasksPanel: () => {},
+
+  addStatusBarWidget: (widget: IWidget) => {},
+  removeStatusBarWidget: (id: string) => {},
+  getStatusBarWidgets: () => undefined,
+  getStatusBarWidget: (id: string) => undefined,
 });

@@ -2,8 +2,8 @@ import React from "react";
 
 import { IconButton } from "@fluentui/react";
 
+import { AppController } from "../contexts/AppController";
 import { theme } from "../resources/theme";
-import { removeTab, selectTab } from "../structures/TabsStructure";
 
 export interface TabComponentProps {
   id: string;
@@ -27,12 +27,14 @@ export function TabComponent({
   active,
   onAction,
 }: TabComponentProps) {
+  const appController = React.useContext(AppController);
+
   const handleSelect = () => {
-    onAction(selectTab, { id: id });
+    appController.selectTab(id);
   };
 
   const handleClose = () => {
-    onAction(removeTab, { id: id });
+    appController.removeTab(id);
   };
 
   const tabStyle = { backgroundColor: theme.palette.neutralPrimary };

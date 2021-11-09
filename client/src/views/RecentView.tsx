@@ -8,7 +8,6 @@ import { AppController } from "../contexts/AppController";
 import { MainPageViewProps } from "../pages/MainPage";
 import NotebookPage from "../pages/NotebookPage";
 import { strings } from "../resources/strings";
-import { addTab, createTab } from "../structures/TabsStructure";
 
 const columns = [
   {
@@ -84,18 +83,16 @@ export default class RecentView extends Component<
     readFileSync(path, "utf-8").then((_notebook) => {
       let notebook = JSON.parse(_notebook as string);
 
-      appController.tabsDo(addTab, {
-        tab: createTab({
-          id: id,
-          content: (
-            <NotebookPage
-              key={id}
-              id={id}
-              notebook={notebook}
-              notebookPath={path}
-            />
-          ),
-        }),
+      appController.addTab({
+        id: id,
+        content: (
+          <NotebookPage
+            key={id}
+            id={id}
+            notebook={notebook}
+            notebookPath={path}
+          />
+        ),
       });
     });
   }

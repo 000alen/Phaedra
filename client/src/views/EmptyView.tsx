@@ -7,7 +7,6 @@ import { MainPageViewProps } from "../pages/MainPage";
 import NotebookPage from "../pages/NotebookPage";
 import { strings } from "../resources/strings";
 import { createNotebook } from "../structures/NotebookStructure";
-import { addTab, createTab } from "../structures/TabsStructure";
 
 const newIcon = {
   iconName: "FileTemplate",
@@ -18,12 +17,13 @@ export default function EmptyView({ id }: MainPageViewProps) {
 
   const handleNew = () => {
     const id = uuidv4();
+    // TODO
     const notebook = createNotebook({ name: `Unnamed Notebook ${id}` });
 
-    appController.tabsDo(addTab, {
-      tab: createTab({
-        content: <NotebookPage key={id} id={id} notebook={notebook} />,
-      }),
+    appController.addTab({
+      id: id,
+      title: strings.newTabTitle,
+      content: <NotebookPage key={id} id={id} notebook={notebook} />,
     });
   };
 

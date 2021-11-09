@@ -14,15 +14,8 @@ import {
 import { saveNotebook } from "../IO/NotebookIO";
 import { strings } from "../resources/strings";
 import { theme } from "../resources/theme";
-import { addMessage, createMessage } from "../structures/MessagesStructure";
 import { IBlock, INotebook } from "../structures/NotebookStructure";
-import { addTask, createTask, removeTask } from "../structures/TasksStructure";
 import PageComponent from "./PageComponent";
-
-// export interface DocumentFile {
-//   url: string;
-//   data: Uint8Array;
-// }
 
 export interface NotebookComponentProps {
   notebook: INotebook;
@@ -91,11 +84,12 @@ export default class NotebookComponent extends Component<
   async save() {
     const { notebook, notebookPath } = this.state;
     const notebookPageController: INotebookPageController = this.context;
-    const appController = notebookPageController.getAppController();
+    const appController = notebookPageController.getAppController()!;
 
     const taskId = uuidv4();
-    appController!.tasksDo(addTask, {
-      task: createTask({ id: taskId, name: strings.savingNotebookTaskLabel }),
+    appController.addTask({
+      id: taskId,
+      name: strings.savingNotebookTaskLabel,
     });
 
     try {
@@ -108,14 +102,13 @@ export default class NotebookComponent extends Component<
         };
       });
     } catch (error) {
-      notebookPageController.messagesDo(addMessage, {
-        message: createMessage({
-          text: strings.savingNotebookTaskError,
-          type: MessageBarType.error,
-        }),
+      appController.addMessage({
+        id: uuidv4(),
+        text: strings.savingNotebookTaskError,
+        type: MessageBarType.error,
       });
     } finally {
-      appController!.tasksDo(removeTask, { id: taskId });
+      appController.removeTask(taskId);
     }
   }
 

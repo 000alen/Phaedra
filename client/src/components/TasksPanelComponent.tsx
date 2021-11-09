@@ -2,7 +2,7 @@ import React from "react";
 
 import { Label, Panel, PanelType, Spinner, SpinnerSize } from "@fluentui/react";
 
-import { ITask } from "../structures/TasksStructure";
+import { ITask } from "../App";
 
 interface ITasksPanelComponentProps {
   tasksPanelShown: boolean;

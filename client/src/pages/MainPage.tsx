@@ -1,5 +1,3 @@
-import "../css/MainPage.css";
-
 import Mousetrap from "mousetrap";
 import React, { Component, MouseEvent } from "react";
 
@@ -114,8 +112,8 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
     const { selectedKey, navLinkContents } = this.state;
 
     return (
-      <div className="mainPage">
-        <div className="mainPageSideBar">
+      <div className="fill-parent flex flex-row">
+        <div className="fill-parent-y w-60">
           <Nav
             groups={navLinkGroups}
             onLinkClick={this.handleClick}
@@ -123,7 +121,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
           />
         </div>
 
-        <div className="mainPageContent">{navLinkContents[selectedKey]}</div>
+        <div className="fill-parent">{navLinkContents[selectedKey]}</div>
       </div>
     );
   }

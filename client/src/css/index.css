@@ -31,7 +31,7 @@
   background-color: #933bff;
 }
 
-.react-pdf__Page__svg {
+/* .react-pdf__Page__svg {
   width: 100% !important;
   height: auto !important;
   user-select: unset !important;
@@ -40,7 +40,7 @@
 .react-pdf__Page__svg svg {
   width: 100% !important;
   height: auto !important;
-}
+} */
 
 .codex-editor__redactor {
   padding-bottom: 0px !important;

@@ -101,7 +101,7 @@ export default class RecentView extends Component<
     const { items } = this.state;
 
     return (
-      <div>
+      <div className="fill-parent">
         <DetailsList
           items={items}
           columns={columns}

@@ -190,17 +190,19 @@ export default class App extends Component<AppProps, AppState> {
   removeTab(id: string) {
     const { tabs, activeTabId } = this.state;
     const newTabs = tabs.filter((tab) => tab.id !== id);
-    const activeTabIndex = newTabs.findIndex((tab) => tab.id === activeTabId);
-    const newActiveTab =
-      newTabs.length && activeTabIndex !== 0
+    const activeTabIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+
+    const newActiveTabId = newTabs.length
+      ? activeTabIndex !== 0
         ? newTabs[activeTabIndex - 1].id
-        : activeTabId;
+        : newTabs[activeTabIndex].id
+      : undefined;
 
     this.setState((state) => {
       return {
         ...state,
         tabs: newTabs,
-        activeTabId: newActiveTab,
+        activeTabId: newActiveTabId,
       };
     });
   }
@@ -490,20 +492,20 @@ export default class App extends Component<AppProps, AppState> {
         this.getTab(activeTabId)?.content
       );
 
+    // TODO: Show messages floating
+
     return (
       <AppController.Provider value={appController}>
         <div className="app">
           <TopBarComponent tabs={tabs} activeTabId={activeTabId} />
 
-          <div>
-            <OverflowSet
-              vertical
-              items={messagesItems}
-              overflowItems={messageOverflowItems}
-              onRenderItem={this.onRenderMessage}
-              onRenderOverflowButton={this.onRenderMessageOverflow}
-            />
-          </div>
+          <OverflowSet
+            vertical
+            items={messagesItems}
+            overflowItems={messageOverflowItems}
+            onRenderItem={this.onRenderMessage}
+            onRenderOverflowButton={this.onRenderMessageOverflow}
+          />
 
           <div className="appContent">{content}</div>
 

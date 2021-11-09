@@ -1,5 +1,3 @@
-import "../css/NotebookPage.css";
-
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
@@ -81,15 +79,15 @@ export default class NotebookPage extends Component<
     const { notebookPageController } = this.state;
     return (
       <NotebookPageController.Provider value={notebookPageController}>
-        <div className="notebookPage">
-          <div className="notebookPageContent">
-            <NotebookComponent
-              key={this.props.id}
-              ref={this.notebookRef}
-              notebook={this.props.notebook}
-              notebookPath={this.props.notebookPath}
-            />
-          </div>
+        <div className="fill-parent overflow-y-auto overflow-x-hidden">
+          {/* <div className="notebookPageContent"> */}
+          <NotebookComponent
+            key={this.props.id}
+            ref={this.notebookRef}
+            notebook={this.props.notebook}
+            notebookPath={this.props.notebookPath}
+          />
+          {/* </div> */}
         </div>
       </NotebookPageController.Provider>
     );

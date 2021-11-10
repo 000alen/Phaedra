@@ -5,4 +5,6 @@ import { IShortcuts } from "./IShortcuts";
 export const NotebookPageShortcuts: IShortcuts = {
   "ctrl+s": (notebookPageController: INotebookPageController) =>
     saveAction(notebookPageController),
+  "ctrl+k": (notebookPageController: INotebookPageController) =>
+    notebookPageController.showColaborationPanel(),
 };

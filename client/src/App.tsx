@@ -494,12 +494,6 @@ export default class App extends Component<AppProps, AppState> {
       .slice(numberOfMessages)
       .map(this.populateMessageOverflowItem);
 
-    // const appContentStyle = {
-    //   height: `calc(100% - ${messagesItems.length * 32}px - ${
-    //     messageOverflowItems.length ? 32 : 0
-    //   }px)`,
-    // };
-
     const content =
       activeTabId === undefined ? (
         <MainPage id={uuidv4()} />

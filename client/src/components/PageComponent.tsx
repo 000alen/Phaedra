@@ -6,7 +6,8 @@ import { NotebookController } from "../contexts/NotebookController";
 import { IBlock, IData, IReference } from "../structures/NotebookStructure";
 import { EditorBinding } from "../y-editor/y-editor";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
-import PaperComponent from "./PaperComponent";
+import Editor from "./Editor";
+import PaperContainerComponent from "./PaperContainerComponent";
 
 export interface PageComponentProps {
   id: string;
@@ -53,24 +54,24 @@ export default class PageComponent extends Component<
     const { id, blocks, onBlocks, addEditorBinding, yDoc } = this.props;
     const { sizes } = this.state;
 
-    const sourceElement = (
-      <div className="flex justify-center">
-        <DocumentSourceComponent />
-      </div>
-    );
+    const sourceElement = <DocumentSourceComponent />;
 
     return (
       <div className="fill-parent">
-        <Split className="flex flex-row" minSize={0} onDragEnd={this.setSizes}>
-          <div className="flex justify-center">
-            <PaperComponent
+        <Split
+          className="fill-parent flex flex-row"
+          minSize={0}
+          onDragEnd={this.setSizes}
+        >
+          <PaperContainerComponent>
+            <Editor
               id={id}
               blocks={blocks}
               onBlocks={onBlocks}
               addEditorBinding={addEditorBinding}
               yDoc={yDoc}
             />
-          </div>
+          </PaperContainerComponent>
 
           {sizes !== undefined ? (
             sizes[sizes.length - 1] > showThreshold ? (

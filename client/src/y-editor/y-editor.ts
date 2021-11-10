@@ -190,9 +190,10 @@ export class EditorBinding {
         return null;
       }
 
-      const blockElements = Array.from(
-        this.holder.querySelectorAll(blockSelector)
-      );
+      // ! Commented this out
+      // const blockElements = Array.from(
+      //   this.holder.querySelectorAll(blockSelector)
+      // );
       const changeType = checkChangeType(mutation);
 
       switch (mutation.type) {

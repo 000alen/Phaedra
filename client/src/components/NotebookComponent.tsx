@@ -59,6 +59,7 @@ export default class NotebookComponent extends Component<
     const yProvider = new WebsocketProvider(
       "wss://demos.yjs.dev",
       "phaedra-editorjs",
+      // @ts-ignore
       yDoc
     );
 
@@ -178,7 +179,7 @@ export default class NotebookComponent extends Component<
 
     return (
       <NotebookController.Provider value={notebookController}>
-        <div className="notebook" id="notebook" style={containerStyle}>
+        <div className="fill-parent" id="notebook" style={containerStyle}>
           {notebook.pages.map((page) => (
             <PageComponent
               key={page.id}

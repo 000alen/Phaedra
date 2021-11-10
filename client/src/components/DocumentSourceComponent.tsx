@@ -2,12 +2,9 @@ import React from "react";
 
 import { mergeStyles, Shimmer } from "@fluentui/react";
 
-import { theme } from "../resources/theme";
-
-// import { DocumentFile } from "./NotebookComponent";
+import PaperContainerComponent from "./PaperContainerComponent";
 
 export interface DocumentSourceComponentProps {
-  // document?: DocumentFile;
   pageNumber?: number;
 }
 
@@ -21,38 +18,31 @@ const wrapperClass = mergeStyles({
 });
 
 export function DocumentSourceComponent({
-  // document,
   pageNumber,
 }: DocumentSourceComponentProps) {
-  const pageStyle = {
-    backgroundColor: theme.palette.white,
-  };
-
   return (
-    <div className="fill-parent p-2 m-2 rounded-sm shadow-sm" style={pageStyle}>
-      <div className={`${wrapperClass}`}>
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-        <Shimmer />
-      </div>
-    </div>
+    <PaperContainerComponent className={`${wrapperClass}`}>
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+      <Shimmer />
+    </PaperContainerComponent>
   );
 }

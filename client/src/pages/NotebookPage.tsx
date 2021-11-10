@@ -1,6 +1,7 @@
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
+import ColaborationPanelComponent from "../components/ColaborationPanelComponent";
 import NotebookComponent from "../components/NotebookComponent";
 import { AppController, IAppController } from "../contexts/AppController";
 import { INotebookController } from "../contexts/NotebookController";
@@ -19,6 +20,7 @@ export interface NotebookPageProps {
 
 export interface NotebookPageState {
   notebookPageController: INotebookPageController;
+  colaborationPanelShown: boolean;
 }
 
 export interface NotebookPageViewProps {}
@@ -36,13 +38,20 @@ export default class NotebookPage extends Component<
 
     this.getAppController = this.getAppController.bind(this);
     this.getNotebookController = this.getNotebookController.bind(this);
+    this.showColaborationPanel = this.showColaborationPanel.bind(this);
+    this.hideColaborationPanel = this.hideColaborationPanel.bind(this);
+    this.isColaborationPanelShown = this.isColaborationPanelShown.bind(this);
 
     this.notebookRef = React.createRef();
 
     this.state = {
+      colaborationPanelShown: false,
       notebookPageController: {
         getAppController: this.getAppController,
         getNotebookController: this.getNotebookController,
+        showColaborationPanel: this.showColaborationPanel,
+        hideColaborationPanel: this.hideColaborationPanel,
+        isColaborationPanelShown: this.isColaborationPanelShown,
       },
     };
   }
@@ -75,20 +84,46 @@ export default class NotebookPage extends Component<
     return this.notebookRef.current!.state.notebookController!;
   }
 
+  showColaborationPanel(): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        colaborationPanelShown: true,
+      };
+    });
+  }
+
+  hideColaborationPanel(): void {
+    this.setState((state) => {
+      return {
+        ...state,
+        colaborationPanelShown: false,
+      };
+    });
+  }
+
+  isColaborationPanelShown(): boolean {
+    return this.state.colaborationPanelShown;
+  }
+
   render(): JSX.Element {
-    const { notebookPageController } = this.state;
+    const { colaborationPanelShown, notebookPageController } = this.state;
+
     return (
       <NotebookPageController.Provider value={notebookPageController}>
         <div className="fill-parent overflow-y-auto overflow-x-hidden">
-          {/* <div className="notebookPageContent"> */}
           <NotebookComponent
             key={this.props.id}
             ref={this.notebookRef}
             notebook={this.props.notebook}
             notebookPath={this.props.notebookPath}
           />
-          {/* </div> */}
         </div>
+
+        <ColaborationPanelComponent
+          colaborationPanelShown={colaborationPanelShown}
+          hideColaborationPanel={this.hideColaborationPanel}
+        />
       </NotebookPageController.Provider>
     );
   }

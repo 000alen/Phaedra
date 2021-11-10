@@ -1,14 +1,18 @@
 import React, { Component, createRef } from "react";
+import * as Y from "yjs";
 
 import EditorJS, { API, BlockAPI, OutputData } from "@editorjs/editorjs";
 
 import { tools } from "../resources/tools";
 import { IBlock } from "../structures/NotebookStructure";
+import { EditorBinding } from "../y-editor/y-editor";
 
 interface EditorProps {
   id: string;
   blocks: IBlock[];
   onBlocks: (pageId: string, blocks: IBlock[]) => void;
+  addEditorBinding: (binding: EditorBinding) => void;
+  yDoc: Y.Doc;
 }
 
 interface EditorState {
@@ -55,6 +59,7 @@ export default class Editor extends Component<EditorProps, EditorState> {
   }
 
   initEditor() {
+    const { addEditorBinding, yDoc } = this.props;
     const { editorData, holder } = this.state;
 
     const editor = new EditorJS({
@@ -63,6 +68,12 @@ export default class Editor extends Component<EditorProps, EditorState> {
       onReady: () => {
         // @ts-ignore
         this.editorInstance.current = editor;
+
+        const holderElement = document.getElementById(holder);
+
+        addEditorBinding(
+          new EditorBinding(editor, holderElement, yDoc.getArray(holder))
+        );
       },
       onChange: this.onChange,
       autofocus: true,

@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Split from "react-split";
+import * as Y from "yjs";
 
 import { NotebookController } from "../contexts/NotebookController";
 import { IBlock, IData, IReference } from "../structures/NotebookStructure";
+import { EditorBinding } from "../y-editor/y-editor";
 import { DocumentSourceComponent } from "./DocumentSourceComponent";
 import PaperComponent from "./PaperComponent";
 
@@ -12,6 +14,8 @@ export interface PageComponentProps {
   data: IData;
   blocks: IBlock[];
   onBlocks: (pageId: string, blocks: IBlock[]) => void;
+  addEditorBinding: (binding: EditorBinding) => void;
+  yDoc: Y.Doc;
 }
 
 const showThreshold = 1;
@@ -46,7 +50,7 @@ export default class PageComponent extends Component<
   }
 
   render() {
-    const { id, blocks, onBlocks } = this.props;
+    const { id, blocks, onBlocks, addEditorBinding, yDoc } = this.props;
     const { sizes } = this.state;
 
     const sourceElement = (
@@ -59,7 +63,13 @@ export default class PageComponent extends Component<
       <div className="fill-parent">
         <Split className="flex flex-row" minSize={0} onDragEnd={this.setSizes}>
           <div className="flex justify-center">
-            <PaperComponent id={id} blocks={blocks} onBlocks={onBlocks} />
+            <PaperComponent
+              id={id}
+              blocks={blocks}
+              onBlocks={onBlocks}
+              addEditorBinding={addEditorBinding}
+              yDoc={yDoc}
+            />
           </div>
 
           {sizes !== undefined ? (

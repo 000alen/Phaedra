@@ -25,13 +25,11 @@ export function DocumentSourceComponent({
   pageNumber,
 }: DocumentSourceComponentProps) {
   const pageStyle = {
-    width: "8.5in",
-    height: "11in",
     backgroundColor: theme.palette.white,
   };
 
   return (
-    <div className="p-2 m-2 rounded-sm shadow-sm" style={pageStyle}>
+    <div className="fill-parent p-2 m-2 rounded-sm shadow-sm" style={pageStyle}>
       <div className={`${wrapperClass}`}>
         <Shimmer />
         <Shimmer />

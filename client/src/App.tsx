@@ -8,6 +8,7 @@ import {
   IconButton,
   IOverflowSetItemProps,
   Label,
+  mergeStyles,
   MessageBar,
   MessageBarType,
   OverflowSet,
@@ -20,6 +21,7 @@ import { AppController, IAppController } from "./contexts/AppController";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage";
 import { strings } from "./resources/strings";
+import { theme } from "./resources/theme";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
 
 export interface ITab {
@@ -471,6 +473,19 @@ export default class App extends Component<AppProps, AppState> {
       statusBarWidgets,
     } = this.state;
 
+    const scrollbarStyles = mergeStyles({
+      "*::-webkit-scrollbar": {
+        width: "16px",
+      },
+      "*::-webkit-scrollbar-thumb": {
+        height: "56px",
+        borderRadius: "8px",
+        border: "4px solid transparent",
+        backgroundClip: "content-box",
+        backgroundColor: theme.palette.themePrimary,
+      },
+    });
+
     const messagesItems = messages
       .slice(0, numberOfMessages)
       .map(this.populateMessageItem);
@@ -496,7 +511,7 @@ export default class App extends Component<AppProps, AppState> {
 
     return (
       <AppController.Provider value={appController}>
-        <div className="app">
+        <div className={`app ${scrollbarStyles}`}>
           <TopBarComponent tabs={tabs} activeTabId={activeTabId} />
 
           <OverflowSet

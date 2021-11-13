@@ -20,7 +20,7 @@ const wrapperClass = mergeStyles({
 export function DocumentSource({ pageNumber }: DocumentSourceProps) {
   return (
     <Paper>
-      <div className={`fill-parent ${wrapperClass}`}>
+      <div className={`w-[100%] h-[100%] ${wrapperClass}`}>
         <Shimmer />
         <Shimmer />
         <Shimmer />

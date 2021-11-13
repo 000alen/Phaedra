@@ -1,4 +1,7 @@
 // @ts-ignore
+import Paragraph from "editorjs-paragraph-with-alignment";
+
+// @ts-ignore
 import CheckList from "@editorjs/checklist";
 // @ts-ignore
 import Code from "@editorjs/code";
@@ -30,6 +33,7 @@ import Table from "@editorjs/table";
 import Warning from "@editorjs/warning";
 
 export const tools = {
+  paragraph: Paragraph,
   embed: Embed,
   table: Table,
   marker: Marker,

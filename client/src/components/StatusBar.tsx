@@ -1,5 +1,3 @@
-import "../css/StatusBarComponent.css";
-
 import React from "react";
 
 import { ITask, IWidget } from "../App";
@@ -26,10 +24,10 @@ export function StatusBar({
 
   return (
     <div
-      className="statusBar flex flex-row items-center px-2 select-none"
+      className="w-[100%] h-5 z-50 flex flex-row items-center px-2 select-none"
       style={statusBarStyle}
     >
-      <div className="statusBarMessageSection">
+      <div className="w-[100%]">
         {task && (
           <StatusBarLoading
             text={task.name}
@@ -38,7 +36,7 @@ export function StatusBar({
         )}
       </div>
 
-      <div className="statusBarButtonsSection flex flex-row-reverse space-x-2">
+      <div className="w-[100%] h-[100%] flex flex-row-reverse space-x-2">
         {widgets.map((widget) => widget.element)}
       </div>
     </div>

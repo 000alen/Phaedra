@@ -1,5 +1,3 @@
-import "../css/Editor.css";
-
 import React, { Component } from "react";
 
 import EditorJS, { API, BlockAPI, OutputData } from "@editorjs/editorjs";

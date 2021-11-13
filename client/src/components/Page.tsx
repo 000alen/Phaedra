@@ -1,13 +1,9 @@
-import "../css/Page.css";
-
 import React, { Component } from "react";
-import Split from "react-split";
 
 import Subdivide from "@pixore/subdivide";
 
 import { NotebookController } from "../contexts/NotebookController";
 import { IBlock, IData, IReference } from "../structures/NotebookStructure";
-import { DocumentSource } from "./DocumentSource";
 import { Editor } from "./Editor";
 import { Paper } from "./Paper";
 
@@ -18,8 +14,6 @@ export interface PageProps {
   blocks: IBlock[];
   onBlocks: (pageId: string, blocks: IBlock[]) => void;
 }
-
-const showThreshold = 1;
 
 export interface PageState {
   sizes: number[] | undefined;
@@ -51,7 +45,7 @@ export class Page extends Component<PageProps, PageState> {
     const { id, blocks } = this.props;
 
     return (
-      <div className="fill-parent relative">
+      <div className="w-[100%] h-[100%] relative">
         <Subdivide
           component={() => (
             <Paper>

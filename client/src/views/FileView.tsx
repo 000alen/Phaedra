@@ -9,7 +9,7 @@ const iconClass = mergeStyles({
 
 export function FileView() {
   return (
-    <div className="flex items-center justify-center fill-parent">
+    <div className="w-[100%] h-[100%] flex items-center justify-center">
       <div className="flex-col items-center">
         <Icon iconName="TextDocument" className={iconClass} />
         <Label>{strings.welcome}</Label>

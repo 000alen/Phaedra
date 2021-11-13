@@ -148,7 +148,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     return (
       <NotebookController.Provider value={notebookController}>
         <div
-          className="fill-parent overflow-y-auto overflow-x-hidden"
+          className="w-[100%] h-[100%] overflow-y-auto overflow-x-hidden"
           id="notebook"
           style={containerStyle}
         >

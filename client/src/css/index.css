@@ -19,26 +19,43 @@
 
 @tailwind utilities;
 
-.fill-parent {
-  width: 100%;
-  height: 100%;
+.drag-region {
+  -webkit-app-region: drag;
 }
 
-.fill-parent-x {
-  width: 100%;
+.no-drag-region {
+  -webkit-app-region: no-drag;
 }
 
-.fill-parent-y {
-  height: 100%;
+.codex-editor__redactor {
+  padding-bottom: 0 !important;
 }
 
-.gutter {
-  background-color: #eee;
-  background-repeat: no-repeat;
-  background-position: 50%;
+.ce-block__content {
+  max-width: unset !important;
 }
 
-.gutter.gutter-horizontal {
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-  cursor: col-resize;
+.ce-toolbar__content {
+  max-width: unset !important;
+}
+
+.ce-toolbar__actions {
+  right: 0 !important;
+}
+
+.ce-toolbar__plus {
+  left: 0 !important;
+}
+
+.cdx-block {
+  padding: 0 !important;
+}
+
+.px-corner {
+  background-color: rgba(100, 100, 100, 0.5);
+}
+
+.px-layout {
+  width: 100% !important;
+  height: 100% !important;
 }

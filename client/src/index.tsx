@@ -10,8 +10,6 @@ import { theme } from "./resources/theme";
 
 export const { ipcRenderer } = window.require("electron");
 
-window.localStorage.clear();
-
 initializeIcons();
 
 ReactDOM.render(

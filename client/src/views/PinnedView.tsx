@@ -69,7 +69,7 @@ export class PinnedView extends Component<MainPageViewProps, PinnedViewState> {
     const { items } = this.state;
 
     return (
-      <div className="fill-parent">
+      <div className="w-[100%] h-[100%]">
         <DetailsList items={items} columns={columns} />
       </div>
     );

@@ -112,8 +112,8 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
     const { selectedKey, navLinkContents } = this.state;
 
     return (
-      <div className="fill-parent flex flex-row">
-        <div className="fill-parent-y w-60">
+      <div className="w-[100%] h-[100%] flex flex-row">
+        <div className="h-[100%] w-60">
           <Nav
             groups={navLinkGroups}
             onLinkClick={this.handleClick}
@@ -121,7 +121,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
           />
         </div>
 
-        <div className="fill-parent">{navLinkContents[selectedKey]}</div>
+        <div className="w-[100%] h-[100%]">{navLinkContents[selectedKey]}</div>
       </div>
     );
   }

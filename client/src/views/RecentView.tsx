@@ -98,7 +98,7 @@ export class RecentView extends Component<MainPageViewProps, RecentViewState> {
     const { items } = this.state;
 
     return (
-      <div className="fill-parent">
+      <div className="w-[100%] h-[100%]">
         <DetailsList
           items={items}
           columns={columns}

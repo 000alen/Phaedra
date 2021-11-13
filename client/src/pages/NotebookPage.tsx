@@ -111,7 +111,7 @@ export class NotebookPage extends Component<
 
     return (
       <NotebookPageController.Provider value={notebookPageController}>
-        <div className="fill-parent">
+        <div className="w-[100%] h-[100%]">
           <Notebook
             key={this.props.id}
             ref={this.notebookRef}

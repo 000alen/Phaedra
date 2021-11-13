@@ -1,5 +1,3 @@
-import "../css/TopBarComponent.css";
-
 import React, { Component } from "react";
 
 import { IconButton } from "@fluentui/react";
@@ -100,26 +98,29 @@ export class TopBar extends Component<TopBarProps, TopBarState> {
     };
 
     return (
-      <div className="topBar flex items-center" style={topBarStyle}>
-        <div className="titleBar flex items-center">
-          <div className="titleBarChildren flex items-center ml-1">
+      <div
+        className="w-[100%] h-10 flex flex-row z-50 select-none items-center"
+        style={topBarStyle}
+      >
+        <div className="drag-region w-[90%] flex items-center">
+          <div className="no-drag-region max-w-[90%] h-[100%] inline-flex flex-row items-center ml-1">
             <Tabs tabs={tabs} activeTabId={activeTabId} />
           </div>
         </div>
 
-        <div className="titleBarButtons mx-2 space-x-3">
+        <div className="w-[10%] flex flex-row justify-end h-4 mx-2 space-x-3">
           <IconButton
-            className="topButton"
+            className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={minimizeIcon}
             onClick={this.handleMinimizeButtonClick}
           />
           <IconButton
-            className="topButton"
+            className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={showMaximize ? maximizeIcon : restoreIcon}
             onClick={this.handleMaximizeRestoreButtonClick}
           />
           <IconButton
-            className="topButton"
+            className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={closeIcon}
             onClick={this.handleCloseButtonClick}
           />

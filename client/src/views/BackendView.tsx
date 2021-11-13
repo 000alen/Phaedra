@@ -30,7 +30,7 @@ export function BackendView({ id }: MainPageViewProps) {
   };
 
   return (
-    <div className="fill-parent space-y-2">
+    <div className="w-[100%] h-[100%] space-y-2">
       <CompoundButton
         primary
         secondaryText="Serve Phaedra's backend from Google Colaboratory"

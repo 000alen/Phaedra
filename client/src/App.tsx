@@ -1,19 +1,10 @@
-import "./css/App.css";
-
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  IconButton,
-  IOverflowSetItemProps,
-  Label,
-  mergeStyles,
-  MessageBar,
-  MessageBarType,
-  OverflowSet,
-} from "@fluentui/react";
+import { mergeStyles, MessageBarType } from "@fluentui/react";
 
+import { Message } from "./components/Message";
 import { StatusBar } from "./components/StatusBar";
 import { TasksPanel } from "./components/TasksPanel";
 import { TopBar } from "./components/TopBar";
@@ -58,9 +49,6 @@ export interface AppState {
   appController: IAppController;
 }
 
-// TODO: Extract constants to a preferences file
-const numberOfMessages = 3;
-
 export class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
@@ -80,11 +68,7 @@ export class App extends Component<AppProps, AppState> {
     this.removeMessage = this.removeMessage.bind(this);
     this.getMessages = this.getMessages.bind(this);
     this.getMessage = this.getMessage.bind(this);
-    this.onRenderMessage = this.onRenderMessage.bind(this);
-    this.onRenderMessageOverflow = this.onRenderMessageOverflow.bind(this);
-    this.populateMessageItem = this.populateMessageItem.bind(this);
-    this.populateMessageOverflowItem =
-      this.populateMessageOverflowItem.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
 
     this.addTask = this.addTask.bind(this);
     this.removeTask = this.removeTask.bind(this);
@@ -102,7 +86,13 @@ export class App extends Component<AppProps, AppState> {
     this.state = {
       tabs: [],
       activeTabId: undefined,
-      messages: [],
+      messages: [
+        {
+          id: uuidv4(),
+          type: MessageBarType.info,
+          text: "Lorem",
+        },
+      ],
       tasks: [],
       statusBarWidgets: [],
 
@@ -314,55 +304,18 @@ export class App extends Component<AppProps, AppState> {
     return messages.find((message) => message.id === id);
   }
 
-  onRenderMessage(item: IOverflowSetItemProps) {
-    return (
-      <MessageBar
-        key={item.id}
-        id={item.id}
-        isMultiline={false}
-        messageBarType={item.type}
-        onDismiss={() => this.removeMessage(item.id)}
-      >
-        {item.text}
-      </MessageBar>
-    );
-  }
+  renderMessage(message: IMessage) {
+    const { id, type, text } = message;
 
-  onRenderMessageOverflow(overflowItems: IOverflowSetItemProps[] | undefined) {
     return (
-      <IconButton
-        menuIconProps={{ iconName: "More" }}
-        menuProps={{ items: overflowItems! }}
+      <Message
+        key={id}
+        id={id}
+        type={type}
+        text={text}
+        onDismiss={this.removeMessage}
       />
     );
-  }
-
-  populateMessageItem(message: IMessage) {
-    return {
-      key: message.id,
-      id: message.id,
-      text: message.text,
-      type: message.type,
-    };
-  }
-
-  populateMessageOverflowItem(message: IMessage) {
-    return {
-      key: message.id,
-      id: message.id,
-      name: message.text,
-      onRender: () => {
-        return (
-          <div className="flex flex-row items-center ml-2">
-            <Label>{message.text}</Label>
-            <IconButton
-              iconProps={{ iconName: "Cancel" }}
-              onClick={() => this.removeMessage(message.id)}
-            />
-          </div>
-        );
-      },
-    };
   }
   // #endregion
 
@@ -486,14 +439,6 @@ export class App extends Component<AppProps, AppState> {
       },
     });
 
-    const messagesItems = messages
-      .slice(0, numberOfMessages)
-      .map(this.populateMessageItem);
-
-    const messageOverflowItems = messages
-      .slice(numberOfMessages)
-      .map(this.populateMessageOverflowItem);
-
     const content =
       activeTabId === undefined ? (
         <MainPage id={uuidv4()} />
@@ -501,22 +446,16 @@ export class App extends Component<AppProps, AppState> {
         this.getTab(activeTabId)?.content
       );
 
-    // TODO: Show messages floating
-
     return (
       <AppController.Provider value={appController}>
-        <div className={`app ${scrollbarStyles}`}>
+        <div className={`w-screen h-screen overflow-hidden ${scrollbarStyles}`}>
           <TopBar tabs={tabs} activeTabId={activeTabId} />
 
-          <OverflowSet
-            vertical
-            items={messagesItems}
-            overflowItems={messageOverflowItems}
-            onRenderItem={this.onRenderMessage}
-            onRenderOverflowButton={this.onRenderMessageOverflow}
-          />
+          <div className="absolute top-5 inset-x-0 w-[60%] mx-auto space-y-0.5 z-50">
+            {messages.map((message) => this.renderMessage(message))}
+          </div>
 
-          <div className="appContent">{content}</div>
+          <div className="w-[100%] h-[calc(100%-60px)]">{content}</div>
 
           <StatusBar
             onShowTasksPanel={this.showTasksPanel}

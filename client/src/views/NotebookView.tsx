@@ -43,7 +43,7 @@ export function NotebookView({ id }: MainPageViewProps) {
   };
 
   return (
-    <div className="fill-parent flex items-center justify-center">
+    <div className="w-[100%] h-[100%] flex items-center justify-center">
       <div className="flex flex-row space-x-1">
         <Card
           iconProps={openIcon}

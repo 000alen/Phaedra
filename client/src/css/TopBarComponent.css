@@ -26,12 +26,12 @@
 .titleBarButtons {
   display: flex;
   flex-direction: row;
-  height: 25px;
+  height: 15px;
 }
 
 .topButton {
-  width: 25px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border: none;
   outline: none;
   background-repeat: no-repeat;

@@ -6,13 +6,13 @@ import { INavLink, Nav } from "@fluentui/react";
 import { AppController } from "../contexts/AppController";
 import { strings } from "../resources/strings";
 import { MainPageShortcuts } from "../shortcuts/MainPageShortcuts";
-import BackendView from "../views/BackendView";
-import EmptyView from "../views/EmptyView";
-import FromPdfView from "../views/FromPdfView";
-import FromTextView from "../views/FromTextView";
-import NotebookView from "../views/NotebookView";
-import PinnedView from "../views/PinnedView";
-import RecentView from "../views/RecentView";
+import { BackendView } from "../views/BackendView";
+import { EmptyView } from "../views/EmptyView";
+import { FromPdfView } from "../views/FromPdfView";
+import { FromTextView } from "../views/FromTextView";
+import { NotebookView } from "../views/NotebookView";
+import { PinnedView } from "../views/PinnedView";
+import { RecentView } from "../views/RecentView";
 
 export interface MainPageProps {
   id: string;

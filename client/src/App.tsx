@@ -14,9 +14,9 @@ import {
   OverflowSet,
 } from "@fluentui/react";
 
-import { StatusBarComponent } from "./components/StatusBarComponent";
-import TasksPanelComponent from "./components/TasksPanelComponent";
-import TopBarComponent from "./components/TopBarComponent";
+import { StatusBar } from "./components/StatusBar";
+import { TasksPanel } from "./components/TasksPanel";
+import { TopBar } from "./components/TopBar";
 import { AppController, IAppController } from "./contexts/AppController";
 import { EmptyPage } from "./pages/EmptyPage";
 import { MainPage } from "./pages/MainPage";
@@ -61,7 +61,7 @@ export interface AppState {
 // TODO: Extract constants to a preferences file
 const numberOfMessages = 3;
 
-export default class App extends Component<AppProps, AppState> {
+export class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
 
@@ -506,7 +506,7 @@ export default class App extends Component<AppProps, AppState> {
     return (
       <AppController.Provider value={appController}>
         <div className={`app ${scrollbarStyles}`}>
-          <TopBarComponent tabs={tabs} activeTabId={activeTabId} />
+          <TopBar tabs={tabs} activeTabId={activeTabId} />
 
           <OverflowSet
             vertical
@@ -518,13 +518,13 @@ export default class App extends Component<AppProps, AppState> {
 
           <div className="appContent">{content}</div>
 
-          <StatusBarComponent
+          <StatusBar
             onShowTasksPanel={this.showTasksPanel}
             tasks={tasks}
             statusBarWidgets={statusBarWidgets}
           />
 
-          <TasksPanelComponent
+          <TasksPanel
             tasksPanelShown={tasksPanelShown}
             hideTasksPanel={this.hideTasksPanel}
             tasks={tasks}

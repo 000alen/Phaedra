@@ -2,15 +2,15 @@ import React from "react";
 
 import { Label, Panel, PanelType } from "@fluentui/react";
 
-interface IColaborationPanelComponentProps {
+interface ColaborationPanelProps {
   colaborationPanelShown: boolean;
   hideColaborationPanel: () => void;
 }
 
-export default function ColaborationPanelComponent({
+export function ColaborationPanel({
   colaborationPanelShown,
   hideColaborationPanel: hideTasksPanel,
-}: IColaborationPanelComponentProps) {
+}: ColaborationPanelProps) {
   return (
     <Panel
       isLightDismiss

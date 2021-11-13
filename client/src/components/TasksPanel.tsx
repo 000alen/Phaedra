@@ -4,17 +4,17 @@ import { Label, Panel, PanelType, Spinner, SpinnerSize } from "@fluentui/react";
 
 import { ITask } from "../App";
 
-interface ITasksPanelComponentProps {
+interface TasksPanelProps {
   tasksPanelShown: boolean;
   hideTasksPanel: () => void;
   tasks: ITask[];
 }
 
-export default function TasksPanelComponent({
+export function TasksPanel({
   tasksPanelShown,
   hideTasksPanel,
   tasks,
-}: ITasksPanelComponentProps) {
+}: TasksPanelProps) {
   return (
     <Panel
       isLightDismiss

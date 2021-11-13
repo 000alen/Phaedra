@@ -2,15 +2,15 @@ import React from "react";
 
 import { Spinner, SpinnerSize, Text } from "@fluentui/react";
 
-export interface StatusBarLoadingComponentProps {
+export interface StatusBarLoadingProps {
   text: string;
   onShowTasksPanel: () => void;
 }
 
-export function StatusBarLoadingComponent({
+export function StatusBarLoading({
   text,
   onShowTasksPanel,
-}: StatusBarLoadingComponentProps) {
+}: StatusBarLoadingProps) {
   return (
     <div
       className="flex items-center space-x-2"

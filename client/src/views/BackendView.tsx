@@ -11,7 +11,7 @@ import { getApiUrl, setApiUrl } from "../API/PhaedraAPI";
 import { MainPageViewProps } from "../pages/MainPage";
 import { strings } from "../resources/strings";
 
-export default function BackendView({ id }: MainPageViewProps) {
+export function BackendView({ id }: MainPageViewProps) {
   const [url, setUrl] = useState(getApiUrl());
 
   const handleUrlChange = (

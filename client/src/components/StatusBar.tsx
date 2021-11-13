@@ -4,24 +4,24 @@ import React from "react";
 
 import { ITask, IWidget } from "../App";
 import { theme } from "../resources/theme";
-import { StatusBarLoadingComponent } from "./StatusBarLoadingComponent";
+import { StatusBarLoading } from "./StatusBarLoading";
 
-export interface StatusBarComponentProps {
+export interface StatusBarProps {
   tasks: ITask[];
   statusBarWidgets: IWidget[];
   onShowTasksPanel: () => void;
 }
 
-export function StatusBarComponent({
+export function StatusBar({
   tasks,
   statusBarWidgets: widgets,
   onShowTasksPanel,
-}: StatusBarComponentProps): JSX.Element {
+}: StatusBarProps): JSX.Element {
   let task;
   if (tasks.length > 0) task = tasks[0];
 
   const statusBarStyle = {
-    backgroundColor: theme.palette.neutralLight,
+    backgroundColor: theme.palette.white,
   };
 
   return (
@@ -31,7 +31,7 @@ export function StatusBarComponent({
     >
       <div className="statusBarMessageSection">
         {task && (
-          <StatusBarLoadingComponent
+          <StatusBarLoading
             text={task.name}
             onShowTasksPanel={onShowTasksPanel}
           />

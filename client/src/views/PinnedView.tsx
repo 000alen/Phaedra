@@ -37,10 +37,7 @@ interface PinnedViewState {
   items: StoreFile[];
 }
 
-export default class PinnedView extends Component<
-  MainPageViewProps,
-  PinnedViewState
-> {
+export class PinnedView extends Component<MainPageViewProps, PinnedViewState> {
   constructor(props: MainPageViewProps) {
     super(props);
 

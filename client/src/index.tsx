@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 
 import { initializeIcons, ThemeProvider } from "@fluentui/react";
 
-import App from "./App";
+import { App } from "./App";
 import { theme } from "./resources/theme";
 
 export const { ipcRenderer } = window.require("electron");

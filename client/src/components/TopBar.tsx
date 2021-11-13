@@ -7,22 +7,19 @@ import { IconButton } from "@fluentui/react";
 import { ITab } from "../App";
 import { ipcRenderer } from "../index";
 import { theme } from "../resources/theme";
-import TabsComponent from "./TabsComponent";
+import { Tabs } from "./Tabs";
 
-export interface TopBarComponentProps {
+export interface TopBarProps {
   tabs: ITab[];
   activeTabId: string | undefined;
 }
 
-export interface TopBarComponentState {
+export interface TopBarState {
   showMaximize: boolean;
 }
 
-export default class TopBarComponent extends Component<
-  TopBarComponentProps,
-  TopBarComponentState
-> {
-  constructor(props: TopBarComponentProps) {
+export class TopBar extends Component<TopBarProps, TopBarState> {
+  constructor(props: TopBarProps) {
     super(props);
 
     this.setMaximizeRestoreButton = this.setMaximizeRestoreButton.bind(this);
@@ -106,11 +103,11 @@ export default class TopBarComponent extends Component<
       <div className="topBar flex items-center" style={topBarStyle}>
         <div className="titleBar flex items-center">
           <div className="titleBarChildren flex items-center ml-1">
-            <TabsComponent tabs={tabs} activeTabId={activeTabId} />
+            <Tabs tabs={tabs} activeTabId={activeTabId} />
           </div>
         </div>
 
-        <div className="titleBarButtons mx-2 space-x-2">
+        <div className="titleBarButtons mx-2 space-x-3">
           <IconButton
             className="topButton"
             iconProps={minimizeIcon}

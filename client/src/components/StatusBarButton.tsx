@@ -2,15 +2,12 @@ import React from "react";
 
 import { Icon, Text } from "@fluentui/react";
 
-export interface StatusBarButtonComponentProps {
+export interface StatusBarButtonProps {
   text: string;
   icon?: string;
 }
 
-export function StatusBarButtonComponent({
-  text,
-  icon,
-}: StatusBarButtonComponentProps) {
+export function StatusBarButton({ text, icon }: StatusBarButtonProps) {
   return (
     <div className="flex items-center px-1 space-x-1 hover:bg-red-800">
       {icon ? <Icon iconName={icon} /> : null}

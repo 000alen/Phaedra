@@ -1,8 +1,8 @@
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
 
-import ColaborationPanelComponent from "../components/ColaborationPanelComponent";
-import NotebookComponent from "../components/NotebookComponent";
+import { ColaborationPanel } from "../components/ColaborationPanel";
+import { Notebook } from "../components/Notebook";
 import { AppController, IAppController } from "../contexts/AppController";
 import { INotebookController } from "../contexts/NotebookController";
 import {
@@ -25,13 +25,13 @@ export interface NotebookPageState {
 
 export interface NotebookPageViewProps {}
 
-export default class NotebookPage extends Component<
+export class NotebookPage extends Component<
   NotebookPageProps,
   NotebookPageState
 > {
   static contextType = AppController;
 
-  notebookRef: React.RefObject<NotebookComponent>;
+  notebookRef: React.RefObject<Notebook>;
 
   constructor(props: NotebookPageProps) {
     super(props);
@@ -111,8 +111,8 @@ export default class NotebookPage extends Component<
 
     return (
       <NotebookPageController.Provider value={notebookPageController}>
-        <div className="fill-parent overflow-y-auto overflow-x-hidden">
-          <NotebookComponent
+        <div className="fill-parent">
+          <Notebook
             key={this.props.id}
             ref={this.notebookRef}
             notebook={this.props.notebook}
@@ -120,7 +120,7 @@ export default class NotebookPage extends Component<
           />
         </div>
 
-        <ColaborationPanelComponent
+        <ColaborationPanel
           colaborationPanelShown={colaborationPanelShown}
           hideColaborationPanel={this.hideColaborationPanel}
         />

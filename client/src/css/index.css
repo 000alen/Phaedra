@@ -19,21 +19,6 @@
 
 @tailwind utilities;
 
-/* .react-pdf__Page__svg {
-  width: 100% !important;
-  height: auto !important;
-  user-select: unset !important;
-}
-
-.react-pdf__Page__svg svg {
-  width: 100% !important;
-  height: auto !important;
-} */
-
-.codex-editor__redactor {
-  padding-bottom: 0px !important;
-}
-
 .fill-parent {
   width: 100%;
   height: 100%;

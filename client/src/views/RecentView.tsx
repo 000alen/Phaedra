@@ -6,7 +6,7 @@ import { DetailsList } from "@fluentui/react";
 import { getRecent, readFileSync, StoreFile } from "../API/ElectronAPI";
 import { AppController } from "../contexts/AppController";
 import { MainPageViewProps } from "../pages/MainPage";
-import NotebookPage from "../pages/NotebookPage";
+import { NotebookPage } from "../pages/NotebookPage";
 import { strings } from "../resources/strings";
 
 const columns = [
@@ -40,10 +40,7 @@ interface RecentViewState {
   items: StoreFile[];
 }
 
-export default class RecentView extends Component<
-  MainPageViewProps,
-  RecentViewState
-> {
+export class RecentView extends Component<MainPageViewProps, RecentViewState> {
   static contextType = AppController;
 
   constructor(props: MainPageViewProps) {

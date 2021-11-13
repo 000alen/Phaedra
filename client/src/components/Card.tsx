@@ -8,7 +8,7 @@ import {
 } from "@fluentui/react";
 import { mergeStyles } from "@fluentui/react/lib/Styling";
 
-export interface CardComponentProps {
+export interface CardProps {
   iconProps: IIconProps;
   title: string;
   subtitle: string;
@@ -26,12 +26,7 @@ const cardStyles = {
   root: { display: "inline-block", marginRight: 20, width: 320 },
 };
 
-export default function CardComponent({
-  iconProps,
-  title,
-  subtitle,
-  onClick,
-}: CardComponentProps) {
+export function Card({ iconProps, title, subtitle, onClick }: CardProps) {
   return (
     <div>
       <DocumentCard styles={cardStyles} onClick={onClick}>

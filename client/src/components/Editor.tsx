@@ -1,23 +1,21 @@
-import React, { Component, createRef } from "react";
-import * as Y from "yjs";
+import "../css/Editor.css";
+
+import React, { Component } from "react";
 
 import EditorJS, { API, BlockAPI, OutputData } from "@editorjs/editorjs";
 
 import { tools } from "../resources/tools";
 import { IBlock } from "../structures/NotebookStructure";
-import { EditorBinding } from "../y-editor/y-editor";
 
 interface EditorProps {
   id: string;
   blocks: IBlock[];
-  onBlocks: (pageId: string, blocks: IBlock[]) => void;
-  addEditorBinding: (binding: EditorBinding) => void;
-  yDoc: Y.Doc;
 }
 
 interface EditorState {
-  editorData: OutputData;
-  holder: string;
+  editor: EditorJS | undefined;
+  data: OutputData;
+  id: string;
 }
 
 function wrapBlocks(blocks: IBlock[]): OutputData {
@@ -27,74 +25,62 @@ function wrapBlocks(blocks: IBlock[]): OutputData {
   };
 }
 
-export default class Editor extends Component<EditorProps, EditorState> {
-  editorInstance: React.RefObject<EditorJS>;
-
+export class Editor extends Component<EditorProps, EditorState> {
   constructor(props: EditorProps) {
     super(props);
 
     this.onChange = this.onChange.bind(this);
 
-    this.editorInstance = createRef<EditorJS>();
-
     const { id, blocks } = props;
 
     this.state = {
-      editorData: wrapBlocks(blocks),
-      holder: `editor_${id}`,
+      editor: undefined,
+      data: wrapBlocks(blocks),
+      id: id,
     };
   }
 
   componentDidMount() {
-    if (!this.editorInstance.current) {
-      this.initEditor();
-    }
+    const { editor } = this.state;
+
+    if (editor === undefined) this.initEditor();
   }
 
   componentWillUnmount() {
-    this.editorInstance.current!.destroy();
+    const { editor } = this.state;
 
-    // @ts-ignore
-    this.editorInstance.current = null;
+    editor!.destroy();
+    this.setState((state) => {
+      return {
+        ...state,
+        editor: undefined,
+      };
+    });
   }
 
   initEditor() {
-    const { addEditorBinding, yDoc } = this.props;
-    const { editorData, holder } = this.state;
+    const { data, id } = this.state;
 
     const editor = new EditorJS({
-      holder: holder,
-      data: editorData,
+      holder: id,
+      data: data,
       onReady: () => {
-        // @ts-ignore
-        this.editorInstance.current = editor;
-
-        const holderElement = document.getElementById(holder);
-
-        addEditorBinding(
-          new EditorBinding(editor, holderElement, yDoc.getArray(holder))
-        );
+        this.setState((state) => ({ ...state, editor: editor }));
       },
       onChange: this.onChange,
-      autofocus: true,
       tools: tools,
     });
   }
 
-  onChange(api: API, block: BlockAPI) {
-    const { id, onBlocks } = this.props;
+  async onChange(api: API, block: BlockAPI) {
+    const data = await api.saver.save();
 
-    api.saver.save().then((data) => {
-      onBlocks(id, data.blocks);
-      this.setState({
-        editorData: data,
-      });
-    });
+    this.setState((state) => ({ ...state, data: data }));
   }
 
   render() {
-    const { holder } = this.state;
+    const { id } = this.state;
 
-    return <div id={holder}></div>;
+    return <div id={id}></div>;
   }
 }

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { mergeStyles, MessageBarType } from "@fluentui/react";
 
+import { ContextMenu } from "./components/ContextMenu";
 import { Message } from "./components/Message";
 import { StatusBar } from "./components/StatusBar";
 import { TasksPanel } from "./components/TasksPanel";
@@ -40,6 +41,9 @@ export interface IWidget {
 export interface AppProps {}
 
 export interface AppState {
+  contextMenuShown: boolean;
+  contextMenuX: number;
+  contextMenuY: number;
   tabs: ITab[];
   messages: IMessage[];
   activeTabId: string | undefined;
@@ -53,7 +57,10 @@ export class App extends Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
 
-    this.insertTab = this.insertTab.bind(this);
+    this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.showContextMenu = this.showContextMenu.bind(this);
+    this.hideContextMenu = this.hideContextMenu.bind(this);
+
     this.addTab = this.addTab.bind(this);
     this.removeTab = this.removeTab.bind(this);
     this.selectTab = this.selectTab.bind(this);
@@ -84,22 +91,19 @@ export class App extends Component<AppProps, AppState> {
     this.getStatusBarWidget = this.getStatusBarWidget.bind(this);
 
     this.state = {
+      contextMenuShown: false,
+      contextMenuX: 0,
+      contextMenuY: 0,
+
       tabs: [],
       activeTabId: undefined,
-      messages: [
-        {
-          id: uuidv4(),
-          type: MessageBarType.info,
-          text: "Lorem",
-        },
-      ],
+      messages: [],
       tasks: [],
       statusBarWidgets: [],
 
       tasksPanelShown: false,
 
       appController: {
-        insertTab: this.insertTab,
         addTab: this.addTab,
         removeTab: this.removeTab,
         selectTab: this.selectTab,
@@ -134,6 +138,9 @@ export class App extends Component<AppProps, AppState> {
   componentDidMount(): void {
     const { appController } = this.state;
 
+    document.addEventListener("contextmenu", this.handleContextMenu);
+    document.addEventListener("click", () => this.hideContextMenu());
+
     for (const [keys, action] of Object.entries(AppShortcuts)) {
       Mousetrap.bind(
         keys,
@@ -147,25 +154,44 @@ export class App extends Component<AppProps, AppState> {
   }
 
   componentWillUnmount(): void {
+    document.removeEventListener("contextmenu", this.handleContextMenu);
+    document.removeEventListener("click", () => this.hideContextMenu());
+
     for (const keys of Object.keys(AppShortcuts)) {
       Mousetrap.unbind(keys);
     }
   }
 
-  // #region Tabs
-  insertTab(tab: ITab, index: number) {
-    const { tabs } = this.state;
-    const newTabs = [...tabs];
-    newTabs.splice(index, 0, tab);
+  // #region ContextMenu
+  handleContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    this.showContextMenu(event.clientX, event.clientY);
+  }
+
+  showContextMenu(x: number, y: number) {
     this.setState((state) => {
       return {
         ...state,
-        tabs: newTabs,
-        activeTabId: tab.id,
+        contextMenuShown: true,
+        contextMenuX: x,
+        contextMenuY: y,
       };
     });
   }
 
+  hideContextMenu() {
+    this.setState((state) => {
+      return {
+        ...state,
+        contextMenuShown: false,
+        contextMenuX: 0,
+        contextMenuY: 0,
+      };
+    });
+  }
+  // #endregion
+
+  // #region Tabs
   addTab(tab: ITab) {
     const { tabs } = this.state;
     const newTabs = [...tabs];
@@ -417,6 +443,9 @@ export class App extends Component<AppProps, AppState> {
 
   render(): JSX.Element {
     const {
+      contextMenuShown,
+      contextMenuX,
+      contextMenuY,
       appController,
       tasksPanelShown,
       tabs,
@@ -448,6 +477,8 @@ export class App extends Component<AppProps, AppState> {
 
     return (
       <AppController.Provider value={appController}>
+        {contextMenuShown && <ContextMenu x={contextMenuX} y={contextMenuY} />}
+
         <div className={`w-screen h-screen overflow-hidden ${scrollbarStyles}`}>
           <TopBar tabs={tabs} activeTabId={activeTabId} />
 

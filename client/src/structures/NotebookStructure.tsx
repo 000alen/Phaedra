@@ -15,6 +15,7 @@ export interface IPage {
   references: IReference[];
   data: IData;
   blocks: IBlock[];
+  layout: any;
 }
 
 export interface INotebook {
@@ -43,6 +44,7 @@ export function createNotebook({
         references: [],
         data: {},
         blocks: [],
+        layout: undefined,
       },
     ];
 
@@ -71,6 +73,7 @@ export function createPage({
     references: references,
     data: data,
     blocks: blocks,
+    layout: undefined,
   };
 }
 

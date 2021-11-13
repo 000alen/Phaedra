@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 
-import Subdivide from "@pixore/subdivide";
+import Subdivide, { ConfigProvider } from "@pixore/subdivide";
 
 import { NotebookController } from "../contexts/NotebookController";
 import { IBlock, IData, IReference } from "../structures/NotebookStructure";
-import { Editor } from "./Editor";
-import { Paper } from "./Paper";
+import { PageLayoutMaster } from "./PageLayoutMaster";
 
 export interface PageProps {
   id: string;
@@ -13,11 +12,10 @@ export interface PageProps {
   data: IData;
   blocks: IBlock[];
   onBlocks: (pageId: string, blocks: IBlock[]) => void;
+  layout: any;
 }
 
-export interface PageState {
-  sizes: number[] | undefined;
-}
+export interface PageState {}
 
 export class Page extends Component<PageProps, PageState> {
   static contextType = NotebookController;
@@ -25,34 +23,19 @@ export class Page extends Component<PageProps, PageState> {
   constructor(props: PageProps) {
     super(props);
 
-    this.setSizes = this.setSizes.bind(this);
-
-    this.state = {
-      sizes: undefined,
-    };
-  }
-
-  setSizes(sizes: number[]) {
-    this.setState((state) => {
-      return {
-        ...state,
-        sizes: sizes,
-      };
-    });
+    this.state = {};
   }
 
   render() {
-    const { id, blocks } = this.props;
+    const { id, blocks, layout } = this.props;
 
     return (
       <div className="w-[100%] h-[100%] relative">
-        <Subdivide
-          component={() => (
-            <Paper>
-              <Editor id={id} blocks={blocks} />
-            </Paper>
-          )}
-        />
+        <ConfigProvider initialState={layout}>
+          <Subdivide
+            component={() => <PageLayoutMaster id={id} blocks={blocks} />}
+          />
+        </ConfigProvider>
       </div>
     );
   }

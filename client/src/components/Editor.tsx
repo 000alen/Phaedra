@@ -47,13 +47,7 @@ export class Editor extends Component<EditorProps, EditorState> {
   componentWillUnmount() {
     const { editor } = this.state;
 
-    editor!.destroy();
-    this.setState((state) => {
-      return {
-        ...state,
-        editor: undefined,
-      };
-    });
+    if (editor !== undefined) editor!.destroy();
   }
 
   initEditor() {

@@ -52,10 +52,39 @@
 }
 
 .px-corner {
+  cursor: grab;
   background-color: rgba(100, 100, 100, 0.5);
 }
 
 .px-layout {
   width: 100% !important;
   height: 100% !important;
+}
+
+.px-container {
+  outline: 1px solid;
+}
+
+.px-divider--vertical {
+  cursor: row-resize;
+}
+
+.px-divider--horizontal {
+  cursor: col-resize;
+}
+
+/* ! TODO */
+.contextMenu {
+  font-size: 14px;
+  background-color: #fff;
+  border-radius: 2px;
+  padding: 5px 0 5px 0;
+  width: 150px;
+  height: auto;
+  margin: 0;
+  position: absolute;
+  list-style: none;
+  box-shadow: 0 0 20px 0 #ccc;
+  opacity: 1;
+  transition: opacity 0.5s linear;
 }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { MessageBarType } from "@fluentui/react";
+import { DefaultButton, MessageBarType } from "@fluentui/react";
 
 import {
   INotebookController,
@@ -160,8 +160,10 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
               data={page.data}
               blocks={page.blocks}
               onBlocks={this.onBlocks}
+              layout={page.layout}
             />
           ))}
+          <DefaultButton text="Add page" />
         </div>
       </NotebookController.Provider>
     );

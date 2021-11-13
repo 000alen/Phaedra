@@ -3,7 +3,6 @@ import React from "react";
 import { IMessage, ITab, ITask, IWidget } from "../App";
 
 export interface IAppController {
-  insertTab: (tab: ITab, index: number) => void;
   addTab: (tab: ITab) => void;
   removeTab: (id: string) => void;
   selectTab: (id: string) => void;
@@ -34,7 +33,6 @@ export interface IAppController {
 }
 
 export const AppController = React.createContext<IAppController>({
-  insertTab: (tab: ITab, index: number) => {},
   addTab: (tab: ITab) => {},
   removeTab: (id: string) => {},
   selectTab: (id: string) => {},

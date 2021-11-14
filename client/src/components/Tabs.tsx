@@ -28,6 +28,7 @@ export interface TabProps {
   id: string;
   title: string;
   active: boolean;
+  dirty: boolean;
 }
 
 export const iconButtonStyles = {
@@ -39,7 +40,7 @@ export const iconButtonStyles = {
   },
 };
 
-export function Tab({ id, title, active }: TabProps) {
+export function Tab({ id, title, dirty, active }: TabProps) {
   const appController = React.useContext(AppController);
 
   const handleSelect = () => {
@@ -47,7 +48,7 @@ export function Tab({ id, title, active }: TabProps) {
   };
 
   const handleClose = () => {
-    appController.removeTab(id);
+    appController.closeTab(id);
   };
 
   const tabStyle = { backgroundColor: theme.palette.neutralPrimary };
@@ -78,7 +79,7 @@ export function Tab({ id, title, active }: TabProps) {
         onClick={handleSelect}
         style={active ? activeTextStyle : textStyle}
       >
-        {title}
+        {`${dirty ? "*" : ""}${title}`}
       </div>
       <IconButton
         iconProps={active ? activeCancelIcon : cancelIcon}
@@ -89,14 +90,14 @@ export function Tab({ id, title, active }: TabProps) {
   );
 }
 
-export function OverflowTab({ id, title, active }: TabProps) {
+export function OverflowTab({ id, title, dirty, active }: TabProps) {
   const appController: IAppController = useContext(AppController);
   return (
     <div className="flex flex-row items-center ml-2">
-      <Label>{title}</Label>
+      <Label>{`${dirty ? "*" : ""}${title}`}</Label>
       <IconButton
         iconProps={{ iconName: "Cancel" }}
-        onClick={() => appController.removeTab(id)}
+        onClick={() => appController.closeTab(id)}
       />
     </div>
   );
@@ -151,7 +152,13 @@ export class Tabs extends Component<TabsProps> {
 
   onRenderItem(item: IOverflowSetItemProps) {
     return (
-      <Tab key={item.id} id={item.id} title={item.name} active={item.active} />
+      <Tab
+        key={item.id}
+        id={item.id}
+        title={item.name}
+        dirty={item.dirty}
+        active={item.active}
+      />
     );
   }
 
@@ -186,12 +193,15 @@ export class Tabs extends Component<TabsProps> {
       key: tab.id,
       id: tab.id,
       name: tab.title,
+      dirty: tab.dirty,
       active: tab.id === activeTabId,
       onClick: () => appController.selectTab(tab.id),
       onRender: () => (
         <OverflowTab
+          key={tab.id}
           id={tab.id}
           title={tab.title}
+          dirty={tab.dirty}
           active={tab.id === activeTabId}
         />
       ),

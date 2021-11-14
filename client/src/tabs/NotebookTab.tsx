@@ -1,5 +1,13 @@
 import Mousetrap from "mousetrap";
 import React, { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import {
+  DefaultButton,
+  DialogFooter,
+  DialogType,
+  PrimaryButton,
+} from "@fluentui/react";
 
 import { ColaborationPanel } from "../components/ColaborationPanel";
 import { Notebook } from "../components/Notebook";
@@ -12,32 +20,29 @@ import {
 import { NotebookPageShortcuts } from "../shortcuts/NotebookPageShortcuts";
 import { INotebook } from "../structures/NotebookStructure";
 
-export interface NotebookPageProps {
-  id: string;
+export interface NotebookTabProps {
+  tabId: string;
+  tabRef: (ref: any) => void;
   notebook: INotebook;
   notebookPath?: string | undefined;
 }
 
-export interface NotebookPageState {
-  notebookPageController: INotebookPageController;
+export interface NotebookTabState {
   colaborationPanelShown: boolean;
+  notebookPageController: INotebookPageController;
 }
 
-export interface NotebookPageViewProps {}
-
-export class NotebookPage extends Component<
-  NotebookPageProps,
-  NotebookPageState
-> {
+export class NotebookTab extends Component<NotebookTabProps, NotebookTabState> {
   static contextType = AppController;
 
   notebookRef: React.RefObject<Notebook>;
 
-  constructor(props: NotebookPageProps) {
+  constructor(props: NotebookTabProps) {
     super(props);
 
     this.getAppController = this.getAppController.bind(this);
     this.getNotebookController = this.getNotebookController.bind(this);
+    this.getTabId = this.getTabId.bind(this);
     this.showColaborationPanel = this.showColaborationPanel.bind(this);
     this.hideColaborationPanel = this.hideColaborationPanel.bind(this);
     this.isColaborationPanelShown = this.isColaborationPanelShown.bind(this);
@@ -49,6 +54,7 @@ export class NotebookPage extends Component<
       notebookPageController: {
         getAppController: this.getAppController,
         getNotebookController: this.getNotebookController,
+        getTabId: this.getTabId,
         showColaborationPanel: this.showColaborationPanel,
         hideColaborationPanel: this.hideColaborationPanel,
         isColaborationPanelShown: this.isColaborationPanelShown,
@@ -57,7 +63,11 @@ export class NotebookPage extends Component<
   }
 
   componentDidMount(): void {
+    const { tabRef } = this.props;
     const { notebookPageController } = this.state;
+
+    tabRef(this);
+
     for (const [keys, action] of Object.entries(NotebookPageShortcuts)) {
       Mousetrap.bind(
         keys,
@@ -71,6 +81,10 @@ export class NotebookPage extends Component<
   }
 
   componentWillUnmount(): void {
+    const { tabRef } = this.props;
+
+    tabRef(undefined);
+
     for (const keys of Object.keys(NotebookPageShortcuts)) {
       Mousetrap.unbind(keys);
     }
@@ -106,6 +120,30 @@ export class NotebookPage extends Component<
     return this.state.colaborationPanelShown;
   }
 
+  getTabId(): string {
+    return this.props.tabId;
+  }
+
+  handleDirt() {
+    const appController: IAppController = this.context;
+    const { notebook } = this.props;
+
+    appController.addDialog({
+      id: uuidv4(),
+      title: "Save changes?",
+      subText: notebook.name,
+      type: DialogType.normal,
+      visible: true,
+      footer: (
+        <DialogFooter>
+          <DefaultButton text="Cancel" />
+          <DefaultButton text="Do not save" />
+          <PrimaryButton text="Save" />
+        </DialogFooter>
+      ),
+    });
+  }
+
   render(): JSX.Element {
     const { colaborationPanelShown, notebookPageController } = this.state;
 
@@ -113,7 +151,7 @@ export class NotebookPage extends Component<
       <NotebookPageController.Provider value={notebookPageController}>
         <div className="w-[100%] h-[100%]">
           <Notebook
-            key={this.props.id}
+            key={this.props.tabId}
             ref={this.notebookRef}
             notebook={this.props.notebook}
             notebookPath={this.props.notebookPath}

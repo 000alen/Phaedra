@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { DefaultButton, MessageBarType } from "@fluentui/react";
 
+import { IAppController } from "../contexts/AppController";
 import {
   INotebookController,
   NotebookController,
@@ -14,7 +15,7 @@ import {
 import { saveNotebook } from "../IO/NotebookIO";
 import { strings } from "../resources/strings";
 import { theme } from "../resources/theme";
-import { IBlock, INotebook } from "../structures/NotebookStructure";
+import { INotebook } from "../structures/NotebookStructure";
 import { Page } from "./Page";
 
 export interface NotebookProps {
@@ -38,9 +39,15 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
 
     this.save = this.save.bind(this);
     this.isSaved = this.isSaved.bind(this);
+    this.setDirty = this.setDirty.bind(this);
+
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
     this.getNotebook = this.getNotebook.bind(this);
-    this.onBlocks = this.onBlocks.bind(this);
+
+    this.onPageReferencesChange = this.onPageReferencesChange.bind(this);
+    this.onPageDataChange = this.onPageDataChange.bind(this);
+    this.onPageContentChange = this.onPageContentChange.bind(this);
+    this.onPageLayoutChange = this.onPageLayoutChange.bind(this);
 
     const { notebook, notebookPath } = props;
 
@@ -52,30 +59,22 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
       notebookController: {
         save: this.save,
         isSaved: this.isSaved,
-
         getNotebookPageController: this.getNotebookPageController,
         getNotebook: this.getNotebook,
       },
     };
   }
 
-  // TODO: Change the method of persistance
   componentDidMount() {
+    const notebookPageController: INotebookPageController = this.context;
+    const appController: IAppController =
+      notebookPageController.getAppController()!;
+    const tabId = notebookPageController.getTabId()!;
     const { notebook } = this.state;
 
-    let unparsedState = window.localStorage.getItem(notebook.name);
-
-    if (unparsedState !== null) {
-      let state = JSON.parse(unparsedState);
-      this.setState(state);
-    }
-  }
-
-  // TODO: Change the method of persistance
-  componentWillUnmount() {
-    const { notebook } = this.state;
-    let state = { ...this.state };
-    window.localStorage.setItem(notebook.name, JSON.stringify(state));
+    appController.setTabTitle(tabId, notebook.name, () => {
+      appController.setTabDirty(tabId, true);
+    });
   }
 
   async save() {
@@ -91,13 +90,15 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
 
     try {
       const finalNotebookPath = await saveNotebook(notebook, notebookPath);
-      this.setState((state) => {
-        return {
-          ...state,
-          notebookPath: finalNotebookPath,
-          saved: true,
-        };
-      });
+      this.setState(
+        (state) => {
+          return {
+            ...state,
+            notebookPath: finalNotebookPath,
+          };
+        },
+        () => this.setDirty(false)
+      );
     } catch (error) {
       appController.addMessage({
         id: uuidv4(),
@@ -113,6 +114,21 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     return this.state.saved;
   }
 
+  setDirty(dirty: boolean) {
+    const notebookPageController: INotebookPageController = this.context;
+    const appController = notebookPageController.getAppController()!;
+    const tabId = notebookPageController.getTabId()!;
+
+    appController.setTabDirty(tabId, dirty);
+
+    this.setState((state) => {
+      return {
+        ...state,
+        saved: !dirty,
+      };
+    });
+  }
+
   getNotebookPageController() {
     return this.context;
   }
@@ -121,21 +137,20 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     return this.state.notebook;
   }
 
-  onBlocks(pageId: string, blocks: IBlock[]) {
-    console.log(pageId, blocks);
+  onPageReferencesChange() {
+    this.setDirty(true);
+  }
 
-    const { notebook } = this.state;
-    const page = notebook.pages.find((page) => page.id === pageId);
+  onPageDataChange() {
+    this.setDirty(true);
+  }
 
-    page!.blocks = blocks;
+  onPageContentChange() {
+    this.setDirty(true);
+  }
 
-    this.setState((state) => {
-      return {
-        ...state,
-        notebook: notebook,
-        saved: false,
-      };
-    });
+  onPageLayoutChange() {
+    this.setDirty(true);
   }
 
   render() {
@@ -158,9 +173,12 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
               id={page.id}
               references={page.references}
               data={page.data}
-              blocks={page.blocks}
-              onBlocks={this.onBlocks}
+              content={page.content}
               layout={page.layout}
+              onReferencesChange={this.onPageReferencesChange}
+              onDataChange={this.onPageDataChange}
+              onContentChange={this.onPageContentChange}
+              onLayoutChange={this.onPageLayoutChange}
             />
           ))}
           <DefaultButton text="Add page" />

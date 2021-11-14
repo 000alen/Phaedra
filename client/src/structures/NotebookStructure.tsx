@@ -8,13 +8,13 @@ export type IData = any;
 
 export type IReference = any;
 
-export type IBlock = any;
+export type IContent = any;
 
 export interface IPage {
   id: string;
   references: IReference[];
   data: IData;
-  blocks: IBlock[];
+  content: IContent;
   layout: any;
 }
 
@@ -43,7 +43,7 @@ export function createNotebook({
         id: uuidv4(),
         references: [],
         data: {},
-        blocks: [],
+        content: {},
         layout: undefined,
       },
     ];
@@ -61,18 +61,18 @@ export function createPage({
   id,
   references,
   data,
-  blocks,
+  content,
 }: Partial<IPage>): IPage {
   if (id === undefined) id = uuidv4();
   if (references === undefined) references = [];
   if (data === undefined) data = {};
-  if (blocks === undefined) blocks = [];
+  if (content === undefined) content = {};
 
   return {
     id: id,
     references: references,
     data: data,
-    blocks: blocks,
+    content: {},
     layout: undefined,
   };
 }

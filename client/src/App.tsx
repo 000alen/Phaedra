@@ -11,8 +11,8 @@ import { StatusBar } from "./components/StatusBar";
 import { TasksPanel } from "./components/TasksPanel";
 import { TopBar } from "./components/TopBar";
 import { AppController, IAppController } from "./contexts/AppController";
-import { strings } from "./resources/strings";
-import { theme } from "./resources/theme";
+import { getStrings } from "./resources/strings";
+import { getTheme } from "./resources/theme";
 import { AppShortcuts } from "./shortcuts/AppShortcuts";
 import { EmptyTab } from "./tabs/EmptyTab";
 import { MainTab } from "./tabs/MainTab";
@@ -170,8 +170,9 @@ export class App extends Component<AppProps, AppState> {
   componentDidMount(): void {
     const { appController } = this.state;
 
-    document.addEventListener("contextmenu", this.handleContextMenu);
-    document.addEventListener("click", () => this.hideContextMenu());
+    // ! TODO: This causes the app to re-render when clicked.
+    // document.addEventListener("contextmenu", this.handleContextMenu);
+    // document.addEventListener("click", () => this.hideContextMenu());
 
     for (const [keys, action] of Object.entries(AppShortcuts)) {
       Mousetrap.bind(
@@ -186,8 +187,8 @@ export class App extends Component<AppProps, AppState> {
   }
 
   componentWillUnmount(): void {
-    document.removeEventListener("contextmenu", this.handleContextMenu);
-    document.removeEventListener("click", () => this.hideContextMenu());
+    // document.removeEventListener("contextmenu", this.handleContextMenu);
+    // document.removeEventListener("click", () => this.hideContextMenu());
 
     for (const keys of Object.keys(AppShortcuts)) {
       Mousetrap.unbind(keys);
@@ -358,7 +359,7 @@ export class App extends Component<AppProps, AppState> {
   createEmptyTab(): ITab {
     return {
       id: uuidv4(),
-      title: strings.newTabTitle,
+      title: getStrings().newTabTitle,
       component: EmptyTab,
       props: {},
       dirty: false,
@@ -601,7 +602,7 @@ export class App extends Component<AppProps, AppState> {
         borderRadius: "8px",
         border: "4px solid transparent",
         backgroundClip: "content-box",
-        backgroundColor: theme.palette.themePrimary,
+        backgroundColor: getTheme().palette.themePrimary,
       },
     });
 

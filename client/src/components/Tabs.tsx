@@ -11,7 +11,7 @@ import {
 
 import { ITab } from "../App";
 import { AppController, IAppController } from "../contexts/AppController";
-import { theme } from "../resources/theme";
+import { getTheme } from "../resources/theme";
 
 export interface IOverflowData {
   primary: IContextualMenuItem[];
@@ -50,6 +50,8 @@ export function Tab({ id, title, dirty, active }: TabProps) {
   const handleClose = () => {
     appController.closeTab(id);
   };
+
+  const theme = getTheme();
 
   const tabStyle = { backgroundColor: theme.palette.neutralPrimary };
   const textStyle = { color: theme.palette.white };

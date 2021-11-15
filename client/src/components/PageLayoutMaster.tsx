@@ -8,18 +8,30 @@ import { Paper } from "./Paper";
 
 interface PageLayoutMasterProps {
   id: string;
+  onReferencesChange: (...args: any[]) => void;
+  onDataChange: (...args: any[]) => void;
+  onContentChange: (...args: any[]) => void;
 }
 
-export function PageLayoutMaster({ id }: PageLayoutMasterProps) {
+export function PageLayoutMaster({
+  id,
+  onReferencesChange,
+  onDataChange,
+  onContentChange,
+}: PageLayoutMasterProps) {
   const { id: containerId } = useContainer();
 
   return containerId === 0 ? (
     <Paper>
       <div id={id}>
-        <Editor id={id} />
+        <Editor id={id} onContentChange={onContentChange} />
       </div>
     </Paper>
   ) : (
-    <PageLayoutSelector id={id} />
+    <PageLayoutSelector
+      id={id}
+      onReferencesChange={onReferencesChange}
+      onDataChange={onDataChange}
+    />
   );
 }

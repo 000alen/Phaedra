@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "../API/ElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
-import { strings } from "../resources/strings";
+import { getStrings } from "../resources/strings";
 import { INotebook } from "../structures/NotebookStructure";
 
 export interface INotebookIO {
@@ -18,23 +18,26 @@ export interface INotebookIO {
 
 const openPdfDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
-  filters: [{ name: strings.notebooksFilterName, extensions: ["pdf"] }],
+  filters: [{ name: getStrings().notebooksFilterName, extensions: ["pdf"] }],
 };
 
 const openJsonDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
-  filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
+  filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }],
 };
 
 const openTextDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
-  filters: [{ name: strings.notebooksFilterName, extensions: ["txt"] }],
+  filters: [{ name: getStrings().notebooksFilterName, extensions: ["txt"] }],
 };
 
 const openFileDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
   filters: [
-    { name: strings.notebooksFilterName, extensions: ["pdf", "json", "txt"] },
+    {
+      name: getStrings().notebooksFilterName,
+      extensions: ["pdf", "json", "txt"],
+    },
   ],
 };
 
@@ -147,7 +150,7 @@ export function saveNotebook(
   notebookPath: string | undefined
 ): Promise<string> {
   const saveDialogOptions = {
-    filters: [{ name: strings.notebooksFilterName, extensions: ["json"] }],
+    filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }],
   };
 
   return new Promise((resolve, reject) => {

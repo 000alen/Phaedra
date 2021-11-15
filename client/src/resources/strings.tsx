@@ -1,4 +1,4 @@
-export const strings = {
+export const en_strings = {
   unknownError: "An unknown error occurred",
   documentLoadingError: "An error occurred while loading the document",
 
@@ -98,3 +98,7 @@ export const strings = {
 
   welcome: "Welcome to Phaedra!",
 };
+
+export function getStrings(): { [key: string]: string } {
+  return en_strings;
+}

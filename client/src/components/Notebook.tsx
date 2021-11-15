@@ -13,9 +13,9 @@ import {
   NotebookPageController,
 } from "../contexts/NotebookPageController";
 import { saveNotebook } from "../IO/NotebookIO";
-import { strings } from "../resources/strings";
-import { theme } from "../resources/theme";
-import { INotebook } from "../structures/NotebookStructure";
+import { getStrings } from "../resources/strings";
+import { getTheme } from "../resources/theme";
+import { INotebook, IPage } from "../structures/NotebookStructure";
 import { Page } from "./Page";
 
 export interface NotebookProps {
@@ -72,9 +72,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const tabId = notebookPageController.getTabId()!;
     const { notebook } = this.state;
 
-    appController.setTabTitle(tabId, notebook.name, () => {
-      appController.setTabDirty(tabId, true);
-    });
+    appController.setTabTitle(tabId, notebook.name);
   }
 
   async save() {
@@ -85,7 +83,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const taskId = uuidv4();
     appController.addTask({
       id: taskId,
-      name: strings.savingNotebookTaskLabel,
+      name: getStrings().savingNotebookTaskLabel,
     });
 
     try {
@@ -102,7 +100,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     } catch (error) {
       appController.addMessage({
         id: uuidv4(),
-        text: strings.savingNotebookTaskError,
+        text: getStrings().savingNotebookTaskError,
         type: MessageBarType.error,
       });
     } finally {
@@ -114,7 +112,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     return this.state.saved;
   }
 
-  setDirty(dirty: boolean) {
+  setDirty(dirty: boolean, callback?: () => void) {
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController()!;
     const tabId = notebookPageController.getTabId()!;
@@ -126,7 +124,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
         ...state,
         saved: !dirty,
       };
-    });
+    }, callback);
   }
 
   getNotebookPageController() {
@@ -137,19 +135,19 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     return this.state.notebook;
   }
 
-  onPageReferencesChange() {
+  onPageReferencesChange(pageId: string, ...args: any[]) {
     this.setDirty(true);
   }
 
-  onPageDataChange() {
+  onPageDataChange(pageId: string, ...args: any[]) {
     this.setDirty(true);
   }
 
-  onPageContentChange() {
+  onPageContentChange(pageId: string, ...args: any[]) {
     this.setDirty(true);
   }
 
-  onPageLayoutChange() {
+  onPageLayoutChange(pageId: string, newLayout: any) {
     this.setDirty(true);
   }
 
@@ -157,7 +155,7 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const { notebookController, notebook } = this.state;
 
     const containerStyle = {
-      backgroundColor: theme.palette.neutralLight,
+      backgroundColor: getTheme().palette.neutralLight,
     };
 
     return (

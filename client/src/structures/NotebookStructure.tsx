@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { strings } from "../resources/strings";
+import { getStrings } from "../resources/strings";
 
 export type ISource = any;
 
@@ -34,7 +34,7 @@ export function createNotebook({
   pages,
 }: Partial<INotebook>): INotebook {
   if (id === undefined) id = uuidv4();
-  if (name === undefined) name = strings.newNotebookTitle;
+  if (name === undefined) name = getStrings().newNotebookTitle;
   if (sources === undefined) sources = [];
   if (data === undefined) data = {};
   if (pages === undefined)

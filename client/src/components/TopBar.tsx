@@ -5,7 +5,7 @@ import { IconButton } from "@fluentui/react";
 import { ITab } from "../App";
 import { AppController, IAppController } from "../contexts/AppController";
 import { ipcRenderer } from "../index";
-import { theme } from "../resources/theme";
+import { getTheme } from "../resources/theme";
 import { Tabs } from "./Tabs";
 
 export interface TopBarProps {
@@ -69,6 +69,8 @@ export class TopBar extends Component<TopBarProps, TopBarState> {
     const appController: IAppController = this.context;
     const { showMaximize } = this.state;
     const { tabs, activeTabId } = this.props;
+
+    const theme = getTheme();
 
     const topBarStyle = {
       backgroundColor: theme.palette.white,

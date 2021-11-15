@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Card } from "../components/Card";
 import { AppController } from "../contexts/AppController";
 import { openFile } from "../IO/NotebookIO";
-import { strings } from "../resources/strings";
+import { getStrings } from "../resources/strings";
 import { createNotebook } from "../structures/NotebookStructure";
 import { NotebookTab } from "./NotebookTab";
 
@@ -50,7 +50,10 @@ export class EmptyTab extends Component<EmptyTabProps, EmptyTabState> {
     const { tabId } = this.props;
 
     const taskId = uuidv4();
-    appController.addTask({ id: taskId, name: strings.openingFileTaskLabel });
+    appController.addTask({
+      id: taskId,
+      name: getStrings().openingFileTaskLabel,
+    });
 
     openFile().then(({ notebook, notebookPath }) => {
       appController.removeTask(taskId);
@@ -82,15 +85,15 @@ export class EmptyTab extends Component<EmptyTabProps, EmptyTabState> {
         <div className="flex flex-row space-x-1">
           <Card
             iconProps={openIcon}
-            title={strings.openFileButtonLabel}
-            subtitle={strings.openFileButtonDescription}
+            title={getStrings().openFileButtonLabel}
+            subtitle={getStrings().openFileButtonDescription}
             onClick={this.handleOpen}
           />
 
           <Card
             iconProps={newIcon}
-            title={strings.createNotebookButtonLabel}
-            subtitle={strings.createNotebookButtonDescription}
+            title={getStrings().createNotebookButtonLabel}
+            subtitle={getStrings().createNotebookButtonDescription}
             onClick={this.handleNew}
           />
         </div>

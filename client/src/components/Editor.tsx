@@ -1,16 +1,13 @@
 import "react-quill/dist/quill.bubble.css";
 
-import React, { Component } from "react";
+import React from "react";
 import ReactQuill from "react-quill";
 
 interface EditorProps {
   id: string;
+  onContentChange: (...args: any[]) => void;
 }
 
-interface EditorState {}
-
-export class Editor extends Component<EditorProps, EditorState> {
-  render() {
-    return <ReactQuill theme="bubble" />;
-  }
+export function Editor({ id }: EditorProps) {
+  return <ReactQuill theme="bubble" defaultValue="Hello, world!" />;
 }

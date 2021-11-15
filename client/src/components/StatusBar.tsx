@@ -1,7 +1,7 @@
 import React from "react";
 
 import { ITask, IWidget } from "../App";
-import { theme } from "../resources/theme";
+import { getTheme } from "../resources/theme";
 import { StatusBarLoading } from "./StatusBarLoading";
 
 export interface StatusBarProps {
@@ -19,7 +19,7 @@ export function StatusBar({
   if (tasks.length > 0) task = tasks[0];
 
   const statusBarStyle = {
-    backgroundColor: theme.palette.white,
+    backgroundColor: getTheme().palette.white,
   };
 
   return (

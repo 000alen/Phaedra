@@ -130,48 +130,48 @@ export class NotebookTab extends Component<NotebookTabProps, NotebookTabState> {
 
     const dialogId = uuidv4();
 
-    appController.addDialog({
-      id: dialogId,
-      title: "Save changes?",
-      subText: notebook.name,
-      type: DialogType.normal,
-      visible: true,
-      onDismiss: () => {
-        appController.removeDialog(dialogId);
-      },
-      footer: (
-        <DialogFooter>
-          <DefaultButton
-            text="Cancel"
-            onClick={() => {
-              appController.removeDialog(dialogId);
-            }}
-          />
-          <DefaultButton
-            text="Do not save"
-            onClick={() => {
-              appController.removeDialog(dialogId, () => {
-                appController.setTabDirty(this.getTabId(), false, () => {
-                  appController.closeTab(this.getTabId());
-                });
-              });
-            }}
-          />
-          <PrimaryButton
-            text="Save"
-            onClick={() => {
-              appController.removeDialog(dialogId, () => {
-                this.getNotebookController()
-                  .save()
-                  .then(() => {
-                    appController.closeTab(this.getTabId());
-                  });
-              });
-            }}
-          />
-        </DialogFooter>
-      ),
-    });
+    // appController.addDialog({
+    //   id: dialogId,
+    //   title: "Save changes?",
+    //   subText: notebook.name,
+    //   type: DialogType.normal,
+    //   visible: true,
+    //   onDismiss: () => {
+    //     appController.removeDialog(dialogId);
+    //   },
+    //   footer: (
+    //     <DialogFooter>
+    //       <DefaultButton
+    //         text="Cancel"
+    //         onClick={() => {
+    //           appController.removeDialog(dialogId);
+    //         }}
+    //       />
+    //       <DefaultButton
+    //         text="Do not save"
+    //         onClick={() => {
+    //           appController.removeDialog(dialogId, () => {
+    //             appController.setTabDirty(this.getTabId(), false, () => {
+    //               appController.closeTab(this.getTabId());
+    //             });
+    //           });
+    //         }}
+    //       />
+    //       <PrimaryButton
+    //         text="Save"
+    //         onClick={() => {
+    //           appController.removeDialog(dialogId, () => {
+    //             this.getNotebookController()
+    //               .save()
+    //               .then(() => {
+    //                 appController.closeTab(this.getTabId());
+    //               });
+    //           });
+    //         }}
+    //       />
+    //     </DialogFooter>
+    //   ),
+    // });
   }
 
   render(): JSX.Element {

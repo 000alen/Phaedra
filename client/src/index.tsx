@@ -5,18 +5,19 @@ import ReactDOM from "react-dom";
 
 import { initializeIcons, ThemeProvider } from "@fluentui/react";
 
-import { App } from "./App";
+import { Application } from "./App";
 import { getTheme } from "./resources/theme";
 
 export const { ipcRenderer } = window.require("electron");
 
 initializeIcons();
 
+// @ts-ignore
+const application = <Application />;
+
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={getTheme()}>
-      <App />
-    </ThemeProvider>
+    <ThemeProvider theme={getTheme()}>{application}</ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

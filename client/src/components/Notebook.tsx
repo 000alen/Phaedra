@@ -72,7 +72,8 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const tabId = notebookPageController.getTabId()!;
     const { notebook } = this.state;
 
-    appController.setTabTitle(tabId, notebook.name);
+    // appController.setTabTitle(tabId, notebook.name);
+    appController.tabsManager.setTitle(tabId, notebook.name);
   }
 
   async save() {
@@ -80,8 +81,12 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const notebookPageController: INotebookPageController = this.context;
     const appController = notebookPageController.getAppController()!;
 
+    // appController.addTask({
+    //   id: taskId,
+    //   name: getStrings().savingNotebookTaskLabel,
+    // });
     const taskId = uuidv4();
-    appController.addTask({
+    appController.tasksManager.add({
       id: taskId,
       name: getStrings().savingNotebookTaskLabel,
     });
@@ -98,13 +103,19 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
         () => this.setDirty(false)
       );
     } catch (error) {
-      appController.addMessage({
+      //   appController.addMessage({
+      //     id: uuidv4(),
+      //     text: getStrings().savingNotebookTaskError,
+      //     type: MessageBarType.error,
+      //   });
+      appController.messagesManager.add({
         id: uuidv4(),
         text: getStrings().savingNotebookTaskError,
         type: MessageBarType.error,
       });
     } finally {
-      appController.removeTask(taskId);
+      // appController.removeTask(taskId);
+      appController.tasksManager.remove(taskId);
     }
   }
 
@@ -117,7 +128,8 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
     const appController = notebookPageController.getAppController()!;
     const tabId = notebookPageController.getTabId()!;
 
-    appController.setTabDirty(tabId, dirty);
+    // appController.setTabDirty(tabId, dirty);
+    appController.tabsManager.setDirty(tabId, dirty);
 
     this.setState((state) => {
       return {

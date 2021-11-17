@@ -1,6 +1,7 @@
 import React from "react";
 
-import { ITask, IWidget } from "../App";
+import { ITask } from "../HOC/UseTasks";
+import { IWidget } from "../HOC/UseWidgets";
 import { getTheme } from "../resources/theme";
 import { StatusBarLoading } from "./StatusBarLoading";
 

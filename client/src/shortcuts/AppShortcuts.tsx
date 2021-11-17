@@ -3,13 +3,13 @@ import { IShortcuts } from "./IShortcuts";
 
 export const AppShortcuts: IShortcuts = {
   "ctrl+n": (appController: IAppController) => {
-    appController.addTab(appController.createEmptyTab()!);
+    appController.tabsManager.add(appController.tabsManager.empty());
   },
   "ctrl+w": (appController: IAppController) => {
-    const activeTabId = appController.getActiveTabId()!;
-    appController.closeTab(activeTabId);
+    console.log(appController.activeTabId);
+    appController.tabsManager.remove(appController.tabsManager.activeId());
   },
-  "ctrl+shift+t": (AppController: IAppController) => {
-    AppController.showTasksPanel();
+  "ctrl+shift+t": (appController: IAppController) => {
+    appController.showTasksPanel();
   },
 };

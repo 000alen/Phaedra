@@ -1,4 +1,5 @@
 import React from "react";
+import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
 
 import { getStrings } from "../resources/strings";
@@ -12,15 +13,28 @@ export interface ITab {
   dirty: boolean;
 }
 
-interface UseTabsProps {}
+interface UseTabsProps {
+  forwardedRef: React.Ref<any>;
+}
 
 interface UseTabsState {
   tabs: ITab[];
   activeTabId: string | undefined;
 }
 
-export function UseTabs<P>(Component: React.ComponentType<P>) {
-  return class extends React.Component<P & UseTabsProps, UseTabsState> {
+export interface UseTabsInjectedProps {
+  tabs: ITab[];
+  activeTabId: string | undefined;
+  tabsManager: any;
+}
+
+export function UseTabs<P extends UseTabsInjectedProps>(
+  Component: React.ComponentType<P>
+) {
+  class WithTabs extends React.Component<
+    Subtract<P & UseTabsProps, UseTabsInjectedProps>,
+    UseTabsState
+  > {
     constructor(props: P & UseTabsProps) {
       super(props);
 
@@ -107,12 +121,17 @@ export function UseTabs<P>(Component: React.ComponentType<P>) {
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardedRef}
           tabs={this.state.tabs}
           activeTabId={this.state.activeTabId}
           tabsManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithTabs {...(props as P)} forwardedRef={ref} />
+  ));
 }

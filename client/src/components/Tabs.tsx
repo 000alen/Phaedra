@@ -1,4 +1,4 @@
-import React, { Component, useContext } from "react";
+import React from "react";
 
 import {
   IconButton,
@@ -9,7 +9,7 @@ import {
   ResizeGroup,
 } from "@fluentui/react";
 
-import { AppController, IAppController } from "../contexts/AppController";
+import { AppController, IAppController } from "../contexts";
 import { ITab } from "../HOC/UseTabs";
 import { getTheme } from "../resources/theme";
 
@@ -44,12 +44,10 @@ export function Tab({ id, title, dirty, active }: TabProps) {
   const appController = React.useContext(AppController);
 
   const handleSelect = () => {
-    // appController.selectTab(id);
     appController.tabsManager.select(id);
   };
 
   const handleClose = () => {
-    // appController.closeTab(id);
     appController.tabsManager.remove(id);
   };
 
@@ -95,20 +93,19 @@ export function Tab({ id, title, dirty, active }: TabProps) {
 }
 
 export function OverflowTab({ id, title, dirty, active }: TabProps) {
-  const appController: IAppController = useContext(AppController);
+  const appController: IAppController = React.useContext(AppController);
   return (
     <div className="flex flex-row items-center ml-2">
       <Label>{`${dirty ? "*" : ""}${title}`}</Label>
       <IconButton
         iconProps={{ iconName: "Cancel" }}
-        // onClick={() => appController.closeTab(id)}
         onClick={() => appController.tabsManager.remove(id)}
       />
     </div>
   );
 }
 
-export class Tabs extends Component<TabsProps> {
+export class Tabs extends React.Component<TabsProps> {
   static contextType = AppController;
 
   constructor(props: TabsProps) {
@@ -200,7 +197,6 @@ export class Tabs extends Component<TabsProps> {
       name: tab.title,
       dirty: tab.dirty,
       active: tab.id === activeTabId,
-      // onClick: () => appController.selectTab(tab.id),
       onClick: () => appController.tabsManager.select(tab.id),
       onRender: () => (
         <OverflowTab

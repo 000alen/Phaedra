@@ -1,4 +1,5 @@
 import React from "react";
+import { Subtract } from "utility-types";
 
 import { PanelType } from "@fluentui/react";
 
@@ -10,14 +11,26 @@ export interface IPanel {
   onDismiss?: () => void;
 }
 
-interface UsePanelsProps {}
+interface UsePanelsProps {
+  forwardedRef: React.Ref<any>;
+}
 
 interface UsePanelsState {
   panels: IPanel[];
 }
 
-export function UsePanels<P>(Component: React.ComponentType<P>) {
-  return class extends React.Component<P & UsePanelsProps, UsePanelsState> {
+export interface UsePanelsInjectedProps {
+  panels: IPanel[];
+  panelsManager: any;
+}
+
+export function UsePanels<P extends UsePanelsInjectedProps>(
+  Component: React.ComponentType<P>
+) {
+  class WithPanels extends React.Component<
+    Subtract<P & UsePanelsProps, UsePanelsInjectedProps>,
+    UsePanelsState
+  > {
     constructor(props: P & UsePanelsProps) {
       super(props);
 
@@ -80,11 +93,16 @@ export function UsePanels<P>(Component: React.ComponentType<P>) {
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardedRef}
           panels={this.state.panels}
           panelsManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithPanels {...(props as P)} forwardedRef={ref} />
+  ));
 }

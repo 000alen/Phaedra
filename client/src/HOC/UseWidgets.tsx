@@ -1,20 +1,31 @@
 import React from "react";
+import { Subtract } from "utility-types";
 
 export interface IWidget {
   id: string;
   element: JSX.Element;
 }
 
-interface UseWidgetsProps {}
+interface UseWidgetsProps {
+  forwardedRef: React.Ref<any>;
+}
 
 interface UseWidgetsState {
   widgets: IWidget[];
 }
 
-export function UseWidgets<P extends object>(
+export interface UseWidgetsInjectedProps {
+  widgets: IWidget[];
+  widgetsManager: any;
+}
+
+export function UseWidgets<P extends UseWidgetsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  return class extends React.Component<P & UseWidgetsProps, UseWidgetsState> {
+  class WithWidgets extends React.Component<
+    Subtract<P & UseWidgetsProps, UseWidgetsInjectedProps>,
+    UseWidgetsState
+  > {
     constructor(props: P & UseWidgetsProps) {
       super(props);
 
@@ -55,11 +66,16 @@ export function UseWidgets<P extends object>(
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardedRef}
           widgets={this.state.widgets}
           widgetsManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithWidgets {...(props as P)} forwardedRef={ref} />
+  ));
 }

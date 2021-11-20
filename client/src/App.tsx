@@ -1,5 +1,4 @@
-import Mousetrap from "mousetrap";
-import React, { Component } from "react";
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { mergeStyles } from "@fluentui/react";
@@ -9,44 +8,34 @@ import { Message } from "./components/Message";
 import { StatusBar } from "./components/StatusBar";
 import { TasksPanel } from "./components/TasksPanel";
 import { TopBar } from "./components/TopBar";
-import { AppController, IAppController } from "./contexts/AppController";
-import { IDialog, UseDialogs } from "./HOC/UseDialogs";
-import { IMessage, UseMessages } from "./HOC/UseMessages";
-import { IPanel, UsePanels } from "./HOC/UsePanels";
-import { ITab, UseTabs } from "./HOC/UseTabs";
-import { ITask, UseTasks } from "./HOC/UseTasks";
-import { IWidget, UseWidgets } from "./HOC/UseWidgets";
+import { AppController, IAppController } from "./contexts";
+import { IDialog, UseDialogs, UseDialogsInjectedProps } from "./HOC/UseDialogs";
+import {
+  IMessage,
+  UseMessages,
+  UseMessagesInjectedProps,
+} from "./HOC/UseMessages";
+import { UsePanels, UsePanelsInjectedProps } from "./HOC/UsePanels";
+import { IShortcuts, UseShortcuts } from "./HOC/UseShortcuts";
+import { UseTabs, UseTabsInjectedProps } from "./HOC/UseTabs";
+import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
+import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
 import { getTheme } from "./resources/theme";
-import { AppShortcuts } from "./shortcuts/AppShortcuts";
 import { MainTab } from "./tabs/MainTab";
 
-export interface AppProps {
-  dialogs: IDialog[];
-  dialogsManager: any;
+type AppProps = UseDialogsInjectedProps &
+  UseMessagesInjectedProps &
+  UsePanelsInjectedProps &
+  UseTabsInjectedProps &
+  UseTasksInjectedProps &
+  UseWidgetsInjectedProps;
 
-  messages: IMessage[];
-  messagesManager: any;
-
-  panels: IPanel[];
-  panelsManager: any;
-
-  tabs: ITab[];
-  activeTabId: string | undefined;
-  tabsManager: any;
-
-  tasks: ITask[];
-  tasksManager: any;
-
-  widgets: IWidget[];
-  widgetsManager: any;
-}
-
-export interface AppState {
+interface AppState {
   tasksPanelShown: boolean;
   appController: IAppController;
 }
 
-export class App extends Component<AppProps, AppState> {
+export class AppSkeleton extends React.Component<AppProps, AppState> {
   activeTabRef: any;
 
   constructor(props: AppProps) {
@@ -101,25 +90,48 @@ export class App extends Component<AppProps, AppState> {
     };
   }
 
-  componentDidMount(): void {
-    const { appController } = this.state;
-
-    for (const [keys, action] of Object.entries(AppShortcuts)) {
-      Mousetrap.bind(
-        keys,
-        (event) => {
-          action(appController);
-          event.preventDefault();
-        },
-        "keyup"
-      );
-    }
+  get dialogs() {
+    return this.props.dialogs;
   }
 
-  componentWillUnmount(): void {
-    for (const keys of Object.keys(AppShortcuts)) {
-      Mousetrap.unbind(keys);
-    }
+  get dialogsManager() {
+    return this.props.dialogsManager;
+  }
+
+  get messages() {
+    return this.props.messages;
+  }
+
+  get messagesManager() {
+    return this.props.messagesManager;
+  }
+
+  get panels() {
+    return this.props.panels;
+  }
+
+  get panelsManager() {
+    return this.props.panelsManager;
+  }
+
+  get tabs() {
+    return this.props.tabs;
+  }
+
+  get activeTabId() {
+    return this.props.activeTabId;
+  }
+
+  get tabsManager() {
+    return this.props.tabsManager;
+  }
+
+  get tasks() {
+    return this.props.tasks;
+  }
+
+  get tasksManager() {
+    return this.props.tasksManager;
   }
 
   renderMessage(message: IMessage) {
@@ -131,8 +143,7 @@ export class App extends Component<AppProps, AppState> {
         id={id}
         type={type}
         text={text}
-        // onDismiss={this.removeMessage}
-        onDismiss={() => {}}
+        onDismiss={() => this.props.messagesManager.remove(id)}
       />
     );
   }
@@ -174,21 +185,15 @@ export class App extends Component<AppProps, AppState> {
     );
   }
 
-  render(): JSX.Element {
+  render() {
     const {
       dialogs,
-      dialogsManager,
       messages,
-      messagesManager,
-      panels,
-      panelsManager,
       tabs,
       activeTabId,
       tabsManager,
       tasks,
-      tasksManager,
       widgets,
-      widgetsManager,
     } = this.props;
     const { appController, tasksPanelShown } = this.state;
 
@@ -209,13 +214,11 @@ export class App extends Component<AppProps, AppState> {
       activeTabId === undefined
         ? MainTab
         : tabsManager.get(activeTabId)?.component;
-    // activeTabId === undefined ? MainTab : this.getTab(activeTabId)?.component;
 
     const tabId = activeTabId === undefined ? uuidv4() : activeTabId;
 
     const tabProps =
       activeTabId === undefined ? {} : tabsManager.get(activeTabId)?.props;
-    // activeTabId === undefined ? {} : this.getTab(activeTabId)?.props;
 
     return (
       <AppController.Provider value={appController}>
@@ -254,6 +257,23 @@ export class App extends Component<AppProps, AppState> {
   }
 }
 
-export const Application = UseDialogs(
-  UseMessages(UsePanels(UseTabs(UseTasks(UseWidgets(App)))))
+const AppShortcuts: IShortcuts<React.RefObject<AppSkeleton>> = {
+  "ctrl+n": (appRef: React.RefObject<AppSkeleton>) => {
+    appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
+  },
+  "ctrl+w": (appRef: React.RefObject<AppSkeleton>) => {
+    appRef.current!.tabsManager.remove(appRef.current!.tabsManager.activeId());
+  },
+  "ctrl+shift+t": (appRef: React.RefObject<AppSkeleton>) => {
+    appRef.current!.showTasksPanel();
+  },
+};
+
+export const App = UseShortcuts(
+  // @ts-ignore
+  UseDialogs(
+    // @ts-ignore
+    UseMessages(UsePanels(UseTabs(UseTasks(UseWidgets(AppSkeleton)))))
+  ),
+  AppShortcuts
 );

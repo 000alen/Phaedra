@@ -1,18 +1,31 @@
 import React from "react";
+import { Subtract } from "utility-types";
 
 export interface ITask {
   id: string;
   name: string;
 }
 
-interface UseTasksProps {}
+interface UseTasksProps {
+  forwardedRef: React.Ref<any>;
+}
 
 interface UseTasksState {
   tasks: ITask[];
 }
 
-export function UseTasks<P extends object>(Component: React.ComponentType<P>) {
-  return class extends React.Component<P & UseTasksProps, UseTasksState> {
+export interface UseTasksInjectedProps {
+  tasks: ITask[];
+  tasksManager: any;
+}
+
+export function UseTasks<P extends UseTasksInjectedProps>(
+  Component: React.ComponentType<P>
+) {
+  class WithTasks extends React.Component<
+    Subtract<P & UseTasksProps, UseTasksInjectedProps>,
+    UseTasksState
+  > {
     constructor(props: P & UseTasksProps) {
       super(props);
 
@@ -51,11 +64,16 @@ export function UseTasks<P extends object>(Component: React.ComponentType<P>) {
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardedRef}
           tasks={this.state.tasks}
           tasksManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithTasks {...(props as P)} forwardedRef={ref} />
+  ));
 }

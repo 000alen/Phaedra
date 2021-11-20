@@ -1,4 +1,5 @@
 import React from "react";
+import { Subtract } from "utility-types";
 
 import { DialogType } from "@fluentui/react";
 
@@ -12,17 +13,27 @@ export interface IDialog {
   onDismiss?: () => void;
 }
 
-interface UseDialogsProps {}
+interface UseDialogsProps {
+  forwardedRef: React.Ref<any>;
+}
 
 interface UseDialogsState {
   dialogs: IDialog[];
 }
 
-export function UseDialogs<P extends object>(
+export interface UseDialogsInjectedProps {
+  dialogs: IDialog[];
+  dialogsManager: any;
+}
+
+export function UseDialogs<P extends UseDialogsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  return class extends React.Component<P & UseDialogsProps, UseDialogsState> {
-    constructor(props: P & UseDialogsProps) {
+  class WithDialogs extends React.Component<
+    Subtract<P & UseDialogsProps, UseDialogsInjectedProps>,
+    UseDialogsState
+  > {
+    constructor(props: Subtract<P & UseDialogsProps, UseDialogsInjectedProps>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -102,11 +113,16 @@ export function UseDialogs<P extends object>(
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardedRef}
           dialogs={this.state.dialogs}
           dialogsManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithDialogs {...(props as P)} forwardedRef={ref} />
+  ));
 }

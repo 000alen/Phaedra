@@ -1,13 +1,13 @@
 // TODO: Refactor handling calls
 
-import React, { Component } from "react";
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { Card } from "../components/Card";
-import { AppController, IAppController } from "../contexts/AppController";
+import { AppController, IAppController } from "../contexts";
+import { createNotebook } from "../HOC/UseNotebook";
 import { openFile } from "../IO/NotebookIO";
 import { getStrings } from "../resources/strings";
-import { createNotebook } from "../structures/NotebookStructure";
 import { NotebookTab } from "./NotebookTab";
 
 export interface EmptyTabProps {
@@ -25,7 +25,7 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-export class EmptyTab extends Component<EmptyTabProps, EmptyTabState> {
+export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
   static contextType = AppController;
 
   constructor(props: EmptyTabProps) {
@@ -50,25 +50,16 @@ export class EmptyTab extends Component<EmptyTabProps, EmptyTabState> {
     const { tabId } = this.props;
 
     const taskId = uuidv4();
-    // appController.addTask({
-    //   id: taskId,
-    //   name: getStrings().openingFileTaskLabel,
-    // });
     appController.tasksManager.add({
       id: taskId,
       name: getStrings().openingFileTaskLabel,
     });
 
     openFile().then(({ notebook, notebookPath }) => {
-      // appController.removeTask(taskId);
       appController.tasksManager.remove(taskId);
 
       if (!notebook) return;
 
-      // appController.setTabContent(tabId, NotebookTab, {
-      //   notebook: notebook,
-      //   notebookPath: notebookPath,
-      // });
       appController.tabsManager.setComponent(tabId, NotebookTab, {
         notebook: notebook,
         notebookPath: notebookPath,
@@ -82,10 +73,6 @@ export class EmptyTab extends Component<EmptyTabProps, EmptyTabState> {
 
     const notebook = createNotebook({ name: `Unnamed Notebook ${tabId}` });
 
-    // appController.setTabContent(tabId, NotebookTab, {
-    //   notebook: notebook,
-    //   notebookPath: undefined,
-    // });
     appController.tabsManager.setComponent(tabId, NotebookTab, {
       notebook: notebook,
       notebookPath: undefined,

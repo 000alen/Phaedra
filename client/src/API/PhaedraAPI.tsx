@@ -1,4 +1,4 @@
-import { INotebook } from "../structures/NotebookStructure";
+import { INotebook } from "../HOC/UseNotebook";
 
 const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };

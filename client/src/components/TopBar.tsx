@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { IconButton } from "@fluentui/react";
 
-import { AppController, IAppController } from "../contexts/AppController";
+import { AppController, IAppController } from "../contexts";
 import { ITab } from "../HOC/UseTabs";
 import { ipcRenderer } from "../index";
 import { getTheme } from "../resources/theme";
@@ -17,7 +17,7 @@ export interface TopBarState {
   showMaximize: boolean;
 }
 
-export class TopBar extends Component<TopBarProps, TopBarState> {
+export class TopBar extends React.Component<TopBarProps, TopBarState> {
   static contextType = AppController;
 
   constructor(props: TopBarProps) {
@@ -126,7 +126,6 @@ export class TopBar extends Component<TopBarProps, TopBarState> {
             className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={addIcon}
             onClick={() =>
-              // appController.addTab(appController.createEmptyTab()!)
               appController.tabsManager.add(appController.tabsManager.empty())
             }
           />

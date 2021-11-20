@@ -8,8 +8,8 @@ import {
   writeFileSync,
 } from "../API/ElectronAPI";
 import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
+import { INotebook } from "../HOC/UseNotebook";
 import { getStrings } from "../resources/strings";
-import { INotebook } from "../structures/NotebookStructure";
 
 export interface INotebookIO {
   notebook: INotebook;

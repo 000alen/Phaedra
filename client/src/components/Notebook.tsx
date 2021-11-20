@@ -1,21 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { DefaultButton, MessageBarType } from "@fluentui/react";
 
-import { IAppController } from "../contexts/AppController";
 import {
+  IAppController,
   INotebookController,
+  INotebookTabController,
   NotebookController,
-} from "../contexts/NotebookController";
-import {
-  INotebookPageController,
-  NotebookPageController,
-} from "../contexts/NotebookPageController";
+  NotebookTabController,
+} from "../contexts";
+import { INotebook } from "../HOC/UseNotebook";
 import { saveNotebook } from "../IO/NotebookIO";
 import { getStrings } from "../resources/strings";
 import { getTheme } from "../resources/theme";
-import { INotebook, IPage } from "../structures/NotebookStructure";
 import { Page } from "./Page";
 
 export interface NotebookProps {
@@ -31,8 +29,8 @@ export interface NotebookState {
   notebookController: INotebookController;
 }
 
-export class Notebook extends Component<NotebookProps, NotebookState> {
-  static contextType = NotebookPageController;
+export class Notebook extends React.Component<NotebookProps, NotebookState> {
+  static contextType = NotebookTabController;
 
   constructor(props: NotebookProps) {
     super(props);
@@ -66,25 +64,20 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
   }
 
   componentDidMount() {
-    const notebookPageController: INotebookPageController = this.context;
+    const notebookTabController: INotebookTabController = this.context;
     const appController: IAppController =
-      notebookPageController.getAppController()!;
-    const tabId = notebookPageController.getTabId()!;
+      notebookTabController.getAppController()!;
+    const tabId = notebookTabController.getTabId()!;
     const { notebook } = this.state;
 
-    // appController.setTabTitle(tabId, notebook.name);
     appController.tabsManager.setTitle(tabId, notebook.name);
   }
 
   async save() {
     const { notebook, notebookPath } = this.state;
-    const notebookPageController: INotebookPageController = this.context;
-    const appController = notebookPageController.getAppController()!;
+    const notebookTabController: INotebookTabController = this.context;
+    const appController = notebookTabController.getAppController()!;
 
-    // appController.addTask({
-    //   id: taskId,
-    //   name: getStrings().savingNotebookTaskLabel,
-    // });
     const taskId = uuidv4();
     appController.tasksManager.add({
       id: taskId,
@@ -103,18 +96,12 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
         () => this.setDirty(false)
       );
     } catch (error) {
-      //   appController.addMessage({
-      //     id: uuidv4(),
-      //     text: getStrings().savingNotebookTaskError,
-      //     type: MessageBarType.error,
-      //   });
       appController.messagesManager.add({
         id: uuidv4(),
         text: getStrings().savingNotebookTaskError,
         type: MessageBarType.error,
       });
     } finally {
-      // appController.removeTask(taskId);
       appController.tasksManager.remove(taskId);
     }
   }
@@ -124,11 +111,10 @@ export class Notebook extends Component<NotebookProps, NotebookState> {
   }
 
   setDirty(dirty: boolean, callback?: () => void) {
-    const notebookPageController: INotebookPageController = this.context;
-    const appController = notebookPageController.getAppController()!;
-    const tabId = notebookPageController.getTabId()!;
+    const notebookTabController: INotebookTabController = this.context;
+    const appController = notebookTabController.getAppController()!;
+    const tabId = notebookTabController.getTabId()!;
 
-    // appController.setTabDirty(tabId, dirty);
     appController.tabsManager.setDirty(tabId, dirty);
 
     this.setState((state) => {

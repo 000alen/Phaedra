@@ -1,4 +1,5 @@
 import React from "react";
+import { Subtract } from "utility-types";
 
 import { MessageBarType } from "@fluentui/react";
 
@@ -8,17 +9,27 @@ export interface IMessage {
   type: MessageBarType;
 }
 
-interface UseMessagesProps {}
+interface UseMesagesProps {
+  forwardsRef: React.Ref<any>;
+}
 
 interface UseMessagesState {
   messages: IMessage[];
 }
 
-export function UseMessages<P extends object>(
+export interface UseMessagesInjectedProps {
+  messages: IMessage[];
+  messagesManager: any;
+}
+
+export function UseMessages<P extends UseMessagesInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  return class extends React.Component<P & UseMessagesProps, UseMessagesState> {
-    constructor(props: P & UseMessagesProps) {
+  class WithMessages extends React.Component<
+    Subtract<P & UseMesagesProps, UseMessagesInjectedProps>,
+    UseMessagesState
+  > {
+    constructor(props: P & UseMesagesProps) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -66,11 +77,16 @@ export function UseMessages<P extends object>(
     render() {
       return (
         <Component
+          {...(this.props as P)}
+          ref={this.props.forwardsRef}
           messages={this.state.messages}
           messagesManager={this}
-          {...(this.props as P)}
         />
       );
     }
-  };
+  }
+
+  return React.forwardRef((props, ref) => (
+    <WithMessages {...(props as P)} forwardsRef={ref} />
+  ));
 }

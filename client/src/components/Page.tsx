@@ -1,11 +1,11 @@
 import "react-quill/dist/quill.bubble.css";
 
-import React, { Component } from "react";
+import React from "react";
 
 import Subdivide, { ConfigProvider } from "@pixore/subdivide";
 
-import { NotebookController } from "../contexts/NotebookController";
-import { IContent, IData, IReference } from "../structures/NotebookStructure";
+import { NotebookController } from "../contexts";
+import { IContent, IData, IReference } from "../HOC/UseNotebook";
 import { PageLayoutMaster } from "./PageLayoutMaster";
 
 export interface PageProps {
@@ -22,17 +22,12 @@ export interface PageProps {
 
 export interface PageState {}
 
-export class Page extends Component<PageProps, PageState> {
+export class Page extends React.Component<PageProps, PageState> {
   static contextType = NotebookController;
 
   render() {
-    const {
-      id,
-      onReferencesChange,
-      onDataChange,
-      onContentChange,
-      onLayoutChange,
-    } = this.props;
+    const { id, onReferencesChange, onDataChange, onContentChange } =
+      this.props;
     const { layout } = this.props;
 
     return (

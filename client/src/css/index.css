@@ -88,3 +88,9 @@
   opacity: 1;
   transition: opacity 0.5s linear;
 }
+
+:root {
+  --thickness: 1px;
+  --draggable: calc(1px + 6px);
+  --color: "white";
+}

@@ -12,8 +12,8 @@ import {
 } from "../contexts";
 import { INotebook } from "../HOC/UseNotebook";
 import { saveNotebook } from "../IO/NotebookIO";
-import { getStrings } from "../resources/strings";
-import { getTheme } from "../resources/theme";
+import { getStrings } from "../strings";
+import { getTheme } from "../themes";
 import { Page } from "./Page";
 
 export interface NotebookProps {
@@ -70,7 +70,7 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     const tabId = notebookTabController.getTabId()!;
     const { notebook } = this.state;
 
-    appController.tabsManager.setTitle(tabId, notebook.name);
+    appController.tabsManager!.setTitle(tabId, notebook.name);
   }
 
   async save() {
@@ -79,7 +79,7 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     const appController = notebookTabController.getAppController()!;
 
     const taskId = uuidv4();
-    appController.tasksManager.add({
+    appController.tasksManager!.add({
       id: taskId,
       name: getStrings().savingNotebookTaskLabel,
     });
@@ -96,13 +96,13 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
         () => this.setDirty(false)
       );
     } catch (error) {
-      appController.messagesManager.add({
+      appController.messagesManager!.add({
         id: uuidv4(),
         text: getStrings().savingNotebookTaskError,
         type: MessageBarType.error,
       });
     } finally {
-      appController.tasksManager.remove(taskId);
+      appController.tasksManager!.remove(taskId);
     }
   }
 
@@ -115,7 +115,7 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     const appController = notebookTabController.getAppController()!;
     const tabId = notebookTabController.getTabId()!;
 
-    appController.tabsManager.setDirty(tabId, dirty);
+    appController.tabsManager!.setDirty(tabId, dirty);
 
     this.setState((state) => {
       return {

@@ -7,7 +7,7 @@ import { Card } from "../components/Card";
 import { AppController, IAppController } from "../contexts";
 import { createNotebook } from "../HOC/UseNotebook";
 import { openFile } from "../IO/NotebookIO";
-import { getStrings } from "../resources/strings";
+import { getStrings } from "../strings";
 import { NotebookTab } from "./NotebookTab";
 
 export interface EmptyTabProps {
@@ -50,17 +50,17 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
     const { tabId } = this.props;
 
     const taskId = uuidv4();
-    appController.tasksManager.add({
+    appController.tasksManager!.add({
       id: taskId,
       name: getStrings().openingFileTaskLabel,
     });
 
     openFile().then(({ notebook, notebookPath }) => {
-      appController.tasksManager.remove(taskId);
+      appController.tasksManager!.remove(taskId);
 
       if (!notebook) return;
 
-      appController.tabsManager.setComponent(tabId, NotebookTab, {
+      appController.tabsManager!.setComponent(tabId, NotebookTab, {
         notebook: notebook,
         notebookPath: notebookPath,
       });
@@ -73,7 +73,7 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
 
     const notebook = createNotebook({ name: `Unnamed Notebook ${tabId}` });
 
-    appController.tabsManager.setComponent(tabId, NotebookTab, {
+    appController.tabsManager!.setComponent(tabId, NotebookTab, {
       notebook: notebook,
       notebookPath: undefined,
     });

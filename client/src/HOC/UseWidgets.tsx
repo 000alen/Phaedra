@@ -16,7 +16,14 @@ interface UseWidgetsState {
 
 export interface UseWidgetsInjectedProps {
   widgets: IWidget[];
-  widgetsManager: any;
+  widgetsManager: WidgetsManager;
+}
+
+export interface WidgetsManager {
+  get(id: string): IWidget | undefined;
+  add(widget: IWidget): void;
+  remove(id: string): void;
+  setElement(id: string, element: JSX.Element): void;
 }
 
 export function UseWidgets<P extends UseWidgetsInjectedProps>(

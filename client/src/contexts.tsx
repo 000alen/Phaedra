@@ -1,12 +1,12 @@
 import React from "react";
 
-import { IDialog } from "./HOC/UseDialogs";
-import { IMessage } from "./HOC/UseMessages";
+import { DialogsManager, IDialog } from "./HOC/UseDialogs";
+import { IMessage, MessagesManager } from "./HOC/UseMessages";
 import { INotebook } from "./HOC/UseNotebook";
-import { IPanel } from "./HOC/UsePanels";
-import { ITab } from "./HOC/UseTabs";
-import { ITask } from "./HOC/UseTasks";
-import { IWidget } from "./HOC/UseWidgets";
+import { IPanel, PanelsManager } from "./HOC/UsePanels";
+import { ITab, TabsManager } from "./HOC/UseTabs";
+import { ITask, TasksManager } from "./HOC/UseTasks";
+import { IWidget, WidgetsManager } from "./HOC/UseWidgets";
 
 export interface IAppController {
   isTasksPanelShown: () => boolean | undefined;
@@ -14,23 +14,23 @@ export interface IAppController {
   hideTasksPanel: (callback?: () => void) => void;
 
   dialogs: IDialog[];
-  dialogsManager: any;
+  dialogsManager: DialogsManager | undefined;
 
   messages: IMessage[];
-  messagesManager: any;
+  messagesManager: MessagesManager | undefined;
 
   panels: IPanel[];
-  panelsManager: any;
+  panelsManager: PanelsManager | undefined;
 
   tabs: ITab[];
   activeTabId: string | undefined;
-  tabsManager: any;
+  tabsManager: TabsManager | undefined;
 
   tasks: ITask[];
-  tasksManager: any;
+  tasksManager: TasksManager | undefined;
 
   widgets: IWidget[];
-  widgetsManager: any;
+  widgetsManager: WidgetsManager | undefined;
 }
 
 export const AppController = React.createContext<IAppController>({

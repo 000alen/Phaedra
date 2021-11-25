@@ -21,7 +21,17 @@ interface UsePanelsState {
 
 export interface UsePanelsInjectedProps {
   panels: IPanel[];
-  panelsManager: any;
+  panelsManager: PanelsManager;
+}
+
+export interface PanelsManager {
+  get(id: string): IPanel | undefined;
+  add(panel: IPanel): void;
+  remove(id: string): void;
+  setType(id: string, type: PanelType): void;
+  setVisible(id: string, visible: boolean): void;
+  setContent(id: string, content: JSX.Element): void;
+  setOnDismiss(id: string, onDismiss: () => void): void;
 }
 
 export function UsePanels<P extends UsePanelsInjectedProps>(

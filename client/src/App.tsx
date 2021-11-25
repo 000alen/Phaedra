@@ -20,8 +20,8 @@ import { IShortcuts, UseShortcuts } from "./HOC/UseShortcuts";
 import { UseTabs, UseTabsInjectedProps } from "./HOC/UseTabs";
 import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
 import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
-import { getTheme } from "./resources/theme";
 import { MainTab } from "./tabs/MainTab";
+import { getTheme } from "./themes";
 
 type AppProps = UseDialogsInjectedProps &
   UseMessagesInjectedProps &
@@ -262,7 +262,9 @@ const AppShortcuts: IShortcuts<React.RefObject<AppSkeleton>> = {
     appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
   },
   "ctrl+w": (appRef: React.RefObject<AppSkeleton>) => {
-    appRef.current!.tabsManager.remove(appRef.current!.tabsManager.activeId());
+    appRef.current!.tabsManager.remove(
+      appRef.current!.tabsManager!.activeId()!
+    );
   },
   "ctrl+shift+t": (appRef: React.RefObject<AppSkeleton>) => {
     appRef.current!.showTasksPanel();

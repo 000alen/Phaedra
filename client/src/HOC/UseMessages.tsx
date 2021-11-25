@@ -19,7 +19,15 @@ interface UseMessagesState {
 
 export interface UseMessagesInjectedProps {
   messages: IMessage[];
-  messagesManager: any;
+  messagesManager: MessagesManager;
+}
+
+export interface MessagesManager {
+  get(id: string): IMessage | undefined;
+  add(message: IMessage): void;
+  remove(id: string): void;
+  setText(id: string, text: string): void;
+  setType(id: string, type: MessageBarType): void;
 }
 
 export function UseMessages<P extends UseMessagesInjectedProps>(

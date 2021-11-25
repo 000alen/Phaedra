@@ -2,7 +2,7 @@ import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
 
-import { getStrings } from "../resources/strings";
+import { getStrings } from "../strings";
 import { EmptyTab } from "../tabs/EmptyTab";
 
 export interface ITab {
@@ -25,7 +25,20 @@ interface UseTabsState {
 export interface UseTabsInjectedProps {
   tabs: ITab[];
   activeTabId: string | undefined;
-  tabsManager: any;
+  tabsManager: TabsManager;
+}
+
+export interface TabsManager {
+  empty(): ITab;
+  get(id: string): ITab | undefined;
+  activeId(): string | undefined;
+  add(tab: ITab): void;
+  remove(id: string): void;
+  select(id: string): void;
+  setTitle(id: string, title: string): void;
+  setComponent(id: string, component: any, props: any): void;
+  setProps(id: string, props: any): void;
+  setDirty(id: string, dirty: boolean): void;
 }
 
 export function UseTabs<P extends UseTabsInjectedProps>(

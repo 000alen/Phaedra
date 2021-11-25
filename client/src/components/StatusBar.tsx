@@ -2,7 +2,7 @@ import React from "react";
 
 import { ITask } from "../HOC/UseTasks";
 import { IWidget } from "../HOC/UseWidgets";
-import { getTheme } from "../resources/theme";
+import { getTheme } from "../themes";
 import { StatusBarLoading } from "./StatusBarLoading";
 
 export interface StatusBarProps {

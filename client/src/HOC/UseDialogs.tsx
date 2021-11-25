@@ -23,7 +23,19 @@ interface UseDialogsState {
 
 export interface UseDialogsInjectedProps {
   dialogs: IDialog[];
-  dialogsManager: any;
+  dialogsManager: DialogsManager;
+}
+
+export interface DialogsManager {
+  get(id: string): IDialog | undefined;
+  add(dialog: IDialog): void;
+  remove(id: string): void;
+  setTitle(id: string, title: string): void;
+  setSubText(id: string, subText: string): void;
+  setType(id: string, type: DialogType): void;
+  setVisible(id: string, visible: boolean): void;
+  setFooter(id: string, footer: JSX.Element): void;
+  setOnDismiss(id: string, onDismiss: () => void): void;
 }
 
 export function UseDialogs<P extends UseDialogsInjectedProps>(

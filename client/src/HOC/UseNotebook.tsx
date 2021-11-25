@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { getStrings } from "../resources/strings";
+import { getStrings } from "../strings";
 
 export type ISource = any;
 

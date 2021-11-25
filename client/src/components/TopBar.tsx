@@ -5,7 +5,7 @@ import { IconButton } from "@fluentui/react";
 import { AppController, IAppController } from "../contexts";
 import { ITab } from "../HOC/UseTabs";
 import { ipcRenderer } from "../index";
-import { getTheme } from "../resources/theme";
+import { getTheme } from "../themes";
 import { Tabs } from "./Tabs";
 
 export interface TopBarProps {
@@ -126,7 +126,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
             className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={addIcon}
             onClick={() =>
-              appController.tabsManager.add(appController.tabsManager.empty())
+              appController.tabsManager!.add(appController.tabsManager!.empty())
             }
           />
           <IconButton

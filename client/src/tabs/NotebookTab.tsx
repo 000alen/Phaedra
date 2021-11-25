@@ -118,47 +118,47 @@ class NotebookTabSkeleton extends React.Component<
 
     const dialogId = uuidv4();
 
-    appController.dialogsManager.add({
+    appController.dialogsManager!.add({
       id: dialogId,
       title: "Save changes?",
       subText: notebook.name,
       type: DialogType.normal,
       visible: true,
       onDismiss: () => {
-        appController.dialogsManager.remove(dialogId);
+        appController.dialogsManager!.remove(dialogId);
       },
       footer: (
         <DialogFooter>
           <DefaultButton
             text="Cancel"
             onClick={() => {
-              appController.dialogsManager.remove(dialogId);
+              appController.dialogsManager!.remove(dialogId);
             }}
           />
           <DefaultButton
             text="Do not save"
             onClick={() => {
-              appController.dialogsManager.remove(dialogId, () => {
-                appController.tabsManager.setDirty(
-                  this.getTabId(),
-                  false,
-                  () => {
-                    appController.tabsManager.remove(this.getTabId());
-                  }
-                );
-              });
+              // appController.dialogsManager!.remove(dialogId, () => {
+              //   appController.tabsManager!.setDirty(
+              //     this.getTabId(),
+              //     false,
+              //     () => {
+              //       appController.tabsManager!.remove(this.getTabId());
+              //     }
+              //   );
+              // });
             }}
           />
           <PrimaryButton
             text="Save"
             onClick={() => {
-              appController.dialogsManager.remove(dialogId, () => {
-                this.getNotebookController()
-                  .save()
-                  .then(() => {
-                    appController.tabsManager.remove(this.getTabId());
-                  });
-              });
+              // appController.dialogsManager.remove(dialogId, () => {
+              //   this.getNotebookController()
+              //     .save()
+              //     .then(() => {
+              //       appController.tabsManager.remove(this.getTabId());
+              //     });
+              // });
             }}
           />
         </DialogFooter>

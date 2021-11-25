@@ -16,7 +16,14 @@ interface UseTasksState {
 
 export interface UseTasksInjectedProps {
   tasks: ITask[];
-  tasksManager: any;
+  tasksManager: TasksManager;
+}
+
+export interface TasksManager {
+  get(id: string): ITask | undefined;
+  add(task: ITask): void;
+  remove(id: string): void;
+  setName(id: string, name: string): void;
 }
 
 export function UseTasks<P extends UseTasksInjectedProps>(

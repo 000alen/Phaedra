@@ -1,4 +1,3 @@
-import "react-quill/dist/quill.bubble.css";
 import "phaedra-layout/dist/index.css";
 
 import { LayoutSkeleton, UseLayout } from "phaedra-layout";
@@ -6,7 +5,7 @@ import React from "react";
 
 import { NotebookController } from "../contexts";
 import { IContent, IData, IReference } from "../HOC/UseNotebook";
-import { PagePaneSelector } from "./PagePaneSelector";
+import { PageMasterPane } from "./PageMasterPane";
 
 export interface PageProps {
   id: string;
@@ -28,7 +27,7 @@ export class Page extends React.Component<PageProps, PageState> {
   render() {
     const LayoutComponent = UseLayout(LayoutSkeleton);
     // @ts-ignore
-    const layoutElement = <LayoutComponent Component={PagePaneSelector} />;
+    const layoutElement = <LayoutComponent Component={PageMasterPane} />;
 
     return <div className="w-[100%] h-[100%] relative">{layoutElement}</div>;
   }

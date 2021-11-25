@@ -10,7 +10,7 @@ export interface IMessage {
 }
 
 interface UseMesagesProps {
-  forwardsRef: React.Ref<any>;
+  forwardedRef: React.Ref<any>;
 }
 
 interface UseMessagesState {
@@ -30,14 +30,21 @@ export interface MessagesManager {
   setType(id: string, type: MessageBarType): void;
 }
 
+type Props<P extends UseMessagesInjectedProps> = Subtract<
+  P & UseMesagesProps,
+  UseMessagesInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseMessagesInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export function UseMessages<P extends UseMessagesInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithMessages extends React.Component<
-    Subtract<P & UseMesagesProps, UseMessagesInjectedProps>,
-    UseMessagesState
-  > {
-    constructor(props: P & UseMesagesProps) {
+  class WithMessages extends React.Component<Props<P>, UseMessagesState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -86,7 +93,7 @@ export function UseMessages<P extends UseMessagesInjectedProps>(
       return (
         <Component
           {...(this.props as P)}
-          ref={this.props.forwardsRef}
+          ref={this.props.forwardedRef}
           messages={this.state.messages}
           messagesManager={this}
         />
@@ -94,7 +101,7 @@ export function UseMessages<P extends UseMessagesInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithMessages {...(props as P)} forwardsRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithMessages {...(props as Props<P>)} forwardsRef={ref} />
   ));
 }

@@ -12,12 +12,11 @@ export const { ipcRenderer } = window.require("electron");
 
 initializeIcons();
 
-// @ts-ignore
-const app = <App />;
-
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={getTheme()}>{app}</ThemeProvider>
+    <ThemeProvider theme={getTheme()}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

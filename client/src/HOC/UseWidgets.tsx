@@ -26,14 +26,21 @@ export interface WidgetsManager {
   setElement(id: string, element: JSX.Element): void;
 }
 
+type Props<P extends UseWidgetsInjectedProps> = Subtract<
+  P & UseWidgetsProps,
+  UseWidgetsInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseWidgetsInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export function UseWidgets<P extends UseWidgetsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithWidgets extends React.Component<
-    Subtract<P & UseWidgetsProps, UseWidgetsInjectedProps>,
-    UseWidgetsState
-  > {
-    constructor(props: P & UseWidgetsProps) {
+  class WithWidgets extends React.Component<Props<P>, UseWidgetsState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -82,7 +89,7 @@ export function UseWidgets<P extends UseWidgetsInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithWidgets {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithWidgets {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

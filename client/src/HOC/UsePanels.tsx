@@ -24,6 +24,15 @@ export interface UsePanelsInjectedProps {
   panelsManager: PanelsManager;
 }
 
+type Props<P extends UsePanelsInjectedProps> = Subtract<
+  P & UsePanelsProps,
+  UsePanelsInjectedProps
+>;
+type PropsWithoutRef<P extends UsePanelsInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export interface PanelsManager {
   get(id: string): IPanel | undefined;
   add(panel: IPanel): void;
@@ -37,11 +46,8 @@ export interface PanelsManager {
 export function UsePanels<P extends UsePanelsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithPanels extends React.Component<
-    Subtract<P & UsePanelsProps, UsePanelsInjectedProps>,
-    UsePanelsState
-  > {
-    constructor(props: P & UsePanelsProps) {
+  class WithPanels extends React.Component<Props<P>, UsePanelsState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -112,7 +118,7 @@ export function UsePanels<P extends UsePanelsInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithPanels {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithPanels {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

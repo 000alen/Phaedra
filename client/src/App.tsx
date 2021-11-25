@@ -272,9 +272,7 @@ const AppShortcuts: IShortcuts<React.RefObject<AppSkeleton>> = {
 };
 
 export const App = UseShortcuts(
-  // @ts-ignore
   UseDialogs(
-    // @ts-ignore
     UseMessages(UsePanels(UseTabs(UseTasks(UseWidgets(AppSkeleton)))))
   ),
   AppShortcuts

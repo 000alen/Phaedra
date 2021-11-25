@@ -14,17 +14,24 @@ interface UseShortcutsState {}
 
 interface UseShortcutsInjectedProps {}
 
+type Props<P extends UseShortcutsInjectedProps> = Subtract<
+  P & UseShortcutsProps,
+  UseShortcutsInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseShortcutsInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.RefObject<any> }
+>;
+
 export function UseShortcuts<P>(
   Component: React.ComponentType<P>,
-  Shortcuts: IShortcuts<React.RefObject<React.Component<P>>>
+  Shortcuts: IShortcuts<React.RefObject<any>>
 ) {
-  class WithShortcuts extends React.Component<
-    Subtract<P, UseShortcutsInjectedProps>,
-    UseShortcutsState
-  > {
+  class WithShortcuts extends React.Component<Props<P>, UseShortcutsState> {
     componentRef: React.RefObject<React.Component<P>>;
 
-    constructor(props: P & UseShortcutsProps) {
+    constructor(props: Props<P>) {
       super(props);
 
       const { forwardedRef } = props;
@@ -56,7 +63,7 @@ export function UseShortcuts<P>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithShortcuts {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithShortcuts {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

@@ -26,14 +26,21 @@ export interface TasksManager {
   setName(id: string, name: string): void;
 }
 
+type Props<P extends UseTasksInjectedProps> = Subtract<
+  P & UseTasksProps,
+  UseTasksInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseTasksInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export function UseTasks<P extends UseTasksInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithTasks extends React.Component<
-    Subtract<P & UseTasksProps, UseTasksInjectedProps>,
-    UseTasksState
-  > {
-    constructor(props: P & UseTasksProps) {
+  class WithTasks extends React.Component<Props<P>, UseTasksState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -80,7 +87,7 @@ export function UseTasks<P extends UseTasksInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithTasks {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithTasks {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

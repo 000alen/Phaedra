@@ -26,6 +26,16 @@ export interface UseDialogsInjectedProps {
   dialogsManager: DialogsManager;
 }
 
+type Props<P extends UseDialogsInjectedProps> = Subtract<
+  P & UseDialogsProps,
+  UseDialogsInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseDialogsInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export interface DialogsManager {
   get(id: string): IDialog | undefined;
   add(dialog: IDialog): void;
@@ -41,11 +51,8 @@ export interface DialogsManager {
 export function UseDialogs<P extends UseDialogsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithDialogs extends React.Component<
-    Subtract<P & UseDialogsProps, UseDialogsInjectedProps>,
-    UseDialogsState
-  > {
-    constructor(props: Subtract<P & UseDialogsProps, UseDialogsInjectedProps>) {
+  class WithDialogs extends React.Component<Props<P>, UseDialogsState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.get = this.get.bind(this);
@@ -134,7 +141,7 @@ export function UseDialogs<P extends UseDialogsInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithDialogs {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithDialogs {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

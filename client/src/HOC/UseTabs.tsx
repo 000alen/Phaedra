@@ -41,14 +41,21 @@ export interface TabsManager {
   setDirty(id: string, dirty: boolean): void;
 }
 
+type Props<P extends UseTabsInjectedProps> = Subtract<
+  P & UseTabsProps,
+  UseTabsInjectedProps
+>;
+
+type PropsWithoutRef<P extends UseTabsInjectedProps> = Subtract<
+  Props<P>,
+  { forwardedRef: React.Ref<any> }
+>;
+
 export function UseTabs<P extends UseTabsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
-  class WithTabs extends React.Component<
-    Subtract<P & UseTabsProps, UseTabsInjectedProps>,
-    UseTabsState
-  > {
-    constructor(props: P & UseTabsProps) {
+  class WithTabs extends React.Component<Props<P>, UseTabsState> {
+    constructor(props: Props<P>) {
       super(props);
 
       this.state = {
@@ -144,7 +151,7 @@ export function UseTabs<P extends UseTabsInjectedProps>(
     }
   }
 
-  return React.forwardRef((props, ref) => (
-    <WithTabs {...(props as P)} forwardedRef={ref} />
+  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
+    <WithTabs {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

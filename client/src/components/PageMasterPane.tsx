@@ -1,5 +1,12 @@
 import React from "react";
 
+import { Editor } from "./Editor";
+import { Paper } from "./Paper";
+
 export function PageMasterPane() {
-  return <h1>Hello!</h1>;
+  return (
+    <Paper>
+      <Editor />
+    </Paper>
+  );
 }

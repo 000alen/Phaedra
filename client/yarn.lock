@@ -9717,7 +9717,7 @@ phaedra-content@000alen/phaedra-content:
 
 phaedra-layout@000alen/phaedra-layout:
   version "1.0.0"
-  resolved "https://codeload.github.com/000alen/phaedra-layout/tar.gz/1d0b467d18fcaca2cfa5261a3a96a2835d353ed3"
+  resolved "https://codeload.github.com/000alen/phaedra-layout/tar.gz/74c1b887c09cf422679cd728005f1a7f0f27ce21"
   dependencies:
     mousetrap "^1.6.5"
     utility-types "^3.10.0"

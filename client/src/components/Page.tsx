@@ -17,9 +17,13 @@ export class Page extends React.Component<PageProps, PageState> {
   static contextType = NotebookController;
 
   render() {
+    const { page } = this.props;
+
     const LayoutComponent = UseLayout(LayoutSkeleton);
-    // @ts-ignore
-    const layoutElement = <LayoutComponent Component={PageMasterPane} />;
+    const layoutElement = (
+      // @ts-ignore
+      <LayoutComponent Component={PageMasterPane} defaultLayout={page.layout} />
+    );
 
     return <div className="w-[100%] h-[100%] relative">{layoutElement}</div>;
   }

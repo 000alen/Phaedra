@@ -29,6 +29,7 @@
     "lib0": "^0.2.25",
     "lodash": "^4.17.19",
     "mousetrap": "^1.6.5",
+    "phaedra-content": "000alen/phaedra-content",
     "phaedra-layout": "000alen/phaedra-layout",
     "postcss": "^7",
     "react": "^17.0.2",

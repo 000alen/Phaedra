@@ -92,21 +92,8 @@
       },
       "required": ["id", "orientation", "position", "size"]
     },
-    "block": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string",
-          "enum": ["paragraph", "header", "list", "separator", "image", "quote"]
-        },
-        "props": {
-          "type": "object"
-        }
-      },
-      "required": ["id", "type", "props"]
+    "content": {
+      "type": "array"
     },
     "page": {
       "type": "object",
@@ -123,14 +110,11 @@
         "layout": {
           "$ref": "#/definitions/layout"
         },
-        "blocks": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/block"
-          }
+        "content": {
+          "$ref": "#definitions/content"
         }
       },
-      "required": ["id", "references", "layout", "blocks"]
+      "required": ["id", "references", "layout", "content"]
     }
   }
 }

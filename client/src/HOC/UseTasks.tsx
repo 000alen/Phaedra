@@ -21,9 +21,9 @@ export interface UseTasksInjectedProps {
 
 export interface TasksManager {
   get(id: string): ITask | undefined;
-  add(task: ITask): void;
-  remove(id: string): void;
-  setName(id: string, name: string): void;
+  add(task: ITask, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  setName(id: string, name: string, callback?: () => void): void;
 }
 
 type Props<P extends UseTasksInjectedProps> = Subtract<
@@ -57,22 +57,22 @@ export function UseTasks<P extends UseTasksInjectedProps>(
       return this.state.tasks.find((t) => t.id === id);
     }
 
-    add(task: ITask) {
+    add(task: ITask, callback?: () => void) {
       const newTasks = [...this.state.tasks];
       newTasks.push(task);
-      this.setState({ tasks: newTasks });
+      this.setState({ tasks: newTasks }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newTasks = this.state.tasks.filter((task) => task.id !== id);
-      this.setState({ tasks: newTasks });
+      this.setState({ tasks: newTasks }, callback);
     }
 
-    setName(id: string, name: string) {
+    setName(id: string, name: string, callback?: () => void) {
       const newTasks = this.state.tasks.map((task) =>
         task.id === id ? { ...task, name } : task
       );
-      this.setState({ tasks: newTasks });
+      this.setState({ tasks: newTasks }, callback);
     }
 
     render() {

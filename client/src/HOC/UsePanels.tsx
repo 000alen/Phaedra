@@ -35,12 +35,12 @@ type PropsWithoutRef<P extends UsePanelsInjectedProps> = Subtract<
 
 export interface PanelsManager {
   get(id: string): IPanel | undefined;
-  add(panel: IPanel): void;
-  remove(id: string): void;
-  setType(id: string, type: PanelType): void;
-  setVisible(id: string, visible: boolean): void;
-  setContent(id: string, content: JSX.Element): void;
-  setOnDismiss(id: string, onDismiss: () => void): void;
+  add(panel: IPanel, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  setType(id: string, type: PanelType, callback?: () => void): void;
+  setVisible(id: string, visible: boolean, callback?: () => void): void;
+  setContent(id: string, content: JSX.Element, callback?: () => void): void;
+  setOnDismiss(id: string, onDismiss: () => void, callback?: () => void): void;
 }
 
 export function UsePanels<P extends UsePanelsInjectedProps>(
@@ -67,43 +67,43 @@ export function UsePanels<P extends UsePanelsInjectedProps>(
       return this.state.panels.find((panel) => panel.id === id);
     }
 
-    add(panel: IPanel) {
+    add(panel: IPanel, callback?: () => void) {
       const newPanels = [...this.state.panels];
       newPanels.push(panel);
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newPanels = this.state.panels.filter((panel) => panel.id !== id);
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
-    setType(id: string, type: PanelType) {
+    setType(id: string, type: PanelType, callback?: () => void) {
       const newPanels = this.state.panels.map((panel) =>
         panel.id === id ? { ...panel, type } : panel
       );
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
-    setVisible(id: string, visible: boolean) {
+    setVisible(id: string, visible: boolean, callback?: () => void) {
       const newPanels = this.state.panels.map((panel) =>
         panel.id === id ? { ...panel, visible } : panel
       );
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
-    setContent(id: string, content: JSX.Element) {
+    setContent(id: string, content: JSX.Element, callback?: () => void) {
       const newPanels = this.state.panels.map((panel) =>
         panel.id === id ? { ...panel, content } : panel
       );
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
-    setOnDismiss(id: string, onDismiss: () => void) {
+    setOnDismiss(id: string, onDismiss: () => void, callback?: () => void) {
       const newPanels = this.state.panels.map((panel) =>
         panel.id === id ? { ...panel, onDismiss } : panel
       );
-      this.setState({ panels: newPanels });
+      this.setState({ panels: newPanels }, callback);
     }
 
     render() {

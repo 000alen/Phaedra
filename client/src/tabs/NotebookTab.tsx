@@ -138,27 +138,27 @@ class NotebookTabSkeleton extends React.Component<
           <DefaultButton
             text="Do not save"
             onClick={() => {
-              // appController.dialogsManager!.remove(dialogId, () => {
-              //   appController.tabsManager!.setDirty(
-              //     this.getTabId(),
-              //     false,
-              //     () => {
-              //       appController.tabsManager!.remove(this.getTabId());
-              //     }
-              //   );
-              // });
+              appController.dialogsManager!.remove(dialogId, () => {
+                appController.tabsManager!.setDirty(
+                  this.getTabId(),
+                  false,
+                  () => {
+                    appController.tabsManager!.remove(this.getTabId());
+                  }
+                );
+              });
             }}
           />
           <PrimaryButton
             text="Save"
             onClick={() => {
-              // appController.dialogsManager.remove(dialogId, () => {
-              //   this.getNotebookController()
-              //     .save()
-              //     .then(() => {
-              //       appController.tabsManager.remove(this.getTabId());
-              //     });
-              // });
+              appController.dialogsManager!.remove(dialogId, () => {
+                this.getNotebookController()
+                  .save()
+                  .then(() => {
+                    appController.tabsManager!.remove(this.getTabId());
+                  });
+              });
             }}
           />
         </DialogFooter>
@@ -200,6 +200,5 @@ export const NotebookTabShortcuts: IShortcuts<
 
 export const NotebookTab = UseShortcuts(
   NotebookTabSkeleton,
-  // @ts-ignore
   NotebookTabShortcuts
 );

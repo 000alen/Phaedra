@@ -38,14 +38,14 @@ type PropsWithoutRef<P extends UseDialogsInjectedProps> = Subtract<
 
 export interface DialogsManager {
   get(id: string): IDialog | undefined;
-  add(dialog: IDialog): void;
-  remove(id: string): void;
-  setTitle(id: string, title: string): void;
-  setSubText(id: string, subText: string): void;
-  setType(id: string, type: DialogType): void;
-  setVisible(id: string, visible: boolean): void;
-  setFooter(id: string, footer: JSX.Element): void;
-  setOnDismiss(id: string, onDismiss: () => void): void;
+  add(dialog: IDialog, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  setTitle(id: string, title: string, callback?: () => void): void;
+  setSubText(id: string, subText: string, callback?: () => void): void;
+  setType(id: string, type: DialogType, callback?: () => void): void;
+  setVisible(id: string, visible: boolean, callback?: () => void): void;
+  setFooter(id: string, footer: JSX.Element, callback?: () => void): void;
+  setOnDismiss(id: string, onDismiss: () => void, callback?: () => void): void;
 }
 
 export function UseDialogs<P extends UseDialogsInjectedProps>(
@@ -74,59 +74,59 @@ export function UseDialogs<P extends UseDialogsInjectedProps>(
       return this.state.dialogs.find((dialog) => dialog.id === id);
     }
 
-    add(dialog: IDialog) {
+    add(dialog: IDialog, callback?: () => void) {
       const newDialogs = [...this.state.dialogs];
       newDialogs.push(dialog);
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newDialogs = this.state.dialogs.filter(
         (dialog) => dialog.id !== id
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setTitle(id: string, title: string) {
+    setTitle(id: string, title: string, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, title } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setSubText(id: string, subText: string) {
+    setSubText(id: string, subText: string, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, subText } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setType(id: string, type: DialogType) {
+    setType(id: string, type: DialogType, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, type } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setVisible(id: string, visible: boolean) {
+    setVisible(id: string, visible: boolean, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, visible } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setFooter(id: string, footer: JSX.Element) {
+    setFooter(id: string, footer: JSX.Element, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, footer } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
-    setOnDismiss(id: string, onDismiss: () => void) {
+    setOnDismiss(id: string, onDismiss: () => void, callback?: () => void) {
       const newDialogs = this.state.dialogs.map((dialog) =>
         dialog.id === id ? { ...dialog, onDismiss } : dialog
       );
-      this.setState({ dialogs: newDialogs });
+      this.setState({ dialogs: newDialogs }, callback);
     }
 
     render() {

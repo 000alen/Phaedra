@@ -42,11 +42,6 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     this.getNotebookPageController = this.getNotebookPageController.bind(this);
     this.getNotebook = this.getNotebook.bind(this);
 
-    this.onPageReferencesChange = this.onPageReferencesChange.bind(this);
-    this.onPageDataChange = this.onPageDataChange.bind(this);
-    this.onPageContentChange = this.onPageContentChange.bind(this);
-    this.onPageLayoutChange = this.onPageLayoutChange.bind(this);
-
     const { notebook, notebookPath } = props;
 
     this.state = {
@@ -133,22 +128,6 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     return this.state.notebook;
   }
 
-  onPageReferencesChange(pageId: string, ...args: any[]) {
-    this.setDirty(true);
-  }
-
-  onPageDataChange(pageId: string, ...args: any[]) {
-    this.setDirty(true);
-  }
-
-  onPageContentChange(pageId: string, ...args: any[]) {
-    this.setDirty(true);
-  }
-
-  onPageLayoutChange(pageId: string, newLayout: any) {
-    this.setDirty(true);
-  }
-
   render() {
     const { notebookController, notebook } = this.state;
 
@@ -164,18 +143,7 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
           style={containerStyle}
         >
           {notebook.pages.map((page) => (
-            <Page
-              key={page.id}
-              id={page.id}
-              references={page.references}
-              data={page.data}
-              content={page.content}
-              layout={page.layout}
-              onReferencesChange={this.onPageReferencesChange}
-              onDataChange={this.onPageDataChange}
-              onContentChange={this.onPageContentChange}
-              onLayoutChange={this.onPageLayoutChange}
-            />
+            <Page key={page.id} page={page} />
           ))}
           <DefaultButton text="Add page" />
         </div>

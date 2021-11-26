@@ -21,9 +21,9 @@ export interface UseWidgetsInjectedProps {
 
 export interface WidgetsManager {
   get(id: string): IWidget | undefined;
-  add(widget: IWidget): void;
-  remove(id: string): void;
-  setElement(id: string, element: JSX.Element): void;
+  add(widget: IWidget, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  setElement(id: string, element: JSX.Element, callback?: () => void): void;
 }
 
 type Props<P extends UseWidgetsInjectedProps> = Subtract<
@@ -57,24 +57,24 @@ export function UseWidgets<P extends UseWidgetsInjectedProps>(
       return this.state.widgets.find((w) => w.id === id);
     }
 
-    add(widget: IWidget) {
+    add(widget: IWidget, callback?: () => void) {
       const newWidgets = [...this.state.widgets];
       newWidgets.push(widget);
-      this.setState({ widgets: newWidgets });
+      this.setState({ widgets: newWidgets }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newWidgets = this.state.widgets.filter(
         (widget) => widget.id !== id
       );
-      this.setState({ widgets: newWidgets });
+      this.setState({ widgets: newWidgets }, callback);
     }
 
-    setElement(id: string, element: JSX.Element) {
+    setElement(id: string, element: JSX.Element, callback?: () => void) {
       const newWidgets = this.state.widgets.map((widget) =>
         widget.id === id ? { ...widget, element } : widget
       );
-      this.setState({ widgets: newWidgets });
+      this.setState({ widgets: newWidgets }, callback);
     }
 
     render() {

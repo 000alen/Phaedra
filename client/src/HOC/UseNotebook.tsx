@@ -2,27 +2,29 @@ import { v4 as uuidv4 } from "uuid";
 
 import { getStrings } from "../strings";
 
-export type ISource = any;
+export interface ISource {
+  id: string;
+  content: string;
+}
 
-export type IData = any;
+export interface IReference {
+  id: string;
+  sourceId: string;
+}
 
-export type IReference = any;
-
-export type IContent = any;
+export type IContent = object[];
 
 export interface IPage {
   id: string;
   references: IReference[];
-  data: IData;
-  content: IContent;
   layout: any;
+  content: IContent;
 }
 
 export interface INotebook {
   id: string;
   name: string;
   sources: ISource[];
-  data: IData;
   pages: IPage[];
 }
 
@@ -30,50 +32,37 @@ export function createNotebook({
   id,
   name,
   sources,
-  data,
   pages,
 }: Partial<INotebook>): INotebook {
   if (id === undefined) id = uuidv4();
   if (name === undefined) name = getStrings().newNotebookTitle;
   if (sources === undefined) sources = [];
-  if (data === undefined) data = {};
-  if (pages === undefined)
-    pages = [
-      {
-        id: uuidv4(),
-        references: [],
-        data: {},
-        content: {},
-        layout: undefined,
-      },
-    ];
+  if (pages === undefined) pages = [createPage({})];
 
   return {
-    id: id,
-    name: name,
-    sources: sources,
-    data: data,
-    pages: pages,
+    id,
+    name,
+    sources,
+    pages,
   };
 }
 
 export function createPage({
   id,
   references,
-  data,
+  layout,
   content,
 }: Partial<IPage>): IPage {
   if (id === undefined) id = uuidv4();
   if (references === undefined) references = [];
-  if (data === undefined) data = {};
-  if (content === undefined) content = {};
+  if (layout === undefined) layout = undefined;
+  if (content === undefined) content = [];
 
   return {
-    id: id,
-    references: references,
-    data: data,
-    content: {},
-    layout: undefined,
+    id,
+    references,
+    layout,
+    content,
   };
 }
 

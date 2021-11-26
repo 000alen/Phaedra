@@ -32,13 +32,18 @@ export interface TabsManager {
   empty(): ITab;
   get(id: string): ITab | undefined;
   activeId(): string | undefined;
-  add(tab: ITab): void;
-  remove(id: string): void;
-  select(id: string): void;
-  setTitle(id: string, title: string): void;
-  setComponent(id: string, component: any, props: any): void;
-  setProps(id: string, props: any): void;
-  setDirty(id: string, dirty: boolean): void;
+  add(tab: ITab, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  select(id: string, callback?: () => void): void;
+  setTitle(id: string, title: string, callback?: () => void): void;
+  setComponent(
+    id: string,
+    component: any,
+    props: any,
+    callback?: () => void
+  ): void;
+  setProps(id: string, props: any, callback?: () => void): void;
+  setDirty(id: string, dirty: boolean, callback?: () => void): void;
 }
 
 type Props<P extends UseTabsInjectedProps> = Subtract<
@@ -82,13 +87,13 @@ export function UseTabs<P extends UseTabsInjectedProps>(
       return this.state.activeTabId;
     }
 
-    add(tab: ITab) {
+    add(tab: ITab, callback?: () => void) {
       const newTabs = [...this.state.tabs];
       newTabs.push(tab);
-      this.setState({ tabs: newTabs, activeTabId: tab.id });
+      this.setState({ tabs: newTabs, activeTabId: tab.id }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newTabs = this.state.tabs.filter((tab) => tab.id !== id);
       const activeTabIndex = this.state.tabs.findIndex(
         (tab) => tab.id === this.state.activeTabId
@@ -100,42 +105,50 @@ export function UseTabs<P extends UseTabsInjectedProps>(
           : newTabs[activeTabIndex].id
         : undefined;
 
-      this.setState({
-        tabs: newTabs,
-        activeTabId: newActiveTabId,
-      });
+      this.setState(
+        {
+          tabs: newTabs,
+          activeTabId: newActiveTabId,
+        },
+        callback
+      );
     }
 
-    select(id: string) {
-      this.setState({ activeTabId: id });
+    select(id: string, callback?: () => void) {
+      this.setState({ activeTabId: id }, callback);
     }
 
-    setTitle(id: string, title: string) {
+    setTitle(id: string, title: string, callback?: () => void) {
       const newTabs = this.state.tabs.map((tab) =>
         tab.id === id ? { ...tab, title } : tab
       );
-      this.setState({ tabs: newTabs });
+      this.setState({ tabs: newTabs }, callback);
     }
 
-    setComponent(id: string, component: any, props: any) {
+    setComponent(
+      id: string,
+      component: any,
+      props: any,
+      callback?: () => void
+    ) {
       const newTabs = this.state.tabs.map((tab) =>
         tab.id === id ? { ...tab, component, props } : tab
       );
-      this.setState({ tabs: newTabs });
+      this.setState({ tabs: newTabs }, callback);
     }
 
-    setProps(id: string, props: any) {
+    setProps(id: string, props: any, callback?: () => void) {
       const newTabs = this.state.tabs.map((tab) =>
         tab.id === id ? { ...tab, props } : tab
       );
-      this.setState({ tabs: newTabs });
+      this.setState({ tabs: newTabs }, callback);
     }
 
-    setDirty(id: string, dirty: boolean) {
+    setDirty(id: string, dirty: boolean, callback?: () => void) {
       const newTabs = this.state.tabs.map((tab) =>
         tab.id === id ? { ...tab, dirty } : tab
       );
-      this.setState({ tabs: newTabs });
+      this.setState({ tabs: newTabs }, callback);
     }
 
     render() {

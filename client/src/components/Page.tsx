@@ -4,19 +4,11 @@ import { LayoutSkeleton, UseLayout } from "phaedra-layout";
 import React from "react";
 
 import { NotebookController } from "../contexts";
-import { IContent, IData, IReference } from "../HOC/UseNotebook";
+import { IPage } from "../HOC/UseNotebook";
 import { PageMasterPane } from "./PageMasterPane";
 
 export interface PageProps {
-  id: string;
-  references: IReference[];
-  data: IData;
-  content: IContent;
-  layout: any;
-  onReferencesChange: (...args: any[]) => void;
-  onDataChange: (...args: any[]) => void;
-  onContentChange: (...args: any[]) => void;
-  onLayoutChange: (...args: any[]) => void;
+  page: IPage;
 }
 
 export interface PageState {}

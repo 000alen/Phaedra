@@ -1,12 +1,11 @@
+import { ContentSkeleton, UseContent } from "phaedra-content";
 import React from "react";
 
-import { Editor } from "./Editor";
 import { Paper } from "./Paper";
 
 export function PageMasterPane() {
-  return (
-    <Paper>
-      <Editor />
-    </Paper>
-  );
+  const ContentComponent = UseContent(ContentSkeleton);
+  const contentElement = <ContentComponent />;
+
+  return <Paper>{contentElement}</Paper>;
 }

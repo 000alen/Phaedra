@@ -24,10 +24,10 @@ export interface UseMessagesInjectedProps {
 
 export interface MessagesManager {
   get(id: string): IMessage | undefined;
-  add(message: IMessage): void;
-  remove(id: string): void;
-  setText(id: string, text: string): void;
-  setType(id: string, type: MessageBarType): void;
+  add(message: IMessage, callback?: () => void): void;
+  remove(id: string, callback?: () => void): void;
+  setText(id: string, text: string, callback?: () => void): void;
+  setType(id: string, type: MessageBarType, callback?: () => void): void;
 }
 
 type Props<P extends UseMessagesInjectedProps> = Subtract<
@@ -62,31 +62,31 @@ export function UseMessages<P extends UseMessagesInjectedProps>(
       return this.state.messages.find((message) => message.id === id);
     }
 
-    add(message: IMessage) {
+    add(message: IMessage, callback?: () => void) {
       const newMessages = [...this.state.messages];
       newMessages.push(message);
-      this.setState({ messages: newMessages });
+      this.setState({ messages: newMessages }, callback);
     }
 
-    remove(id: string) {
+    remove(id: string, callback?: () => void) {
       const newMessages = this.state.messages.filter(
         (message) => message.id !== id
       );
-      this.setState({ messages: newMessages });
+      this.setState({ messages: newMessages }, callback);
     }
 
-    setText(id: string, text: string) {
+    setText(id: string, text: string, callback?: () => void) {
       const newMessages = this.state.messages.map((message) =>
         message.id === id ? { ...message, text } : message
       );
-      this.setState({ messages: newMessages });
+      this.setState({ messages: newMessages }, callback);
     }
 
-    setType(id: string, type: MessageBarType) {
+    setType(id: string, type: MessageBarType, callback?: () => void) {
       const newMessages = this.state.messages.map((message) =>
         message.id === id ? { ...message, type } : message
       );
-      this.setState({ messages: newMessages });
+      this.setState({ messages: newMessages }, callback);
     }
 
     render() {
@@ -102,6 +102,6 @@ export function UseMessages<P extends UseMessagesInjectedProps>(
   }
 
   return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
-    <WithMessages {...(props as Props<P>)} forwardsRef={ref} />
+    <WithMessages {...(props as Props<P>)} forwardedRef={ref} />
   ));
 }

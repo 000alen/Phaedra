@@ -56,5 +56,5 @@ export const darkTheme = createTheme({
 });
 
 export function getTheme(): Theme {
-  return lightTheme;
+  return darkTheme;
 }

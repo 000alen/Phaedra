@@ -9,7 +9,6 @@ import {
 } from "@fluentui/react";
 
 import { saveAction } from "../actions";
-import { ColaborationPanel } from "../components/ColaborationPanel";
 import { Notebook } from "../components/Notebook";
 import {
   AppController,
@@ -19,7 +18,7 @@ import {
   NotebookTabController,
 } from "../contexts";
 import { INotebook } from "../HOC/UseNotebook";
-import { IShortcuts, UseShortcuts } from "../HOC/UseShortcuts";
+import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 
 export interface NotebookTabProps {
   tabId: string;
@@ -29,7 +28,7 @@ export interface NotebookTabProps {
 }
 
 export interface NotebookTabState {
-  colaborationPanelShown: boolean;
+  contentTableShown: boolean;
   notebookTabController: INotebookTabController;
 }
 
@@ -47,21 +46,15 @@ class NotebookTabSkeleton extends React.Component<
     this.getAppController = this.getAppController.bind(this);
     this.getNotebookController = this.getNotebookController.bind(this);
     this.getTabId = this.getTabId.bind(this);
-    this.showColaborationPanel = this.showColaborationPanel.bind(this);
-    this.hideColaborationPanel = this.hideColaborationPanel.bind(this);
-    this.isColaborationPanelShown = this.isColaborationPanelShown.bind(this);
 
     this.notebookRef = React.createRef();
 
     this.state = {
-      colaborationPanelShown: false,
+      contentTableShown: false,
       notebookTabController: {
         getAppController: this.getAppController,
         getNotebookController: this.getNotebookController,
         getTabId: this.getTabId,
-        showColaborationPanel: this.showColaborationPanel,
-        hideColaborationPanel: this.hideColaborationPanel,
-        isColaborationPanelShown: this.isColaborationPanelShown,
       },
     };
   }
@@ -86,26 +79,16 @@ class NotebookTabSkeleton extends React.Component<
     return this.notebookRef.current!.state.notebookController!;
   }
 
-  showColaborationPanel(): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        colaborationPanelShown: true,
-      };
-    });
+  showContentTable(): void {
+    this.setState({ contentTableShown: true });
   }
 
-  hideColaborationPanel(): void {
-    this.setState((state) => {
-      return {
-        ...state,
-        colaborationPanelShown: false,
-      };
-    });
+  hideContentTable(): void {
+    this.setState({ contentTableShown: false });
   }
 
-  isColaborationPanelShown(): boolean {
-    return this.state.colaborationPanelShown;
+  isContentTableShown(): boolean {
+    return this.state.contentTableShown;
   }
 
   getTabId(): string {
@@ -167,7 +150,7 @@ class NotebookTabSkeleton extends React.Component<
   }
 
   render(): JSX.Element {
-    const { colaborationPanelShown, notebookTabController } = this.state;
+    const { notebookTabController } = this.state;
 
     return (
       <NotebookTabController.Provider value={notebookTabController}>
@@ -179,24 +162,19 @@ class NotebookTabSkeleton extends React.Component<
             notebookPath={this.props.notebookPath}
           />
         </div>
-
-        <ColaborationPanel
-          colaborationPanelShown={colaborationPanelShown}
-          hideColaborationPanel={this.hideColaborationPanel}
-        />
       </NotebookTabController.Provider>
     );
   }
 }
 
-export const NotebookTabShortcuts: IShortcuts<
-  React.RefObject<NotebookTabSkeleton>
-> = {
-  "ctrl+s": (notebookTabRef: React.RefObject<NotebookTabSkeleton>) =>
-    saveAction(notebookTabRef.current!),
-  "ctrl+k": (notebookTabRef: React.RefObject<NotebookTabSkeleton>) =>
-    notebookTabRef.current!.showColaborationPanel(),
-};
+export const NotebookTabShortcuts: IShortcut<NotebookTabSkeleton>[] = [
+  {
+    keys: "ctrl+s",
+    description: "Save notebook",
+    action: (notebookTabRef: React.RefObject<NotebookTabSkeleton>) =>
+      saveAction(notebookTabRef.current!),
+  },
+];
 
 export const NotebookTab = UseShortcuts(
   NotebookTabSkeleton,

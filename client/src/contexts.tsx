@@ -62,9 +62,6 @@ export interface INotebookTabController {
   getAppController: () => IAppController | undefined;
   getNotebookController: () => INotebookController | undefined;
   getTabId: () => string | undefined;
-  showColaborationPanel: () => void;
-  hideColaborationPanel: () => void;
-  isColaborationPanelShown: () => boolean | undefined;
 }
 
 export const NotebookTabController =
@@ -72,9 +69,6 @@ export const NotebookTabController =
     getAppController: () => undefined,
     getNotebookController: () => undefined,
     getTabId: () => undefined,
-    showColaborationPanel: () => {},
-    hideColaborationPanel: () => {},
-    isColaborationPanelShown: () => undefined,
   });
 
 export interface INotebookController {

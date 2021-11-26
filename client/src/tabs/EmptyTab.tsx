@@ -3,7 +3,7 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { Card } from "../components/Card";
+import { CardButton } from "../components/CardButton";
 import { AppController, IAppController } from "../contexts";
 import { createNotebook } from "../HOC/UseNotebook";
 import { openFile } from "../IO/NotebookIO";
@@ -83,14 +83,14 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
     return (
       <div className="w-[100%] h-[100%] flex items-center justify-center">
         <div className="flex flex-row space-x-1">
-          <Card
+          <CardButton
             iconProps={openIcon}
             title={getStrings().openFileButtonLabel}
             subtitle={getStrings().openFileButtonDescription}
             onClick={this.handleOpen}
           />
 
-          <Card
+          <CardButton
             iconProps={newIcon}
             title={getStrings().createNotebookButtonLabel}
             subtitle={getStrings().createNotebookButtonDescription}

@@ -27,70 +27,15 @@
   -webkit-app-region: no-drag;
 }
 
-.codex-editor__redactor {
-  padding-bottom: 0 !important;
-}
-
-.ce-block__content {
-  max-width: unset !important;
-}
-
-.ce-toolbar__content {
-  max-width: unset !important;
-}
-
-.ce-toolbar__actions {
-  right: 0 !important;
-}
-
-.ce-toolbar__plus {
-  left: 0 !important;
-}
-
-.cdx-block {
-  padding: 0 !important;
-}
-
-.px-corner {
-  cursor: grab;
-  background-color: rgba(100, 100, 100, 0.5);
-}
-
-.px-layout {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-.px-container {
-  outline: 1px solid;
-}
-
-.px-divider--vertical {
-  cursor: row-resize;
-}
-
-.px-divider--horizontal {
-  cursor: col-resize;
-}
-
-/* ! TODO */
-.contextMenu {
-  font-size: 14px;
-  background-color: #fff;
-  border-radius: 2px;
-  padding: 5px 0 5px 0;
-  width: 150px;
-  height: auto;
-  margin: 0;
-  position: absolute;
-  list-style: none;
-  box-shadow: 0 0 20px 0 #ccc;
-  opacity: 1;
-  transition: opacity 0.5s linear;
-}
-
 :root {
   --thickness: 1px;
   --draggable: calc(1px + 6px);
   --color: "white";
+}
+
+kbd {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.1em 0.4em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
 }

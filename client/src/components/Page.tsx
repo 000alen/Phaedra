@@ -5,7 +5,7 @@ import React from "react";
 
 import { NotebookController } from "../contexts";
 import { IPage } from "../HOC/UseNotebook";
-import { PageMasterPane } from "./PageMasterPane";
+import { PagePane } from "./PagePane";
 
 export interface PageProps {
   page: IPage;
@@ -22,7 +22,7 @@ export class Page extends React.Component<PageProps, PageState> {
     const LayoutComponent = UseLayout(LayoutSkeleton);
     const layoutElement = (
       // @ts-ignore
-      <LayoutComponent Component={PageMasterPane} defaultLayout={page.layout} />
+      <LayoutComponent Component={PagePane} defaultLayout={page.layout} />
     );
 
     return <div className="w-[100%] h-[100%] relative">{layoutElement}</div>;

@@ -3,7 +3,7 @@ import React from "react";
 
 import { Paper } from "./Paper";
 
-export function PageMasterPane() {
+export function PagePane() {
   const ContentComponent = UseContent(ContentSkeleton);
   const contentElement = <ContentComponent />;
 

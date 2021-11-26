@@ -16,7 +16,7 @@ import {
   UseMessagesInjectedProps,
 } from "./HOC/UseMessages";
 import { UsePanels, UsePanelsInjectedProps } from "./HOC/UsePanels";
-import { IShortcuts, UseShortcuts } from "./HOC/UseShortcuts";
+import { IShortcut, UseShortcuts } from "./HOC/UseShortcuts";
 import { UseTabs, UseTabsInjectedProps } from "./HOC/UseTabs";
 import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
 import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
@@ -257,19 +257,31 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
   }
 }
 
-const AppShortcuts: IShortcuts<React.RefObject<AppSkeleton>> = {
-  "ctrl+n": (appRef: React.RefObject<AppSkeleton>) => {
-    appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
+export const AppShortcuts: IShortcut<AppSkeleton>[] = [
+  {
+    keys: "ctrl+n",
+    description: "New tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
+    },
   },
-  "ctrl+w": (appRef: React.RefObject<AppSkeleton>) => {
-    appRef.current!.tabsManager.remove(
-      appRef.current!.tabsManager!.activeId()!
-    );
+  {
+    keys: "ctrl+w",
+    description: "Close tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.tabsManager.remove(
+        appRef.current!.tabsManager.activeId()!
+      );
+    },
   },
-  "ctrl+shift+t": (appRef: React.RefObject<AppSkeleton>) => {
-    appRef.current!.showTasksPanel();
+  {
+    keys: "ctrl+shift+t",
+    description: "Show tasks panel",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.showTasksPanel();
+    },
   },
-};
+];
 
 export const App = UseShortcuts(
   UseDialogs(

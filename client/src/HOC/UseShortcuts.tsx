@@ -2,9 +2,11 @@ import Mousetrap from "mousetrap";
 import React from "react";
 import { Subtract } from "utility-types";
 
-export type IShortcuts<T> = {
-  [keys: string]: (componentRef: T) => void;
-};
+export interface IShortcut<T> {
+  keys: string;
+  description: string;
+  action: (componentRef: React.RefObject<T>) => void;
+}
 
 interface UseShortcutsProps {
   forwardedRef: React.RefObject<any>;
@@ -26,7 +28,7 @@ type PropsWithoutRef<P extends UseShortcutsInjectedProps> = Subtract<
 
 export function UseShortcuts<P>(
   Component: React.ComponentType<P>,
-  Shortcuts: IShortcuts<React.RefObject<any>>
+  Shortcuts: IShortcut<any>[]
 ) {
   class WithShortcuts extends React.Component<Props<P>, UseShortcutsState> {
     componentRef: React.RefObject<React.Component<P>>;
@@ -40,7 +42,7 @@ export function UseShortcuts<P>(
     }
 
     componentDidMount() {
-      for (const [keys, action] of Object.entries(Shortcuts)) {
+      for (const { keys, action } of Shortcuts) {
         Mousetrap.bind(
           keys,
           (event) => {

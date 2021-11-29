@@ -9700,7 +9700,7 @@ performance-now@^2.1.0:
 
 "phaedra-content@https://github.com/000alen/phaedra-content":
   version "1.0.0"
-  resolved "https://github.com/000alen/phaedra-content#f458bc5f4718e0da6da5f0146410660bea0737fa"
+  resolved "https://github.com/000alen/phaedra-content#a9ad595d58b53b60836dc26e9debee2c193ee1cf"
   dependencies:
     quill "^1.3.7"
     react-quilljs "^1.2.17"

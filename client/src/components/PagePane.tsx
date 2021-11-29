@@ -8,11 +8,12 @@ interface PagePaneProps {
   page: IPage;
 }
 
-export function PagePane({}: PagePaneProps) {
+export function PagePane({ page }: PagePaneProps) {
   return (
     <>
       <Paper>
-        <Content />
+        {/* @ts-ignore */}
+        <Content defaultContent={page.content} />
       </Paper>
     </>
   );

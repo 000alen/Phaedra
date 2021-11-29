@@ -82,11 +82,8 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
     try {
       const finalNotebookPath = await saveNotebook(notebook, notebookPath);
       this.setState(
-        (state) => {
-          return {
-            ...state,
-            notebookPath: finalNotebookPath,
-          };
+        {
+          notebookPath: finalNotebookPath,
         },
         () => this.setDirty(false)
       );
@@ -112,12 +109,12 @@ export class Notebook extends React.Component<NotebookProps, NotebookState> {
 
     appController.tabsManager!.setDirty(tabId, dirty);
 
-    this.setState((state) => {
-      return {
-        ...state,
+    this.setState(
+      {
         saved: !dirty,
-      };
-    }, callback);
+      },
+      callback
+    );
   }
 
   getNotebookPageController() {

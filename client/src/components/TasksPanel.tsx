@@ -20,7 +20,7 @@ export function TasksPanel({
       isLightDismiss
       type={PanelType.smallFixedNear}
       isOpen={tasksPanelShown}
-      onDismiss={hideTasksPanel}
+      onDismiss={() => hideTasksPanel()}
     >
       <Label>Tasks panel!</Label>
       <div className="space-y-2">

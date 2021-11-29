@@ -1,6 +1,6 @@
 import "phaedra-layout/dist/index.css";
 
-import { LayoutSkeleton, UseLayout } from "phaedra-layout";
+import { Layout } from "phaedra-layout";
 import React from "react";
 
 import { NotebookController } from "../contexts";
@@ -19,10 +19,15 @@ export class Page extends React.Component<PageProps, PageState> {
   render() {
     const { page } = this.props;
 
-    const LayoutComponent = UseLayout(LayoutSkeleton);
     const layoutElement = (
-      // @ts-ignore
-      <LayoutComponent Component={PagePane} defaultLayout={page.layout} />
+      <Layout
+        // @ts-ignore
+        Component={PagePane}
+        props={{
+          page,
+        }}
+        defaultLayout={page.layout}
+      />
     );
 
     return <div className="w-[100%] h-[100%] relative">{layoutElement}</div>;

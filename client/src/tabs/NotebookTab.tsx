@@ -9,6 +9,7 @@ import {
 } from "@fluentui/react";
 
 import { saveAction } from "../actions";
+import { ContentTable } from "../components/ContentTable";
 import { Notebook } from "../components/Notebook";
 import {
   AppController,
@@ -150,17 +151,20 @@ class NotebookTabSkeleton extends React.Component<
   }
 
   render(): JSX.Element {
-    const { notebookTabController } = this.state;
+    const { notebookTabController, contentTableShown } = this.state;
 
     return (
       <NotebookTabController.Provider value={notebookTabController}>
         <div className="w-[100%] h-[100%]">
-          <Notebook
-            key={this.props.tabId}
-            ref={this.notebookRef}
-            notebook={this.props.notebook}
-            notebookPath={this.props.notebookPath}
-          />
+          <div className="flex flex-row h-[100%]">
+            {contentTableShown && <ContentTable />}
+            <Notebook
+              key={this.props.tabId}
+              ref={this.notebookRef}
+              notebook={this.props.notebook}
+              notebookPath={this.props.notebookPath}
+            />
+          </div>
         </div>
       </NotebookTabController.Provider>
     );

@@ -7,8 +7,8 @@ interface PaperProps {
 
 export function Paper({ children }: PaperProps) {
   return (
-    <div className="w-[100%] overflow-auto">
-      <div className="w-[8.5in] h-[11in] p-2 mx-auto my-2 bg-white rounded-sm shadow-sm overflow-y-auto">
+    <div className="w-[100%] h-[100%] p-2">
+      <div className="w-[100%] h-[100%] bg-white rounded-sm shadow-sm">
         {children}
       </div>
     </div>

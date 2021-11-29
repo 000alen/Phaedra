@@ -153,21 +153,21 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
   }
 
   showTasksPanel(callback?: () => void) {
-    this.setState((state) => {
-      return {
-        ...state,
+    this.setState(
+      {
         tasksPanelShown: true,
-      };
-    }, callback);
+      },
+      callback
+    );
   }
 
   hideTasksPanel(callback?: () => void) {
-    this.setState((state) => {
-      return {
-        ...state,
+    this.setState(
+      {
         tasksPanelShown: false,
-      };
-    }, callback);
+      },
+      callback
+    );
   }
 
   renderDialog(dialog: IDialog) {

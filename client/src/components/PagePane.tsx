@@ -1,11 +1,19 @@
-import { ContentSkeleton, UseContent } from "phaedra-content";
+import { Content } from "phaedra-content";
 import React from "react";
 
+import { IPage } from "../HOC/UseNotebook";
 import { Paper } from "./Paper";
 
-export function PagePane() {
-  const ContentComponent = UseContent(ContentSkeleton);
-  const contentElement = <ContentComponent />;
+interface PagePaneProps {
+  page: IPage;
+}
 
-  return <Paper>{contentElement}</Paper>;
+export function PagePane({}: PagePaneProps) {
+  return (
+    <>
+      <Paper>
+        <Content />
+      </Paper>
+    </>
+  );
 }

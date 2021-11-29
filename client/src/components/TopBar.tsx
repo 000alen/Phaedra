@@ -49,11 +49,8 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
   }
 
   setMaximizeRestoreButton(isMaximizedApp: boolean) {
-    this.setState((state) => {
-      return {
-        ...state,
-        showMaximize: !isMaximizedApp,
-      };
+    this.setState({
+      showMaximize: !isMaximizedApp,
     });
   }
 

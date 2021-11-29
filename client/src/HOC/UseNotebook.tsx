@@ -12,7 +12,7 @@ export interface IReference {
   sourceId: string;
 }
 
-export type IContent = object[];
+export type IContent = object;
 
 export interface IPage {
   id: string;

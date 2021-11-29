@@ -1,5 +1,4 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import { Label } from "@fluentui/react";
 
@@ -33,41 +32,27 @@ class MainTabSkeleton extends React.Component<MainTabProps, MainTabState> {
     return (
       <div className="w-[100%] h-[100%] flex items-center justify-center">
         <div
-          className="select-none"
+          className="select-none space-y-2"
           style={{
             opacity: 0.5,
           }}
         >
-          {shortcuts.map((shortcut) => {
+          {shortcuts.map((shortcut, index) => {
             return (
-              <dl
-                style={{
-                  display: "table-row",
-                }}
-              >
-                <dt
-                  style={{
-                    display: "table-cell",
-                  }}
-                >
-                  <Label
-                    style={{
-                      textAlign: "right",
-                    }}
-                  >
-                    {shortcut.description}
-                  </Label>
+              <dl key={index}>
+                <dt>
+                  <Label>{shortcut.description}</Label>
                 </dt>
-                <dd
-                  style={{
-                    display: "table-cell",
-                  }}
-                >
+                <dd>
                   {shortcut.keys
                     .split("+")
-                    .map((key) => <kbd>{key}</kbd>)
+                    .map((key, index) => <kbd key={index}>{key}</kbd>)
                     .map((key, index, keys) =>
-                      index === keys.length - 1 ? key : <>{key} + </>
+                      index === keys.length - 1 ? (
+                        key
+                      ) : (
+                        <React.Fragment key={index}>{key} +</React.Fragment>
+                      )
                     )}
                 </dd>
               </dl>

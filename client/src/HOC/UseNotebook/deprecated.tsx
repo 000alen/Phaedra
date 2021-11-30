@@ -1,8 +1,5 @@
-import React from "react";
-import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
-
-import { getStrings } from "../strings";
+import { getStrings } from "../../strings";
 
 export interface ISource {
   id: string;
@@ -81,57 +78,4 @@ export function makePageUnique(page: IPage): IPage {
     ...page,
     id: uuidv4(),
   };
-}
-
-export interface UseNotebookProps {
-  forwardedRef: React.Ref<any>;
-}
-
-export interface UseNotebookState {}
-
-export interface UseNotebookInjectedProps {}
-
-type Props<P extends UseNotebookInjectedProps> = Subtract<
-  P & UseNotebookProps,
-  UseNotebookInjectedProps
->;
-
-export interface NotebookManager {}
-
-type PropsWithoutRef<P extends UseNotebookInjectedProps> = Subtract<
-  Props<P>,
-  { forwardedRef: React.Ref<any> }
->;
-
-export function UseNotebook<P extends UseNotebookInjectedProps>(
-  Component: React.ComponentType<P>
-) {
-  class WithNotebook
-    extends React.Component<Props<P>>
-    implements NotebookManager
-  {
-    getSources() {}
-
-    getSource() {}
-
-    getPage() {}
-
-    getPageReferences() {}
-
-    getPageReference() {}
-
-    getPageLayout() {}
-
-    getPageContent() {}
-
-    addPage(page: IPage, callback?: () => void) {}
-
-    insertPage(page: IPage, index: number, callback?: () => void) {}
-
-    removePage(id: string, callback?: () => void) {}
-  }
-
-  return React.forwardRef<unknown, PropsWithoutRef<P>>((props, ref) => (
-    <WithNotebook {...(props as Props<P>)} forwardedRef={ref} />
-  ));
 }

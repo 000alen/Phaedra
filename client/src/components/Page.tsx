@@ -4,7 +4,7 @@ import { Layout } from "phaedra-layout";
 import React from "react";
 
 import { NotebookController } from "../contexts";
-import { IPage } from "../HOC/UseNotebook";
+import { IPage } from "../HOC/UseNotebook/deprecated";
 import { PagePane } from "./PagePane";
 
 export interface PageProps {

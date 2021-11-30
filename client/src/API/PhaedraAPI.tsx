@@ -1,4 +1,4 @@
-import { INotebook } from "../HOC/UseNotebook";
+import { INotebook } from "../HOC/UseNotebook/deprecated";
 
 const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };

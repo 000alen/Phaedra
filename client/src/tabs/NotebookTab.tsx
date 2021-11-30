@@ -18,7 +18,7 @@ import {
   INotebookTabController,
   NotebookTabController,
 } from "../contexts";
-import { INotebook } from "../HOC/UseNotebook";
+import { INotebook } from "../HOC/UseNotebook/deprecated";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 
 export interface NotebookTabProps {

@@ -10,7 +10,7 @@ import {
   NotebookController,
   NotebookTabController,
 } from "../contexts";
-import { INotebook } from "../HOC/UseNotebook";
+import { INotebook } from "../HOC/UseNotebook/deprecated";
 import { saveNotebook } from "../IO/NotebookIO";
 import { getStrings } from "../strings";
 import { getTheme } from "../themes";

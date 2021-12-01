@@ -10,16 +10,16 @@ import {
 
 import { saveAction } from "../actions";
 import { ContentTable } from "../components/ContentTable";
-import { Notebook } from "../components/Notebook";
 import {
   AppController,
   IAppController,
-  INotebookController,
   INotebookTabController,
   NotebookTabController,
 } from "../contexts";
 import { INotebook } from "../HOC/UseNotebook/deprecated";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
+import { Notebook } from "../HOC/UseNotebook/Notebook";
+import { NotebookManager } from "../HOC/UseNotebook/UseNotebook";
 
 export interface NotebookTabProps {
   tabId: string;
@@ -39,22 +39,18 @@ class NotebookTabSkeleton extends React.Component<
 > {
   static contextType = AppController;
 
-  notebookRef: React.RefObject<Notebook>;
+  notebookManager: NotebookManager | undefined = undefined;
 
   constructor(props: NotebookTabProps) {
     super(props);
 
     this.getAppController = this.getAppController.bind(this);
-    this.getNotebookController = this.getNotebookController.bind(this);
     this.getTabId = this.getTabId.bind(this);
 
-    this.notebookRef = React.createRef();
-
     this.state = {
-      contentTableShown: false,
+      contentTableShown: true,
       notebookTabController: {
         getAppController: this.getAppController,
-        getNotebookController: this.getNotebookController,
         getTabId: this.getTabId,
       },
     };
@@ -74,10 +70,6 @@ class NotebookTabSkeleton extends React.Component<
 
   getAppController(): IAppController {
     return this.context;
-  }
-
-  getNotebookController(): INotebookController {
-    return this.notebookRef.current!.state.notebookController!;
   }
 
   showContentTable(): void {
@@ -137,11 +129,11 @@ class NotebookTabSkeleton extends React.Component<
             text="Save"
             onClick={() => {
               appController.dialogsManager!.remove(dialogId, () => {
-                this.getNotebookController()
-                  .save()
-                  .then(() => {
-                    appController.tabsManager!.remove(this.getTabId());
-                  });
+                // this.getNotebookController()
+                //   .save()
+                //   .then(() => {
+                //     appController.tabsManager!.remove(this.getTabId());
+                //   });
               });
             }}
           />
@@ -160,7 +152,9 @@ class NotebookTabSkeleton extends React.Component<
             {contentTableShown && <ContentTable />}
             <Notebook
               key={this.props.tabId}
-              ref={this.notebookRef}
+              initialize={(notebookManager: NotebookManager) => {
+                this.notebookManager = notebookManager;
+              }}
               notebook={this.props.notebook}
               notebookPath={this.props.notebookPath}
             />

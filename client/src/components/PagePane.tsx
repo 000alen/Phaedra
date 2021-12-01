@@ -1,12 +1,14 @@
 import { Content } from "../phaedra-content/Content";
 import React from "react";
 
-import { IPage } from "../HOC/UseNotebook/deprecated";
+import { IContent, IPage } from "../HOC/UseNotebook/deprecated";
 import { Paper } from "./Paper";
 import { Source } from "./Source";
 
 interface PagePaneProps {
+  id: string;
   page: IPage;
+  onContentChange: (content: IContent) => void;
 }
 
 const autoformat = {
@@ -19,7 +21,7 @@ const autoformat = {
   },
 };
 
-export function PagePane({ page }: PagePaneProps) {
+export function PagePane({ id, page, onContentChange }: PagePaneProps) {
   const [index, setIndex] = React.useState(0);
 
   const incrementIndex = () => {
@@ -27,10 +29,7 @@ export function PagePane({ page }: PagePaneProps) {
   };
 
   const carousel = [
-    <Content
-      autoformat={autoformat}
-      onContentChange={(content) => console.log(content)}
-    />,
+    <Content autoformat={autoformat} onContentChange={onContentChange} />,
     <Source />,
   ];
 

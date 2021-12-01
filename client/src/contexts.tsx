@@ -60,27 +60,21 @@ export const AppController = React.createContext<IAppController>({
 
 export interface INotebookTabController {
   getAppController: () => IAppController | undefined;
-  getNotebookController: () => INotebookController | undefined;
   getTabId: () => string | undefined;
 }
 
 export const NotebookTabController =
   React.createContext<INotebookTabController>({
     getAppController: () => undefined,
-    getNotebookController: () => undefined,
     getTabId: () => undefined,
   });
 
 export interface INotebookController {
-  save: () => Promise<void>;
-  isSaved: () => boolean | undefined;
   getNotebookPageController: () => INotebookTabController | undefined;
   getNotebook: () => INotebook | undefined;
 }
 
 export const NotebookController = React.createContext<INotebookController>({
-  save: () => Promise.resolve(),
-  isSaved: () => undefined,
   getNotebookPageController: () => undefined,
   getNotebook: () => undefined,
 });

@@ -14,7 +14,7 @@ import {
 export interface UseLayoutProps {
   forwardedRef: React.Ref<any>;
   defaultLayout?: LayoutJSON;
-  onLayoutChange?: (layout: LayoutRect) => void;
+  onLayoutChange?: (layout: LayoutJSON) => void;
 }
 
 export interface UseLayoutState {
@@ -405,11 +405,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
           ? () => {
               callback(newDivider);
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
           : () => {
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
       );
     }
@@ -432,11 +432,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
           ? () => {
               callback();
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
           : () => {
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
       );
     }
@@ -473,11 +473,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
           ? () => {
               callback();
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
           : () => {
               if (this.props.onLayoutChange)
-                this.props.onLayoutChange(this.state.layout);
+                this.props.onLayoutChange(this.JSON());
             }
       );
     }

@@ -1,4 +1,4 @@
-import { Content } from "phaedra-content";
+import { Content } from "../phaedra-content/Content";
 import React from "react";
 
 import { IPage } from "../HOC/UseNotebook/deprecated";
@@ -9,6 +9,16 @@ interface PagePaneProps {
   page: IPage;
 }
 
+const autoformat = {
+  mention: {
+    trigger: /[\s.,;:!?]/,
+    find: /(?:^|\s)@[^\s.,;:!?]+/i,
+    extract: /@([^\s.,;:!?]+)/i,
+    transform: "$1",
+    insert: "poll",
+  },
+};
+
 export function PagePane({ page }: PagePaneProps) {
   const [index, setIndex] = React.useState(0);
 
@@ -17,8 +27,10 @@ export function PagePane({ page }: PagePaneProps) {
   };
 
   const carousel = [
-    // @ts-ignore
-    <Content defaultContent={page.content} />,
+    <Content
+      autoformat={autoformat}
+      onContentChange={(content) => console.log(content)}
+    />,
     <Source />,
   ];
 

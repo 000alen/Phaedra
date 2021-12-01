@@ -1,4 +1,4 @@
-import { LayoutJSON } from "phaedra-layout/dist/UseLayout/UseLayout"; // ! TODO
+import { LayoutJSON } from "../../phaedra-layout/UseLayout/UseLayout"; // ! TODO
 
 export interface ISource {
   id: string;

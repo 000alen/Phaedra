@@ -1,6 +1,4 @@
-import "phaedra-layout/dist/index.css";
-
-import { Layout } from "phaedra-layout";
+import { Layout } from "../phaedra-layout/Layout";
 import React from "react";
 
 import { NotebookController } from "../contexts";

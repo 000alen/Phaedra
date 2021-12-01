@@ -3,6 +3,6 @@
 import { INotebookTabController } from "./contexts";
 
 export function saveAction(notebookTabController: INotebookTabController) {
-  // const notebookController = notebookTabController.getNotebookController()!;
-  // notebookController.save();
+  const notebookManager = notebookTabController.getNotebookManager()!;
+  notebookManager.save();
 }

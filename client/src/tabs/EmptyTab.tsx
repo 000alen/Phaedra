@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CardButton } from "../components/CardButton";
 import { AppController, IAppController } from "../contexts";
-import { createNotebook } from "../HOC/UseNotebook/deprecated";
 import { openFile } from "../IO/NotebookIO";
 import { getStrings } from "../strings";
 import { NotebookTab } from "./NotebookTab";
+import { empty as emptyNotebook } from "../HOC/UseNotebook/UseNotebook";
 
 export interface EmptyTabProps {
   tabId: string;
@@ -71,7 +71,7 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
     const appController: IAppController = this.context;
     const { tabId } = this.props;
 
-    const notebook = createNotebook({ name: `Unnamed Notebook ${tabId}` });
+    const notebook = emptyNotebook();
 
     appController.tabsManager!.setComponent(tabId, NotebookTab, {
       notebook: notebook,

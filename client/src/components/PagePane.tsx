@@ -1,9 +1,9 @@
 import { Content } from "../phaedra-content/Content";
 import React from "react";
 
-import { IContent, IPage } from "../HOC/UseNotebook/deprecated";
 import { Paper } from "./Paper";
 import { Source } from "./Source";
+import { IContent, IPage } from "../HOC/UseNotebook/UseNotebook";
 
 interface PagePaneProps {
   id: string;
@@ -12,12 +12,26 @@ interface PagePaneProps {
 }
 
 const autoformat = {
+  generation: {
+    trigger: /[\s.,;:!?]/,
+    find: /\/\"[\w\ ,.:;!?]+\"/i,
+    extract: /\/\"([\w\ ,.:;!?]+)\"/i,
+    transform: "$1",
+    insert: "generation",
+  },
   mention: {
     trigger: /[\s.,;:!?]/,
-    find: /(?:^|\s)@[^\s.,;:!?]+/i,
-    extract: /@([^\s.,;:!?]+)/i,
+    find: /@\"[\w\ ,.:;!?]+\"/i,
+    extract: /@\"([\w\ ,.:;!?]+)\"/i,
     transform: "$1",
-    insert: "poll",
+    insert: "mention",
+  },
+  question: {
+    trigger: /[\s.,;:!?]/,
+    find: /\?\"[\w\ ,.:;!?]+\"/i,
+    extract: /\?\"([\w\ ,.:;!?]+)\"/i,
+    transform: "$1",
+    insert: "question",
   },
 };
 
@@ -29,7 +43,11 @@ export function PagePane({ id, page, onContentChange }: PagePaneProps) {
   };
 
   const carousel = [
-    <Content autoformat={autoformat} onContentChange={onContentChange} />,
+    <Content
+      defaultContent={page.content}
+      autoformat={autoformat}
+      onContentChange={onContentChange}
+    />,
     <Source />,
   ];
 

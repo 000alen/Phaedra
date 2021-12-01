@@ -1,8 +1,14 @@
+import { MessageBarType } from "@fluentui/react";
 import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
+import { INotebookTabController, NotebookTabController } from "../../contexts";
+import { saveNotebook } from "../../IO/NotebookIO";
 
 import { LayoutJSON } from "../../phaedra-layout/UseLayout/UseLayout";
+import { getStrings } from "../../strings";
+import { empty as emptyLayout } from "../../phaedra-layout/UseLayout/UseLayout";
+import { empty as emptyContent } from "../../phaedra-content/UseContent/UseContent";
 
 export interface ISource {
   id: string;
@@ -54,7 +60,7 @@ type Props<P extends UseNotebookInjectedProps> = Subtract<
 >;
 
 export interface NotebookManager {
-  empty(): INotebook;
+  save(): Promise<void>;
   getSources(): ISource[];
   getSource(id: string): ISource | undefined;
   getPages(): IPage[];
@@ -73,6 +79,26 @@ type PropsWithoutRef<P extends UseNotebookInjectedProps> = Subtract<
   { forwardedRef: React.Ref<any> }
 >;
 
+export function emptyPage() {
+  return {
+    id: uuidv4(),
+    references: [],
+    layout: emptyLayout(),
+    content: emptyContent(),
+  };
+}
+
+export function empty() {
+  const id = uuidv4();
+
+  return {
+    id,
+    name: `Unnamed Notebook ${id}`,
+    sources: [],
+    pages: [emptyPage()],
+  } as INotebook;
+}
+
 export function UseNotebook<P extends UseNotebookInjectedProps>(
   Component: React.ComponentType<P>
 ) {
@@ -80,6 +106,8 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
     extends React.Component<Props<P>, UseNotebookState>
     implements NotebookManager
   {
+    static contextType = NotebookTabController;
+
     notebook: INotebook;
     notebookPath: string | undefined;
     saved: boolean;
@@ -105,7 +133,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
 
       if (initialize) initialize(this);
 
-      this.notebook = notebook !== undefined ? notebook : this.empty();
+      this.notebook = notebook !== undefined ? notebook : empty();
       this.notebookPath = notebookPath;
       this.saved = notebookPath !== undefined ? true : false;
     }
@@ -120,70 +148,32 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
     //   appController.tabsManager!.setTitle(tabId, notebook.name);
     // }
 
-    // async save() {
-    //   const { notebook, notebookPath } = this.state;
-    //   const notebookTabController: INotebookTabController = this.context;
-    //   const appController = notebookTabController.getAppController()!;
+    async save() {
+      const notebookTabController: INotebookTabController = this.context;
+      const appController = notebookTabController.getAppController()!;
 
-    //   const taskId = uuidv4();
-    //   appController.tasksManager!.add({
-    //     id: taskId,
-    //     name: getStrings().savingNotebookTaskLabel,
-    //   });
+      const taskId = uuidv4();
+      appController.tasksManager!.add({
+        id: taskId,
+        name: getStrings().savingNotebookTaskLabel,
+      });
 
-    //   try {
-    //     const finalNotebookPath = await saveNotebook(notebook, notebookPath);
-    //     this.setState(
-    //       {
-    //         notebookPath: finalNotebookPath,
-    //       },
-    //       () => this.setDirty(false)
-    //     );
-    //   } catch (error) {
-    //     appController.messagesManager!.add({
-    //       id: uuidv4(),
-    //       text: getStrings().savingNotebookTaskError,
-    //       type: MessageBarType.error,
-    //     });
-    //   } finally {
-    //     appController.tasksManager!.remove(taskId);
-    //   }
-    // }
-
-    empty() {
-      const id = uuidv4();
-
-      return {
-        id,
-        name: `Unnamed Notebook ${id}`,
-        sources: [],
-        pages: [
-          {
-            id: uuidv4(),
-            references: [],
-            layout: {
-              type: "layout",
-              id: uuidv4(),
-              position: 0,
-              size: 1,
-              orientation: "horizontal",
-              previous: null,
-              next: null,
-              children: [
-                {
-                  type: "pane",
-                  id: uuidv4(),
-                  position: 0,
-                  size: 1,
-                  previous: null,
-                  next: null,
-                },
-              ],
-            },
-            content: {},
-          },
-        ],
-      } as INotebook;
+      try {
+        const finalNotebookPath = await saveNotebook(
+          this.notebook,
+          this.notebookPath
+        );
+        this.notebookPath = finalNotebookPath;
+        this.saved = true;
+      } catch (error) {
+        appController.messagesManager!.add({
+          id: uuidv4(),
+          text: getStrings().savingNotebookTaskError,
+          type: MessageBarType.error,
+        });
+      } finally {
+        appController.tasksManager!.remove(taskId);
+      }
     }
 
     getSources() {

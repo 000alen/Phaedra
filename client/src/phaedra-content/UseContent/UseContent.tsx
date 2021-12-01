@@ -41,6 +41,12 @@ type PropsWithoutRef<P extends UseContentInjectedProps> = Subtract<
   { forwardedRef: React.Ref<any> }
 >;
 
+export function empty(): Delta {
+  return {
+    ops: [],
+  };
+}
+
 export function UseContent<P extends UseContentInjectedProps>(
   Component: React.ComponentType<P>
 ) {
@@ -52,12 +58,11 @@ export function UseContent<P extends UseContentInjectedProps>(
       super(props);
 
       this.onContentChange = this.onContentChange.bind(this);
-      this.empty = this.empty.bind(this);
 
       const { defaultContent } = this.props;
 
       const _defaultContent: Delta =
-        defaultContent !== undefined ? (defaultContent as Delta) : this.empty();
+        defaultContent !== undefined ? (defaultContent as Delta) : empty();
 
       this.state = {
         defaultContent: _defaultContent,
@@ -67,12 +72,6 @@ export function UseContent<P extends UseContentInjectedProps>(
     onContentChange(content: Delta) {
       const { onContentChange } = this.props;
       if (onContentChange !== undefined) onContentChange(content);
-    }
-
-    empty(): Delta {
-      return {
-        ops: [],
-      };
     }
 
     render() {

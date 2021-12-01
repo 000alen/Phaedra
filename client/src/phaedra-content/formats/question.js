@@ -1,23 +1,24 @@
+import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
-import { v4 } from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 const BlockEmbed = Quill.import("blots/block/embed");
 
-export class Poll extends BlockEmbed {
-  static blotName = "poll";
+export class Question extends BlockEmbed {
+  static blotName = "question";
   static tagName = "div";
-  static className = `ql-custom`;
-  static ref = {};
+  static className = "ql-custom";
+  static refs = {};
 
   static create(value) {
-    const id = v4();
+    const id = uuidv4();
     const node = super.create(value);
-    const refs = Poll.refs;
+    const refs = Question.refs;
     node.setAttribute("data-id", id);
-    Poll.data = value;
-    Poll.refs = {
+    Question.data = value;
+    Question.refs = {
       ...refs,
       [id]: React.createRef(),
     };
@@ -26,14 +27,14 @@ export class Poll extends BlockEmbed {
 
   static value(domNode) {
     const id = domNode.getAttribute("data-id");
-    const ref = Poll.refs[id];
+    const ref = Question.refs[id];
     return ref && ref.current && ref.current.getData();
   }
 
   constructor(domNode) {
     super(domNode);
     this.id = domNode.getAttribute("data-id");
-    this.data = Poll.data;
+    this.data = Question.data;
   }
 
   attach() {
@@ -43,12 +44,11 @@ export class Poll extends BlockEmbed {
 
   renderPortal(id) {
     const { options } = Quill.find(this.scroll.domNode.parentNode);
-    const ref = Poll.refs[id];
+    const ref = Question.refs[id];
     return ReactDOM.createPortal(
-      <PollComponent
-        type={Poll.blotName}
-        node={this.data}
+      <QuestionComponent
         ref={ref}
+        data={this.data}
         readOnly={options.readOnly}
       />,
       this.domNode
@@ -61,12 +61,20 @@ export class Poll extends BlockEmbed {
   }
 }
 
-class PollComponent extends React.Component {
+class QuestionComponent extends React.Component {
   getData() {
-    return "data";
+    const { data } = this.props;
+    return data;
   }
 
   render() {
-    return <div>Poll Component</div>;
+    const { data } = this.props;
+
+    return (
+      <div className="flex flex-row space-x-2 align-middle">
+        <Spinner size={SpinnerSize.xSmall} />
+        <Label>{data}</Label>
+      </div>
+    );
   }
 }

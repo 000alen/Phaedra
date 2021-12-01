@@ -3,15 +3,17 @@ import Quill from "quill";
 import defer from "lodash/defer";
 import map from "lodash/map";
 import { Autoformat } from "../modules/autoformat";
+import { Generation } from "../formats/generation";
 import { Mention } from "../formats/mention";
-import { Poll } from "../formats/poll";
+import { Question } from "../formats/question";
 
 import "quill/dist/quill.bubble.css";
 
 Quill.register({
   "modules/autoformat": Autoformat,
+  "formats/generation": Generation,
   "formats/mention": Mention,
-  "formats/poll": Poll,
+  "formats/question": Question,
 });
 
 export function register(toRegister) {
@@ -55,8 +57,9 @@ const FORMATS = [
   "background",
   "clean",
 
+  "generation",
   "mention",
-  "poll",
+  "question",
 ];
 
 const AUTOFORMAT = {};

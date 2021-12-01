@@ -16,10 +16,9 @@ import {
   INotebookTabController,
   NotebookTabController,
 } from "../contexts";
-import { INotebook } from "../HOC/UseNotebook/deprecated";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { Notebook } from "../HOC/UseNotebook/Notebook";
-import { NotebookManager } from "../HOC/UseNotebook/UseNotebook";
+import { INotebook, NotebookManager } from "../HOC/UseNotebook/UseNotebook";
 
 export interface NotebookTabProps {
   tabId: string;
@@ -46,12 +45,14 @@ class NotebookTabSkeleton extends React.Component<
 
     this.getAppController = this.getAppController.bind(this);
     this.getTabId = this.getTabId.bind(this);
+    this.getNotebookManager = this.getNotebookManager.bind(this);
 
     this.state = {
-      contentTableShown: true,
+      contentTableShown: false,
       notebookTabController: {
         getAppController: this.getAppController,
         getTabId: this.getTabId,
+        getNotebookManager: this.getNotebookManager,
       },
     };
   }
@@ -71,6 +72,13 @@ class NotebookTabSkeleton extends React.Component<
   getAppController(): IAppController {
     return this.context;
   }
+  getTabId(): string {
+    return this.props.tabId;
+  }
+
+  getNotebookManager(): NotebookManager | undefined {
+    return this.notebookManager;
+  }
 
   showContentTable(): void {
     this.setState({ contentTableShown: true });
@@ -82,10 +90,6 @@ class NotebookTabSkeleton extends React.Component<
 
   isContentTableShown(): boolean {
     return this.state.contentTableShown;
-  }
-
-  getTabId(): string {
-    return this.props.tabId;
   }
 
   handleDirt() {
@@ -129,11 +133,9 @@ class NotebookTabSkeleton extends React.Component<
             text="Save"
             onClick={() => {
               appController.dialogsManager!.remove(dialogId, () => {
-                // this.getNotebookController()
-                //   .save()
-                //   .then(() => {
-                //     appController.tabsManager!.remove(this.getTabId());
-                //   });
+                this.notebookManager!.save().then(() => {
+                  appController.tabsManager!.remove(this.getTabId());
+                });
               });
             }}
           />

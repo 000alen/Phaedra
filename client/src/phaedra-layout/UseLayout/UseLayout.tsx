@@ -65,7 +65,6 @@ export interface LayoutManager {
     edge: Direction
   ): number;
   paneFindEdge(event: React.MouseEvent, domRect: DOMRect): Direction | null;
-  empty(): LayoutRect;
   split(
     pane: PaneRect,
     direction: Direction,
@@ -98,6 +97,28 @@ type PropsWithouthRef<P extends UseLayoutInjectedProps> = Subtract<
 
 const PANE_EDGE_THRESHOLD = 100;
 
+export function empty(): LayoutJSON {
+  return {
+    type: "layout",
+    id: uuidv4(),
+    position: 0,
+    size: 1,
+    orientation: "horizontal",
+    previous: null,
+    next: null,
+    children: [
+      {
+        type: "pane",
+        id: uuidv4(),
+        position: 0,
+        size: 1,
+        previous: null,
+        next: null,
+      },
+    ],
+  };
+}
+
 export function UseLayout<P extends UseLayoutInjectedProps>(
   Component: React.ComponentType<P>
 ) {
@@ -113,7 +134,6 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
       this.computeRelativeSize = this.computeRelativeSize.bind(this);
       this.computeAbsoluteSize = this.computeAbsoluteSize.bind(this);
       this.paneFindEdge = this.paneFindEdge.bind(this);
-      this.empty = this.empty.bind(this);
       this.split = this.split.bind(this);
       this.resize = this.resize.bind(this);
       this.remove = this.remove.bind(this);
@@ -122,11 +142,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
 
       this.layoutContainerRef = React.createRef();
 
-      const layout =
-        props.defaultLayout !== undefined
-          ? this.layoutFromJSON(props.defaultLayout as LayoutJSON)
-          : this.empty();
+      const { defaultLayout } = this.props;
 
+      const layout = this.layoutFromJSON(
+        defaultLayout !== undefined ? defaultLayout : empty()
+      );
       this.state = {
         layout: layout,
         panes: layout.getAllPanes(),
@@ -284,13 +304,6 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
       distances.sort((a, b) => a[1] - b[1]);
 
       return distances[0][0];
-    }
-
-    empty() {
-      const layout = new LayoutRect(uuidv4(), 0, 1, Orientation.Horizontal);
-      const pane = new PaneRect(uuidv4(), 0, 1, Orientation.Horizontal);
-      layout.addChild(pane);
-      return layout;
     }
 
     split(

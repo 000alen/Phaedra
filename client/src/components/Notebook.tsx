@@ -4,7 +4,7 @@ import { DefaultButton } from "@fluentui/react";
 import { getTheme } from "../themes";
 import { Page } from "./Page";
 import { UseNotebookInjectedProps } from "../HOC/UseNotebook/UseNotebook";
-import { v4 as uuidv4 } from "uuid";
+import { emptyPage } from "../HOC/UseNotebook/UseNotebook";
 
 export type NotebookProps = UseNotebookInjectedProps;
 
@@ -22,30 +22,7 @@ export class NotebookSkeleton extends React.Component<
 
   addPage() {
     const { _notebookManager } = this.props;
-    _notebookManager.addPage({
-      id: uuidv4(),
-      references: [],
-      layout: {
-        type: "layout",
-        id: uuidv4(),
-        position: 0,
-        size: 1,
-        orientation: "horizontal",
-        previous: null,
-        next: null,
-        children: [
-          {
-            type: "pane",
-            id: uuidv4(),
-            position: 0,
-            size: 1,
-            previous: null,
-            next: null,
-          },
-        ],
-      },
-      content: {},
-    });
+    _notebookManager.addPage(emptyPage());
   }
 
   render() {

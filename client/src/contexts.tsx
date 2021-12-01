@@ -2,7 +2,7 @@ import React from "react";
 
 import { DialogsManager, IDialog } from "./HOC/UseDialogs";
 import { IMessage, MessagesManager } from "./HOC/UseMessages";
-import { INotebook } from "./HOC/UseNotebook/deprecated";
+import { INotebook, NotebookManager } from "./HOC/UseNotebook/UseNotebook";
 import { IPanel, PanelsManager } from "./HOC/UsePanels";
 import { ITab, TabsManager } from "./HOC/UseTabs";
 import { ITask, TasksManager } from "./HOC/UseTasks";
@@ -61,12 +61,14 @@ export const AppController = React.createContext<IAppController>({
 export interface INotebookTabController {
   getAppController: () => IAppController | undefined;
   getTabId: () => string | undefined;
+  getNotebookManager: () => NotebookManager | undefined;
 }
 
 export const NotebookTabController =
   React.createContext<INotebookTabController>({
     getAppController: () => undefined,
     getTabId: () => undefined,
+    getNotebookManager: () => undefined,
   });
 
 export interface INotebookController {

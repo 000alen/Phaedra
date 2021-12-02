@@ -7,7 +7,7 @@ import {
   showSaveDialog,
   writeFileSync,
 } from "../API/ElectronAPI";
-import { notebookFromPdf, notebookFromText } from "../API/PhaedraAPI";
+import { notebookFromPdf } from "../API/PhaedraAPI";
 import { INotebook } from "../HOC/UseNotebook/Notebook";
 import { getStrings } from "../strings";
 
@@ -26,17 +26,12 @@ const openJsonDialogOptions: OpenDialogOptions = {
   filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }],
 };
 
-const openTextDialogOptions: OpenDialogOptions = {
-  properties: ["openFile"],
-  filters: [{ name: getStrings().notebooksFilterName, extensions: ["txt"] }],
-};
-
 const openFileDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
   filters: [
     {
       name: getStrings().notebooksFilterName,
-      extensions: ["pdf", "json", "txt"],
+      extensions: ["pdf", "json"],
     },
   ],
 };
@@ -61,16 +56,6 @@ export function loadJson(path: string): Promise<INotebookIO> {
       addRecent(path, notebook.name);
 
       resolve({ notebook: notebook, notebookPath: path });
-    });
-  });
-}
-
-export function loadText(path: string): Promise<INotebookIO> {
-  return new Promise((resolve, reject) => {
-    readFileSync(path, "utf-8").then((text) => {
-      notebookFromText(text as string).then((notebook) => {
-        resolve({ notebook: notebook, notebookPath: undefined });
-      });
     });
   });
 }
@@ -101,19 +86,6 @@ export function openJson(): Promise<INotebookIO> {
   });
 }
 
-export function openText(): Promise<INotebookIO> {
-  return new Promise((resolve, reject) => {
-    showOpenDialog(openTextDialogOptions).then((results) => {
-      if (!results.canceled) {
-        const path = results.filePaths[0];
-        loadText(path).then(({ notebook, notebookPath }) => {
-          resolve({ notebook, notebookPath });
-        });
-      }
-    });
-  });
-}
-
 export function openFile(): Promise<INotebookIO> {
   return new Promise((resolve, reject) => {
     showOpenDialog(openFileDialogOptions).then((results) => {
@@ -129,11 +101,6 @@ export function openFile(): Promise<INotebookIO> {
             break;
           case "json":
             loadJson(path).then(({ notebook, notebookPath }) => {
-              resolve({ notebook, notebookPath });
-            });
-            break;
-          case "txt":
-            loadText(path).then(({ notebook, notebookPath }) => {
               resolve({ notebook, notebookPath });
             });
             break;

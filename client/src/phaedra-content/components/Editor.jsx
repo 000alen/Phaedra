@@ -152,11 +152,13 @@ export class Editor extends React.Component {
   }
 
   render() {
-    const { spellCheck } = this.props;
+    const { spellCheck, id, notebookManager, page } = this.props;
 
     return (
       <div spellCheck={spellCheck} ref={this.editorContainer}>
-        {map(this.state.embedBlots, (blot) => blot.renderPortal(blot.id))}
+        {map(this.state.embedBlots, (blot) =>
+          blot.renderPortal(blot.id, id, notebookManager, page)
+        )}
       </div>
     );
   }

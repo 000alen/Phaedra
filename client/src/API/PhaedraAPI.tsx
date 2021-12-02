@@ -30,220 +30,42 @@ export async function notebookFromPdf(
     .catch((error) => error);
 }
 
-export async function notebookFromText(text: string): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/notebook/from_text`, {
+export function generation(context: string, query: string): Promise<string> {
+  return fetch(`${getApiUrl()}/command/generate`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({
-      text: text,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
+    body: JSON.stringify({ context, query }),
+  }).then((response) => response.json());
 }
 
-export async function addEntitiesCell(
-  notebook_json: INotebook,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/entities`, {
+export function wimage(context: string, query: string): Promise<string> {
+  return fetch(`${getApiUrl()}/command/wimage`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
+    body: JSON.stringify({ context, query }),
+  }).then((response) => response.json());
 }
 
-export async function addQuestionCell(
-  notebook_json: INotebook,
-  question: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/question`, {
+export function question(context: string, query: string): Promise<string> {
+  return fetch(`${getApiUrl()}/command/question`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      question: question,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
+    body: JSON.stringify({ context, query }),
+  }).then((response) => response.json());
 }
 
-export async function addSparseQuestionCell(
-  notebook_json: INotebook,
-  question: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/sparse_question`, {
+export function wsuggestion(context: string, query: string): Promise<string> {
+  return fetch(`${getApiUrl()}/command/wsuggestion`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      question: question,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
+    body: JSON.stringify({ context, query }),
+  }).then((response) => response.json());
 }
 
-export async function addGenerateCell(
-  notebook_json: INotebook,
-  prompt: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/generate`, {
+export function wsummary(context: string, query: string): Promise<string> {
+  return fetch(`${getApiUrl()}/command/wsummary`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      prompt: prompt,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addSummaryCell(
-  notebook_json: INotebook,
-  query: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/summary`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      query: query,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addSuggestionsCell(
-  notebook_json: INotebook,
-  query: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/suggestions`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      query: query,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addImageCell(
-  notebook_json: INotebook,
-  query: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/image`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      query: query,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addMeaningCell(
-  notebook_json: INotebook,
-  word: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/meaning`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      word: word,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addSynonymCell(
-  notebook_json: INotebook,
-  word: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/synonym`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      word: word,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function addAntonymCell(
-  notebook_json: INotebook,
-  word: string,
-  page_id: string,
-  cell_id: string
-): Promise<INotebook> {
-  return fetch(`${getApiUrl()}/cell/add/antonym`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify({
-      notebook: JSON.stringify(notebook_json),
-      word: word,
-      page_id: page_id,
-      cell_id: cell_id,
-    }),
-  })
-    .then((response) => response.json())
-    .catch((error) => error);
-}
-
-export async function kill() {
-  return await fetch(`${getApiUrl()}/kill`);
-}
-
-export async function beacon() {
-  return await fetch(`${getApiUrl()}/beacon`);
+    body: JSON.stringify({ context, query }),
+  }).then((response) => response.json());
 }

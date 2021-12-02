@@ -42,14 +42,17 @@ export class Mention extends BlockEmbed {
     this.scroll.emitter.emit("blot-mount", this);
   }
 
-  renderPortal(id) {
+  renderPortal(blotId, pageId, notebookManager, page) {
     const { options } = Quill.find(this.scroll.domNode.parentNode);
-    const ref = Mention.refs[id];
+    const ref = Mention.refs[blotId];
     return ReactDOM.createPortal(
       <MentionComponent
         ref={ref}
         data={this.data}
         readOnly={options.readOnly}
+        id={pageId}
+        notebookManager={notebookManager}
+        page={page}
       />,
       this.domNode
     );

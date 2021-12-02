@@ -85,6 +85,9 @@ export function PagePane({
   return type === "default" ? (
     <Paper>
       <Content
+        id={id}
+        notebookManager={notebookManager}
+        page={page}
         defaultContent={page.content}
         autoformat={autoformat}
         onContentChange={onContentChange}
@@ -107,6 +110,9 @@ export function PagePane({
   ) : type === "quill" ? (
     <Paper>
       <Content
+        id={id}
+        notebookManager={notebookManager}
+        page={page}
         defaultContent={notebookManager.getPageQuill(id, paramId!)?.content!}
         autoformat={autoformat}
         onContentChange={(content) => onQuillChange(paramId!, content)}

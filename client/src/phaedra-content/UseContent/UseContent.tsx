@@ -1,5 +1,7 @@
 import React from "react";
 import { Subtract } from "utility-types";
+import { IPage } from "../../HOC/UseNotebook/Notebook";
+import { NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
 
 export type Delta = object;
 
@@ -12,6 +14,10 @@ export interface UseContentProps {
   autoformat?: object;
   readOnly?: boolean;
   spellCheck?: boolean;
+
+  id: string;
+  notebookManager: NotebookManager;
+  page: IPage;
 }
 
 export interface UseContentState {
@@ -27,6 +33,9 @@ export interface UseContentInjectedProps {
   _autoformat: object;
   _readOnly: boolean;
   _spellCheck: boolean;
+  _id: string;
+  _notebookManager: NotebookManager;
+  _page: IPage;
 }
 
 export interface ContentManager {}
@@ -82,6 +91,9 @@ export function UseContent<P extends UseContentInjectedProps>(
         autoformat,
         readOnly,
         spellCheck,
+        id,
+        notebookManager,
+        page,
         ...rest
       } = this.props;
       const { defaultContent } = this.state;
@@ -98,6 +110,9 @@ export function UseContent<P extends UseContentInjectedProps>(
           _autoformat={autoformat !== undefined ? autoformat : {}}
           _readOnly={readOnly !== undefined ? readOnly : false}
           _spellCheck={spellCheck !== undefined ? spellCheck : false}
+          _id={id}
+          _notebookManager={notebookManager}
+          _page={page}
         />
       );
     }

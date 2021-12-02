@@ -16,6 +16,9 @@ export const ContentSkeleton = React.memo(
     _autoformat,
     _readOnly,
     _spellCheck,
+    _id,
+    _notebookManager,
+    _page,
   }: ContentSkeletonProps) => {
     return (
       <Editor
@@ -26,6 +29,9 @@ export const ContentSkeleton = React.memo(
         autoformat={_autoformat}
         readOnly={_readOnly}
         spellCheck={_spellCheck}
+        id={_id}
+        notebookManager={_notebookManager}
+        page={_page}
       />
     );
   }

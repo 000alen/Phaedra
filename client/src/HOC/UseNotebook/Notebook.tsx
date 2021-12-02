@@ -14,6 +14,7 @@ export interface ISource {
   type: string;
   content: string;
   path?: string;
+  index?: number;
 }
 
 export interface IReference {

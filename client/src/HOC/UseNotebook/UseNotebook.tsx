@@ -56,6 +56,11 @@ export interface NotebookManager {
   getPageContent(pageId: string): IContent | undefined;
   getPageQuills(pageId: string): IQuill[] | undefined;
   getPageQuill(pageId: string, quillId: string): IQuill | undefined;
+  addPageReference(
+    pageId: string,
+    reference: IReference,
+    callback?: () => void
+  ): void;
   addPageQuill(pageId: string, quill: IQuill, callback?: () => void): void;
   addPage(page: IPage, callback?: () => void): void;
   insertPage(page: IPage, index: number, callback?: () => void): void;
@@ -119,11 +124,16 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       this.getPageReference = this.getPageReference.bind(this);
       this.getPageLayout = this.getPageLayout.bind(this);
       this.getPageContent = this.getPageContent.bind(this);
+      this.getPageQuills = this.getPageQuills.bind(this);
+      this.addPageReference = this.addPageReference.bind(this);
+      this.getPageQuill = this.getPageQuill.bind(this);
+      this.addPageQuill = this.addPageQuill.bind(this);
       this.addPage = this.addPage.bind(this);
       this.insertPage = this.insertPage.bind(this);
       this.removePage = this.removePage.bind(this);
       this.onContentChange = this.onContentChange.bind(this);
       this.onLayoutChange = this.onLayoutChange.bind(this);
+      this.onQuillChange = this.onQuillChange.bind(this);
 
       const { initialize, notebook, notebookPath } = props;
 
@@ -210,6 +220,17 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
 
     getPageQuill(pageId: string, quillId: string) {
       return this.getPage(pageId)?.quills.find((quill) => quill.id === quillId);
+    }
+
+    // * Forces update
+    addPageReference(
+      pageId: string,
+      reference: IReference,
+      callback?: () => void
+    ) {
+      const page = this.getPage(pageId)!;
+      page.references.push(reference);
+      this.forceUpdate(callback);
     }
 
     // * Forces update

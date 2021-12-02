@@ -1,7 +1,12 @@
 import React from "react";
 
 import style from "../css/Pane.module.css";
-import { Direction, DividerRect, PaneRect } from "../UseLayout/Rect";
+import {
+  Direction,
+  DividerRect,
+  PaneRect,
+  PaneRectProps,
+} from "../UseLayout/Rect";
 import { LayoutManager } from "../UseLayout/UseLayout";
 
 interface PaneProps<P> {
@@ -24,7 +29,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.setPaneType = this.setPaneType.bind(this);
+    this.setPaneProps = this.setPaneProps.bind(this);
 
     this.paneRef = React.createRef();
 
@@ -84,9 +89,9 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
   }
 
   // * This does not force update
-  setPaneType(type: string) {
+  setPaneProps(props: PaneRectProps) {
     const { layoutManager, pane } = this.props;
-    layoutManager.setProps(pane, { ...pane.props, type: type });
+    layoutManager.setProps(pane, { ...pane.props, ...props });
   }
 
   render() {
@@ -112,7 +117,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
           <Component
             {...(props as P)}
             paneProps={pane.props}
-            setPaneType={this.setPaneType}
+            setPaneProps={this.setPaneProps}
           />
         </div>
       </div>

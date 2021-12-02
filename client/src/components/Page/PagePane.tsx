@@ -14,10 +14,14 @@ interface PagePaneProps {
   notebookManager: NotebookManager;
   onContentChange: (content: IContent) => void;
   onQuillChange: (quillId: string, content: IContent) => void;
+  addReference: (
+    sourceId: string,
+    callback?: (referenceId: string) => void
+  ) => void;
   addQuill: (callback?: (quillId: string) => void) => void;
 
   paneProps: PaneRectProps;
-  setPaneType: (type: string) => void;
+  setPaneProps: (type: PaneRectProps) => void;
 }
 
 const autoformat = {
@@ -50,9 +54,10 @@ export function PagePane({
   notebookManager,
   onContentChange,
   onQuillChange,
+  addReference,
   addQuill,
   paneProps,
-  setPaneType,
+  setPaneProps,
 }: PagePaneProps) {
   const { type, paramId } = paneProps;
 
@@ -65,18 +70,23 @@ export function PagePane({
       />
     </Paper>
   ) : type === "new" ? (
-    <PagePaneSelector setPaneType={setPaneType} />
+    <PagePaneSelector
+      id={id}
+      page={page}
+      notebookManager={notebookManager}
+      addReference={addReference}
+      addQuill={addQuill}
+      setPaneProps={setPaneProps}
+    />
   ) : type === "reference" ? (
     <Reference
       notebookManager={notebookManager}
-      reference={{ id: "a", title: "a", sourceId: "a" }}
-      // ! TODO
-      // reference={notebookManager.getPageReference(id, paramId!)!}
+      reference={notebookManager.getPageReference(id, paramId!)!}
     />
   ) : type === "quill" ? (
     <Paper>
       <Content
-        defaultContent={notebookManager.getPageQuill(id, paramId!)?.content}
+        defaultContent={notebookManager.getPageQuill(id, paramId!)?.content!}
         autoformat={autoformat}
         onContentChange={(content) => onQuillChange(paramId!, content)}
       />

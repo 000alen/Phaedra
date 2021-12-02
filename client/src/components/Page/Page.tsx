@@ -4,6 +4,7 @@ import React from "react";
 import { PagePane } from "./PagePane";
 import { IContent, ILayout, IPage } from "../../HOC/UseNotebook/Notebook";
 import { emptyQuill, NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
+import { v4 as uuidv4 } from "uuid";
 
 export interface PageProps {
   id: string;
@@ -23,6 +24,7 @@ export class Page extends React.Component<PageProps, PageState> {
     this.onLayoutChange = this.onLayoutChange.bind(this);
     this.onContentChange = this.onContentChange.bind(this);
     this.onQuillChange = this.onQuillChange.bind(this);
+    this.addReference = this.addReference.bind(this);
     this.addQuill = this.addQuill.bind(this);
   }
 
@@ -39,6 +41,22 @@ export class Page extends React.Component<PageProps, PageState> {
   onQuillChange(quillId: string, content: IContent) {
     const { id, _onQuillChange } = this.props;
     _onQuillChange(id, quillId, content);
+  }
+
+  addReference(sourceId: string, callback?: (referenceId: string) => void) {
+    const { id, _notebookManager } = this.props;
+    const referenceId = uuidv4();
+    _notebookManager.addPageReference(
+      id,
+      {
+        id: referenceId,
+        title: _notebookManager.getSource(sourceId)?.title!,
+        sourceId,
+      },
+      () => {
+        if (callback) callback(referenceId);
+      }
+    );
   }
 
   addQuill(callback?: (quillId: string) => void) {
@@ -66,6 +84,7 @@ export class Page extends React.Component<PageProps, PageState> {
             notebookManager: _notebookManager,
             onContentChange: this.onContentChange,
             onQuillChange: this.onQuillChange,
+            addReference: this.addReference,
             addQuill: this.addQuill,
           }}
         />

@@ -12,21 +12,29 @@ export interface ReferenceProps {
 }
 
 export function Reference({ notebookManager, reference }: ReferenceProps) {
-  const [file, setFile] = React.useState<null | { data: Uint8Array }>(null);
+  const [pdfFile, setPdfFile] = React.useState<null | { data: Uint8Array }>(
+    null
+  );
+
+  const source = notebookManager.getSource(reference.sourceId)!;
 
   React.useEffect(() => {
-    readFileSync("C:\\Users\\alenk\\Desktop\\bitcoin.pdf").then((data) => {
-      setFile({ data: data as Uint8Array });
-    });
-  }, []);
+    if (source.type === "pdf") {
+      readFileSync(source.path!).then((data) => {
+        setPdfFile({ data: data as Uint8Array });
+      });
+    }
+  }, [source.type, source.path]);
 
-  return (
-    <Document file={file} renderMode="svg">
+  return source.type === "pdf" ? (
+    <Document file={pdfFile} renderMode="svg">
       <Page
-        pageIndex={0}
+        pageIndex={source.index!}
         renderAnnotationLayer={false}
         renderTextLayer={false}
       />
     </Document>
+  ) : (
+    <>{source.content}</>
   );
 }

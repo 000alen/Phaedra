@@ -24,6 +24,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.setPaneType = this.setPaneType.bind(this);
 
     this.paneRef = React.createRef();
 
@@ -82,6 +83,12 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
     this.setState({ edge });
   }
 
+  // * This does not force update
+  setPaneType(type: string) {
+    const { layoutManager, pane } = this.props;
+    layoutManager.setProps(pane, { ...pane.props, type: type });
+  }
+
   render() {
     const { pane, Component, props } = this.props;
 
@@ -102,7 +109,11 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
         onMouseMove={this.handleMouseMove}
       >
         <div className={`${style.inner}`}>
-          <Component {...(props as P)} paneProps={pane.props} />
+          <Component
+            {...(props as P)}
+            paneProps={pane.props}
+            setPaneType={this.setPaneType}
+          />
         </div>
       </div>
     );

@@ -1,9 +1,9 @@
-import { Layout } from "../phaedra-layout/Layout";
+import { Layout } from "../../phaedra-layout/Layout";
 import React from "react";
 
 import { PagePane } from "./PagePane";
-import { IContent, ILayout, IPage } from "../HOC/UseNotebook/Notebook";
-import { emptyQuill, NotebookManager } from "../HOC/UseNotebook/UseNotebook";
+import { IContent, ILayout, IPage } from "../../HOC/UseNotebook/Notebook";
+import { emptyQuill, NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
 
 export interface PageProps {
   id: string;
@@ -49,8 +49,9 @@ export class Page extends React.Component<PageProps, PageState> {
     });
   }
 
+  // ! TODO: Cannot get rid of @ts-ignore
   render() {
-    const { id, page } = this.props;
+    const { id, page, _notebookManager } = this.props;
 
     return (
       <div className="w-[100%] h-[100%] relative">
@@ -62,6 +63,7 @@ export class Page extends React.Component<PageProps, PageState> {
           props={{
             id,
             page,
+            notebookManager: _notebookManager,
             onContentChange: this.onContentChange,
             onQuillChange: this.onQuillChange,
             addQuill: this.addQuill,

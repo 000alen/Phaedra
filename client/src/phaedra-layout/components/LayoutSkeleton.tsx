@@ -6,20 +6,20 @@ import { UseLayoutInjectedProps } from "../UseLayout/UseLayout";
 import { Divider } from "./Divider";
 import { Pane } from "./Pane";
 
-export type LayoutSkeletonProps<P> = UseLayoutInjectedProps & {
-  PaneComponent: React.ComponentType<P>;
-  props: P;
+export type LayoutSkeletonProps = UseLayoutInjectedProps & {
+  PaneComponent: React.ComponentType;
+  props: object;
 };
 
 export interface LayoutSkeletonState {
   keyPressed: boolean;
 }
 
-export class LayoutSkeleton<P> extends React.Component<
-  LayoutSkeletonProps<P>,
+export class LayoutSkeleton extends React.Component<
+  LayoutSkeletonProps,
   LayoutSkeletonState
 > {
-  constructor(props: LayoutSkeletonProps<P>) {
+  constructor(props: LayoutSkeletonProps) {
     super(props);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);

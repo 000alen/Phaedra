@@ -95,6 +95,11 @@ export class Rect {
   }
 }
 
+export interface PaneRectProps {
+  type: string;
+  paramId?: string | undefined;
+}
+
 export class PaneRect extends Rect {
   public props: object;
 
@@ -106,7 +111,7 @@ export class PaneRect extends Rect {
     parent: any = null,
     previous: any = null,
     next: any = null,
-    props: object = {}
+    props: PaneRectProps = { type: "default" }
   ) {
     super(id, position, size, orientation, parent, previous, next);
     this.props = props;

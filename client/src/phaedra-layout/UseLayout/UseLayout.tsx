@@ -9,6 +9,7 @@ import {
   LayoutRect,
   Orientation,
   PaneRect,
+  PaneRectProps,
 } from "./Rect";
 
 export interface UseLayoutProps {
@@ -38,7 +39,7 @@ export interface PaneJSON {
   size: number;
   previous: string | null;
   next: string | null;
-  props: object;
+  props: PaneRectProps;
 }
 
 export interface LayoutJSON {
@@ -86,6 +87,7 @@ export interface LayoutManager {
     closing: boolean,
     callback?: () => void
   ): void;
+  setProps(pane: PaneRect, props: object): void;
 }
 
 type Props<P extends UseLayoutInjectedProps> = Subtract<
@@ -109,7 +111,7 @@ export function emptyPane(): PaneJSON {
     previous: null,
     next: null,
     props: {
-      pane: "default",
+      type: "default",
     },
   };
 }
@@ -220,6 +222,7 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
 
     layoutToJSON(layout: LayoutRect): LayoutJSON {
       return {
+        type: "layout",
         id: layout.id,
         position: layout.position,
         size: layout.size,
@@ -231,6 +234,7 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
           child instanceof LayoutRect
             ? this.layoutToJSON(child)
             : ({
+                type: "pane",
                 id: child.id,
                 position: child.position,
                 size: child.size,
@@ -376,7 +380,10 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
         pane.orientation,
         pane.parent,
         pane.previous,
-        pane.next
+        pane.next,
+        {
+          type: "new",
+        }
       );
       layout.addChild(newPane);
 
@@ -519,6 +526,12 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
 
     setClosing(divider: DividerRect, closing: boolean, callback?: () => void) {
       divider.closing = closing;
+      this.forceUpdate(callback);
+    }
+
+    setProps(pane: PaneRect, props: object, callback?: () => void) {
+      pane.props = props;
+      if (this.props.onLayoutChange) this.props.onLayoutChange(this.JSON());
       this.forceUpdate(callback);
     }
 

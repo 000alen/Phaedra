@@ -39,3 +39,31 @@ kbd {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 2px;
 }
+
+/* ! TODO: Clean CSS */
+.react-pdf__Document {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
+}
+
+.react-pdf__Page {
+  height: 100% !important;
+  background: unset !important;
+  overflow: auto !important;
+}
+
+.react-pdf__Page__svg {
+  width: auto !important;
+  height: 100% !important;
+  background: unset !important;
+  /* user-select: unset !important; */
+  overflow: auto !important;
+}
+
+.react-pdf__Page__svg svg {
+  margin: auto !important;
+  width: auto !important;
+  height: 100% !important;
+  background: white !important;
+}

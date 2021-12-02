@@ -4,17 +4,21 @@ import { UseNotebook } from "./UseNotebook";
 import React from "react";
 
 import { getTheme } from "../../themes";
-import { Page } from "../../components/Page";
+import { Page } from "../../components/Page/Page";
 import { UseNotebookInjectedProps } from "./UseNotebook";
 import { emptyPage } from "./UseNotebook";
 
 export interface ISource {
   id: string;
+  title: string;
+  type: string;
   content: string;
+  path?: string;
 }
 
 export interface IReference {
   id: string;
+  title: string;
   sourceId: string;
 }
 

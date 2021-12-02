@@ -1,10 +1,17 @@
 import React from "react";
 import { pdfjs, Document, Page } from "react-pdf";
 import { readFileSync } from "../API/ElectronAPI";
+import { IReference } from "../HOC/UseNotebook/Notebook";
+import { NotebookManager } from "../HOC/UseNotebook/UseNotebook";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
-export function Source() {
+export interface ReferenceProps {
+  notebookManager: NotebookManager;
+  reference: IReference;
+}
+
+export function Reference({ notebookManager, reference }: ReferenceProps) {
   const [file, setFile] = React.useState<null | { data: Uint8Array }>(null);
 
   React.useEffect(() => {
@@ -14,10 +21,12 @@ export function Source() {
   }, []);
 
   return (
-    <div>
-      <Document file={file}>
-        <Page pageIndex={0} />
-      </Document>
-    </div>
+    <Document file={file} renderMode="svg">
+      <Page
+        pageIndex={0}
+        renderAnnotationLayer={false}
+        renderTextLayer={false}
+      />
+    </Document>
   );
 }

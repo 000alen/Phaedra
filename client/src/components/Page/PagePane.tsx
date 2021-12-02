@@ -46,6 +46,27 @@ const autoformat = {
     transform: "$1",
     insert: "question",
   },
+  wimage: {
+    trigger: /[\s.,;:!?]/,
+    find: /image"[\w ,.:;!?]+"/i,
+    extract: /image"([\w ,.:;!?]+)"/i,
+    transform: "$1",
+    insert: "wimage",
+  },
+  wsuggestion: {
+    trigger: /[\s.,;:!?]/,
+    find: /suggestion"[\w ,.:;!?]+"/i,
+    extract: /suggestion"([\w ,.:;!?]+)"/i,
+    transform: "$1",
+    insert: "wsuggestion",
+  },
+  wsummary: {
+    trigger: /[\s.,;:!?]/,
+    find: /summary"[\w ,.:;!?]+"/i,
+    extract: /summary"([\w ,.:;!?]+)"/i,
+    transform: "$1",
+    insert: "wsummary",
+  },
 };
 
 export function PagePane({

@@ -8,12 +8,18 @@ import { Mention } from "../formats/mention";
 import { Question } from "../formats/question";
 
 import "quill/dist/quill.bubble.css";
+import { WImage } from "../formats/image";
+import { WSuggestion } from "../formats/suggestion";
+import { WSummary } from "../formats/summary";
 
 Quill.register({
   "modules/autoformat": Autoformat,
   "formats/generation": Generation,
   "formats/mention": Mention,
   "formats/question": Question,
+  "formats/wimage": WImage,
+  "formats/wsuggestion": WSuggestion,
+  "formats/wsummary": WSummary,
 });
 
 export function register(toRegister) {
@@ -60,6 +66,9 @@ const FORMATS = [
   "generation",
   "mention",
   "question",
+  "wimage",
+  "wsuggestion",
+  "wsummary",
 ];
 
 const AUTOFORMAT = {};

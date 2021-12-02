@@ -24,9 +24,11 @@ export interface UseLayoutState {
 }
 
 export interface UseLayoutInjectedProps {
-  layoutManager: LayoutManager;
-  layout: LayoutRect;
-  layoutContainerRef: React.RefObject<HTMLDivElement>;
+  _layoutManager: LayoutManager;
+  _layout: LayoutRect;
+  _panes: PaneRect[];
+  _dividers: DividerRect[];
+  _layoutContainerRef: React.RefObject<HTMLDivElement>;
 }
 
 export interface PaneJSON {
@@ -36,6 +38,7 @@ export interface PaneJSON {
   size: number;
   previous: string | null;
   next: string | null;
+  props: object;
 }
 
 export interface LayoutJSON {
@@ -97,6 +100,20 @@ type PropsWithouthRef<P extends UseLayoutInjectedProps> = Subtract<
 
 const PANE_EDGE_THRESHOLD = 100;
 
+export function emptyPane(): PaneJSON {
+  return {
+    type: "pane",
+    id: uuidv4(),
+    position: 0,
+    size: 1,
+    previous: null,
+    next: null,
+    props: {
+      pane: "default",
+    },
+  };
+}
+
 export function empty(): LayoutJSON {
   return {
     type: "layout",
@@ -106,16 +123,7 @@ export function empty(): LayoutJSON {
     orientation: "horizontal",
     previous: null,
     next: null,
-    children: [
-      {
-        type: "pane",
-        id: uuidv4(),
-        position: 0,
-        size: 1,
-        previous: null,
-        next: null,
-      },
-    ],
+    children: [emptyPane()],
   };
 }
 
@@ -174,7 +182,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
                 childJSON.id,
                 childJSON.position,
                 childJSON.size,
-                Orientation.Horizontal
+                Orientation.Horizontal,
+                null,
+                null,
+                null,
+                childJSON.props
               );
 
         child.parent = layout;
@@ -224,6 +236,7 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
                 size: child.size,
                 previous: child.previous !== null ? child.previous.id : null,
                 next: child.next !== null ? child.next.id : null,
+                props: child.props,
               } as PaneJSON)
         ),
         previous: layout.previous !== null ? layout.previous.id : null,
@@ -517,11 +530,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
         <Component
           {...(rest as P)}
           ref={forwardedRef}
-          layout={layout}
-          panes={panes}
-          dividers={dividers}
-          layoutManager={this}
-          layoutContainerRef={this.layoutContainerRef}
+          _layout={layout}
+          _panes={panes}
+          _dividers={dividers}
+          _layoutManager={this}
+          _layoutContainerRef={this.layoutContainerRef}
         />
       );
     }

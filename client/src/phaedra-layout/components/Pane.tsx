@@ -102,7 +102,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
         onMouseMove={this.handleMouseMove}
       >
         <div className={`${style.inner}`}>
-          <Component {...(props as P)} />
+          <Component {...(props as P)} paneProps={pane.props} />
         </div>
       </div>
     );

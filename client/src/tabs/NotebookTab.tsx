@@ -5,6 +5,7 @@ import {
   DefaultButton,
   DialogFooter,
   DialogType,
+  IconButton,
   PrimaryButton,
 } from "@fluentui/react";
 
@@ -18,7 +19,8 @@ import {
 } from "../contexts";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { Notebook } from "../HOC/UseNotebook/Notebook";
-import { INotebook, NotebookManager } from "../HOC/UseNotebook/UseNotebook";
+import { emptyPage, NotebookManager } from "../HOC/UseNotebook/UseNotebook";
+import { INotebook } from "../HOC/UseNotebook/Notebook";
 
 export interface NotebookTabProps {
   tabId: string;
@@ -46,6 +48,7 @@ class NotebookTabSkeleton extends React.Component<
     this.getAppController = this.getAppController.bind(this);
     this.getTabId = this.getTabId.bind(this);
     this.getNotebookManager = this.getNotebookManager.bind(this);
+    this.addPage = this.addPage.bind(this);
 
     this.state = {
       contentTableShown: false,
@@ -144,13 +147,17 @@ class NotebookTabSkeleton extends React.Component<
     });
   }
 
+  addPage() {
+    this.notebookManager?.addPage(emptyPage());
+  }
+
   render(): JSX.Element {
     const { notebookTabController, contentTableShown } = this.state;
 
     return (
       <NotebookTabController.Provider value={notebookTabController}>
         <div className="w-[100%] h-[100%]">
-          <div className="flex flex-row h-[100%]">
+          <div className="relative flex flex-row h-[100%]">
             {contentTableShown && <ContentTable />}
             <Notebook
               key={this.props.tabId}
@@ -160,6 +167,12 @@ class NotebookTabSkeleton extends React.Component<
               notebook={this.props.notebook}
               notebookPath={this.props.notebookPath}
             />
+            <div className="absolute bottom-5 right-5">
+              <IconButton
+                iconProps={{ iconName: "Add" }}
+                onClick={() => this.addPage()}
+              />
+            </div>
           </div>
         </div>
       </NotebookTabController.Provider>

@@ -2,20 +2,14 @@ import Mousetrap from "mousetrap";
 import React from "react";
 
 import style from "../css/Layout.module.css";
-import { DividerRect, LayoutRect, PaneRect } from "../UseLayout/Rect";
-import { LayoutManager } from "../UseLayout/UseLayout";
+import { UseLayoutInjectedProps } from "../UseLayout/UseLayout";
 import { Divider } from "./Divider";
 import { Pane } from "./Pane";
 
-export interface LayoutSkeletonProps<P> {
-  Component: React.ComponentType<P>;
+export type LayoutSkeletonProps<P> = UseLayoutInjectedProps & {
+  PaneComponent: React.ComponentType<P>;
   props: P;
-  layout: LayoutRect;
-  panes: PaneRect[];
-  dividers: DividerRect[];
-  layoutManager: LayoutManager;
-  layoutContainerRef: React.RefObject<HTMLDivElement>;
-}
+};
 
 export interface LayoutSkeletonState {
   keyPressed: boolean;
@@ -60,34 +54,34 @@ export class LayoutSkeleton<P> extends React.Component<
 
   render() {
     const {
-      Component,
+      PaneComponent,
       props,
-      panes,
-      dividers,
-      layoutManager,
-      layoutContainerRef,
+      _panes,
+      _dividers,
+      _layoutManager,
+      _layoutContainerRef,
     } = this.props;
     const { keyPressed } = this.state;
 
     return (
       <div className={`${style.clip}`}>
-        <div ref={layoutContainerRef} className={`${style.layout}`}>
-          {panes.map((pane) => (
+        <div ref={_layoutContainerRef} className={`${style.layout}`}>
+          {_panes.map((pane) => (
             <Pane
               key={pane.id}
-              Component={Component}
-              props={props}
               pane={pane}
-              layoutManager={layoutManager}
+              layoutManager={_layoutManager}
               keyPressed={keyPressed}
+              Component={PaneComponent}
+              props={props}
             />
           ))}
 
-          {dividers.map((divider) => (
+          {_dividers.map((divider) => (
             <Divider
               key={divider.id}
               divider={divider}
-              layoutManager={layoutManager}
+              layoutManager={_layoutManager}
             />
           ))}
         </div>

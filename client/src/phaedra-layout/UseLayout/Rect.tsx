@@ -96,6 +96,22 @@ export class Rect {
 }
 
 export class PaneRect extends Rect {
+  public props: object;
+
+  constructor(
+    id: string,
+    position: number,
+    size: number,
+    orientation: Orientation,
+    parent: any = null,
+    previous: any = null,
+    next: any = null,
+    props: object = {}
+  ) {
+    super(id, position, size, orientation, parent, previous, next);
+    this.props = props;
+  }
+
   destroy(panes: PaneRect[], dividers: DividerRect[]) {
     const index = panes.indexOf(this);
     if (index === -1) throw new Error("Unexpected error");

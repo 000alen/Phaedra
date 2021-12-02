@@ -2,41 +2,25 @@ import { MessageBarType } from "@fluentui/react";
 import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
-import { INotebookTabController, NotebookTabController } from "../../contexts";
+import {
+  IAppController,
+  INotebookTabController,
+  NotebookTabController,
+} from "../../contexts";
 import { saveNotebook } from "../../IO/NotebookIO";
 
-import { LayoutJSON } from "../../phaedra-layout/UseLayout/UseLayout";
 import { getStrings } from "../../strings";
 import { empty as emptyLayout } from "../../phaedra-layout/UseLayout/UseLayout";
 import { empty as emptyContent } from "../../phaedra-content/UseContent/UseContent";
-
-export interface ISource {
-  id: string;
-  content: string;
-}
-
-export interface IReference {
-  id: string;
-  sourceId: string;
-}
-
-export type IContent = object;
-
-export type ILayout = LayoutJSON;
-
-export interface IPage {
-  id: string;
-  references: IReference[];
-  layout: ILayout;
-  content: IContent;
-}
-
-export interface INotebook {
-  id: string;
-  name: string;
-  sources: ISource[];
-  pages: IPage[];
-}
+import {
+  IContent,
+  ILayout,
+  INotebook,
+  IPage,
+  IQuill,
+  IReference,
+  ISource,
+} from "./Notebook";
 
 export interface UseNotebookProps {
   forwardedRef: React.Ref<any>;
@@ -52,6 +36,7 @@ export interface UseNotebookInjectedProps {
   _defaultNotebook: INotebook;
   _onContentChange: (pageId: string, content: IContent) => void;
   _onLayoutChange: (pageId: string, layout: ILayout) => void;
+  _onQuillChange: (pageId: string, quillId: string, content: IContent) => void;
 }
 
 type Props<P extends UseNotebookInjectedProps> = Subtract<
@@ -69,6 +54,9 @@ export interface NotebookManager {
   getPageReference(pageId: string, referenceId: string): IReference | undefined;
   getPageLayout(pageId: string): ILayout | undefined;
   getPageContent(pageId: string): IContent | undefined;
+  getPageQuills(pageId: string): IQuill[] | undefined;
+  getPageQuill(pageId: string, quillId: string): IQuill | undefined;
+  addPageQuill(pageId: string, quill: IQuill, callback?: () => void): void;
   addPage(page: IPage, callback?: () => void): void;
   insertPage(page: IPage, index: number, callback?: () => void): void;
   removePage(id: string, callback?: () => void): void;
@@ -79,16 +67,24 @@ type PropsWithoutRef<P extends UseNotebookInjectedProps> = Subtract<
   { forwardedRef: React.Ref<any> }
 >;
 
-export function emptyPage() {
+export function emptyQuill(): IQuill {
+  return {
+    id: uuidv4(),
+    content: emptyContent(),
+  };
+}
+
+export function emptyPage(): IPage {
   return {
     id: uuidv4(),
     references: [],
     layout: emptyLayout(),
     content: emptyContent(),
+    quills: [],
   };
 }
 
-export function empty() {
+export function empty(): INotebook {
   const id = uuidv4();
 
   return {
@@ -138,15 +134,13 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       this.saved = notebookPath !== undefined ? true : false;
     }
 
-    // componentDidMount() {
-    //   const notebookTabController: INotebookTabController = this.context;
-    //   const appController: IAppController =
-    //     notebookTabController.getAppController()!;
-    //   const tabId = notebookTabController.getTabId()!;
-    //   const { notebook } = this.state;
-
-    //   appController.tabsManager!.setTitle(tabId, notebook.name);
-    // }
+    componentDidMount() {
+      const notebookTabController: INotebookTabController = this.context;
+      const appController: IAppController =
+        notebookTabController.getAppController()!;
+      const tabId = notebookTabController.getTabId()!;
+      appController.tabsManager!.setTitle(tabId, this.notebook.name);
+    }
 
     async save() {
       const notebookTabController: INotebookTabController = this.context;
@@ -210,6 +204,22 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       return this.getPage(id)?.content;
     }
 
+    getPageQuills(pageId: string) {
+      return this.getPage(pageId)?.quills;
+    }
+
+    getPageQuill(pageId: string, quillId: string) {
+      return this.getPage(pageId)?.quills.find((quill) => quill.id === quillId);
+    }
+
+    // * Forces update
+    addPageQuill(pageId: string, quill: IQuill, callback?: () => void) {
+      const page = this.getPage(pageId)!;
+      page.quills.push(quill);
+      this.saved = false;
+      this.forceUpdate(callback);
+    }
+
     // * Forces update
     addPage(page: IPage, callback?: () => void) {
       this.notebook.pages.push(page);
@@ -245,6 +255,12 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       this.saved = false;
     }
 
+    // * Does not force update
+    onQuillChange(pageId: string, quillId: string, content: IContent) {
+      this.getPageQuill(pageId, quillId)!.content = content;
+      this.saved = false;
+    }
+
     render() {
       const { forwardedRef, ...rest } = this.props;
       return (
@@ -255,6 +271,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
           _defaultNotebook={this.notebook}
           _onContentChange={this.onContentChange}
           _onLayoutChange={this.onLayoutChange}
+          _onQuillChange={this.onQuillChange}
         />
       );
     }

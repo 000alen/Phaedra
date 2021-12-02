@@ -4,7 +4,7 @@ import React from "react";
 import { Editor } from "./Editor";
 import { UseContentInjectedProps } from "../UseContent/UseContent";
 
-export type ContentSkeleton = UseContentInjectedProps;
+export type ContentSkeletonProps = UseContentInjectedProps;
 
 export const ContentSkeleton = React.memo(
   ({
@@ -16,7 +16,7 @@ export const ContentSkeleton = React.memo(
     _autoformat,
     _readOnly,
     _spellCheck,
-  }: ContentSkeleton) => {
+  }: ContentSkeletonProps) => {
     return (
       <Editor
         defaultContent={_defaultContent}

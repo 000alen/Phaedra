@@ -76,13 +76,8 @@ class ImageComponent extends React.Component {
 
   componentDidMount() {
     /** @type {{data: string, notebookManager: import("../../HOC/UseNotebook/UseNotebook").NotebookManager, page: import("../../HOC/UseNotebook/Notebook").IPage}} */
-    const { data, notebookManager, page } = this.props;
-    wimage(
-      page.references.length > 0
-        ? notebookManager.getSource(page.references[0].sourceId).content
-        : "",
-      data
-    )
+    const { data } = this.props;
+    wimage(data)
       .then((response) => {
         this.setState({ response });
       })

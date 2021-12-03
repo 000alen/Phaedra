@@ -11,6 +11,8 @@ from flask_ngrok import run_with_ngrok  # type: ignore
 
 from Phaedra.Notebook import Notebook
 from Phaedra.Secrets import get_secrets, get_secrets_remote, set_secrets
+from Phaedra.Language import generate, answer
+from Phaedra.Knowledge import wimage, wsuggestion, wsummary
 
 __all__ = ("run", "run_remote")
 
@@ -34,63 +36,31 @@ def notebook_from_pdf():
 @app.route("/command/generation", methods=["POST"])
 def command_generation():
     """Adds a generate cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_generation_cell(
-        request.json["prompt"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
+    return jsonify(generate(request.json["query"], request.json["context"]))
 
 
 @app.route("/command/wimage", methods=["POST"])
 def command_wimage():
     """Adds Wikipedia image cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_image_cell(
-        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
+    return jsonify(wimage(request.json["query"]))
 
 
 @app.route("/command/question", methods=["POST"])
 def command_question():
     """Adds question cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_question_cell(
-        request.json["question"],
-        request.json["page_id"],
-        cell_id=request.json["cell_id"],
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
+    return jsonify(answer(request.json["query"], request.json["context"]))
 
 
 @app.route("/command/wsuggestion", methods=["POST"])
 def command_wsuggestion():
     """Adds Wikipedia suggestions cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_suggestions_cell(
-        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
+    return jsonify(wsuggestion(request.json["query"]))
 
 
 @app.route("/command/wsummary", methods=["POST"])
 def command_wsummary():
     """Adds Wikipedia summary cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_summary_cell(
-        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
+    return jsonify(wsummary(request.json["query"]))
 
 
 def authenticate():

@@ -4,9 +4,9 @@ const defaultApiUrl = "http://localhost:5000";
 const headers = { "Content-Type": "application/json" };
 
 export function getApiUrl(): string {
-  let apiUrl = window.localStorage.getItem("apiUrl");
-  if (apiUrl) return apiUrl;
-  window.localStorage.setItem("apiUrl", defaultApiUrl);
+  // let apiUrl = window.localStorage.getItem("apiUrl");
+  // if (apiUrl) return apiUrl;
+  // window.localStorage.setItem("apiUrl", defaultApiUrl);
   return defaultApiUrl;
 }
 
@@ -31,18 +31,18 @@ export async function notebookFromPdf(
 }
 
 export function generation(context: string, query: string): Promise<string> {
-  return fetch(`${getApiUrl()}/command/generate`, {
+  return fetch(`${getApiUrl()}/command/generation`, {
     method: "POST",
     headers: headers,
     body: JSON.stringify({ context, query }),
   }).then((response) => response.json());
 }
 
-export function wimage(context: string, query: string): Promise<string> {
+export function wimage(query: string): Promise<string[]> {
   return fetch(`${getApiUrl()}/command/wimage`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({ context, query }),
+    body: JSON.stringify({ query }),
   }).then((response) => response.json());
 }
 
@@ -54,18 +54,20 @@ export function question(context: string, query: string): Promise<string> {
   }).then((response) => response.json());
 }
 
-export function wsuggestion(context: string, query: string): Promise<string> {
+export function wsuggestion(
+  query: string
+): Promise<{ [suggestion: string]: string }> {
   return fetch(`${getApiUrl()}/command/wsuggestion`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({ context, query }),
+    body: JSON.stringify({ query }),
   }).then((response) => response.json());
 }
 
-export function wsummary(context: string, query: string): Promise<string> {
+export function wsummary(query: string): Promise<string> {
   return fetch(`${getApiUrl()}/command/wsummary`, {
     method: "POST",
     headers: headers,
-    body: JSON.stringify({ context, query }),
+    body: JSON.stringify({ query }),
   }).then((response) => response.json());
 }

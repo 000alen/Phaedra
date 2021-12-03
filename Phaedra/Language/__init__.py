@@ -1,7 +1,7 @@
 """Phaedra's Language operations module."""
 
 from enum import Enum, auto
-from typing import List, Dict
+from typing import List
 
 import Phaedra.Language.Local as Local
 import Phaedra.Language.Remote as Remote
@@ -13,10 +13,6 @@ __all__ = (
     "batch_answer",
     "batch_answer_same_context",
     "batch_answer_same_question",
-    "entities",
-    "meaning",
-    "synonym",
-    "antonym",
 )
 
 
@@ -63,14 +59,6 @@ _batch_generate_same_prompt = {
     Mode.LOCAL: Local.batch_generate_same_prompt,
     Mode.REMOTE: Remote.batch_generate_same_prompt,
 }
-_get_ner_tokenizer = {
-    Mode.LOCAL: Local.get_ner_tokenizer,
-    Mode.REMOTE: Local.get_ner_tokenizer,
-}
-_entities = {Mode.LOCAL: Local.entities, Mode.REMOTE: Local.entities}
-_meaning = {Mode.LOCAL: Local.meaning, Mode.REMOTE: Local.meaning}
-_synonym = {Mode.LOCAL: Local.synonym, Mode.REMOTE: Local.synonym}
-_antonym = {Mode.LOCAL: Local.antonym, Mode.REMOTE: Local.antonym}
 
 
 def get_mode() -> Mode:
@@ -229,7 +217,7 @@ def generate(prompt: str, context: str) -> str:
 
 def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
     """Generates responses for the given prompts and contexts.
-    
+
     :param prompts: The prompts to generate responses for.
     :type prompts: List[str]
     :param contexts: The contexts to generate responses for.
@@ -270,65 +258,3 @@ def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
     """
 
     return _batch_generate_same_prompt[get_mode()](prompt, contexts)
-
-
-def get_ner_tokenizer():
-    """Returns the Named Entities Recognizer tokenizer.
-
-    :return: The Named Entities Recognizer tokenizer.
-
-    """
-
-    return _get_ner_tokenizer[get_mode()]
-
-
-def entities(text: str) -> List[str]:
-    """Returns the entities in the given text.
-
-    :param text: The text to get the entities of.
-    :type text: str
-    :return: The entities in the given text.
-    :rtype: List[str]
-
-    """
-
-    return _entities[get_mode()](text)
-
-
-def meaning(word: str) -> Dict[str, List[str]]:
-    """Returns the meanings of the given word.
-
-    :param word: The word to get the meanings of.
-    :type word: str
-    :return: The meanings of the given word.
-    :rtype: Dict[str, List[str]]
-
-    """
-
-    return _meaning[get_mode()](word)
-
-
-def synonym(word: str) -> List[str]:
-    """Returns the synonyms of the given word.
-
-    :param word: The word to get the synonyms of.
-    :type word: str
-    :return: The synonyms of the given word.
-    :rtype: List[str]
-
-    """
-
-    return _synonym[get_mode()](word)
-
-
-def antonym(word: str) -> List[str]:
-    """Returns the antonyms of the given word.
-
-    :param word: The word to get the antonyms of.
-    :type word: str
-    :return: The antonyms of the given word.
-    :rtype: List[str]
-
-    """
-
-    return _antonym[get_mode()](word)

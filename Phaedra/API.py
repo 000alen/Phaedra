@@ -26,7 +26,7 @@ def notebook_from_pdf():
     pdf_base64 = request.json["base64"]
     pdf_bytes = base64.b64decode(pdf_base64)
     pdf_stream = io.BytesIO(pdf_bytes)
-    notebook = Notebook.from_pdf(pdf_stream=pdf_stream, pdf_path=path)
+    notebook = Notebook.from_pdf(stream=pdf_stream, path=path)
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 

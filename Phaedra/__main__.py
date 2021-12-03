@@ -1,6 +1,11 @@
-from Phaedra.CLI import CLI
+from json import dump
+from Phaedra.Language import Mode, set_mode
+from Phaedra.Secrets import get_secrets, set_secrets
+from Phaedra.Notebook import Notebook
 
+set_secrets(get_secrets())
+set_mode(Mode.REMOTE)
 
-if __name__ == "__main__":
-    cli = CLI()
-    cli.run()
+notebook = Notebook.from_pdf(path="C:/Users/alenk/Desktop/bitcoin.pdf")
+
+dump(notebook.json(), open("out.json", "w"))

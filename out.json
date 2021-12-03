@@ -1,0 +1,422 @@
+{
+  "id": "ed2be5e2-323d-4981-8300-37656405856e",
+  "name": "blissful_matsumoto",
+  "sources": [
+    {
+      "id": "4391530d-9ec2-4245-919d-7608ee1a2c36",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (0)",
+      "type": "pdf",
+      "content": "Bitcoin: A Peer-to-Peer Electronic Cash System\nAbstract.   A purely peer-to-peer version of electronic cash would allow online \npayments to be sent directly from one party to another without going through a \nfinancial institution.  Digital signatures provide part of the solution, but the main \nbenefits are lost if a trusted third party is still required to prevent double-spending. \nWe propose a solution to the double-spending problem using a peer-to-peer network. \nThe network timestamps transactions by hashing them into an ongoing chain of \nhash-based proof-of-work, forming a record that cannot be changed without redoing \nthe proof-of-work.  The longest chain not only serves as proof of the sequence of \nevents witnessed, but proof that it came from the largest pool of CPU power.  As \nlong as a majority of CPU power is controlled by nodes that are not cooperating to \nattack the network, they'll generate the longest chain and outpace attackers.  The \nnetwork itself requires minimal structure.  Messages are broadcast on a best effort \nbasis, and nodes can leave and rejoin the network at will, accepting the longest \nproof-of-work chain as proof of what happened while they were gone.\n1. Introduction\nCommerce on the Internet has come to rely almost exclusively on financial institutions serving as \ntrusted third parties to process electronic payments.  While the system works well enough for \nmost transactions, it still suffers from the inherent weaknesses of the trust based model. \nCompletely non-reversible transactions are not really possible, since financial institutions cannot \navoid mediating disputes.   The cost of mediation increases transaction costs, limiting the \nminimum practical transaction size and cutting off the possibility for small casual transactions, \nand there is a broader cost in the loss of ability to make non-reversible payments for non-\nreversible services.  With the possibility of reversal, the need for trust spreads.  Merchants must \nbe wary of their customers, hassling them for more information than they would otherwise need. \nA certain percentage of fraud is accepted as unavoidable.  These costs and payment uncertainties \ncan be avoided in person by using physical currency, but no mechanism exists to make payments \n",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 0
+    },
+    {
+      "id": "55494a5a-0a7e-4e38-b866-60d93f7090f4",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (0)",
+      "type": "pdf",
+      "content": "over a communications channel without a trusted party.\nWhat is needed is an electronic payment system based on cryptographic proof instead of trust, \nallowing any two willing parties to transact directly with each other without the need for a trusted \nthird party.  Transactions that are computationally impractical to reverse would protect sellers \nfrom fraud, and routine escrow mechanisms could easily be implemented to protect buyers.  In \nthis paper, we propose a solution to the double-spending problem using a peer-to-peer distributed \ntimestamp server to generate computational proof of the chronological order of transactions.  The \nsystem is secure as long as honest nodes collectively control more CPU power than any \ncooperating group of attacker nodes.\n2. Transactions\nWe define an electronic coin as a chain of digital signatures.  Each owner transfers the coin to the \nnext by digitally signing a hash of the previous transaction and the public key of the next owner \nThe problem of course is the payee can't verify that one of the owners did not double-spend \nthe coin.  A common solution is to introduce a trusted central authority, or mint, that checks every \ntransaction for double spending.  After each transaction, the coin must be returned to the mint to \nissue a new coin, and only coins issued directly from the mint are trusted not to be double-spent. \nThe problem with this solution is that the fate of the entire money system depends on the \ncompany running the mint, with every transaction having to go through them, just like a bank.\ntransactions.  For our purposes, the earliest transaction is the one that counts, so we don't care \nabout later attempts to double-spend.  The only way to confirm the absence of a transaction is to \nbe aware of all transactions.  In the mint based model, the mint was aware of all transactions and \ndecided which arrived first.  To accomplish this without a trusted party, transactions must be \npublicly announced [1], and we need a system for participants to agree on a single history of the \norder in which they were received.  The payee needs proof that at the time of each transaction, the \nmajority of nodes agreed it was the first received. \n3. Timestamp Server\nThe solution we propose",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 0
+    },
+    {
+      "id": "f87e1496-ff47-460e-837c-cdeeca5a0f77",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (1)",
+      "type": "pdf",
+      "content": " begins with a timestamp server.  A timestamp server works by taking a \nnewspaper or Usenet post [2-5].  The timestamp proves that the data must have existed at the \ntime, obviously, in order to get into the hash.  Each timestamp includes the previous timestamp in \nits hash, forming a chain, with each additional timestamp reinforcing the ones before it.\n4. Proof-of-Work\nTo implement a distributed timestamp server on a peer-to-peer basis, we will need to use a proof-\nof-work system similar to Adam Back's Hashcash [6], rather than newspaper or Usenet posts. \nThe proof-of-work involves scanning for a value that when hashed, such as with SHA-256, the \nhash begins with a number of zero bits.  The average work required is exponential in the number \nof zero bits required and can be verified by executing a single hash.\nFor our timestamp network, we implement the proof-of-work by incrementing a nonce in the \nblock until a value is found that gives the block's hash the required zero bits.  Once the CPU \neffort has been expended to make it satisfy the proof-of-work, the block cannot be changed \nwithout redoing the work.  As later blocks are chained after it, the work to change the block \nwould include redoing all the blocks after it.\nThe proof-of-work also solves the problem of determining representation in majority decision \nmaking.  If the majority were based on one-IP-address-one-vote, it could be subverted by anyone \nable to allocate many IPs.  Proof-of-work is essentially one-CPU-one-vote.  The majority \ndecision is represented by the longest chain, which has the greatest proof-of-work effort invested \nfastest and outpace any competing chains.  To modify a past block, an attacker would have to \nredo the proof-of-work of the block and all blocks after it and then catch up with and surpass the \nwork of the honest nodes.  We will show later that the probability of a slower attacker catching up \ndiminishes exponentially as subsequent blocks are added.\nTo compensate for increasing hardware speed and varying interest in",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 1
+    },
+    {
+      "id": "8ce01e29-8046-40fa-b26b-2dbd3233c484",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (2)",
+      "type": "pdf",
+      "content": " running nodes over time, \nthe proof-of-work difficulty is determined by a moving average targeting an average number of \nblocks per hour.  If they're generated too fast, the difficulty increases.\n5. Network\nThe steps to run the network are as follows:\n1) New transactions are broadcast to all nodes.\n2) Each node collects new transactions into a block.  \n3) Each node works on finding a difficult proof-of-work for its block.\n4) When a node finds a proof-of-work, it broadcasts the block to all nodes.\n5) Nodes accept the block only if all transactions in it are valid and not already spent.\n6) Nodes express their acceptance of the block by working on creating the next block in the \nchain, using the hash of the accepted block as the previous hash.\nNodes always consider the longest chain to be the correct one and will keep working on \nextending it.  If two nodes broadcast different versions of the next block simultaneously, some \nbut save the other branch in case it becomes longer.  The tie will be broken when the next proof-\nof-work is found and one branch becomes longer; the nodes that were working on the other \nbranch will then switch to the longer one.\nNew transaction broadcasts do not necessarily need to reach all nodes.  As long as they reach \nmany nodes, they will get into a block before long.  Block broadcasts are also tolerant of dropped \nrealizes it missed one.\n6. Incentive\nBy convention, the first transaction in a block is a special transaction that starts a new coin owned \nby the creator of the block.  This adds an incentive for nodes to support the network, and provides \na way to initially distribute coins into circulation, since there is no central authority to issue them. \nThe steady addition of a constant of amount of new coins is analogous to gold miners expending \nresources to add gold to circulation.  In our case, it is CPU time and electricity that is expended.\nThe incentive can also be funded with transaction fees.  If the output value of a transaction is \nless than its input value, the difference is a transaction fee that is added to the incentive value of \nthe block containing the transaction.  Once a predetermined",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 2
+    },
+    {
+      "id": "8b56d6b4-d5ca-4f1e-ab64-c507e79a6b0d",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (3)",
+      "type": "pdf",
+      "content": " number of coins have entered \ncirculation, the incentive can transition entirely to transaction fees and be completely inflation \nThe incentive may help encourage nodes to stay honest.  If a greedy attacker is able to \nassemble more CPU power than all the honest nodes, he would have to choose between using it \nto defraud people by stealing back his payments, or using it to generate new coins.  He ought to \nfind it more profitable to play by the rules, such rules that favour him with more new coins than \neveryone else combined, than to undermine the system and the validity of his own wealth.\n7. Reclaiming Disk Space\nOnce the latest transaction in a coin is buried under enough blocks, the spent transactions before \nit can be discarded to save disk space.  To facilitate this without breaking the block's hash, \ntransactions are hashed in a Merkle Tree [7][2][5], with only the root included in the block's hash. \nOld blocks can then be compacted by stubbing off branches of the tree.  The interior hashes do \nnot need to be stored.\nTransactions Hashed in a Merkle Tree After Pruning Tx0-2 from the Block\nA block header with no transactions would be about 80 bytes.  If we suppose blocks are \ntypically selling with 2GB of RAM as of 2008, and Moore's Law predicting current growth of \n1.2GB per year, storage should not be a problem even if the block headers must be kept in \n8. Simplified Payment Verification\nIt is possible to verify payments without running a full network node.  A user only needs to keep \na copy of the block headers of the longest proof-of-work chain, which he can get by querying \nnetwork nodes until he's convinced he has the longest chain, and obtain the Merkle branch \nlinking the transaction to the block it's timestamped in.  He can't check the transaction for \nand blocks added after it further confirm the network has accepted it.\nMerkle Branch for Tx3\nAs such, the verification is reliable as long as honest nodes control the network, but is more \nvulnerable if the network is overpowered by an attacker.  While network nodes can verify \ntransactions for",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 3
+    },
+    {
+      "id": "8e3a9b05-78b3-450a-9957-871603519009",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (4)",
+      "type": "pdf",
+      "content": " themselves, the simplified method can be fooled by an attacker's fabricated \ntransactions for as long as the attacker can continue to overpower the network.  One strategy to \nprotect against this would be to accept alerts from network nodes when they detect an invalid \nblock, prompting the user's software to download the full block and alerted transactions to \nconfirm the inconsistency.  Businesses that receive frequent payments will probably still want to \nrun their own nodes for more independent security and quicker verification.\n9. Combining and Splitting Value\nAlthough it would be possible to handle coins individually, it would be unwieldy to make a \nseparate transaction for every cent in a transfer.  To allow value to be split and combined, \ntransactions contain multiple inputs and outputs.  Normally there will be either a single input \nfrom a larger previous transaction or multiple inputs combining smaller amounts, and at most two \noutputs: one for the payment, and one returning the change, if any, back to the sender.  \nIn Out\nIn...\nIt should be noted that fan-out, where a transaction depends on several transactions, and those \ntransactions depend on many more, is not a problem here.  There is never the need to extract a \ncomplete standalone copy of a transaction's history.\n10. Privacy\nThe traditional banking model achieves a level of privacy by limiting access to information to the \nparties involved and the trusted third party.  The necessity to announce all transactions publicly \nprecludes this method, but privacy can still be maintained by breaking the flow of information in \nanother place: by keeping public keys anonymous.  The public can see that someone is sending \nan amount to someone else, but without information linking the transaction to anyone.  This is \nsimilar to the level of information released by stock exchanges, where the time and size of \nindividual trades, the \"tape\", is made public, but without telling who the parties were.\nAs an additional firewall, a new key pair should be used for each transaction to keep them \nfrom being linked to a common owner.  Some linking is still unavoidable with multi-input \ntransactions, which necessarily reveal that their inputs were owned by the same owner.  The risk \nis that if the owner of a key is revealed,",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 4
+    },
+    {
+      "id": "1b070b4b-c227-42cf-a229-2c4ad81a1a03",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (5)",
+      "type": "pdf",
+      "content": " linking could reveal other transactions that belonged to \nthe same owner.\n11. Calculations\nWe consider the scenario of an attacker trying to generate an alternate chain faster than the honest \nchain.  Even if this is accomplished, it does not throw the system open to arbitrary changes, such \nas creating value out of thin air or taking money that never belonged to the attacker.  Nodes are \nnot going to accept an invalid transaction as payment, and honest nodes will never accept a block \ncontaining them.  An attacker can only try to change one of his own transactions to take back \nmoney he recently spent.\nThe race between the honest chain and an attacker chain can be characterized as a Binomial \nRandom Walk.  The success event is the honest chain being extended by one block, increasing its \nlead by +1, and the failure event is the attacker's chain being extended by one block, reducing the \ngap by -1.\nThe probability of an attacker catching up from a given deficit is analogous to a Gambler's \nRuin problem.  Suppose a gambler with unlimited credit starts at a deficit and plays potentially an \ninfinite number of trials to try to reach breakeven.  We can calculate the probability he ever \nreaches breakeven, or that an attacker ever catches up with the honest chain, as follows [8]:\np = probability an honest node finds the next block\nq = probability the attacker finds the next block\nq = probability the attacker will ever catch up from z blocks behind\nGiven our assumption that p > q, the probability drops exponentially as the number of blocks the \nattacker has to catch up with increases.  With the odds against him, if he doesn't make a lucky \nlunge forward early on, his chances become vanishingly small as he falls further behind.\nWe now consider how long the recipient of a new transaction needs to wait before being \nsufficiently certain the sender can't change the transaction.  We assume the sender is an attacker \nhimself after some time has passed.  The receiver will be alerted when that happens, but the \nsender hopes it will be too late.\nThe receiver generates a new key pair and gives the public key to the sender shortly before \nsigning.  This prevents the sender from preparing a",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 5
+    },
+    {
+      "id": "bfbf1cda-8b21-4f42-b47b-e2ecff1a2172",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (6)",
+      "type": "pdf",
+      "content": " chain of blocks ahead of time by working on \nit continuously until he is lucky enough to get far enough ahead, then executing the transaction at \nthat moment.  Once the transaction is sent, the dishonest sender starts working in secret on a \nparallel chain containing an alternate version of his transaction.\nThe recipient waits until the transaction has been added to a block and z blocks have been \nlinked after it.  He doesn't know the exact amount of progress the attacker has made, but \nassuming the honest blocks took the average expected time per block, the attacker's potential \nprogress will be a Poisson distribution with expected value:\nTo get the probability the attacker could still catch up now, we multiply the Poisson density for \neach amount of progress he could have made by the probability he could catch up from that point:\nRearranging to avoid summing the infinite tail of the distribution...\nConverting to C code...\nRunning some results, we can see the probability drop off exponentially with z.\nSolving for P less than 0.1%...\n12. Conclusion\nWe have proposed a system for electronic transactions without relying on trust.  We started with \nthe usual framework of coins made from digital signatures, which provides strong control of \nownership, but is incomplete without a way to prevent double-spending.  To solve this, we \nproposed a peer-to-peer network using proof-of-work to record a public history of transactions \nthat quickly becomes computationally impractical for an attacker to change if honest nodes \ncontrol a majority of CPU power.  The network is robust in its unstructured simplicity.  Nodes \nwork all at once with little coordination.  They do not need to be identified, since messages are \nnot routed to any particular place and only need to be delivered on a best effort basis.  Nodes can \nleave and rejoin the network at will, accepting the proof-of-work chain as proof of what \nhappened while they were gone.  They vote with their CPU power, expressing their acceptance of \nvalid blocks by working on extending them and rejecting invalid blocks by refusing to work on \nthem.  Any needed rules and incentives can be enforced with this consensus mechanism.\n[1] W. Dai, \"b-money,\"",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 6
+    },
+    {
+      "id": "e96e875a-287f-478c-92e1-6d758f4a02d6",
+      "title": "C:/Users/alenk/Desktop/bitcoin.pdf (8)",
+      "type": "pdf",
+      "content": " http://www.weidai.com/bmoney.txt, 1998.\n[2] H. Massias, X.S. Avila, and J.-J. Quisquater, \"Design of a secure timestamping service with minimal \ntrust requirements,\" In 20th Symposium on Information Theory in the Benelux, May 1999.\n[3] S. Haber, W.S. Stornetta, \"How to time-stamp a digital document,\" In Journal of Cryptology, vol 3, no \n[4] D. Bayer, S. Haber, W.S. Stornetta, \"Improving the efficiency and reliability of digital time-stamping,\" \nIn Sequences II: Methods in Communication, Security and Computer Science, pages 329-334, 1993.\n[5] S. Haber, W.S. Stornetta, \"Secure names for bit-strings,\" In Proceedings of the 4th ACM Conference \non Computer and Communications Security, pages 28-35, April 1997.\n[6] A. Back, \"Hashcash - a denial of service counter-measure,\" \n[7] R.C. Merkle, \"Protocols for public key cryptosystems,\" In Proc. 1980 Symposium on Security and \n[8] W. Feller, \"An introduction to probability theory and its applications,\" 1957.\n",
+      "path": "C:/Users/alenk/Desktop/bitcoin.pdf",
+      "index": 8
+    }
+  ],
+  "pages": [
+    {
+      "id": "f522ce29-e8bd-419d-ad70-c6f089f8cc5f",
+      "references": [
+        {
+          "id": "c7894bab-0732-43e9-8d30-a416163f13d6",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (0)",
+          "source_id": "4391530d-9ec2-4245-919d-7608ee1a2c36"
+        }
+      ],
+      "layout": {
+        "id": "37ceb1ea-520b-4474-a672-a984ee95aa34",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "a8278751-ee6d-4a2c-bfd3-675cbcf1f1ff",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "Bitcoin: A Peer-to-Peer Electronic Cash System Abstract. A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending. We propose a solution to the double-spending problem using a peer-to-peer network. The network timestamps transactions by hashing them into an ongoing chain of hash-based proof-of-work, forming a record that cannot be changed without redoing the proof-of-work. The longest chain not only serves as proof of the sequence of events witnessed, but proof that it came from the largest pool of CPU power. As long as a majority of CPU power is controlled by nodes that are not cooperating to attack the network, they'll generate the longest chain and outpace attackers. The network itself requires minimal structure. Messages are broadcast on a best effort basis, and nodes can leave and rejoin the network at will, accepting the longest proof-of-work chain as proof of what happened while they were gone. 1. Introduction Commerce on the Internet has come to rely almost exclusively on financial\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "3cf7bb20-5363-4876-b89e-e315f8d39fb9",
+      "references": [
+        {
+          "id": "b1285dc3-deb7-43e6-8e57-8dd60cf0a6a8",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (0)",
+          "source_id": "55494a5a-0a7e-4e38-b866-60d93f7090f4"
+        }
+      ],
+      "layout": {
+        "id": "905d3bc0-24dd-4f80-8f20-ead1653721bc",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "03b70b40-3adf-4748-93a8-a473ca671d8c",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The Bitcoin protocol is a system for electronic transactions without relying on trust. \nUsers hold the crypto keys to their own money and transact directly with each other, with the help of the network to check for double-spending. \nBut the network is limited to validating the transactions. \nThe main benefits are lost or stolen Bitcoins can be recovered, and fraud is non-trivial to pull off. \nThe main disadvantages are that double-spending is non-trivial to prevent, and the anonymity of \ntransactions is not total.\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "081d9941-d3c5-433d-8579-992acfeb70d1",
+      "references": [
+        {
+          "id": "3b69c48e-e942-40b2-8e1b-ce199c8b9bb4",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (1)",
+          "source_id": "f87e1496-ff47-460e-837c-cdeeca5a0f77"
+        }
+      ],
+      "layout": {
+        "id": "1d4a6137-0d0e-4b14-b105-14ce4139d331",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "2d4b39a7-e1fc-4c06-8e70-08356fa2f968",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The proof-of-work also solves the problem of determining representation in majority decision making. If the majority were based on one-IP-address-one-vote, it could be subverted by anyone able to allocate many IPs. Proof-of-work is essentially one-CPU-one-vote. The majority decision is represented by the longest chain, which has the greatest proof-of-work effort invested fastest and outpace any competing chains. To modify a past block, an attacker would have to redo the proof-of-work of the block and all blocks after it and then catch up with and surpass the work of the honest nodes. We will show later that the probability of a slower attacker catching up diminishes exponentially as subsequent blocks are added.\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "43c60d60-1082-4166-92bd-f0451471233e",
+      "references": [
+        {
+          "id": "8c27bdaa-3dc7-4ec8-80d6-a802aa0307bd",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (2)",
+          "source_id": "8ce01e29-8046-40fa-b26b-2dbd3233c484"
+        }
+      ],
+      "layout": {
+        "id": "5776ae1c-5704-477f-9563-33313b5021a4",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "5a911324-de86-46eb-a7fa-df417069116b",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The steps to run the network are as follows: 1) New transactions are broadcast to all nodes. 2) Each node collects new transactions into a block. 3) Each node works on finding a difficult proof-of-work for its block. 4) When a node finds a proof-of-work, it broadcasts the block to all nodes. 5) Nodes accept the block only if all transactions in it are valid and not already spent. 6) Nodes express their acceptance of the block by working on creating the next block in the chain, using the hash of the accepted block as the previous hash. Nodes always consider the longest chain to be the correct one and will keep working on extending it. If two nodes broadcast different versions of the next block simultaneously, some nodes will save the other branch in case it becomes longer. The tie will be broken when the next proof-of-work is found and one branch becomes longer; the nodes that were working on the other branch will then switch to the longer one. New transaction broadcasts do not necessarily need to reach all nodes. As long as they reach many nodes, they will get into a block before long. Block broadcasts are also tolerant of dropped packets realizes it missed one.\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "c50fd0ff-8fb1-479e-afe8-8bb370a34448",
+      "references": [
+        {
+          "id": "babd9ba2-c92a-47fb-a02b-999ac9af3dfd",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (3)",
+          "source_id": "8b56d6b4-d5ca-4f1e-ab64-c507e79a6b0d"
+        }
+      ],
+      "layout": {
+        "id": "d5af2f33-899b-4651-aa4c-edcac1fc07cb",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "611202e0-d068-4795-adc8-8d7d15ae4bbd",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The bitcoin network is a peer-to-peer payment network that operates on a \ndistributed ledger called a blockchain.  Transactions are recorded into blocks \nand added to the blockchain through a process called mining.  The bitcoin protocol uses a \nproof-of-work system to record transactions. The work performed by miners is \ncomputationally expensive. As a result, mining is a very competitive business where no \nsingle miner can control what is included in the block chain.\nBitcoin uses the Hashcash proof of work.\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "ca3bfe52-8c7f-4469-8801-362f2811a351",
+      "references": [
+        {
+          "id": "8e47c9c1-e424-4e10-a8c5-7927be14652a",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (4)",
+          "source_id": "8e3a9b05-78b3-450a-9957-871603519009"
+        }
+      ],
+      "layout": {
+        "id": "e6ec04e0-bb2e-4377-87ea-c586b356a152",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "8b05adbf-6025-4968-ad25-16151171f4da",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The traditional banking model achieves a level of privacy by limiting access to information to the parties involved and the trusted third party. The necessity to announce all transactions publicly precludes this method, but privacy can still be maintained by breaking the flow of information in another place: by keeping public keys anonymous. The public can see that someone is sending an amount to someone else, but without information linking the transaction to anyone. This is similar to the level of information released by stock exchanges, where the time and size of individual trades, the \"tape\", is made public, but without telling who the parties were. As an additional firewall, a new key pair should be used for each transaction to keep them from being linked to a common owner. Some linking is still unavoidable with multi-input transactions, which necessarily reveal that their inputs were owned by the same owner. The risk is that if the owner of a key is revealed, linking could reveal other transactions that belonged to the same owner.\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "c661a7a5-ba92-404a-9ab3-ee8e743e30f0",
+      "references": [
+        {
+          "id": "e374b493-a1a6-42b0-8788-1d13656ef219",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (5)",
+          "source_id": "1b070b4b-c227-42cf-a229-2c4ad81a1a03"
+        }
+      ],
+      "layout": {
+        "id": "4e6042f0-5082-4f40-98fe-11e84188c941",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "b4a2cc5e-5632-4754-a462-a6c01c11271d",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "The race between the honest chain and an attacker chain can be characterized as a Binomial \nRandom Walk. The success event is the honest chain being extended by one block, increasing its lead \nby +1, and the failure event is the attacker's chain being extended by one block, reducing the gap by -1. \nThe probability of an attacker catching up from a given deficit is analogous to a Gambler's Ruin problem. \nSuppose a gambler with unlimited credit starts at a deficit and plays potentially an infinite number of trials \nto try to reach breakeven. We can calculate the probability he ever reaches breakeven, or that an attacker ever catches up with the honest chain, as follows [8]:\np = probability an honest node finds the next block\nq = probability the attacker finds the next block\nq = probability the attacker will ever catch up from z blocks behind\nGiven our assumption that p > q, the probability drops exponentially as the number of blocks the attacker has to catch up with increases. With the odds against him, if he doesn't make a lucky lunge forward early on, his chances become vanishingly small as he falls further behind.\nWe now consider how long the recipient of a new transaction needs\n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "d548afe6-031d-4f40-b392-8760e77187fe",
+      "references": [
+        {
+          "id": "fe83e8b8-7820-47e0-870a-753c8c5d7173",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (6)",
+          "source_id": "bfbf1cda-8b21-4f42-b47b-e2ecff1a2172"
+        }
+      ],
+      "layout": {
+        "id": "6a0563fc-14c0-4f48-8ecb-7d21161d26e4",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "caf2ce26-5a6d-4269-aedd-7ae00f8f9d5d",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "b-money is a system for electronic transactions without relying on trust. \nIt is a purely peer-to-peer version of electronic cash that requires no trusted \nthird parties.  The system works by generating candidate values for the \npublic-key and demonstrating how the public-key can be derived from these values. \nThe demonstration requires showing a zero-knowledge proof of knowledge of the \nmultiplication of two large prime numbers, which is hard to compute but easy to check. \nThe system uses a chain of hash-based proof-of-work to show that \nthe candidate values were generated according to the specification. \nb-money is the first system to introduce the concept of proof-of-work as a requirement \nfor extending the blockchain.  The system is entirely decentralized with no trusted parties, \nand relies only on math and cryptography. \n\n"
+          }
+        ]
+      },
+      "quills": []
+    },
+    {
+      "id": "18775fc5-4d16-43cb-ba18-035f16113133",
+      "references": [
+        {
+          "id": "a807f668-5180-43aa-ab9e-ccce44335bfe",
+          "title": "C:/Users/alenk/Desktop/bitcoin.pdf (8)",
+          "source_id": "e96e875a-287f-478c-92e1-6d758f4a02d6"
+        }
+      ],
+      "layout": {
+        "id": "e35cae38-a2d0-4863-914c-d7449133ff6f",
+        "position": 0.0,
+        "size": 1.0,
+        "orientation": "horizontal",
+        "previous": null,
+        "next": null,
+        "children": [
+          {
+            "id": "3ebb7b22-bc75-409f-a75e-3052aa36a100",
+            "position": 0.0,
+            "size": 1,
+            "previous": null,
+            "next": null,
+            "props": { "type": "default", "paramId": null },
+            "type": "pane"
+          }
+        ],
+        "type": "layout"
+      },
+      "content": {
+        "ops": [
+          {
+            "insert": "\n\nThe first two parts of this article, \"The Science of Deception\" and \"The Science of Influence,\" provide a general introduction to the science of persuasion, explaining how it works and why it is so effective. The third part, \"The Science of Persuasion in Practice,\" shows how to use this information to persuade others.\n\nPart 1: The Science of Deception\n\nPart 2: The Science of Influence\n\nPart 3: The Science of Persuasion in Practice\n\nThe Science of Persuasion in Practice\n\n\n\n"
+          }
+        ]
+      },
+      "quills": []
+    }
+  ]
+}

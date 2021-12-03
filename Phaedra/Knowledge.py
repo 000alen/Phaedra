@@ -1,12 +1,12 @@
 """Phaedra's Knowledge operations module."""
 
 
-from typing import Dict
+from typing import Dict, List
 
 import wikipedia
 
 
-def summary(query: str) -> str:
+def wsummary(query: str) -> str:
     """Returns Wikipedia summary.
 
     :param query: Query to search Wikipedia for.
@@ -19,7 +19,7 @@ def summary(query: str) -> str:
     return wikipedia.summary(query)
 
 
-def suggestions(query: str) -> Dict[str, str]:
+def wsuggestion(query: str) -> Dict[str, str]:
     """Returns Wikipedia suggestions.
 
     :param query: Query to search Wikipedia for.
@@ -33,7 +33,7 @@ def suggestions(query: str) -> Dict[str, str]:
     return {suggestion: wikipedia.page(suggestion).url for suggestion in suggestions}
 
 
-def image(query: str) -> str:
+def wimage(query: str) -> List[str]:
     """Returns Wikipedia image.
 
     :param query: Query to search Wikipedia for.
@@ -44,4 +44,4 @@ def image(query: str) -> str:
     """
 
     wikipedia_page = wikipedia.page(query)
-    return wikipedia_page.images[0]
+    return wikipedia_page.images

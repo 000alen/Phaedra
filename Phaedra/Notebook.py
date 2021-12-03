@@ -173,7 +173,9 @@ class Notebook:
             notebook.add_page_reference(
                 page_id, Reference(title=f"{path} ({index})", sourceId=source_id)
             )
-            notebook.add_page_content_operation(page_id, {"insert": f"{summary}\n\n"})
+            notebook.add_page_content_operation(
+                page_id, {"insert": {"pre": f"{summary}\n\n"}}
+            )
 
         return notebook
 

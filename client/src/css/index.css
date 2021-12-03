@@ -40,6 +40,17 @@ kbd {
   border-radius: 2px;
 }
 
+#editor-container hr {
+  border: none;
+  color: #111;
+  letter-spacing: 1em;
+  text-align: center;
+}
+
+#editor-container hr:before {
+  content: "...";
+}
+
 /* ! TODO: Clean CSS */
 .react-pdf__Document {
   width: 100% !important;

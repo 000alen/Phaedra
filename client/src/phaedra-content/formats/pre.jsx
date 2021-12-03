@@ -1,4 +1,3 @@
-import { Persona, PersonaSize } from "@fluentui/react";
 import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -6,8 +5,8 @@ import { v4 as uuidv4 } from "uuid";
 
 const BlockEmbed = Quill.import("blots/block/embed");
 
-export class Mention extends BlockEmbed {
-  static blotName = "mention";
+export class Pre extends BlockEmbed {
+  static blotName = "pre";
   static tagName = "div";
   static className = "ql-custom";
   static refs = {};
@@ -15,10 +14,10 @@ export class Mention extends BlockEmbed {
   static create(value) {
     const id = uuidv4();
     const node = super.create(value);
-    const refs = Mention.refs;
+    const refs = Pre.refs;
     node.setAttribute("data-id", id);
-    Mention.data = value;
-    Mention.refs = {
+    Pre.data = value;
+    Pre.refs = {
       ...refs,
       [id]: React.createRef(),
     };
@@ -27,14 +26,14 @@ export class Mention extends BlockEmbed {
 
   static value(domNode) {
     const id = domNode.getAttribute("data-id");
-    const ref = Mention.refs[id];
+    const ref = Pre.refs[id];
     return ref && ref.current && ref.current.getData();
   }
 
   constructor(domNode) {
     super(domNode);
     this.id = domNode.getAttribute("data-id");
-    this.data = Mention.data;
+    this.data = Pre.data;
   }
 
   attach() {
@@ -44,9 +43,9 @@ export class Mention extends BlockEmbed {
 
   renderPortal(blotId, pageId, notebookManager, page) {
     const { options } = Quill.find(this.scroll.domNode.parentNode);
-    const ref = Mention.refs[blotId];
+    const ref = Pre.refs[blotId];
     return ReactDOM.createPortal(
-      <MentionComponent
+      <PreComponent
         ref={ref}
         data={this.data}
         readOnly={options.readOnly}
@@ -64,7 +63,7 @@ export class Mention extends BlockEmbed {
   }
 }
 
-class MentionComponent extends React.Component {
+class PreComponent extends React.Component {
   getData() {
     const { data } = this.props;
     return data;
@@ -73,10 +72,6 @@ class MentionComponent extends React.Component {
   render() {
     const { data } = this.props;
 
-    return (
-      <div>
-        <Persona text={data} size={PersonaSize.size8} />
-      </div>
-    );
+    return <pre>{data}</pre>;
   }
 }

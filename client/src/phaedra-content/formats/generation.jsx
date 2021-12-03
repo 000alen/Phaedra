@@ -69,19 +69,29 @@ class GenerationComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    const { data } = props;
+
+    const query = typeof data === "string" ? data : data.query;
+    const response = typeof data === "string" ? null : data.response;
+
     this.state = {
-      response: null,
+      query,
+      response,
     };
   }
 
   componentDidMount() {
     /** @type {{data: string, notebookManager: import("../../HOC/UseNotebook/UseNotebook").NotebookManager, page: import("../../HOC/UseNotebook/Notebook").IPage}} */
-    const { data, notebookManager, page } = this.props;
+    const { notebookManager, page } = this.props;
+    const { query, response } = this.state;
+
+    if (response !== null) return;
+
     generation(
       page.references.length > 0
         ? notebookManager.getSource(page.references[0].sourceId).content
         : "",
-      data
+      query
     )
       .then((response) => {
         this.setState({ response });
@@ -90,19 +100,21 @@ class GenerationComponent extends React.Component {
   }
 
   getData() {
-    const { data } = this.props;
-    return data;
+    const { query, response } = this.state;
+    return response === null ? query : { query, response };
   }
 
   render() {
-    const { data } = this.props;
-    const { response } = this.state;
+    const { query, response } = this.state;
 
-    return (
+    return response === null ? (
       <div className="flex flex-row space-x-2 align-middle">
         <Spinner size={SpinnerSize.xSmall} />
-        <Label>{data}</Label>
-        {response !== null && <Label>{response}</Label>}
+        <Label>{query}</Label>
+      </div>
+    ) : (
+      <div>
+        <Label>{`${query} ${response}`}</Label>
       </div>
     );
   }

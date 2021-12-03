@@ -1,4 +1,4 @@
-import { Label, Spinner, SpinnerSize } from "@fluentui/react";
+import { IconButton, Label, Spinner, SpinnerSize } from "@fluentui/react";
 import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -69,15 +69,30 @@ class ImageComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    this.increaseIndex = this.increaseIndex.bind(this);
+    this.decreaseIndex = this.decreaseIndex.bind(this);
+
+    const { data } = props;
+
+    const query = typeof data === "string" ? data : data.query;
+    const response = typeof data === "string" ? null : data.response;
+    const index = typeof data === "string" ? 0 : data.index;
+
     this.state = {
-      response: null,
+      query,
+      response,
+      index,
     };
   }
 
   componentDidMount() {
     /** @type {{data: string, notebookManager: import("../../HOC/UseNotebook/UseNotebook").NotebookManager, page: import("../../HOC/UseNotebook/Notebook").IPage}} */
-    const { data } = this.props;
-    wimage(data)
+
+    const { query, response } = this.state;
+
+    if (response !== null) return;
+
+    wimage(query)
       .then((response) => {
         this.setState({ response });
       })
@@ -85,19 +100,43 @@ class ImageComponent extends React.Component {
   }
 
   getData() {
-    const { data } = this.props;
-    return data;
+    const { query, response, index } = this.state;
+    return response === null ? query : { query, response, index };
+  }
+
+  increaseIndex() {
+    this.setState(({ index }) => ({ index: index + 1 }));
+  }
+
+  decreaseIndex() {
+    this.setState(({ index }) => ({ index: index > 0 ? index - 1 : index }));
   }
 
   render() {
-    const { data } = this.props;
-    const { response } = this.state;
+    const { query, response, index } = this.state;
 
-    return (
+    return response === null ? (
       <div className="flex flex-row space-x-2 align-middle">
         <Spinner size={SpinnerSize.xSmall} />
-        <Label>{data}</Label>
-        {response !== null && <Label>{response}</Label>}
+        <Label>{query}</Label>
+      </div>
+    ) : (
+      <div className="relative">
+        <img
+          className="rounded"
+          src={response[index % response.length]}
+          alt={query}
+        />
+        <div className="absolute right-0 bottom-0">
+          <IconButton
+            iconProps={{ iconName: "ChromeBack" }}
+            onClick={this.decreaseIndex}
+          />
+          <IconButton
+            iconProps={{ iconName: "ChromeBackMirrored" }}
+            onClick={this.increaseIndex}
+          />
+        </div>
       </div>
     );
   }

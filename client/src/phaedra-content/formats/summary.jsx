@@ -69,15 +69,24 @@ class SummaryComponent extends React.Component {
   constructor(props) {
     super(props);
 
+    const { data } = props;
+
+    const query = typeof data === "string" ? data : data.query;
+    const response = typeof data === "string" ? null : data.response;
+
     this.state = {
-      response: null,
+      query,
+      response,
     };
   }
 
   componentDidMount() {
     /** @type {{data: string, notebookManager: import("../../HOC/UseNotebook/UseNotebook").NotebookManager, page: import("../../HOC/UseNotebook/Notebook").IPage}} */
-    const { data } = this.props;
-    wsummary(data)
+    const { query, response } = this.state;
+
+    if (response !== null) return;
+
+    wsummary(query)
       .then((response) => {
         this.setState({ response });
       })
@@ -85,19 +94,22 @@ class SummaryComponent extends React.Component {
   }
 
   getData() {
-    const { data } = this.props;
-    return data;
+    const { query, response } = this.state;
+    return response === null ? query : { query, response };
   }
 
   render() {
-    const { data } = this.props;
-    const { response } = this.state;
+    const { query, response } = this.state;
 
-    return (
+    return response === null ? (
       <div className="flex flex-row space-x-2 align-middle">
         <Spinner size={SpinnerSize.xSmall} />
-        <Label>{data}</Label>
-        {response !== null && <Label>{response}</Label>}
+        <Label>{query}</Label>
+      </div>
+    ) : (
+      <div>
+        <Label>{query}</Label>
+        <pre>{response}</pre>
       </div>
     );
   }

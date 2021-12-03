@@ -116,7 +116,6 @@ export class Editor extends React.Component {
     this.editor.on("text-change", this.onContentChange);
 
     let blots = [];
-    /** Listener to listen for custom format */
     this.editor.scroll.emitter.on("blot-mount", (blot) => {
       blots.push(blot);
       defer(() => {

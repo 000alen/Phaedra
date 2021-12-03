@@ -43,6 +43,8 @@ export class Mention extends BlockEmbed {
   }
 
   renderPortal(blotId, pageId, notebookManager, page) {
+    console.log(this.data);
+
     const { options } = Quill.find(this.scroll.domNode.parentNode);
     const ref = Mention.refs[blotId];
     return ReactDOM.createPortal(

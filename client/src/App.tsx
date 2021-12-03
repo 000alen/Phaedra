@@ -1,208 +1,291 @@
-import "./css/App.css";
-
-import Mousetrap from "mousetrap";
-import React, { Component } from "react";
+import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { StatusBarComponent } from "./components/StatusBar/StatusBarComponent";
-import TabsComponent from "./components/Tabs/TabsComponent";
-import TopBarComponent from "./components/TopBarComponent";
-import { AppController } from "./contexts/AppController";
-import { AppProps, AppState } from "./IApp";
-import { EmptyPage } from "./pages/EmptyPage";
-import { MainPage } from "./pages/MainPage/MainPage";
-import { AppShortcuts } from "./shortcuts/AppShortcuts";
-import {
-  IClipboard,
-  IClipboardCommand,
-  IClipboardManipulation,
-} from "./structures/clipboard/IClipboardManipulation";
-import {
-  ITab,
-  ITabsCommand,
-  ITabsManipulation,
-} from "./structures/tabs/ITabsManipulation";
-import { createTab } from "./structures/tabs/TabsConstructors";
-import { getTabContent } from "./structures/tabs/TabsQueries";
-import {
-  ITask,
-  ITasksCommand,
-  ITasksManipulation,
-} from "./structures/tasks/ITasksManipulation";
-import {
-  IWidget,
-  IWidgetsCommand,
-  IWidgetsManipulation,
-} from "./structures/widgets/IWidgetsManipulation";
+import { mergeStyles } from "@fluentui/react";
 
-export default class App extends Component<AppProps, AppState> {
+import { Dialog } from "./components/Dialog";
+import { Message } from "./components/Message";
+import { StatusBar } from "./components/StatusBar";
+import { TasksPanel } from "./components/TasksPanel";
+import { TopBar } from "./components/TopBar";
+import { AppController, IAppController } from "./contexts";
+import { IDialog, UseDialogs, UseDialogsInjectedProps } from "./HOC/UseDialogs";
+import {
+  IMessage,
+  UseMessages,
+  UseMessagesInjectedProps,
+} from "./HOC/UseMessages";
+import { UsePanels, UsePanelsInjectedProps } from "./HOC/UsePanels";
+import { IShortcut, UseShortcuts } from "./HOC/UseShortcuts";
+import { UseTabs, UseTabsInjectedProps } from "./HOC/UseTabs";
+import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
+import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
+import { MainTab } from "./tabs/MainTab";
+import { getTheme } from "./themes";
+
+type AppProps = UseDialogsInjectedProps &
+  UseMessagesInjectedProps &
+  UsePanelsInjectedProps &
+  UseTabsInjectedProps &
+  UseTasksInjectedProps &
+  UseWidgetsInjectedProps;
+
+interface AppState {
+  tasksPanelShown: boolean;
+  appController: IAppController;
+}
+
+export class AppSkeleton extends React.Component<AppProps, AppState> {
+  activeTabRef: any;
+
   constructor(props: AppProps) {
     super(props);
 
-    this.tabsDo = this.tabsDo.bind(this);
-    this.clipboardDo = this.clipboardDo.bind(this);
-    this.tasksDo = this.tasksDo.bind(this);
-    this.widgetsDo = this.widgetsDo.bind(this);
-    this.getTabs = this.getTabs.bind(this);
-    this.getActiveTab = this.getActiveTab.bind(this);
-    this.getClipboard = this.getClipboard.bind(this);
-    this.getTasks = this.getTasks.bind(this);
-    this.getWidgets = this.getWidgets.bind(this);
+    this.renderMessage = this.renderMessage.bind(this);
+
+    this.isTasksPanelShown = this.isTasksPanelShown.bind(this);
+    this.showTasksPanel = this.showTasksPanel.bind(this);
+    this.hideTasksPanel = this.hideTasksPanel.bind(this);
+
+    this.renderDialog = this.renderDialog.bind(this);
+
+    const {
+      dialogs,
+      dialogsManager,
+      messages,
+      messagesManager,
+      panels,
+      panelsManager,
+      tabs,
+      activeTabId,
+      tabsManager,
+      tasks,
+      tasksManager,
+      widgets,
+      widgetsManager,
+    } = this.props;
 
     this.state = {
-      tabs: [],
-      activeTab: undefined,
-      clipboard: [],
-      tasks: [],
-      widgets: [],
+      tasksPanelShown: false,
+
       appController: {
-        tabsDo: this.tabsDo,
-        clipboardDo: this.clipboardDo,
-        tasksDo: this.tasksDo,
-        widgetsDo: this.widgetsDo,
-        getTabs: this.getTabs,
-        getActiveTab: this.getActiveTab,
-        getClipboard: this.getClipboard,
-        getTasks: this.getTasks,
-        getWidgets: this.getWidgets,
+        isTasksPanelShown: this.isTasksPanelShown,
+        showTasksPanel: this.showTasksPanel,
+        hideTasksPanel: this.hideTasksPanel,
+
+        dialogs,
+        dialogsManager,
+        messages,
+        messagesManager,
+        panels,
+        panelsManager,
+        tabs,
+        activeTabId,
+        tabsManager,
+        tasks,
+        tasksManager,
+        widgets,
+        widgetsManager,
       },
     };
   }
 
-  componentDidMount(): void {
-    for (const [keys, action] of Object.entries(AppShortcuts)) {
-      Mousetrap.bind(
-        keys,
-        (event) => {
-          action(this.state.appController);
-          event.preventDefault();
-        },
-        "keyup"
-      );
-    }
+  get dialogs() {
+    return this.props.dialogs;
   }
 
-  componentWillUnmount(): void {
-    for (const keys of Object.keys(AppShortcuts)) {
-      Mousetrap.unbind(keys);
-    }
+  get dialogsManager() {
+    return this.props.dialogsManager;
   }
 
-  tabsDo(manipulation: ITabsManipulation, args: ITabsCommand): void {
-    if (args === undefined) args = {};
-
-    let { tabs, activeTab } = this.state;
-
-    switch (manipulation.name) {
-      case "addTab":
-        const id = uuidv4();
-        if (args.tab === undefined) {
-          const tab = createTab({
-            id: id,
-            content: <EmptyPage key={id} id={id} />,
-          });
-          args = { ...args, tab: tab };
-        }
-        break;
-      default:
-        break;
-    }
-
-    let tabsInformation = manipulation(tabs, activeTab!, args);
-
-    this.setState((state) => {
-      return {
-        ...state,
-        ...tabsInformation,
-      };
-    });
+  get messages() {
+    return this.props.messages;
   }
 
-  clipboardDo(
-    manipulation: IClipboardManipulation,
-    args: IClipboardCommand
-  ): void {
-    const clipboard = this.state.clipboard;
-    const currentClipboard = manipulation(clipboard, args);
-
-    this.setState((state) => {
-      return {
-        ...state,
-        clipboard: currentClipboard,
-      };
-    });
+  get messagesManager() {
+    return this.props.messagesManager;
   }
 
-  tasksDo(manipulation: ITasksManipulation, args: ITasksCommand): void {
-    const tasks = this.state.tasks;
-    const currentTasks = manipulation(tasks, args);
-
-    this.setState((state) => {
-      return {
-        ...state,
-        tasks: currentTasks,
-      };
-    });
+  get panels() {
+    return this.props.panels;
   }
 
-  widgetsDo(manipulation: IWidgetsManipulation, args: IWidgetsCommand): void {
-    const widgets = this.state.widgets;
-    const currentWidgets = manipulation(widgets, args);
-
-    this.setState((state) => {
-      return {
-        ...state,
-        widgets: currentWidgets,
-      };
-    });
+  get panelsManager() {
+    return this.props.panelsManager;
   }
 
-  getTabs(): ITab[] {
-    return this.state.tabs;
+  get tabs() {
+    return this.props.tabs;
   }
 
-  getActiveTab(): string | undefined {
-    return this.state.activeTab;
+  get activeTabId() {
+    return this.props.activeTabId;
   }
 
-  getClipboard(): IClipboard {
-    return this.state.clipboard;
+  get tabsManager() {
+    return this.props.tabsManager;
   }
 
-  getTasks(): ITask[] {
-    return this.state.tasks;
+  get tasks() {
+    return this.props.tasks;
   }
 
-  getWidgets(): IWidget[] {
-    return this.state.widgets;
+  get tasksManager() {
+    return this.props.tasksManager;
   }
 
-  render(): JSX.Element {
-    const { tabs, activeTab, tasks, widgets } = this.state;
-
-    let content;
-    if (activeTab === undefined) {
-      content = <MainPage id={uuidv4()} />;
-    } else {
-      content = getTabContent(tabs, activeTab);
-    }
+  renderMessage(message: IMessage) {
+    const { id, type, text } = message;
 
     return (
-      <AppController.Provider value={this.state.appController}>
-        <div className="app">
-          <TopBarComponent>
-            <TabsComponent
-              tabs={tabs}
-              activeTab={activeTab}
-              onAction={this.tabsDo}
+      <Message
+        key={id}
+        id={id}
+        type={type}
+        text={text}
+        onDismiss={() => this.props.messagesManager.remove(id)}
+      />
+    );
+  }
+
+  isTasksPanelShown(): boolean {
+    return this.state.tasksPanelShown;
+  }
+
+  showTasksPanel(callback?: () => void) {
+    this.setState(
+      {
+        tasksPanelShown: true,
+      },
+      callback
+    );
+  }
+
+  hideTasksPanel(callback?: () => void) {
+    this.setState(
+      {
+        tasksPanelShown: false,
+      },
+      callback
+    );
+  }
+
+  renderDialog(dialog: IDialog) {
+    return (
+      <Dialog
+        key={dialog.id}
+        id={dialog.id}
+        title={dialog.title}
+        subText={dialog.subText}
+        type={dialog.type}
+        visible={dialog.visible}
+        footer={dialog.footer}
+        onDismiss={dialog.onDismiss}
+      />
+    );
+  }
+
+  render() {
+    const {
+      dialogs,
+      messages,
+      tabs,
+      activeTabId,
+      tabsManager,
+      tasks,
+      widgets,
+    } = this.props;
+    const { appController, tasksPanelShown } = this.state;
+
+    const scrollbarStyles = mergeStyles({
+      "*::-webkit-scrollbar": {
+        width: "16px",
+      },
+      "*::-webkit-scrollbar-thumb": {
+        height: "56px",
+        borderRadius: "8px",
+        border: "4px solid transparent",
+        backgroundClip: "content-box",
+        backgroundColor: getTheme().palette.themePrimary,
+      },
+    });
+
+    const TabComponent =
+      activeTabId === undefined
+        ? MainTab
+        : tabsManager.get(activeTabId)?.component;
+
+    const tabId = activeTabId === undefined ? uuidv4() : activeTabId;
+
+    const tabProps =
+      activeTabId === undefined ? {} : tabsManager.get(activeTabId)?.props;
+
+    return (
+      <AppController.Provider value={appController}>
+        <div className={`w-screen h-screen overflow-hidden ${scrollbarStyles}`}>
+          <TopBar tabs={tabs} activeTabId={activeTabId} />
+
+          <div className="absolute top-5 inset-x-0 w-[60%] mx-auto space-y-0.5 z-50">
+            {messages.map((message) => this.renderMessage(message))}
+          </div>
+
+          <div>{dialogs.map((dialog) => this.renderDialog(dialog))}</div>
+
+          <div className="w-[100%] h-[calc(100%-60px)]">
+            <TabComponent
+              key={tabId}
+              tabRef={(ref: any) => (this.activeTabRef = ref)}
+              tabId={tabId}
+              {...tabProps}
             />
-          </TopBarComponent>
+          </div>
 
-          <div className="appContent">{content}</div>
+          <StatusBar
+            onShowTasksPanel={this.showTasksPanel}
+            tasks={tasks}
+            statusBarWidgets={widgets}
+          />
 
-          <StatusBarComponent tasks={tasks} widgets={widgets} />
+          <TasksPanel
+            tasksPanelShown={tasksPanelShown}
+            hideTasksPanel={this.hideTasksPanel}
+            tasks={tasks}
+          />
         </div>
       </AppController.Provider>
     );
   }
 }
+
+export const AppShortcuts: IShortcut<AppSkeleton>[] = [
+  {
+    keys: "ctrl+n",
+    description: "New tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
+    },
+  },
+  {
+    keys: "ctrl+w",
+    description: "Close tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.tabsManager.remove(
+        appRef.current!.tabsManager.activeId()!
+      );
+    },
+  },
+  {
+    keys: "ctrl+shift+t",
+    description: "Show tasks panel",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current!.showTasksPanel();
+    },
+  },
+];
+
+export const App = UseShortcuts(
+  UseDialogs(
+    UseMessages(UsePanels(UseTabs(UseTasks(UseWidgets(AppSkeleton)))))
+  ),
+  AppShortcuts
+);

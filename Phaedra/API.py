@@ -26,32 +26,37 @@ def notebook_from_pdf():
     pdf_base64 = request.json["base64"]
     pdf_bytes = base64.b64decode(pdf_base64)
     pdf_stream = io.BytesIO(pdf_bytes)
-    notebook = Notebook.from_pdf(document_stream=pdf_stream, document_path=path)
+    notebook = Notebook.from_pdf(stream=pdf_stream, path=path)
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/notebook/from_text", methods=["POST"])
-def notebook_from_text():
-    """Creates a Notebook from text."""
-
-    notebook = Notebook.from_text(request.json["text"])
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/entities", methods=["POST"])
-def add_entities_cell():
-    """Adds entities cell to Notebook."""
+@app.route("/command/generation", methods=["POST"])
+def command_generation():
+    """Adds a generate cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_entities_cell(request.json["page_id"], cell_id=request.json["cell_id"])
+    notebook.add_generation_cell(
+        request.json["prompt"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/question", methods=["POST"])
-def add_question_cell():
+@app.route("/command/wimage", methods=["POST"])
+def command_wimage():
+    """Adds Wikipedia image cell to Notebook."""
+
+    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
+    notebook.add_image_cell(
+        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
+    )
+    json_notebook = notebook.json()
+    return jsonify(json_notebook)
+
+
+@app.route("/command/question", methods=["POST"])
+def command_question():
     """Adds question cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
@@ -64,122 +69,28 @@ def add_question_cell():
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/sparse_question", methods=["POST"])
-def add_sparse_question_cell():
-    """Adds sparse question cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_sparse_question_cell(
-        request.json["question"],
-        request.json["page_id"],
-        cell_id=request.json["cell_id"],
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/generate", methods=["POST"])
-def add_generate_cell():
-    """Adds a generate cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_generate_cell(
-        request.json["prompt"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/wikipedia_summary", methods=["POST"])
-def add_wikipedia_summary_cell():
-    """Adds Wikipedia summary cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_summary_cell(
-        request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/wikipedia_suggestions", methods=["POST"])
-def add_wikipedia_suggestions_cell():
+@app.route("/command/wsuggestion", methods=["POST"])
+def command_wsuggestion():
     """Adds Wikipedia suggestions cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_suggestions_cell(
+    notebook.add_suggestions_cell(
         request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
 
 
-@app.route("/cell/add/wikipedia_image", methods=["POST"])
-def add_wikipedia_image_cell():
-    """Adds Wikipedia image cell to Notebook."""
+@app.route("/command/wsummary", methods=["POST"])
+def command_wsummary():
+    """Adds Wikipedia summary cell to Notebook."""
 
     notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_wikipedia_image_cell(
+    notebook.add_summary_cell(
         request.json["query"], request.json["page_id"], cell_id=request.json["cell_id"]
     )
     json_notebook = notebook.json()
     return jsonify(json_notebook)
-
-
-@app.route("/cell/add/meaning", methods=["POST"])
-def add_meaning_cell():
-    """Adds meaning cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_meaning_cell(
-        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/synonym", methods=["POST"])
-def add_synonym_cell():
-    """Adds synonym cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_synonym_cell(
-        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/cell/add/antonym", methods=["POST"])
-def add_antonym_cell():
-    """Adds antonym cell to Notebook."""
-
-    notebook = Notebook.from_json(_json=json.loads(request.json["notebook"]))
-    notebook.add_antonym_cell(
-        request.json["word"], request.json["page_id"], cell_id=request.json["cell_id"]
-    )
-    json_notebook = notebook.json()
-    return jsonify(json_notebook)
-
-
-@app.route("/kill", methods=["GET"])
-def kill():
-    """Kills the server."""
-
-    def _kill():
-        function = request.environ.get("werkzeug.server.shutdown")
-        if function is None:
-            raise RuntimeError("Not running with the Werkzeug Server")
-        function()
-
-    _kill()
-    return jsonify(True)
-
-
-@app.route("/beacon", methods=["GET"])
-def beacon():
-    """ Pings the API. """
-    return jsonify(True)
 
 
 def authenticate():

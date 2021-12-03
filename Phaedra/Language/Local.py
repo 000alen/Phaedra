@@ -23,7 +23,6 @@ _model = None
 _summarizer = None
 _answerer = None
 _generator = None
-_ner = None
 
 
 def load_model():
@@ -64,13 +63,6 @@ def load_generator():
         load_model()
 
     _generator = _model
-
-
-def load_ner():
-    """loads the Named Entities Recognizer model."""
-
-    global _ner
-    _ner = transformers.pipeline("ner", grouped_entities=True, device=_device)
 
 
 def get_summarizer_tokenizer():
@@ -116,21 +108,6 @@ def get_generator_tokenizer():
     assert _generator is not None
 
     return _generator.tokenizer
-
-
-def get_ner_tokenizer():
-    """Returns the Named Entities Recognizer tokenizer.
-
-    :return: The Named Entities Recognizer tokenizer.
-
-    """
-
-    if _ner is None:
-        load_ner()
-
-    assert _ner is not None
-
-    return _ner.tokenizer
 
 
 def summarize(text: str) -> str:
@@ -349,7 +326,7 @@ def generate(prompt: str, context: str) -> str:
 
 def batch_generate(prompts: List[str], contexts: List[str]) -> List[str]:
     """Generates responses for the given prompts and contexts (local mode).
-    
+
     :param prompts: The prompts to generate responses for.
     :type prompts: List[str]
     :param contexts: The contexts to generate responses for.
@@ -448,80 +425,3 @@ def batch_generate_same_prompt(prompt: str, contexts: List[str]) -> List[str]:
         cut_on_stop(choices[0]["generated_text"], generator_parameters["stop"])
         for choices in response
     ]
-
-
-def entities(text: str) -> List[str]:
-    """Returns the entities in the given text (local mode).
-
-    :param text: The text to get the entities of.
-    :type text: str
-    :return: The entities in the given text.
-    :rtype: List[str]
-
-    """
-
-    if _ner is None:
-        load_ner()
-
-    assert _ner is not None
-
-    entities = _ner(text)
-    return [entity["word"] for entity in entities]
-
-
-def meaning(word: str) -> Dict[str, List[str]]:
-    """Returns the meanings of the given word (local mode).
-
-    :param word: The word to get the meanings of.
-    :type word: str
-    :return: The meanings of the given word.
-    :rtype: Dict[str, List[str]]
-
-    """
-
-    syns = wordnet.synsets(word)
-
-    return {
-        syn.lemmas()[0].name(): syn.definition()
-        for syn in syns
-        if len(syn.lemmas()) > 0
-    }
-
-
-def synonym(word: str) -> List[str]:
-    """Returns the synonyms of the given word (local mode).
-
-    :param word: The word to get the synonyms of.
-    :type word: str
-    :return: The synonyms of the given word.
-    :rtype: List[str]
-
-    """
-
-    syns = wordnet.synsets(word)
-
-    return list(set([lemma.name() for syn in syns for lemma in syn.lemmas()]))
-
-
-def antonym(word: str) -> List[str]:
-    """Returns the antonyms of the given word (local mode).
-
-    :param word: The word to get the antonyms of.
-    :type word: str
-    :return: The antonyms of the given word.
-    :rtype: List[str]
-
-    """
-
-    syns = wordnet.synsets(word)
-
-    return list(
-        set(
-            [
-                lemma.antonyms()[0].name()
-                for syn in syns
-                for lemma in syn.lemmas()
-                if len(lemma.antonyms()) > 0
-            ]
-        )
-    )

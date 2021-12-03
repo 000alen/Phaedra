@@ -1,35 +1,69 @@
-::-webkit-scrollbar {
-  width: 16px;
+@tailwind base;
+
+@layer base {
+  h1 {
+    @apply text-2xl font-bold;
+  }
+  h2 {
+    @apply text-xl font-bold;
+  }
+  h3 {
+    @apply text-lg font-bold;
+  }
+  a {
+    @apply text-blue-600 underline;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  height: 56px;
-  border-radius: 8px;
-  border: 4px solid transparent;
-  background-clip: content-box;
-  background-color: #933bff;
+@tailwind components;
+
+@tailwind utilities;
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag-region {
+  -webkit-app-region: no-drag;
+}
+
+:root {
+  --thickness: 1px;
+  --draggable: calc(1px + 6px);
+  --color: "white";
+}
+
+kbd {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.1em 0.4em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+/* ! TODO: Clean CSS */
+.react-pdf__Document {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: auto !important;
+}
+
+.react-pdf__Page {
+  height: 100% !important;
+  background: unset !important;
+  overflow: auto !important;
 }
 
 .react-pdf__Page__svg {
-  width: 100% !important;
-  height: auto !important;
-  user-select: unset !important;
+  width: auto !important;
+  height: 100% !important;
+  background: unset !important;
+  /* user-select: unset !important; */
+  overflow: auto !important;
 }
 
 .react-pdf__Page__svg svg {
-  width: 100% !important;
-  height: auto !important;
-}
-
-.fill-parent {
-  width: 100%;
-  height: 100%;
-}
-
-.fill-parent-x {
-  width: 100%;
-}
-
-.fill-parent-y {
-  height: 100%;
+  margin: auto !important;
+  width: auto !important;
+  height: 100% !important;
+  background: white !important;
 }

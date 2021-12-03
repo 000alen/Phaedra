@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "phaedra.notebook",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/source"
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/page"
+      }
+    }
+  },
+  "required": ["id", "name", "sources", "pages"],
+  "definitions": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "content"]
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "source_id": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "source_id"]
+    },
+    "pane": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["page", "reference"]
+        },
+        "props": {
+          "type": "object"
+        }
+      },
+      "required": ["id", "type", "props"]
+    },
+    "layout": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "orientation": {
+          "type": "string",
+          "enum": ["horizontal", "vertical"]
+        },
+        "position": {
+          "type": "number"
+        },
+        "size": {
+          "type": "number"
+        },
+        "pane": {
+          "$ref": "#/definitions/pane"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/layout"
+          }
+        }
+      },
+      "required": ["id", "orientation", "position", "size"]
+    },
+    "content": {
+      "type": "array"
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reference"
+          }
+        },
+        "layout": {
+          "$ref": "#/definitions/layout"
+        },
+        "content": {
+          "$ref": "#definitions/content"
+        }
+      },
+      "required": ["id", "references", "layout", "content"]
+    }
+  }
+}

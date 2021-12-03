@@ -4,10 +4,12 @@ const {
   ipcMain,
   globalShortcut,
   shell,
+  session,
 } = require("electron");
 const path = require("path");
 const icon = path.join(__dirname, "./icon.png");
-const { register } = require("./ElectronAPI");
+const { register } = require("./electronAPI");
+const os = require("os");
 
 let splashWindow;
 let mainWindow;
@@ -78,6 +80,16 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
+
+// ! XXX
+const reactDevToolsPath = path.join(
+  os.homedir(),
+  "AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.21.0_0"
+);
+
+app.whenReady().then(async () => {
+  await session.defaultSession.loadExtension(reactDevToolsPath);
+});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

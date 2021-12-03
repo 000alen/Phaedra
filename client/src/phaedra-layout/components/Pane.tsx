@@ -56,9 +56,9 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
   }
 
   handleMouseDown(event: React.MouseEvent) {
-    const { pane, layoutManager, keyPressed } = this.props;
+    const { pane, layoutManager } = this.props;
 
-    if (keyPressed === false) return;
+    if (event.ctrlKey === false && event.metaKey === false) return;
 
     const domRect = this.paneRef.current!.getBoundingClientRect();
 

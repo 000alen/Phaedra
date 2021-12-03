@@ -48,7 +48,7 @@ class Source:
 class Reference:
     id: str = field(default_factory=uuid_factory)
     title: str = field(default="Unnamed reference")
-    source_id: str = field(default="unknown")
+    sourceId: str = field(default="unknown")
 
 
 Content = Dict[str, List]
@@ -171,7 +171,7 @@ class Notebook:
             )
             notebook.add_page(Page(id=page_id))
             notebook.add_page_reference(
-                page_id, Reference(title=f"{path} ({index})", source_id=source_id)
+                page_id, Reference(title=f"{path} ({index})", sourceId=source_id)
             )
             notebook.add_page_content_operation(page_id, {"insert": f"{summary}\n\n"})
 

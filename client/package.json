@@ -51,7 +51,7 @@
     "build:electron": "electron-builder",
     "build:craco": "craco build",
     "start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
-    "build": "yarn build:react && yarn build:electron",
+    "build": "yarn build:craco && yarn build:electron",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

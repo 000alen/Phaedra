@@ -114,8 +114,8 @@ export class Editor extends React.Component {
       readOnly,
       modules: {
         ...MODULES,
-        ...modules,
         autoformat: { ...AUTOFORMAT, ...autoformat },
+        ...modules,
       },
       formats: [...FORMATS, ...formats],
     });

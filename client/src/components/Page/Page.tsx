@@ -73,6 +73,7 @@ export class Page extends React.Component<PageProps, PageState> {
 
     return (
       <div className="w-[100%] h-[100%] relative">
+        <div id={`toolbar(${id})`}></div>
         <Layout
           defaultLayout={page.layout}
           onLayoutChange={this.onLayoutChange}

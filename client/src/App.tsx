@@ -36,8 +36,6 @@ interface AppState {
 }
 
 export class AppSkeleton extends React.Component<AppProps, AppState> {
-  activeTabRef: any;
-
   constructor(props: AppProps) {
     super(props);
 
@@ -134,20 +132,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
     return this.props.tasksManager;
   }
 
-  renderMessage(message: IMessage) {
-    const { id, type, text } = message;
-
-    return (
-      <Message
-        key={id}
-        id={id}
-        type={type}
-        text={text}
-        onDismiss={() => this.props.messagesManager.remove(id)}
-      />
-    );
-  }
-
+  // #region Tasks Panel
   isTasksPanelShown(): boolean {
     return this.state.tasksPanelShown;
   }
@@ -167,6 +152,21 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
         tasksPanelShown: false,
       },
       callback
+    );
+  }
+  // #endregion
+
+  renderMessage(message: IMessage) {
+    const { id, type, text } = message;
+
+    return (
+      <Message
+        key={id}
+        id={id}
+        type={type}
+        text={text}
+        onDismiss={() => this.props.messagesManager.remove(id)}
+      />
     );
   }
 
@@ -191,6 +191,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
       messages,
       tabs,
       activeTabId,
+      setActiveTabRef,
       tabsManager,
       tasks,
       widgets,
@@ -234,7 +235,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
           <div className="w-[100%] h-[calc(100%-60px)]">
             <TabComponent
               key={tabId}
-              tabRef={(ref: any) => (this.activeTabRef = ref)}
+              setActiveTabRef={setActiveTabRef}
               tabId={tabId}
               {...tabProps}
             />

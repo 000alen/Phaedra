@@ -8,7 +8,7 @@ import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 
 export interface MainTabProps {
   tabId: string;
-  tabRef: (ref: any) => void;
+  setActiveTabRef: (ref: any) => void;
 }
 
 export interface MainTabState {}
@@ -17,13 +17,13 @@ class MainTabSkeleton extends React.Component<MainTabProps, MainTabState> {
   static contextType = AppController;
 
   componentDidMount() {
-    const { tabRef } = this.props;
-    tabRef(this);
+    const { setActiveTabRef } = this.props;
+    setActiveTabRef(this);
   }
 
   componentWillUnmount() {
-    const { tabRef } = this.props;
-    tabRef(undefined);
+    const { setActiveTabRef } = this.props;
+    setActiveTabRef(undefined);
   }
 
   render() {

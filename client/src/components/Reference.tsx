@@ -16,8 +16,6 @@ export function Reference({ notebookManager, reference }: ReferenceProps) {
     null
   );
 
-  console.log(reference);
-
   const source = notebookManager.getSource(reference.sourceId)!;
 
   React.useEffect(() => {

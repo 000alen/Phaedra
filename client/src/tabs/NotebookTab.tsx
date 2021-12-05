@@ -10,7 +10,6 @@ import {
 } from "@fluentui/react";
 
 import { saveAction } from "../actions";
-import { ContentTable } from "../components/ContentTable";
 import {
   AppController,
   IAppController,
@@ -24,13 +23,12 @@ import { INotebook } from "../HOC/UseNotebook/Notebook";
 
 export interface NotebookTabProps {
   tabId: string;
-  tabRef: (ref: any) => void;
+  setActiveTabRef: (ref: any) => void;
   notebook: INotebook;
   notebookPath?: string | undefined;
 }
 
 export interface NotebookTabState {
-  contentTableShown: boolean;
   notebookTabController: INotebookTabController;
 }
 
@@ -50,9 +48,15 @@ class NotebookTabSkeleton extends React.Component<
     this.getNotebookManager = this.getNotebookManager.bind(this);
     this.addPage = this.addPage.bind(this);
 
+    this.isDirty = this.isDirty.bind(this);
+    this.setDirty = this.setDirty.bind(this);
+    this.handleDirt = this.handleDirt.bind(this);
+
     this.state = {
-      contentTableShown: false,
       notebookTabController: {
+        isDirty: this.isDirty,
+        setDirty: this.setDirty,
+        handleDirt: this.handleDirt,
         getAppController: this.getAppController,
         getTabId: this.getTabId,
         getNotebookManager: this.getNotebookManager,
@@ -61,15 +65,15 @@ class NotebookTabSkeleton extends React.Component<
   }
 
   componentDidMount(): void {
-    const { tabRef } = this.props;
+    const { setActiveTabRef } = this.props;
 
-    tabRef(this);
+    setActiveTabRef(this);
   }
 
   componentWillUnmount(): void {
-    const { tabRef } = this.props;
+    const { setActiveTabRef } = this.props;
 
-    tabRef(undefined);
+    setActiveTabRef(undefined);
   }
 
   getAppController(): IAppController {
@@ -83,19 +87,22 @@ class NotebookTabSkeleton extends React.Component<
     return this.notebookManager;
   }
 
-  showContentTable(): void {
-    this.setState({ contentTableShown: true });
+  isDirty() {
+    const { tabId } = this.props;
+    const appController = this.getAppController();
+    const tab = appController.tabsManager?.get(tabId)!;
+    return tab?.dirty;
   }
 
-  hideContentTable(): void {
-    this.setState({ contentTableShown: false });
+  setDirty(dirty: boolean) {
+    if (dirty === this.isDirty()) return;
+
+    const { tabId } = this.props;
+    const appController = this.getAppController();
+    appController.tabsManager?.setDirty(tabId, dirty);
   }
 
-  isContentTableShown(): boolean {
-    return this.state.contentTableShown;
-  }
-
-  handleDirt() {
+  handleDirt(callback?: () => void): void {
     const appController: IAppController = this.context;
     const { notebook } = this.props;
 
@@ -152,18 +159,18 @@ class NotebookTabSkeleton extends React.Component<
   }
 
   render(): JSX.Element {
-    const { notebookTabController, contentTableShown } = this.state;
+    const { notebookTabController } = this.state;
 
     return (
       <NotebookTabController.Provider value={notebookTabController}>
         <div className="w-[100%] h-[100%]">
           <div className="relative flex flex-row h-[100%]">
-            {contentTableShown && <ContentTable />}
             <Notebook
               key={this.props.tabId}
               initialize={(notebookManager: NotebookManager) => {
                 this.notebookManager = notebookManager;
               }}
+              notebookTabController={notebookTabController}
               notebook={this.props.notebook}
               notebookPath={this.props.notebookPath}
             />

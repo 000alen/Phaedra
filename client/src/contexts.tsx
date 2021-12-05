@@ -60,6 +60,9 @@ export const AppController = React.createContext<IAppController>({
 });
 
 export interface INotebookTabController {
+  isDirty: () => boolean;
+  setDirty: (isDirty: boolean) => void;
+  handleDirt: (callback?: () => void) => void;
   getAppController: () => IAppController | undefined;
   getTabId: () => string | undefined;
   getNotebookManager: () => NotebookManager | undefined;
@@ -67,6 +70,9 @@ export interface INotebookTabController {
 
 export const NotebookTabController =
   React.createContext<INotebookTabController>({
+    isDirty: () => false,
+    setDirty: (isDirty: boolean) => {},
+    handleDirt: (callback?: () => void) => {},
     getAppController: () => undefined,
     getTabId: () => undefined,
     getNotebookManager: () => undefined,

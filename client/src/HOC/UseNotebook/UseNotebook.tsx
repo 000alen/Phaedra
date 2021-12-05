@@ -25,6 +25,7 @@ import {
 export interface UseNotebookProps {
   forwardedRef: React.Ref<any>;
   initialize?: (notebookManager: NotebookManager) => void;
+  notebookTabController: INotebookTabController;
   notebook?: INotebook;
   notebookPath?: string;
 }
@@ -177,6 +178,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
         });
       } finally {
         appController.tasksManager!.remove(taskId);
+        notebookTabController.setDirty(false);
       }
     }
 
@@ -266,20 +268,26 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
 
     // * Does not force update
     onContentChange(pageId: string, content: IContent) {
+      const { notebookTabController } = this.props;
       this.getPage(pageId)!.content = content;
       this.saved = false;
+      notebookTabController.setDirty(true);
     }
 
     // * Does not force update
     onLayoutChange(pageId: string, layout: ILayout) {
+      const { notebookTabController } = this.props;
       this.getPage(pageId)!.layout = layout;
       this.saved = false;
+      notebookTabController.setDirty(true);
     }
 
     // * Does not force update
     onQuillChange(pageId: string, quillId: string, content: IContent) {
+      const { notebookTabController } = this.props;
       this.getPageQuill(pageId, quillId)!.content = content;
       this.saved = false;
+      notebookTabController.setDirty(true);
     }
 
     render() {

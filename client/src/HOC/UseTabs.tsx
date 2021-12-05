@@ -25,6 +25,8 @@ interface UseTabsState {
 export interface UseTabsInjectedProps {
   tabs: ITab[];
   activeTabId: string | undefined;
+  activeTabRef: any;
+  setActiveTabRef: (ref: any) => void;
   tabsManager: TabsManager;
 }
 
@@ -60,8 +62,22 @@ export function UseTabs<P extends UseTabsInjectedProps>(
   Component: React.ComponentType<P>
 ) {
   class WithTabs extends React.Component<Props<P>, UseTabsState> {
+    activeTabRef: any;
+
     constructor(props: Props<P>) {
       super(props);
+
+      this.empty = this.empty.bind(this);
+      this.get = this.get.bind(this);
+      this.activeId = this.activeId.bind(this);
+      this.add = this.add.bind(this);
+      this.remove = this.remove.bind(this);
+      this.select = this.select.bind(this);
+      this.setActiveTabRef = this.setActiveTabRef.bind(this);
+      this.setTitle = this.setTitle.bind(this);
+      this.setComponent = this.setComponent.bind(this);
+      this.setProps = this.setProps.bind(this);
+      this.setDirty = this.setDirty.bind(this);
 
       this.state = {
         tabs: [],
@@ -94,6 +110,13 @@ export function UseTabs<P extends UseTabsInjectedProps>(
     }
 
     remove(id: string, callback?: () => void) {
+      if (this.get(id)?.dirty) {
+        this.select(id, () => {
+          this.activeTabRef.handleDirt(callback);
+        });
+        return;
+      }
+
       const newTabs = this.state.tabs.filter((tab) => tab.id !== id);
       const activeTabIndex = this.state.tabs.findIndex(
         (tab) => tab.id === this.state.activeTabId
@@ -116,6 +139,10 @@ export function UseTabs<P extends UseTabsInjectedProps>(
 
     select(id: string, callback?: () => void) {
       this.setState({ activeTabId: id }, callback);
+    }
+
+    setActiveTabRef(ref: any) {
+      this.activeTabRef = ref;
     }
 
     setTitle(id: string, title: string, callback?: () => void) {
@@ -158,6 +185,8 @@ export function UseTabs<P extends UseTabsInjectedProps>(
           ref={this.props.forwardedRef}
           tabs={this.state.tabs}
           activeTabId={this.state.activeTabId}
+          activeTabRef={this.activeTabRef}
+          setActiveTabRef={this.setActiveTabRef}
           tabsManager={this}
         />
       );

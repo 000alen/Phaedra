@@ -12,6 +12,6 @@ run()
 # from Phaedra.Notebook import Notebook
 
 # dump(
-#     Notebook.from_pdf(path="C:/Users/alenk/Desktop/bitcoin.pdf").json(),
-#     open("C:/Users/alenk/Desktop/bitcoin.json", "w"),
+#     Notebook.from_pdf(path="C:/Users/alenk/Desktop/MIT Portfolio.pdf").json(),
+#     open("C:/Users/alenk/Desktop/MIT Portfolio.json", "w"),
 # )

@@ -12,7 +12,7 @@ import { empty as emptyNotebook } from "../HOC/UseNotebook/UseNotebook";
 
 export interface EmptyTabProps {
   tabId: string;
-  tabRef: (ref: any) => void;
+  setActiveTabRef: (ref: any) => void;
 }
 
 interface EmptyTabState {}
@@ -36,13 +36,13 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
   }
 
   componentDidMount() {
-    const { tabRef } = this.props;
-    tabRef(this);
+    const { setActiveTabRef } = this.props;
+    setActiveTabRef(this);
   }
 
   componentWillUnmount() {
-    const { tabRef } = this.props;
-    tabRef(undefined);
+    const { setActiveTabRef } = this.props;
+    setActiveTabRef(undefined);
   }
 
   handleOpen() {

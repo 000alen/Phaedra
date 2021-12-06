@@ -6,12 +6,12 @@ import {
   IAppController,
   INotebookTabController,
   NotebookTabController,
-} from "../../contexts";
-import { saveNotebook } from "../../IO/NotebookIO";
+} from "../contexts";
+import { saveNotebook } from "./IO";
 
-import { getStrings } from "../../strings";
-import { empty as emptyLayout } from "../../phaedra-layout/UseLayout/UseLayout";
-import { empty as emptyContent } from "../../phaedra-content/UseContent/UseContent";
+import { getStrings } from "../strings";
+import { empty as emptyLayout } from "../Layout/UseLayout/UseLayout";
+import { empty as emptyContent } from "../Content/UseContent/UseContent";
 import {
   IContent,
   ILayout,

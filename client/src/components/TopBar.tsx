@@ -109,11 +109,11 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
     return (
       <div
-        className="w-[100%] h-10 flex flex-row z-50 select-none items-center"
+        className="w-full h-10 flex flex-row z-50 select-none items-center"
         style={topBarStyle}
       >
-        <div className="drag-region w-[100%] h-[100%] items-center">
-          <div className="w-[100%] h-[100%] items-center pl-1 py-1">
+        <div className="drag-region w-full h-full items-center">
+          <div className="w-full h-full items-center pl-1 py-1">
             <Tabs tabs={tabs} activeTabId={activeTabId} />
           </div>
         </div>

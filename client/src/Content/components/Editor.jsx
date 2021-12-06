@@ -6,7 +6,6 @@ import { Autoformat } from "../modules/autoformat";
 import { Generation } from "../formats/generation";
 import { Mention } from "../formats/mention";
 import { Question } from "../formats/question";
-import { Divider } from "../formats/divider";
 
 import "quill/dist/quill.bubble.css";
 import { WImage } from "../formats/image";
@@ -23,7 +22,6 @@ Quill.register({
   "formats/wsuggestion": WSuggestion,
   "formats/wsummary": WSummary,
   "formats/pre": Pre,
-  "formats/divider": Divider,
 });
 
 export function register(toRegister) {
@@ -73,9 +71,7 @@ const FORMATS = [
   "wimage",
   "wsuggestion",
   "wsummary",
-
   "pre",
-  "divider",
 ];
 
 const AUTOFORMAT = {};

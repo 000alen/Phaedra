@@ -30,7 +30,7 @@ class MainTabSkeleton extends React.Component<MainTabProps, MainTabState> {
     const shortcuts: IShortcut<any>[] = [...MainTabShortcuts, ...AppShortcuts];
 
     return (
-      <div className="w-[100%] h-[100%] flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center">
         <div
           className="select-none space-y-2"
           style={{

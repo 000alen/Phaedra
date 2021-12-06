@@ -1,9 +1,9 @@
-import { Layout } from "../../phaedra-layout/Layout";
+import { Layout } from "../../Layout/Layout";
 import React from "react";
 
 import { PagePane } from "./PagePane";
-import { IContent, ILayout, IPage } from "../../HOC/UseNotebook/Notebook";
-import { emptyQuill, NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
+import { IContent, ILayout, IPage } from "../../Notebook/Notebook";
+import { emptyQuill, NotebookManager } from "../../Notebook/UseNotebook";
 import { v4 as uuidv4 } from "uuid";
 
 export interface PageProps {
@@ -72,7 +72,7 @@ export class Page extends React.Component<PageProps, PageState> {
     const { id, page, _notebookManager } = this.props;
 
     return (
-      <div className="w-[100%] h-[100%] relative">
+      <div className="w-full h-full relative">
         <div id={`toolbar(${id})`}></div>
         <Layout
           defaultLayout={page.layout}

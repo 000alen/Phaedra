@@ -1,9 +1,8 @@
-import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
 import { v4 as uuidv4 } from "uuid";
-import { wsuggestion } from "../../API/PhaedraAPI";
+import { SuggestionComponent } from "../../components/Blots/suggestion";
 
 const BlockEmbed = Quill.import("blots/block/embed");
 
@@ -62,55 +61,5 @@ export class WSuggestion extends BlockEmbed {
   detach() {
     super.detach();
     this.scroll.emitter.emit("blot-unmount", this);
-  }
-}
-
-class SuggestionComponent extends React.Component {
-  constructor(props) {
-    super(props);
-
-    const { data } = props;
-
-    const query = typeof data === "string" ? data : data.query;
-    const response = typeof data === "string" ? null : data.response;
-
-    this.state = {
-      query,
-      response,
-    };
-  }
-
-  componentDidMount() {
-    const { query, response } = this.state;
-
-    if (response !== null) return;
-
-    wsuggestion(query)
-      .then((response) => {
-        this.setState({ response });
-      })
-      .catch((error) => {});
-  }
-
-  getData() {
-    const { query, response } = this.state;
-    return response === null ? query : { query, response };
-  }
-
-  render() {
-    const { query, response } = this.state;
-
-    return response === null ? (
-      <div className="flex flex-row space-x-2 align-middle">
-        <Spinner size={SpinnerSize.xSmall} />
-        <Label>{query}</Label>
-      </div>
-    ) : (
-      <div>
-        {Object.entries(response).map(([key, value]) => (
-          <a href={value}>{key}</a>
-        ))}
-      </div>
-    );
   }
 }

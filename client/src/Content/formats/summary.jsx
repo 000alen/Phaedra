@@ -1,9 +1,8 @@
-import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
 import { v4 as uuidv4 } from "uuid";
-import { wsummary } from "../../API/PhaedraAPI";
+import { SummaryComponent } from "../../components/Blots/summary";
 
 const BlockEmbed = Quill.import("blots/block/embed");
 
@@ -62,55 +61,5 @@ export class WSummary extends BlockEmbed {
   detach() {
     super.detach();
     this.scroll.emitter.emit("blot-unmount", this);
-  }
-}
-
-class SummaryComponent extends React.Component {
-  constructor(props) {
-    super(props);
-
-    const { data } = props;
-
-    const query = typeof data === "string" ? data : data.query;
-    const response = typeof data === "string" ? null : data.response;
-
-    this.state = {
-      query,
-      response,
-    };
-  }
-
-  componentDidMount() {
-    /** @type {{data: string, notebookManager: import("../../HOC/UseNotebook/UseNotebook").NotebookManager, page: import("../../HOC/UseNotebook/Notebook").IPage}} */
-    const { query, response } = this.state;
-
-    if (response !== null) return;
-
-    wsummary(query)
-      .then((response) => {
-        this.setState({ response });
-      })
-      .catch((error) => {});
-  }
-
-  getData() {
-    const { query, response } = this.state;
-    return response === null ? query : { query, response };
-  }
-
-  render() {
-    const { query, response } = this.state;
-
-    return response === null ? (
-      <div className="flex flex-row space-x-2 align-middle">
-        <Spinner size={SpinnerSize.xSmall} />
-        <Label>{query}</Label>
-      </div>
-    ) : (
-      <div>
-        <Label>{query}</Label>
-        <pre>{response}</pre>
-      </div>
-    );
   }
 }

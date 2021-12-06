@@ -1,10 +1,10 @@
-import { LayoutJSON } from "../../phaedra-layout/UseLayout/UseLayout";
+import { LayoutJSON } from "../Layout/UseLayout/UseLayout";
 import { UseNotebook } from "./UseNotebook";
 
 import React from "react";
 
-import { getTheme } from "../../themes";
-import { Page } from "../../components/Page/Page";
+import { getTheme } from "../themes";
+import { Page } from "../components/Page/Page";
 import { UseNotebookInjectedProps } from "./UseNotebook";
 import { emptyPage } from "./UseNotebook";
 
@@ -84,7 +84,7 @@ export class NotebookSkeleton extends React.Component<
 
     return (
       <div
-        className="w-[100%] h-[100%] overflow-y-auto overflow-x-hidden"
+        className="w-full h-full overflow-y-auto overflow-x-hidden"
         id="notebook"
         style={containerStyle}
       >

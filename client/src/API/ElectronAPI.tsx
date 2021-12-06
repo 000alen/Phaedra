@@ -69,7 +69,7 @@ export function readFileSync(
     | { encoding: BufferEncoding; flag?: string | undefined }
     | BufferEncoding
     | undefined
-): Promise<string | Uint8Array> {
+): Promise<string | Buffer> {
   return ipcRenderer.invoke("readFileSync", path, options);
 }
 

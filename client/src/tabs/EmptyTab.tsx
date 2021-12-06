@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CardButton } from "../components/CardButton";
 import { AppController, IAppController } from "../contexts";
-import { openFile } from "../IO/NotebookIO";
+import { openFile } from "../Notebook/IO";
 import { getStrings } from "../strings";
 import { NotebookTab } from "./NotebookTab";
-import { empty as emptyNotebook } from "../HOC/UseNotebook/UseNotebook";
+import { empty as emptyNotebook } from "../Notebook/UseNotebook";
 
 export interface EmptyTabProps {
   tabId: string;
@@ -81,7 +81,7 @@ export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
 
   render() {
     return (
-      <div className="w-[100%] h-[100%] flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center">
         <div className="flex flex-row space-x-1">
           <CardButton
             iconProps={openIcon}

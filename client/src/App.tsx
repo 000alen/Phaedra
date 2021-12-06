@@ -22,6 +22,7 @@ import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
 import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
 import { MainTab } from "./tabs/MainTab";
 import { getTheme } from "./themes";
+import { SettingsTab } from "./tabs/SettingsTab";
 
 type AppProps = UseDialogsInjectedProps &
   UseMessagesInjectedProps &
@@ -232,7 +233,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
 
           <div>{dialogs.map((dialog) => this.renderDialog(dialog))}</div>
 
-          <div className="w-[100%] h-[calc(100%-60px)]">
+          <div className="w-full h-[calc(100%-60px)]">
             <TabComponent
               key={tabId}
               setActiveTabRef={setActiveTabRef}
@@ -280,6 +281,19 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
     description: "Show tasks panel",
     action: (appRef: React.RefObject<AppSkeleton>) => {
       appRef.current!.showTasksPanel();
+    },
+  },
+  {
+    keys: "ctrl+,",
+    description: "Show settings tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current?.tabsManager.add({
+        id: uuidv4(),
+        title: "Settings",
+        component: SettingsTab,
+        props: {},
+        dirty: false,
+      });
     },
   },
 ];

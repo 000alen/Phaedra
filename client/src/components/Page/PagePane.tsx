@@ -1,12 +1,12 @@
-import { Content } from "../../phaedra-content/Content";
+import { Content } from "../../Content/Content";
 import React from "react";
 
 import { Paper } from "../Paper";
-import { IContent, IPage } from "../../HOC/UseNotebook/Notebook";
+import { IContent, IPage } from "../../Notebook/Notebook";
 import { PagePaneSelector } from "./PagePaneSelector";
-import { PaneRectProps } from "../../phaedra-layout/UseLayout/Rect";
-import { Reference } from "../Reference";
-import { NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
+import { PaneRectProps } from "../../Layout/UseLayout/Rect";
+import { Reference } from "./Reference";
+import { NotebookManager } from "../../Notebook/UseNotebook";
 
 interface PagePaneProps {
   id: string;
@@ -119,6 +119,6 @@ export function PagePane({
       />
     </Paper>
   ) : (
-    <div className="w-[100%] h-[100%]"></div>
+    <div className="w-full h-full"></div>
   );
 }

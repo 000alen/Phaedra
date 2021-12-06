@@ -1,8 +1,8 @@
 import { IconButton, Label, OverflowSet, Separator } from "@fluentui/react";
 import React from "react";
-import { IPage } from "../../HOC/UseNotebook/Notebook";
-import { NotebookManager } from "../../HOC/UseNotebook/UseNotebook";
-import { PaneRectProps } from "../../phaedra-layout/UseLayout/Rect";
+import { IPage } from "../../Notebook/Notebook";
+import { NotebookManager } from "../../Notebook/UseNotebook";
+import { PaneRectProps } from "../../Layout/UseLayout/Rect";
 import { CardFile } from "../CardFile";
 
 export interface PagePaneSelectorProps {
@@ -103,7 +103,7 @@ export class PagePaneSelector extends React.Component<PagePaneSelectorProps> {
     }));
 
     return (
-      <div className="w-[100%] h-[100%] overflow-auto">
+      <div className="w-full h-full overflow-auto">
         <Label>Content</Label>
         <IconButton
           iconProps={{ iconName: "Add" }}

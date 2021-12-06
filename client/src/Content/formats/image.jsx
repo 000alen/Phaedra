@@ -2,11 +2,12 @@ import Quill from "quill";
 import React from "react";
 import ReactDOM from "react-dom";
 import { v4 as uuidv4 } from "uuid";
+import { ImageComponent } from "../../components/Blots/image";
 
 const BlockEmbed = Quill.import("blots/block/embed");
 
-export class Pre extends BlockEmbed {
-  static blotName = "pre";
+export class WImage extends BlockEmbed {
+  static blotName = "wimage";
   static tagName = "div";
   static className = "ql-custom";
   static refs = {};
@@ -14,10 +15,10 @@ export class Pre extends BlockEmbed {
   static create(value) {
     const id = uuidv4();
     const node = super.create(value);
-    const refs = Pre.refs;
+    const refs = WImage.refs;
     node.setAttribute("data-id", id);
-    Pre.data = value;
-    Pre.refs = {
+    WImage.data = value;
+    WImage.refs = {
       ...refs,
       [id]: React.createRef(),
     };
@@ -26,14 +27,14 @@ export class Pre extends BlockEmbed {
 
   static value(domNode) {
     const id = domNode.getAttribute("data-id");
-    const ref = Pre.refs[id];
+    const ref = WImage.refs[id];
     return ref && ref.current && ref.current.getData();
   }
 
   constructor(domNode) {
     super(domNode);
     this.id = domNode.getAttribute("data-id");
-    this.data = Pre.data;
+    this.data = WImage.data;
   }
 
   attach() {
@@ -43,9 +44,9 @@ export class Pre extends BlockEmbed {
 
   renderPortal(blotId, pageId, notebookManager, page) {
     const { options } = Quill.find(this.scroll.domNode.parentNode);
-    const ref = Pre.refs[blotId];
+    const ref = WImage.refs[blotId];
     return ReactDOM.createPortal(
-      <PreComponent
+      <ImageComponent
         ref={ref}
         data={this.data}
         readOnly={options.readOnly}
@@ -60,18 +61,5 @@ export class Pre extends BlockEmbed {
   detach() {
     super.detach();
     this.scroll.emitter.emit("blot-unmount", this);
-  }
-}
-
-class PreComponent extends React.Component {
-  getData() {
-    const { data } = this.props;
-    return data;
-  }
-
-  render() {
-    const { data } = this.props;
-
-    return <pre>{data}</pre>;
   }
 }

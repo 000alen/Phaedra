@@ -17,9 +17,9 @@ import {
   NotebookTabController,
 } from "../contexts";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
-import { Notebook } from "../HOC/UseNotebook/Notebook";
-import { emptyPage, NotebookManager } from "../HOC/UseNotebook/UseNotebook";
-import { INotebook } from "../HOC/UseNotebook/Notebook";
+import { Notebook } from "../Notebook/Notebook";
+import { emptyPage, NotebookManager } from "../Notebook/UseNotebook";
+import { INotebook } from "../Notebook/Notebook";
 
 export interface NotebookTabProps {
   tabId: string;
@@ -163,8 +163,8 @@ class NotebookTabSkeleton extends React.Component<
 
     return (
       <NotebookTabController.Provider value={notebookTabController}>
-        <div className="w-[100%] h-[100%]">
-          <div className="relative flex flex-row h-[100%]">
+        <div className="w-full h-full">
+          <div className="relative flex flex-row h-full">
             <Notebook
               key={this.props.tabId}
               initialize={(notebookManager: NotebookManager) => {

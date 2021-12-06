@@ -177,7 +177,7 @@ export class Tabs extends React.Component<TabsProps> {
   onRenderData(data: any) {
     return (
       <OverflowSet
-        className="h-[100%]"
+        className="h-full"
         role="menubar"
         items={data.primary}
         overflowItems={data.overflow.length ? data.overflow : null}
@@ -228,7 +228,7 @@ export class Tabs extends React.Component<TabsProps> {
     const data = this.generateData(items);
 
     return (
-      <div className="w-[100%] h-[100%] items-center">
+      <div className="w-full h-full items-center">
         <ResizeGroup
           data={data}
           onReduceData={this.onReduceData}

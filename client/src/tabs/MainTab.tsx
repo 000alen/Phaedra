@@ -6,14 +6,9 @@ import { AppShortcuts } from "../App";
 import { AppController } from "../contexts";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 
-export interface MainTabProps {
-  tabId: string;
-  setActiveTabRef: (ref: any) => void;
-}
-
 export interface MainTabState {}
 
-class MainTabSkeleton extends React.Component<MainTabProps, MainTabState> {
+class MainTabSkeleton extends React.Component<TabProps, MainTabState> {
   static contextType = AppController;
 
   componentDidMount() {

@@ -1,6 +1,6 @@
 import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
-import { wsummary } from "../../API/PhaedraAPI";
+import { wsummary } from "../../core/Knowledge";
 import { BlotsProps, BlotsState } from "./types";
 
 export class SummaryComponent extends React.Component<BlotsProps, BlotsState> {

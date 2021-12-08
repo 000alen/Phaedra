@@ -20,13 +20,12 @@ import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { Notebook } from "../Notebook/Notebook";
 import { emptyPage, NotebookManager } from "../Notebook/UseNotebook";
 import { INotebook } from "../Notebook/Notebook";
+import { PresentationTab } from "./PresentationTab";
 
-export interface NotebookTabProps {
-  tabId: string;
-  setActiveTabRef: (ref: any) => void;
+type NotebookTabProps = TabProps & {
   notebook: INotebook;
   notebookPath?: string | undefined;
-}
+};
 
 export interface NotebookTabState {
   notebookTabController: INotebookTabController;
@@ -65,9 +64,11 @@ class NotebookTabSkeleton extends React.Component<
   }
 
   componentDidMount(): void {
-    const { setActiveTabRef } = this.props;
-
+    const appController: IAppController = this.context;
+    const { setActiveTabRef, tabId, notebook } = this.props;
     setActiveTabRef(this);
+
+    appController.tabsManager!.setTitle(tabId, notebook.name);
   }
 
   componentWillUnmount(): void {
@@ -158,6 +159,14 @@ class NotebookTabSkeleton extends React.Component<
     this.notebookManager?.addPage(emptyPage());
   }
 
+  handlePresentation() {
+    const appController: IAppController = this.context;
+    const { tabId } = this.props;
+    appController.tabsManager!.setComponent(tabId, PresentationTab, {
+      notebook: this.notebookManager?.notebook,
+    });
+  }
+
   render(): JSX.Element {
     const { notebookTabController } = this.state;
 
@@ -174,10 +183,16 @@ class NotebookTabSkeleton extends React.Component<
               notebook={this.props.notebook}
               notebookPath={this.props.notebookPath}
             />
-            <div className="absolute bottom-5 right-5">
+            <div className="absolute flex flex-row-reverse align-middle bottom-5 right-5">
               <IconButton
                 iconProps={{ iconName: "Add" }}
                 onClick={() => this.addPage()}
+              />
+              <IconButton
+                iconProps={{ iconName: "Presentation" }}
+                onClick={() => {
+                  this.handlePresentation();
+                }}
               />
             </div>
           </div>

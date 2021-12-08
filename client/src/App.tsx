@@ -23,6 +23,7 @@ import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
 import { MainTab } from "./tabs/MainTab";
 import { getTheme } from "./themes";
 import { SettingsTab } from "./tabs/SettingsTab";
+import { DevelopmentTab } from "./tabs/DevelopmentTab";
 
 type AppProps = UseDialogsInjectedProps &
   UseMessagesInjectedProps &
@@ -291,6 +292,19 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
         id: uuidv4(),
         title: "Settings",
         component: SettingsTab,
+        props: {},
+        dirty: false,
+      });
+    },
+  },
+  {
+    keys: "ctrl+.",
+    description: "Show development tab",
+    action: (appRef: React.RefObject<AppSkeleton>) => {
+      appRef.current?.tabsManager.add({
+        id: uuidv4(),
+        title: "Development",
+        component: DevelopmentTab,
         props: {},
         dirty: false,
       });

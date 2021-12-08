@@ -1,6 +1,6 @@
 import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
-import { generation } from "../../API/PhaedraAPI";
+import { generation } from "../../core/Language";
 import { BlotsProps, BlotsState } from "./types";
 
 export class GenerationComponent extends React.Component<

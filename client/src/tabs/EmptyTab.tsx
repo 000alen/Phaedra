@@ -10,11 +10,6 @@ import { getStrings } from "../strings";
 import { NotebookTab } from "./NotebookTab";
 import { empty as emptyNotebook } from "../Notebook/UseNotebook";
 
-export interface EmptyTabProps {
-  tabId: string;
-  setActiveTabRef: (ref: any) => void;
-}
-
 interface EmptyTabState {}
 
 const openIcon = {
@@ -25,10 +20,10 @@ const newIcon = {
   iconName: "FileTemplate",
 };
 
-export class EmptyTab extends React.Component<EmptyTabProps, EmptyTabState> {
+export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
   static contextType = AppController;
 
-  constructor(props: EmptyTabProps) {
+  constructor(props: TabProps) {
     super(props);
 
     this.handleOpen = this.handleOpen.bind(this);

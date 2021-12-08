@@ -1,6 +1,6 @@
 import { PathLike, WriteFileOptions } from "fs";
 
-import { ipcRenderer } from "../index";
+import { ipcRenderer } from "./index";
 
 export interface FileFilter {
   extensions: string[];
@@ -99,26 +99,10 @@ export function base64(
   return ipcRenderer.invoke("base64", data);
 }
 
-export function getRecent(): Promise<StoreFile[]> {
-  return ipcRenderer.invoke("getRecent");
+export function getSettings(): Promise<object> {
+  return ipcRenderer.invoke("getSettings");
 }
 
-export function addRecent(path: string, name: string) {
-  ipcRenderer.invoke("addRecent", path, name, Date());
-}
-
-export function clearRecent() {
-  ipcRenderer.invoke("clearRecent");
-}
-
-export function getPinned(): Promise<StoreFile[]> {
-  return ipcRenderer.invoke("getPinned");
-}
-
-export function addPinned(path: string, name: string) {
-  ipcRenderer.invoke("addPinned", path, name, Date());
-}
-
-export function clearPinned() {
-  ipcRenderer.invoke("clearPinned");
+export function setSettings(settings: object) {
+  ipcRenderer.invoke("setSettings", settings);
 }

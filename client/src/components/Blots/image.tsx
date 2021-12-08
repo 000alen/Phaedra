@@ -1,6 +1,6 @@
 import { IconButton, Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
-import { wimage } from "../../API/PhaedraAPI";
+import { wimage } from "../../core/Knowledge";
 import { BlotsProps, BlotsState } from "./types";
 
 export class ImageComponent extends React.Component<

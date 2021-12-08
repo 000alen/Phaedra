@@ -1,6 +1,6 @@
 import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
-import { question } from "../../API/PhaedraAPI";
+import { question } from "../../core/Language";
 import { BlotsProps, BlotsState } from "./types";
 
 export class QuestionComponent extends React.Component<BlotsProps, BlotsState> {

@@ -46,6 +46,7 @@ type Props<P extends UseNotebookInjectedProps> = Subtract<
 >;
 
 export interface NotebookManager {
+  notebook: INotebook;
   save(): Promise<void>;
   getSources(): ISource[];
   getSource(id: string): ISource | undefined;
@@ -143,14 +144,6 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       this.notebook = notebook !== undefined ? notebook : empty();
       this.notebookPath = notebookPath;
       this.saved = notebookPath !== undefined ? true : false;
-    }
-
-    componentDidMount() {
-      const notebookTabController: INotebookTabController = this.context;
-      const appController: IAppController =
-        notebookTabController.getAppController()!;
-      const tabId = notebookTabController.getTabId()!;
-      appController.tabsManager!.setTitle(tabId, this.notebook.name);
     }
 
     async save() {

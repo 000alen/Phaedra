@@ -1,6 +1,6 @@
 import React from "react";
 import { pdfjs, Document, Page } from "react-pdf";
-import { readFileSync } from "../../API/ElectronAPI";
+import { readFileSync } from "../../electron";
 import { IReference } from "../../Notebook/Notebook";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 

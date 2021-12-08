@@ -1,6 +1,6 @@
 import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
-import { wsuggestion } from "../../API/PhaedraAPI";
+import { wsuggestion } from "../../core/Knowledge";
 import { BlotsProps, BlotsState } from "./types";
 
 export class SuggestionComponent extends React.Component<
@@ -48,9 +48,13 @@ export class SuggestionComponent extends React.Component<
       </div>
     ) : (
       <div>
-        {Object.entries(response).map(([key, value]) => (
-          <a href={value as string}>{key}</a>
+        {response.map((suggestion: string) => (
+          <Label>{suggestion}</Label>
         ))}
+
+        {/* {Object.entries(response).map(([key, value]) => (
+          <a href={value as string}>{key}</a>
+        ))} */}
       </div>
     );
   }

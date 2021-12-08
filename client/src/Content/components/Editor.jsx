@@ -12,9 +12,11 @@ import { WImage } from "../formats/image";
 import { WSuggestion } from "../formats/suggestion";
 import { WSummary } from "../formats/summary";
 import { Pre } from "../formats/pre";
+import BlotFormatter from "quill-blot-formatter";
 
 Quill.register({
   "modules/autoformat": Autoformat,
+  "modules/blotFormatter": BlotFormatter,
   "formats/generation": Generation,
   "formats/mention": Mention,
   "formats/question": Question,
@@ -46,6 +48,7 @@ const MODULES = {
   clipboard: {
     matchVisual: false,
   },
+  blotFormatter: {},
 };
 
 const FORMATS = [

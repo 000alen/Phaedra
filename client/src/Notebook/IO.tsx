@@ -1,15 +1,14 @@
 import {
-  addRecent,
   base64,
   OpenDialogOptions,
   readFileSync,
   showOpenDialog,
   showSaveDialog,
   writeFileSync,
-} from "../API/ElectronAPI";
-import { notebookFromPdf } from "../API/PhaedraAPI";
+} from "../electron";
 import { INotebook } from "./Notebook";
 import { getStrings } from "../strings";
+import { notebookFromPdf } from "../core";
 
 export interface INotebookIO {
   notebook: INotebook;
@@ -52,9 +51,6 @@ export function loadJson(path: string): Promise<INotebookIO> {
   return new Promise((resolve, reject) => {
     readFileSync(path, "utf-8").then((content) => {
       let notebook = JSON.parse(content as string);
-
-      addRecent(path, notebook.name);
-
       resolve({ notebook: notebook, notebookPath: path });
     });
   });

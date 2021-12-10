@@ -149,3 +149,7 @@ ipcMain.handle("getSettings", async (event) => {
 ipcMain.handle("setSettings", async (event, settings) => {
   settingsStore.set("settings", settings);
 });
+
+ipcMain.handle("setFullscreen", async (event, fullscreen) => {
+  mainWindow.setFullScreen(fullscreen);
+});

@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 export interface PageProps {
   id: string;
   page: IPage;
-  _notebookManager: NotebookManager;
+  _notebookManager: NotebookManager | undefined;
   _onLayoutChange: (pageId: string, layout: ILayout) => void;
   _onContentChange: (pageId: string, content: IContent) => void;
   _onQuillChange: (pageId: string, quillId: string, content: IContent) => void;
@@ -46,6 +46,9 @@ export class Page extends React.Component<PageProps, PageState> {
   addReference(sourceId: string, callback?: (referenceId: string) => void) {
     const { id, _notebookManager } = this.props;
     const referenceId = uuidv4();
+
+    if (_notebookManager === undefined) throw new Error("No notebook manager");
+
     _notebookManager.addPageReference(
       id,
       {
@@ -61,7 +64,11 @@ export class Page extends React.Component<PageProps, PageState> {
 
   addQuill(callback?: (quillId: string) => void) {
     const { id, _notebookManager } = this.props;
+
+    if (_notebookManager === undefined) throw new Error("No notebook manager");
+
     const quill = emptyQuill();
+
     _notebookManager.addPageQuill(id, quill, () => {
       if (callback) callback(quill.id);
     });

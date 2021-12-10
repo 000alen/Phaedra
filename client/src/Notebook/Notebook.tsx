@@ -85,7 +85,6 @@ export class NotebookSkeleton extends React.Component<
     return (
       <div
         className="w-full h-full overflow-y-auto overflow-x-hidden"
-        id="notebook"
         style={containerStyle}
       >
         {_defaultNotebook.pages.map((page) => (

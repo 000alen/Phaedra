@@ -97,7 +97,8 @@ export class Editor extends React.Component {
     this.onContentChange = this.onContentChange.bind(this);
 
     this.editor = null;
-    this.editorContainer = React.createRef();
+    this.editorContainerRef = React.createRef();
+    this.toolbarContainerRef = React.createRef();
 
     this.state = {
       embedBlots: [],
@@ -108,7 +109,7 @@ export class Editor extends React.Component {
     const { readOnly, modules, formats, autoformat, defaultContent } =
       this.props;
 
-    this.editor = new Quill(this.editorContainer.current, {
+    this.editor = new Quill(this.editorContainerRef.current, {
       theme: "bubble",
       readOnly,
       modules: {
@@ -160,11 +161,14 @@ export class Editor extends React.Component {
     const { spellCheck, id, notebookManager, page } = this.props;
 
     return (
-      <div spellCheck={spellCheck} ref={this.editorContainer}>
-        {map(this.state.embedBlots, (blot) =>
-          blot.renderPortal(blot.id, id, notebookManager, page)
-        )}
-      </div>
+      <>
+        <div spellCheck={spellCheck} ref={this.editorContainerRef}>
+          {map(this.state.embedBlots, (blot) =>
+            blot.renderPortal(blot.id, id, notebookManager, page)
+          )}
+        </div>
+        <div ref={this.toolbarContainerRef}></div>
+      </>
     );
   }
 }

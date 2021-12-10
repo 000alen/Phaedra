@@ -106,3 +106,7 @@ export function getSettings(): Promise<object> {
 export function setSettings(settings: object) {
   ipcRenderer.invoke("setSettings", settings);
 }
+
+export function setFullscreen(fullscreen: boolean) {
+  ipcRenderer.invoke("setFullscreen", fullscreen);
+}

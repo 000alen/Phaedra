@@ -173,28 +173,26 @@ class NotebookTabSkeleton extends React.Component<
     return (
       <NotebookTabController.Provider value={notebookTabController}>
         <div className="w-full h-full">
-          <div className="relative flex flex-row h-full">
-            <Notebook
-              key={this.props.tabId}
-              initialize={(notebookManager: NotebookManager) => {
-                this.notebookManager = notebookManager;
-              }}
-              notebookTabController={notebookTabController}
-              notebook={this.props.notebook}
-              notebookPath={this.props.notebookPath}
+          <Notebook
+            key={this.props.tabId}
+            initialize={(notebookManager: NotebookManager) => {
+              this.notebookManager = notebookManager;
+            }}
+            notebookTabController={notebookTabController}
+            notebook={this.props.notebook}
+            notebookPath={this.props.notebookPath}
+          />
+          <div className="absolute flex flex-row-reverse align-middle bottom-5 right-5">
+            <IconButton
+              iconProps={{ iconName: "Add" }}
+              onClick={() => this.addPage()}
             />
-            <div className="absolute flex flex-row-reverse align-middle bottom-5 right-5">
-              <IconButton
-                iconProps={{ iconName: "Add" }}
-                onClick={() => this.addPage()}
-              />
-              <IconButton
-                iconProps={{ iconName: "Presentation" }}
-                onClick={() => {
-                  this.handlePresentation();
-                }}
-              />
-            </div>
+            <IconButton
+              iconProps={{ iconName: "Presentation" }}
+              onClick={() => {
+                this.handlePresentation();
+              }}
+            />
           </div>
         </div>
       </NotebookTabController.Provider>

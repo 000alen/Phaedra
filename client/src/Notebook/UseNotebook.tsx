@@ -264,7 +264,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPage(pageId)!.content = content;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     // * Does not force update
@@ -272,7 +272,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPage(pageId)!.layout = layout;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     // * Does not force update
@@ -280,7 +280,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPageQuill(pageId, quillId)!.content = content;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     render() {

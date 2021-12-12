@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/Phaedra/static/css/main.d2777c05.chunk.css",
+    "main.js": "/Phaedra/static/js/main.44a2d474.chunk.js",
+    "main.js.map": "/Phaedra/static/js/main.44a2d474.chunk.js.map",
+    "runtime-main.js": "/Phaedra/static/js/runtime-main.efb34ba9.js",
+    "runtime-main.js.map": "/Phaedra/static/js/runtime-main.efb34ba9.js.map",
+    "static/js/2.dbc89c77.chunk.js": "/Phaedra/static/js/2.dbc89c77.chunk.js",
+    "static/js/2.dbc89c77.chunk.js.map": "/Phaedra/static/js/2.dbc89c77.chunk.js.map",
+    "static/js/3.9e9e68d8.chunk.js": "/Phaedra/static/js/3.9e9e68d8.chunk.js",
+    "static/js/3.9e9e68d8.chunk.js.map": "/Phaedra/static/js/3.9e9e68d8.chunk.js.map",
+    "index.html": "/Phaedra/index.html",
+    "static/css/main.d2777c05.chunk.css.map": "/Phaedra/static/css/main.d2777c05.chunk.css.map",
+    "static/js/2.dbc89c77.chunk.js.LICENSE.txt": "/Phaedra/static/js/2.dbc89c77.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/Phaedra/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.efb34ba9.js",
+    "static/js/2.dbc89c77.chunk.js",
+    "static/css/main.d2777c05.chunk.css",
+    "static/js/main.44a2d474.chunk.js"
+  ]
+}

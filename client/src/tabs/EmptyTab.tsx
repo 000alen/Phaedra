@@ -45,17 +45,17 @@ export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
     const { tabId } = this.props;
 
     const taskId = uuidv4();
-    appController.tasksManager!.add({
+    appController.addTask({
       id: taskId,
       name: getStrings().openingFileTaskLabel,
     });
 
     openFile().then(({ notebook, notebookPath }) => {
-      appController.tasksManager!.remove(taskId);
+      appController.removeTask(taskId);
 
       if (!notebook) return;
 
-      appController.tabsManager!.setComponent(tabId, NotebookTab, {
+      appController.setTabComponent(tabId, NotebookTab, {
         notebook: notebook,
         notebookPath: notebookPath,
       });
@@ -68,7 +68,7 @@ export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
 
     const notebook = emptyNotebook();
 
-    appController.tabsManager!.setComponent(tabId, NotebookTab, {
+    appController.setTabComponent(tabId, NotebookTab, {
       notebook: notebook,
       notebookPath: undefined,
     });

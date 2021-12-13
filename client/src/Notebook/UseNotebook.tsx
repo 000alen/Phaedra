@@ -2,11 +2,7 @@ import { MessageBarType } from "@fluentui/react";
 import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
-import {
-  IAppController,
-  INotebookTabController,
-  NotebookTabController,
-} from "../contexts";
+import { INotebookTabController, NotebookTabController } from "../contexts";
 import { saveNotebook } from "./IO";
 
 import { getStrings } from "../strings";
@@ -151,7 +147,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const appController = notebookTabController.getAppController()!;
 
       const taskId = uuidv4();
-      appController.tasksManager!.add({
+      appController.addTask({
         id: taskId,
         name: getStrings().savingNotebookTaskLabel,
       });
@@ -164,13 +160,13 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
         this.notebookPath = finalNotebookPath;
         this.saved = true;
       } catch (error) {
-        appController.messagesManager!.add({
+        appController.addMessage({
           id: uuidv4(),
           text: getStrings().savingNotebookTaskError,
           type: MessageBarType.error,
         });
       } finally {
-        appController.tasksManager!.remove(taskId);
+        appController.removeTask(taskId);
         notebookTabController.setDirty(false);
       }
     }
@@ -264,7 +260,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPage(pageId)!.content = content;
       this.saved = false;
-      // notebookTabController.setDirty(true);
+      notebookTabController.setDirty(true);
     }
 
     // * Does not force update
@@ -272,7 +268,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPage(pageId)!.layout = layout;
       this.saved = false;
-      // notebookTabController.setDirty(true);
+      notebookTabController.setDirty(true);
     }
 
     // * Does not force update
@@ -280,7 +276,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const { notebookTabController } = this.props;
       this.getPageQuill(pageId, quillId)!.content = content;
       this.saved = false;
-      // notebookTabController.setDirty(true);
+      notebookTabController.setDirty(true);
     }
 
     render() {

@@ -1,8 +1,7 @@
 import React from "react";
 
-import { ITask } from "../HOC/UseTasks";
-import { IWidget } from "../HOC/UseWidgets";
 import { getTheme } from "../themes";
+import { ITask, IWidget } from "../types";
 import { StatusBarLoading } from "./StatusBarLoading";
 
 export interface StatusBarProps {

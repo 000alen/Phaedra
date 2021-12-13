@@ -21,6 +21,10 @@ const schema = {
       type: "string",
       title: "OpenAI API Key",
     },
+    locale: {
+      type: "string",
+      title: "Locale",
+    },
   },
   required: ["name", "key"],
 } as JSONSchema7;

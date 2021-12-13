@@ -68,7 +68,7 @@ class NotebookTabSkeleton extends React.Component<
     const { setActiveTabRef, tabId, notebook } = this.props;
     setActiveTabRef(this);
 
-    appController.tabsManager!.setTitle(tabId, notebook.name);
+    appController.setTabTitle(tabId, notebook.name);
   }
 
   componentWillUnmount(): void {
@@ -91,8 +91,8 @@ class NotebookTabSkeleton extends React.Component<
   isDirty() {
     const { tabId } = this.props;
     const appController = this.getAppController();
-    const tab = appController.tabsManager?.get(tabId)!;
-    return tab?.dirty;
+    const tab = appController.getTab(tabId)!;
+    return tab.dirty;
   }
 
   setDirty(dirty: boolean) {
@@ -100,7 +100,7 @@ class NotebookTabSkeleton extends React.Component<
 
     const { tabId } = this.props;
     const appController = this.getAppController();
-    appController.tabsManager?.setDirty(tabId, dirty);
+    appController.setTabDirty(tabId, dirty);
   }
 
   handleDirt(callback?: () => void): void {
@@ -109,43 +109,39 @@ class NotebookTabSkeleton extends React.Component<
 
     const dialogId = uuidv4();
 
-    appController.dialogsManager!.add({
+    appController.addDialog({
       id: dialogId,
       title: "Save changes?",
       subText: notebook.name,
       type: DialogType.normal,
       visible: true,
       onDismiss: () => {
-        appController.dialogsManager!.remove(dialogId);
+        appController.removeDialog(dialogId);
       },
       footer: (
         <DialogFooter>
           <DefaultButton
             text="Cancel"
             onClick={() => {
-              appController.dialogsManager!.remove(dialogId);
+              appController.removeDialog(dialogId);
             }}
           />
           <DefaultButton
             text="Do not save"
             onClick={() => {
-              appController.dialogsManager!.remove(dialogId, () => {
-                appController.tabsManager!.setDirty(
-                  this.getTabId(),
-                  false,
-                  () => {
-                    appController.tabsManager!.remove(this.getTabId());
-                  }
-                );
+              appController.removeDialog(dialogId, () => {
+                appController.setTabDirty(this.getTabId(), false, () => {
+                  appController.removeTab(this.getTabId());
+                });
               });
             }}
           />
           <PrimaryButton
             text="Save"
             onClick={() => {
-              appController.dialogsManager!.remove(dialogId, () => {
+              appController.removeDialog(dialogId, () => {
                 this.notebookManager!.save().then(() => {
-                  appController.tabsManager!.remove(this.getTabId());
+                  appController.removeTab(this.getTabId());
                 });
               });
             }}
@@ -162,7 +158,7 @@ class NotebookTabSkeleton extends React.Component<
   handlePresentation() {
     const appController: IAppController = this.context;
     const { tabId } = this.props;
-    appController.tabsManager!.setComponent(tabId, PresentationTab, {
+    appController.setTabComponent(tabId, PresentationTab, {
       notebook: this.notebookManager?.notebook,
     });
   }

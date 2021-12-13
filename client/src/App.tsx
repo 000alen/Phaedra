@@ -1,7 +1,12 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { mergeStyles } from "@fluentui/react";
+import {
+  DialogType,
+  mergeStyles,
+  MessageBarType,
+  PanelType,
+} from "@fluentui/react";
 
 import { Dialog } from "./components/Dialog";
 import { Message } from "./components/Message";
@@ -9,132 +14,422 @@ import { StatusBar } from "./components/StatusBar";
 import { TasksPanel } from "./components/TasksPanel";
 import { TopBar } from "./components/TopBar";
 import { AppController, IAppController } from "./contexts";
-import { IDialog, UseDialogs, UseDialogsInjectedProps } from "./HOC/UseDialogs";
-import {
-  IMessage,
-  UseMessages,
-  UseMessagesInjectedProps,
-} from "./HOC/UseMessages";
-import { UsePanels, UsePanelsInjectedProps } from "./HOC/UsePanels";
 import { IShortcut, UseShortcuts } from "./HOC/UseShortcuts";
-import { UseTabs, UseTabsInjectedProps } from "./HOC/UseTabs";
-import { UseTasks, UseTasksInjectedProps } from "./HOC/UseTasks";
-import { UseWidgets, UseWidgetsInjectedProps } from "./HOC/UseWidgets";
 import { MainTab } from "./tabs/MainTab";
 import { getTheme } from "./themes";
 import { SettingsTab } from "./tabs/SettingsTab";
 import { DevelopmentTab } from "./tabs/DevelopmentTab";
+import { getStrings } from "./strings";
+import { EmptyTab } from "./tabs/EmptyTab";
+import { IDialog, IMessage, IPanel, ITab, ITask, IWidget } from "./types";
 
-type AppProps = UseDialogsInjectedProps &
-  UseMessagesInjectedProps &
-  UsePanelsInjectedProps &
-  UseTabsInjectedProps &
-  UseTasksInjectedProps &
-  UseWidgetsInjectedProps;
+interface AppSkeletonProps {}
 
-interface AppState {
+interface AppSkeletonState {
   tasksPanelShown: boolean;
   appController: IAppController;
+  dialogs: IDialog[];
+  messages: IMessage[];
+  panels: IPanel[];
+  tabs: ITab[];
+  activeTabId: string | undefined;
+  tasks: ITask[];
+  widgets: IWidget[];
 }
 
-export class AppSkeleton extends React.Component<AppProps, AppState> {
-  constructor(props: AppProps) {
+export function makeTab({
+  id,
+  title,
+  component,
+  props,
+  dirty,
+}: Partial<ITab>): ITab {
+  if (id === undefined) id = uuidv4();
+  if (title === undefined) title = getStrings().newTabTitle;
+  if (component === undefined) component = EmptyTab;
+  if (props === undefined) props = {};
+  if (dirty === undefined) dirty = false;
+
+  return {
+    id,
+    title,
+    component,
+    props,
+    dirty,
+  };
+}
+
+export class AppSkeleton extends React.Component<
+  AppSkeletonProps,
+  AppSkeletonState
+> {
+  activeTabRef: any;
+
+  constructor(props: AppSkeletonProps) {
     super(props);
 
-    this.renderMessage = this.renderMessage.bind(this);
+    this.getDialog = this.getDialog.bind(this);
+    this.addDialog = this.addDialog.bind(this);
+    this.removeDialog = this.removeDialog.bind(this);
+    this.setDialogTitle = this.setDialogTitle.bind(this);
+    this.setDialogSubText = this.setDialogSubText.bind(this);
+    this.setDialogType = this.setDialogType.bind(this);
+    this.setDialogFooter = this.setDialogFooter.bind(this);
+    this.setDialogOnDismiss = this.setDialogOnDismiss.bind(this);
+    this.getMessage = this.getMessage.bind(this);
+    this.addMessage = this.addMessage.bind(this);
+    this.removeMessage = this.removeMessage.bind(this);
+    this.setMessageText = this.setMessageText.bind(this);
+    this.setMessageType = this.setMessageType.bind(this);
+    this.getPanel = this.getPanel.bind(this);
+    this.addPanel = this.addPanel.bind(this);
+    this.removePanel = this.removePanel.bind(this);
+    this.setPanelType = this.setPanelType.bind(this);
+    this.setPanelVisible = this.setPanelVisible.bind(this);
+    this.setPanelContent = this.setPanelContent.bind(this);
+    this.setPanelOnDismiss = this.setPanelOnDismiss.bind(this);
+    this.getTab = this.getTab.bind(this);
+    this.getActiveTabId = this.getActiveTabId.bind(this);
+    this.addTab = this.addTab.bind(this);
+    this.removeTab = this.removeTab.bind(this);
+    this.selectTab = this.selectTab.bind(this);
+    this.setActiveTabRef = this.setActiveTabRef.bind(this);
+    this.setTabTitle = this.setTabTitle.bind(this);
+    this.setTabComponent = this.setTabComponent.bind(this);
+    this.setTabProps = this.setTabProps.bind(this);
+    this.setTabDirty = this.setTabDirty.bind(this);
+    this.getTask = this.getTask.bind(this);
+    this.addTask = this.addTask.bind(this);
+    this.removeTask = this.removeTask.bind(this);
+    this.setTaskName = this.setTaskName.bind(this);
+    this.getWidget = this.getWidget.bind(this);
+    this.addWidget = this.addWidget.bind(this);
+    this.removeWidget = this.removeWidget.bind(this);
+    this.setWidgetElement = this.setWidgetElement.bind(this);
 
     this.isTasksPanelShown = this.isTasksPanelShown.bind(this);
     this.showTasksPanel = this.showTasksPanel.bind(this);
     this.hideTasksPanel = this.hideTasksPanel.bind(this);
 
     this.renderDialog = this.renderDialog.bind(this);
-
-    const {
-      dialogs,
-      dialogsManager,
-      messages,
-      messagesManager,
-      panels,
-      panelsManager,
-      tabs,
-      activeTabId,
-      tabsManager,
-      tasks,
-      tasksManager,
-      widgets,
-      widgetsManager,
-    } = this.props;
+    this.renderMessage = this.renderMessage.bind(this);
 
     this.state = {
       tasksPanelShown: false,
 
       appController: {
+        getDialog: this.getDialog,
+        addDialog: this.addDialog,
+        removeDialog: this.removeDialog,
+        setDialogTitle: this.setDialogTitle,
+        setDialogSubText: this.setDialogSubText,
+        setDialogType: this.setDialogType,
+        setDialogFooter: this.setDialogFooter,
+        setDialogOnDismiss: this.setDialogOnDismiss,
+        getMessage: this.getMessage,
+        addMessage: this.addMessage,
+        removeMessage: this.removeMessage,
+        setMessageText: this.setMessageText,
+        setMessageType: this.setMessageType,
+        getPanel: this.getPanel,
+        addPanel: this.addPanel,
+        removePanel: this.removePanel,
+        setPanelType: this.setPanelType,
+        setPanelVisible: this.setPanelVisible,
+        setPanelContent: this.setPanelContent,
+        setPanelOnDismiss: this.setPanelOnDismiss,
+        getTab: this.getTab,
+        getActiveTabId: this.getActiveTabId,
+        addTab: this.addTab,
+        removeTab: this.removeTab,
+        selectTab: this.selectTab,
+        setActiveTabRef: this.setActiveTabRef,
+        setTabTitle: this.setTabTitle,
+        setTabComponent: this.setTabComponent,
+        setTabProps: this.setTabProps,
+        setTabDirty: this.setTabDirty,
+        getTask: this.getTask,
+        addTask: this.addTask,
+        removeTask: this.removeTask,
+        setTaskName: this.setTaskName,
+        getWidget: this.getWidget,
+        addWidget: this.addWidget,
+        removeWidget: this.removeWidget,
+        setWidgetElement: this.setWidgetElement,
+
         isTasksPanelShown: this.isTasksPanelShown,
         showTasksPanel: this.showTasksPanel,
         hideTasksPanel: this.hideTasksPanel,
-
-        dialogs,
-        dialogsManager,
-        messages,
-        messagesManager,
-        panels,
-        panelsManager,
-        tabs,
-        activeTabId,
-        tabsManager,
-        tasks,
-        tasksManager,
-        widgets,
-        widgetsManager,
       },
+
+      messages: [],
+      dialogs: [],
+      panels: [],
+      tabs: [],
+      activeTabId: undefined,
+      tasks: [],
+      widgets: [],
     };
   }
 
-  get dialogs() {
-    return this.props.dialogs;
+  getDialog(id: string) {
+    return this.state.dialogs.find((dialog) => dialog.id === id);
   }
 
-  get dialogsManager() {
-    return this.props.dialogsManager;
+  addDialog(dialog: IDialog, callback?: () => void) {
+    const newDialogs = [...this.state.dialogs];
+    newDialogs.push(dialog);
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get messages() {
-    return this.props.messages;
+  removeDialog(id: string, callback?: () => void) {
+    const newDialogs = this.state.dialogs.filter((dialog) => dialog.id !== id);
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get messagesManager() {
-    return this.props.messagesManager;
+  setDialogTitle(id: string, title: string, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, title } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get panels() {
-    return this.props.panels;
+  setDialogSubText(id: string, subText: string, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, subText } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get panelsManager() {
-    return this.props.panelsManager;
+  setDialogType(id: string, type: DialogType, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, type } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get tabs() {
-    return this.props.tabs;
+  setDialogVisible(id: string, visible: boolean, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, visible } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get activeTabId() {
-    return this.props.activeTabId;
+  setDialogFooter(id: string, footer: JSX.Element, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, footer } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get tabsManager() {
-    return this.props.tabsManager;
+  setDialogOnDismiss(id: string, onDismiss: () => void, callback?: () => void) {
+    const newDialogs = this.state.dialogs.map((dialog) =>
+      dialog.id === id ? { ...dialog, onDismiss } : dialog
+    );
+    this.setState({ dialogs: newDialogs }, callback);
   }
 
-  get tasks() {
-    return this.props.tasks;
+  getMessage(id: string) {
+    return this.state.messages.find((message) => message.id === id);
   }
 
-  get tasksManager() {
-    return this.props.tasksManager;
+  addMessage(message: IMessage, callback?: () => void) {
+    const newMessages = [...this.state.messages];
+    newMessages.push(message);
+    this.setState({ messages: newMessages }, callback);
   }
 
-  // #region Tasks Panel
+  removeMessage(id: string, callback?: () => void) {
+    const newMessages = this.state.messages.filter(
+      (message) => message.id !== id
+    );
+    this.setState({ messages: newMessages }, callback);
+  }
+
+  setMessageText(id: string, text: string, callback?: () => void) {
+    const newMessages = this.state.messages.map((message) =>
+      message.id === id ? { ...message, text } : message
+    );
+    this.setState({ messages: newMessages }, callback);
+  }
+
+  setMessageType(id: string, type: MessageBarType, callback?: () => void) {
+    const newMessages = this.state.messages.map((message) =>
+      message.id === id ? { ...message, type } : message
+    );
+    this.setState({ messages: newMessages }, callback);
+  }
+
+  getPanel(id: string) {
+    return this.state.panels.find((panel) => panel.id === id);
+  }
+
+  addPanel(panel: IPanel, callback?: () => void) {
+    const newPanels = [...this.state.panels];
+    newPanels.push(panel);
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  removePanel(id: string, callback?: () => void) {
+    const newPanels = this.state.panels.filter((panel) => panel.id !== id);
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  setPanelType(id: string, type: PanelType, callback?: () => void) {
+    const newPanels = this.state.panels.map((panel) =>
+      panel.id === id ? { ...panel, type } : panel
+    );
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  setPanelVisible(id: string, visible: boolean, callback?: () => void) {
+    const newPanels = this.state.panels.map((panel) =>
+      panel.id === id ? { ...panel, visible } : panel
+    );
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  setPanelContent(id: string, content: JSX.Element, callback?: () => void) {
+    const newPanels = this.state.panels.map((panel) =>
+      panel.id === id ? { ...panel, content } : panel
+    );
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  setPanelOnDismiss(id: string, onDismiss: () => void, callback?: () => void) {
+    const newPanels = this.state.panels.map((panel) =>
+      panel.id === id ? { ...panel, onDismiss } : panel
+    );
+    this.setState({ panels: newPanels }, callback);
+  }
+
+  getTab(id: string) {
+    return this.state.tabs.find((tab) => tab.id === id);
+  }
+
+  getActiveTabId() {
+    return this.state.activeTabId;
+  }
+
+  addTab(tab: ITab, callback?: () => void) {
+    const newTabs = [...this.state.tabs];
+    newTabs.push(tab);
+    this.setState({ tabs: newTabs, activeTabId: tab.id }, callback);
+  }
+
+  removeTab(id: string, callback?: () => void) {
+    if (this.getTab(id)?.dirty) {
+      this.selectTab(id, () => {
+        this.activeTabRef.handleDirt(callback);
+      });
+      return;
+    }
+
+    const newTabs = this.state.tabs.filter((tab) => tab.id !== id);
+    const activeTabIndex = this.state.tabs.findIndex(
+      (tab) => tab.id === this.state.activeTabId
+    );
+
+    const newActiveTabId = newTabs.length
+      ? activeTabIndex !== 0
+        ? newTabs[activeTabIndex - 1].id
+        : newTabs[activeTabIndex].id
+      : undefined;
+
+    this.setState(
+      {
+        tabs: newTabs,
+        activeTabId: newActiveTabId,
+      },
+      callback
+    );
+  }
+
+  selectTab(id: string, callback?: () => void) {
+    this.setState({ activeTabId: id }, callback);
+  }
+
+  setActiveTabRef(ref: any) {
+    this.activeTabRef = ref;
+  }
+
+  setTabTitle(id: string, title: string, callback?: () => void) {
+    const newTabs = this.state.tabs.map((tab) =>
+      tab.id === id ? { ...tab, title } : tab
+    );
+    this.setState({ tabs: newTabs }, callback);
+  }
+
+  setTabComponent(
+    id: string,
+    component: any,
+    props: any,
+    callback?: () => void
+  ) {
+    const newTabs = this.state.tabs.map((tab) =>
+      tab.id === id ? { ...tab, component, props } : tab
+    );
+    this.setState({ tabs: newTabs }, callback);
+  }
+
+  setTabProps(id: string, props: any, callback?: () => void) {
+    const newTabs = this.state.tabs.map((tab) =>
+      tab.id === id ? { ...tab, props } : tab
+    );
+    this.setState({ tabs: newTabs }, callback);
+  }
+
+  setTabDirty(id: string, dirty: boolean, callback?: () => void) {
+    const newTabs = this.state.tabs.map((tab) =>
+      tab.id === id ? { ...tab, dirty } : tab
+    );
+    this.setState({ tabs: newTabs }, callback);
+  }
+
+  getTask(id: string) {
+    return this.state.tasks.find((t) => t.id === id);
+  }
+
+  addTask(task: ITask, callback?: () => void) {
+    const newTasks = [...this.state.tasks];
+    newTasks.push(task);
+    this.setState({ tasks: newTasks }, callback);
+  }
+
+  removeTask(id: string, callback?: () => void) {
+    const newTasks = this.state.tasks.filter((task) => task.id !== id);
+    this.setState({ tasks: newTasks }, callback);
+  }
+
+  setTaskName(id: string, name: string, callback?: () => void) {
+    const newTasks = this.state.tasks.map((task) =>
+      task.id === id ? { ...task, name } : task
+    );
+    this.setState({ tasks: newTasks }, callback);
+  }
+
+  getWidget(id: string) {
+    return this.state.widgets.find((w) => w.id === id);
+  }
+
+  addWidget(widget: IWidget, callback?: () => void) {
+    const newWidgets = [...this.state.widgets];
+    newWidgets.push(widget);
+    this.setState({ widgets: newWidgets }, callback);
+  }
+
+  removeWidget(id: string, callback?: () => void) {
+    const newWidgets = this.state.widgets.filter((widget) => widget.id !== id);
+    this.setState({ widgets: newWidgets }, callback);
+  }
+
+  setWidgetElement(id: string, element: JSX.Element, callback?: () => void) {
+    const newWidgets = this.state.widgets.map((widget) =>
+      widget.id === id ? { ...widget, element } : widget
+    );
+    this.setState({ widgets: newWidgets }, callback);
+  }
+
   isTasksPanelShown(): boolean {
     return this.state.tasksPanelShown;
   }
@@ -156,7 +451,6 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
       callback
     );
   }
-  // #endregion
 
   renderMessage(message: IMessage) {
     const { id, type, text } = message;
@@ -167,7 +461,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
         id={id}
         type={type}
         text={text}
-        onDismiss={() => this.props.messagesManager.remove(id)}
+        onDismiss={() => this.removeMessage(id)}
       />
     );
   }
@@ -189,16 +483,15 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
 
   render() {
     const {
+      appController,
+      tasksPanelShown,
       dialogs,
       messages,
       tabs,
       activeTabId,
-      setActiveTabRef,
-      tabsManager,
       tasks,
       widgets,
-    } = this.props;
-    const { appController, tasksPanelShown } = this.state;
+    } = this.state;
 
     const scrollbarStyles = mergeStyles({
       "*::-webkit-scrollbar": {
@@ -214,14 +507,12 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
     });
 
     const TabComponent =
-      activeTabId === undefined
-        ? MainTab
-        : tabsManager.get(activeTabId)?.component;
+      activeTabId === undefined ? MainTab : this.getTab(activeTabId)?.component;
 
     const tabId = activeTabId === undefined ? uuidv4() : activeTabId;
 
     const tabProps =
-      activeTabId === undefined ? {} : tabsManager.get(activeTabId)?.props;
+      activeTabId === undefined ? {} : this.getTab(activeTabId)?.props;
 
     return (
       <AppController.Provider value={appController}>
@@ -237,7 +528,7 @@ export class AppSkeleton extends React.Component<AppProps, AppState> {
           <div className="w-full h-[calc(100%-60px)]">
             <TabComponent
               key={tabId}
-              setActiveTabRef={setActiveTabRef}
+              setActiveTabRef={this.setActiveTabRef}
               tabId={tabId}
               {...tabProps}
             />
@@ -265,16 +556,14 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
     keys: "ctrl+n",
     description: "New tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
-      appRef.current!.tabsManager.add(appRef.current!.tabsManager.empty());
+      appRef.current!.addTab(makeTab({}));
     },
   },
   {
     keys: "ctrl+w",
     description: "Close tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
-      appRef.current!.tabsManager.remove(
-        appRef.current!.tabsManager.activeId()!
-      );
+      appRef.current!.removeTab(appRef.current!.getActiveTabId()!);
     },
   },
   {
@@ -288,7 +577,7 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
     keys: "ctrl+,",
     description: "Show settings tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
-      appRef.current?.tabsManager.add({
+      appRef.current!.addTab({
         id: uuidv4(),
         title: "Settings",
         component: SettingsTab,
@@ -301,7 +590,7 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
     keys: "ctrl+.",
     description: "Show development tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
-      appRef.current?.tabsManager.add({
+      appRef.current!.addTab({
         id: uuidv4(),
         title: "Development",
         component: DevelopmentTab,
@@ -312,9 +601,4 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
   },
 ];
 
-export const App = UseShortcuts(
-  UseDialogs(
-    UseMessages(UsePanels(UseTabs(UseTasks(UseWidgets(AppSkeleton)))))
-  ),
-  AppShortcuts
-);
+export const App = UseShortcuts(AppSkeleton, AppShortcuts);

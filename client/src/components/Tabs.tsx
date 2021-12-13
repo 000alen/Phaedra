@@ -10,8 +10,8 @@ import {
 } from "@fluentui/react";
 
 import { AppController, IAppController } from "../contexts";
-import { ITab } from "../HOC/UseTabs";
 import { getTheme } from "../themes";
+import { ITab } from "../types";
 
 export interface IOverflowData {
   primary: IContextualMenuItem[];
@@ -44,11 +44,11 @@ export function Tab({ id, title, dirty, active }: TabProps) {
   const appController = React.useContext(AppController);
 
   const handleSelect = () => {
-    appController.tabsManager!.select(id);
+    appController.selectTab(id);
   };
 
   const handleClose = () => {
-    appController.tabsManager!.remove(id);
+    appController.removeTab(id);
   };
 
   const theme = getTheme();
@@ -99,7 +99,7 @@ export function OverflowTab({ id, title, dirty, active }: TabProps) {
       <Label>{`${dirty ? "*" : ""}${title}`}</Label>
       <IconButton
         iconProps={{ iconName: "Cancel" }}
-        onClick={() => appController.tabsManager!.remove(id)}
+        onClick={() => appController.removeTab(id)}
       />
     </div>
   );
@@ -197,7 +197,7 @@ export class Tabs extends React.Component<TabsProps> {
       name: tab.title,
       dirty: tab.dirty,
       active: tab.id === activeTabId,
-      onClick: () => appController.tabsManager!.select(tab.id),
+      onClick: () => appController.selectTab(tab.id),
       onRender: () => (
         <OverflowTab
           key={tab.id}

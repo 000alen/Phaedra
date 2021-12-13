@@ -3,10 +3,11 @@ import React from "react";
 import { IconButton } from "@fluentui/react";
 
 import { AppController, IAppController } from "../contexts";
-import { ITab } from "../HOC/UseTabs";
 import { ipcRenderer } from "../index";
 import { getTheme } from "../themes";
 import { Tabs } from "./Tabs";
+import { ITab } from "../types";
+import { makeTab } from "../App";
 
 export interface TopBarProps {
   tabs: ITab[];
@@ -122,9 +123,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
           <IconButton
             className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"
             iconProps={addIcon}
-            onClick={() =>
-              appController.tabsManager!.add(appController.tabsManager!.empty())
-            }
+            onClick={() => appController.addTab(makeTab({}))}
           />
           <IconButton
             className="w-4 h-4 border-none outline-none bg-no-repeat cursor-pointer"

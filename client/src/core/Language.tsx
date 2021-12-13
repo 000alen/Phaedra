@@ -1,4 +1,4 @@
-import { getSettings } from "../electron";
+import { getSettings } from "../settings";
 import OpenAI from "openai-api";
 
 const summaryParameters = {
@@ -57,10 +57,6 @@ export async function summary(text: string): Promise<string> {
   return gptResponse.data.choices[0].text;
 }
 
-// export async function batchSummary(texts: string[]): Promise<string[]> {
-//   return await texts.map((text) => "Lorem ipsum");
-// }
-
 export async function question(
   question: string,
   context: string
@@ -78,27 +74,6 @@ export async function question(
   return gptResponse.data.choices[0].text;
 }
 
-// export async function batchQuestion(
-//   questions: string[],
-//   contexts: string[]
-// ): Promise<string[]> {
-//   return await questions.map((question) => "Lorem ipsum");
-// }
-
-// export async function batchQuestionSameContext(
-//   questions: string[],
-//   context: string
-// ): Promise<string[]> {
-//   return await questions.map((question) => "Lorem ipsum");
-// }
-
-// export async function batchQuestionSameQuestion(
-//   question: string,
-//   contexts: string[]
-// ): Promise<string[]> {
-//   return await contexts.map((context) => "Lorem ipsum");
-// }
-
 export async function generation(
   prompt: string,
   context: string
@@ -115,24 +90,3 @@ export async function generation(
 
   return gptResponse.data.choices[0].text;
 }
-
-// export async function batchGeneration(
-//   prompts: string[],
-//   contexts: string[]
-// ): Promise<string[]> {
-//   return await prompts.map((prompt) => "Lorem ipsum");
-// }
-
-// export async function batchGenerationSameContext(
-//   prompts: string[],
-//   context: string
-// ): Promise<string[]> {
-//   return await prompts.map((prompt) => "Lorem ipsum");
-// }
-
-// export async function batchGenerationSamePrompt(
-//   prompt: string,
-//   contexts: string[]
-// ): Promise<string[]> {
-//   return await contexts.map((context) => "Lorem ipsum");
-// }

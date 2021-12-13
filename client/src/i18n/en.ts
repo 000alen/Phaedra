@@ -1,4 +1,6 @@
-export const en_strings = {
+import { Locale } from "./types";
+
+export const en: Locale = {
   unknownError: "An unknown error occurred",
   documentLoadingError: "An error occurred while loading the document",
 
@@ -98,7 +100,3 @@ export const en_strings = {
 
   welcome: "Welcome to Phaedra!",
 };
-
-export function getStrings(): { [key: string]: string } {
-  return en_strings;
-}

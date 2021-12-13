@@ -1,6 +1,7 @@
 import { PathLike, WriteFileOptions } from "fs";
 
 import { ipcRenderer } from "./index";
+import { ISettings } from "./types";
 
 export interface FileFilter {
   extensions: string[];
@@ -99,7 +100,7 @@ export function base64(
   return ipcRenderer.invoke("base64", data);
 }
 
-export function getSettings(): Promise<object> {
+export function getSettings(): Promise<ISettings> {
   return ipcRenderer.invoke("getSettings");
 }
 

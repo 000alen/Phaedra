@@ -19,7 +19,7 @@ import { MainTab } from "./tabs/MainTab";
 import { getTheme } from "./themes";
 import { SettingsTab } from "./tabs/SettingsTab";
 import { DevelopmentTab } from "./tabs/DevelopmentTab";
-import { getStrings } from "./strings";
+import { getStrings } from "./i18n/i18n";
 import { EmptyTab } from "./tabs/EmptyTab";
 import { IDialog, IMessage, IPanel, ITab, ITask, IWidget } from "./types";
 

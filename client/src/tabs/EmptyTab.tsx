@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CardButton } from "../components/CardButton";
 import { AppController, IAppController } from "../contexts";
 import { openFile } from "../Notebook/IO";
-import { getStrings } from "../strings";
+import { getStrings } from "../i18n/i18n";
 import { NotebookTab } from "./NotebookTab";
 import { empty as emptyNotebook } from "../Notebook/UseNotebook";
 

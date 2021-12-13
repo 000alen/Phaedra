@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "../electron";
 import { INotebook } from "./Notebook";
-import { getStrings } from "../strings";
+import { getStrings } from "../i18n/i18n";
 import { notebookFromPdf } from "../core";
 
 export interface INotebookIO {

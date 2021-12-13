@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { INotebookTabController, NotebookTabController } from "../contexts";
 import { saveNotebook } from "./IO";
 
-import { getStrings } from "../strings";
+import { getStrings } from "../i18n/i18n";
 import { empty as emptyLayout } from "../Layout/UseLayout/UseLayout";
 import { empty as emptyContent } from "../Content/UseContent/UseContent";
 import {
@@ -257,26 +257,26 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
 
     // * Does not force update
     onContentChange(pageId: string, content: IContent) {
-      const { notebookTabController } = this.props;
+      // const { notebookTabController } = this.props;
       this.getPage(pageId)!.content = content;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     // * Does not force update
     onLayoutChange(pageId: string, layout: ILayout) {
-      const { notebookTabController } = this.props;
+      // const { notebookTabController } = this.props;
       this.getPage(pageId)!.layout = layout;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     // * Does not force update
     onQuillChange(pageId: string, quillId: string, content: IContent) {
-      const { notebookTabController } = this.props;
+      // const { notebookTabController } = this.props;
       this.getPageQuill(pageId, quillId)!.content = content;
       this.saved = false;
-      notebookTabController.setDirty(true);
+      // notebookTabController.setDirty(true);
     }
 
     render() {

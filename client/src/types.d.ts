@@ -1,3 +1,9 @@
+export interface ISettings {
+  name: string;
+  key: string;
+  locale: string;
+}
+
 export interface IDialog {
   id: string;
   title: string;

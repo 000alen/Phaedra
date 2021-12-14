@@ -1,4 +1,6 @@
-// ! TODO: Pass AppController to avoid persistence issues
+// TODO(#43): Standardize actions interface
+//  Pass actions a global interface (like AppController) instead of the
+//  interface from the level it's invoked from
 
 import { INotebookTabController } from "./contexts";
 

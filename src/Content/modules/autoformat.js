@@ -105,7 +105,7 @@ export class Autoformat {
         // Check helper trigger
         if (transform.helper && transform.helper.trigger) {
           if (lastOp.insert.match(transform.helper.trigger)) {
-            // TODO: check leaf/atindex instead
+            // TODO(#42): check leaf/atindex instead
             this.quill.formatText(
               checkIndex,
               1,

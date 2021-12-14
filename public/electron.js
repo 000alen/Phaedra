@@ -13,7 +13,8 @@ const Store = require("electron-store");
 const fs = require("fs");
 const { encode, decode } = require("gpt-3-encoder");
 
-// ! XXX
+// TODO: Remove ReactDevTools from Electron
+//   The path to ReactDevTools is hardcoded and might not work on other systems.
 const reactDevToolsPath = path.join(
   os.homedir(),
   "AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.21.0_0"

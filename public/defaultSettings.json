@@ -1,5 +1,6 @@
 {
   "name": "Lorem J. Ipsum",
   "key": "lorem-ipsum",
+  "theme": "default",
   "locale": "en"
 }

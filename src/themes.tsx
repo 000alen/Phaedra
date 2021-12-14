@@ -27,7 +27,9 @@ export const lightTheme = createTheme({
   }
 });
 
-// ! TODO Compatibility
+// TODO Fix dark theme Quill compatibility issues
+//   When using the dark theme, text inside Quill editor changes color to white
+//   and therefore cannot be read in from the paper (white) background.
 export const darkTheme = createTheme({
   palette: {
     themePrimary: "#ff00d0",

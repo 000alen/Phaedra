@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="./assets/img/banner_dark.png" />
+  <img src="./.assets/banner_dark.png" />
 </p>
 
 A software that summarizes texts, selects key concepts and allows you to ask questions, using AI. Aimed towards people with intellectual disabilities and neurodivergent individuals, and to revolutionize the way we consume knowledge. Made for [HackMIT 2021](https://hackmit.org/).
 
 # Getting started
 
-Phaedra is currently in a prototype state and is being actively developed. As of right now, the backend can be hosted either locally or using Google Colaboratory as a service provider. The latter option is recommended because of processing requirements.
+Phaedra is currently in a prototype state and is being actively developed. As of right now, Phaedra relies on the OpenAI API for GPT-3 and therefore requires a API key for that service.
 
 ## Running (developing and testing)
 
 <p align="center">
-  <img src="../assets/img/screenshot.png" />
+  <img src="./.assets/screenshot.png" />
 </p>
 
 ```console

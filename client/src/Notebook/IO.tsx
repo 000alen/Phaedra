@@ -6,9 +6,9 @@ import {
   showSaveDialog,
   writeFileSync,
 } from "../electron";
-import { INotebook } from "./Notebook";
+import { INotebook } from "./types";
 import { getStrings } from "../i18n/i18n";
-import { notebookFromPdf } from "../core";
+import { notebookFromPDF } from "../core/Language";
 
 export interface INotebookIO {
   notebook: INotebook;
@@ -38,10 +38,8 @@ const openFileDialogOptions: OpenDialogOptions = {
 export function loadPdf(path: string): Promise<INotebookIO> {
   return new Promise((resolve, reject) => {
     readFileSync(path).then((content) => {
-      base64(content as Uint8Array).then((base64) => {
-        notebookFromPdf(path, base64).then((notebook) => {
-          resolve({ notebook: notebook, notebookPath: undefined });
-        });
+      notebookFromPDF(content as Buffer, path).then((notebook) => {
+        resolve({ notebook: notebook, notebookPath: undefined });
       });
     });
   });

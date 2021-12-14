@@ -2,7 +2,7 @@ import { Content } from "../../Content/Content";
 import React from "react";
 
 import { Paper } from "../Paper";
-import { IContent, IPage } from "../../Notebook/Notebook";
+import { IContent, IPage } from "../../Notebook/types";
 import { PagePaneSelector } from "./PagePaneSelector";
 import { PaneRectProps } from "../../Layout/UseLayout/Rect";
 import { Reference } from "./Reference";

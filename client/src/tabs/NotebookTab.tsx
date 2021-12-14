@@ -19,7 +19,7 @@ import {
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { Notebook } from "../Notebook/Notebook";
 import { emptyPage, NotebookManager } from "../Notebook/UseNotebook";
-import { INotebook } from "../Notebook/Notebook";
+import { INotebook } from "../Notebook/types";
 import { PresentationTab } from "./PresentationTab";
 
 type NotebookTabProps = TabProps & {

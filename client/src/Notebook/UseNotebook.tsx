@@ -16,7 +16,7 @@ import {
   IQuill,
   IReference,
   ISource,
-} from "./Notebook";
+} from "./types";
 
 export interface UseNotebookProps {
   forwardedRef: React.Ref<any>;

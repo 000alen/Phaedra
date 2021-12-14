@@ -1,5 +1,9 @@
 import { getSettings } from "../settings";
 import OpenAI from "openai-api";
+import { chop, extractTextToPagesFromPdf, zip } from "./Text";
+import { v4 as uuidv4 } from "uuid";
+import { INotebook } from "../Notebook/types";
+import { empty } from "../Notebook/UseNotebook";
 
 const summaryParameters = {
   max_tokens: 256,
@@ -46,7 +50,6 @@ export function generationPrompt(prompt: string, context: string) {
 export async function summary(text: string): Promise<string> {
   const settings = await getSettings();
 
-  // @ts-ignore
   const openAi = new OpenAI(settings.key);
 
   const gptResponse = await openAi.complete({
@@ -57,13 +60,16 @@ export async function summary(text: string): Promise<string> {
   return gptResponse.data.choices[0].text;
 }
 
+export async function batchSummary(texts: string[]): Promise<string[]> {
+  return Promise.all(texts.map(summary));
+}
+
 export async function question(
   question: string,
   context: string
 ): Promise<string> {
   const settings = await getSettings();
 
-  // @ts-ignore
   const openAi = new OpenAI(settings.key);
 
   const gptResponse = await openAi.complete({
@@ -74,13 +80,37 @@ export async function question(
   return gptResponse.data.choices[0].text;
 }
 
+export async function batchQuestion(
+  questions: string[],
+  contexts: string[]
+): Promise<string[]> {
+  return Promise.all(
+    questions.map((_question, index) => question(_question, contexts[index]))
+  );
+}
+
+export async function batchQuestionSameQuestion(
+  _question: string,
+  contexts: string[]
+): Promise<string[]> {
+  return Promise.all(contexts.map((context) => question(_question, context)));
+}
+
+export async function batchQuestionSameContext(
+  questions: string[],
+  context: string
+): Promise<string[]> {
+  return Promise.all(
+    questions.map((_question) => question(_question, context))
+  );
+}
+
 export async function generation(
   prompt: string,
   context: string
 ): Promise<string> {
   const settings = await getSettings();
 
-  // @ts-ignore
   const openAi = new OpenAI(settings.key);
 
   const gptResponse = await openAi.complete({
@@ -89,4 +119,41 @@ export async function generation(
   });
 
   return gptResponse.data.choices[0].text;
+}
+
+export async function batchGeneration(
+  prompts: string[],
+  contexts: string[]
+): Promise<string[]> {
+  return Promise.all(
+    prompts.map((prompt, index) => generation(prompt, contexts[index]))
+  );
+}
+
+export async function batchGenerationSamePrompt(
+  prompt: string,
+  contexts: string[]
+): Promise<string[]> {
+  return Promise.all(contexts.map((context) => generation(prompt, context)));
+}
+
+export async function batchGenerationSameContext(
+  prompts: string[],
+  context: string
+): Promise<string[]> {
+  return Promise.all(prompts.map((prompt) => generation(prompt, context)));
+}
+
+export async function notebookFromPDF(
+  buffer: Buffer,
+  path: string
+): Promise<INotebook> {
+  // const texts = await extractTextToPagesFromPdf(buffer);
+  // const [indexes, contents] = chop(texts, 512);
+  // const summaries = await batchSummary(contents);
+  // for (const [index, content, summary] of zip(indexes, contents, summaries)) {
+  //   const sourceId = uuidv4();
+  //   const pageId = uuidv4();
+  // }
+  return await empty();
 }

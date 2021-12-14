@@ -1,7 +1,7 @@
 import { DialogType, MessageBarType, PanelType } from "@fluentui/react";
 import React from "react";
 
-import { INotebook } from "./Notebook/Notebook";
+import { INotebook } from "./Notebook/types";
 import { NotebookManager } from "./Notebook/UseNotebook";
 import { IDialog, IMessage, IPanel, ITab, ITask, IWidget } from "./types";
 

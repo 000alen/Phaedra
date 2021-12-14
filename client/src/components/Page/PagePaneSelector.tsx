@@ -1,6 +1,6 @@
 import { IconButton, Label, OverflowSet, Separator } from "@fluentui/react";
 import React from "react";
-import { IPage } from "../../Notebook/Notebook";
+import { IPage } from "../../Notebook/types";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 import { PaneRectProps } from "../../Layout/UseLayout/Rect";
 import { CardFile } from "../CardFile";

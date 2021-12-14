@@ -2,7 +2,7 @@ import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
 
-import { clamp, removeFromArray } from "../utils";
+import { clamp, removeFromArray } from "../Utils";
 import {
   Direction,
   DividerRect,

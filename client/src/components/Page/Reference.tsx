@@ -1,7 +1,7 @@
 import React from "react";
 import { pdfjs, Document, Page } from "react-pdf";
 import { readFileSync } from "../../electron";
-import { IReference } from "../../Notebook/Notebook";
+import { IReference } from "../../Notebook/types";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Subtract } from "utility-types";
-import { IPage } from "../../Notebook/Notebook";
+import { IPage } from "../../Notebook/types";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 
 export type Delta = object;

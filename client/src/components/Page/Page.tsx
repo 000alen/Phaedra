@@ -2,7 +2,7 @@ import { Layout } from "../../Layout/Layout";
 import React from "react";
 
 import { PagePane } from "./PagePane";
-import { IContent, ILayout, IPage } from "../../Notebook/Notebook";
+import { IContent, ILayout, IPage } from "../../Notebook/types";
 import { emptyQuill, NotebookManager } from "../../Notebook/UseNotebook";
 import { v4 as uuidv4 } from "uuid";
 

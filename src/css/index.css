@@ -51,7 +51,7 @@ kbd {
   content: "...";
 }
 
-/* ! TODO: Clean CSS */
+/* TODO(#45): Clean CSS */
 .react-pdf__Document {
   width: 100% !important;
   height: 100% !important;

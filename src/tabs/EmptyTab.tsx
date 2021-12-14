@@ -1,4 +1,6 @@
-// TODO: Refactor handling calls
+// TODO(#46): Refactor opening calls as actions
+//   Implement actions to open files (e.g. createFromPdf, createFromText,
+//   openNotebook, etc.)
 
 import React from "react";
 import { v4 as uuidv4 } from "uuid";

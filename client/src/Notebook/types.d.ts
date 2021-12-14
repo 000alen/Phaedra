@@ -1,4 +1,5 @@
-import { LayoutJSON } from "../Layout/UseLayout/UseLayout";
+import { PaneRectProps } from "../Layout/UseLayout/Rect";
+import { LayoutJSON, PaneJSON } from "../Layout/UseLayout/UseLayout";
 
 export interface ISource {
   id: string;
@@ -15,12 +16,18 @@ export interface IReference {
   sourceId: string;
 }
 
-export type IContent = object;
+export interface IContent {
+  ops: object[];
+}
 
 export interface IQuill {
   id: string;
   content: IContent;
 }
+
+export type IPaneProps = PaneRectProps;
+
+export type IPane = PaneJSON;
 
 export type ILayout = LayoutJSON;
 

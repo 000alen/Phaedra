@@ -1,6 +1,6 @@
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf";
 import pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.entry";
-import { encode, decode } from "gpt-3-encoder";
+import { encode, decode } from "../electron";
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -36,8 +36,11 @@ export async function extractTextToPagesFromPdf(buffer: Buffer) {
   return pageTexts;
 }
 
-export function chop(texts: string[], size: number): [number[], string[]] {
-  const tokenizedSources = texts.map(encode);
+export async function chop(
+  texts: string[],
+  size: number
+): Promise<[number[], string[]]> {
+  const tokenizedSources = await Promise.all(texts.map(encode));
 
   const indexes: number[] = [];
   const chunks: [number[]][] = [];
@@ -85,7 +88,7 @@ export function chop(texts: string[], size: number): [number[], string[]] {
   }
 
   // @ts-ignore
-  return [indexes, chunks.map((chunk) => decode(chunk))];
+  return [indexes, await Promise.all(chunks.map((chunk) => decode(chunk)))];
 }
 
 export function zip(...arrays: any[][]) {

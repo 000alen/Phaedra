@@ -3,7 +3,9 @@ import { Subtract } from "utility-types";
 import { IPage } from "../../Notebook/types";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 
-export type Delta = object;
+export interface Delta {
+  ops: object[];
+}
 
 export interface UseContentProps {
   forwardedRef: React.Ref<any>;

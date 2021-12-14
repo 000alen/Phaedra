@@ -11,6 +11,7 @@ const path = require("path");
 const os = require("os");
 const Store = require("electron-store");
 const fs = require("fs");
+const { encode, decode } = require("gpt-3-encoder");
 
 // ! XXX
 const reactDevToolsPath = path.join(
@@ -115,7 +116,7 @@ app.on("activate", () => {
 });
 
 app.on("browser-window-focus", function () {
-  globalShortcut.register("CommandOrControl+W", () => {});
+  globalShortcut.register("CommandOrControl+W", () => { });
 });
 
 app.on("browser-window-blur", function () {
@@ -152,4 +153,12 @@ ipcMain.handle("setSettings", async (event, settings) => {
 
 ipcMain.handle("setFullscreen", async (event, fullscreen) => {
   mainWindow.setFullScreen(fullscreen);
+});
+
+ipcMain.handle("encode", async (event, text) => {
+  return encode(text);
+});
+
+ipcMain.handle("decode", async (event, tokens) => {
+  return decode(tokens);
 });

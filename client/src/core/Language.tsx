@@ -3,7 +3,12 @@ import OpenAI from "openai-api";
 import { chop, extractTextToPagesFromPdf, zip } from "./Text";
 import { v4 as uuidv4 } from "uuid";
 import { INotebook } from "../Notebook/types";
-import { empty } from "../Notebook/UseNotebook";
+import {
+  makePage,
+  makeReference,
+  makeSource,
+  Notebook,
+} from "../Notebook/Future";
 
 const summaryParameters = {
   max_tokens: 256,
@@ -148,12 +153,29 @@ export async function notebookFromPDF(
   buffer: Buffer,
   path: string
 ): Promise<INotebook> {
-  // const texts = await extractTextToPagesFromPdf(buffer);
-  // const [indexes, contents] = chop(texts, 512);
-  // const summaries = await batchSummary(contents);
-  // for (const [index, content, summary] of zip(indexes, contents, summaries)) {
-  //   const sourceId = uuidv4();
-  //   const pageId = uuidv4();
-  // }
-  return await empty();
+  const notebook = new Notebook({});
+  const texts = await extractTextToPagesFromPdf(buffer);
+  const [indexes, contents] = await chop(texts, 512);
+  const summaries = await batchSummary(contents);
+  for (const [index, content, summary] of zip(indexes, contents, summaries)) {
+    const sourceId = uuidv4();
+    const pageId = uuidv4();
+    notebook.addSource(
+      makeSource({
+        id: sourceId,
+        title: `${path} (${index})`,
+        type: "pdf",
+        content: content,
+        path: path,
+        index: index,
+      })
+    );
+    notebook.addPage(makePage({ id: pageId }));
+    notebook.addPageReference(
+      pageId,
+      makeReference({ title: `${path} (${index})`, sourceId })
+    );
+    notebook.editPageContent(pageId, { insert: { pre: `${summary}\n\n` } });
+  }
+  return notebook.JSON();
 }

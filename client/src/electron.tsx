@@ -111,3 +111,11 @@ export function setSettings(settings: object) {
 export function setFullscreen(fullscreen: boolean) {
   ipcRenderer.invoke("setFullscreen", fullscreen);
 }
+
+export function encode(text: string): Promise<number[]> {
+  return ipcRenderer.invoke("encode", text);
+}
+
+export function decode(tokens: number[]): Promise<string> {
+  return ipcRenderer.invoke("decode", tokens);
+}

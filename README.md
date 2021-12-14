@@ -10,25 +10,18 @@ Phaedra is currently in a prototype state and is being actively developed. As of
 
 ## Running (developing and testing)
 
-Run the backend locally (or serve it from [Google Colaboratory](https://colab.research.google.com/github/000alen/Phaedra/blob/master/Phaedra_LocalMode.ipynb)):
+<p align="center">
+  <img src="../assets/img/screenshot.png" />
+</p>
 
 ```console
-foo@bar:~$ cd backend
-foo@bar:~$ python -m Phaedra.API
-```
-
-Then, run the client:
-
-```console
-foo@bar:~$ cd client
+foo@bar:~$ yarn install
 foo@bar:~$ yarn start
 ```
 
 # Development
 
 Read the TODO list [here](./TODO.md).
-
-Read more about Phaedra's client [here](./client/README.md).
 
 # Authors
 

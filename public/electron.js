@@ -43,7 +43,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true
+      devTools: true,
+      preload: "preload.js"
     },
     show: false,
     fullscreenable: true
@@ -95,6 +96,8 @@ function createWindow() {
     e.preventDefault();
     shell.openExternal(url);
   });
+
+  globalShortcut.unregister("CommandOrControl+W");
 }
 
 app.whenReady().then(createWindow);
@@ -113,14 +116,6 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
-});
-
-app.on("browser-window-focus", function () {
-  globalShortcut.register("CommandOrControl+W", () => {});
-});
-
-app.on("browser-window-blur", function () {
-  globalShortcut.unregister("CommandOrControl+W");
 });
 
 ipcMain.handle("readFileSync", (event, path, options) => {

@@ -1,5 +1,4 @@
 import {
-  base64,
   OpenDialogOptions,
   readFileSync,
   showOpenDialog,

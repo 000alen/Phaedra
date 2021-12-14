@@ -12,7 +12,7 @@ interface TasksPanelProps {
 export function TasksPanel({
   tasksPanelShown,
   hideTasksPanel,
-  tasks,
+  tasks
 }: TasksPanelProps) {
   return (
     <Panel

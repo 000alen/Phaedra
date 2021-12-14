@@ -1,13 +1,13 @@
+import { notebookFromPDF } from "../core/Language";
 import {
   OpenDialogOptions,
   readFileSync,
   showOpenDialog,
   showSaveDialog,
-  writeFileSync,
+  writeFileSync
 } from "../electron";
-import { INotebook } from "./types";
 import { getStrings } from "../i18n/i18n";
-import { notebookFromPDF } from "../core/Language";
+import { INotebook } from "./types";
 
 export interface INotebookIO {
   notebook: INotebook;
@@ -16,12 +16,12 @@ export interface INotebookIO {
 
 const openPdfDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
-  filters: [{ name: getStrings().notebooksFilterName, extensions: ["pdf"] }],
+  filters: [{ name: getStrings().notebooksFilterName, extensions: ["pdf"] }]
 };
 
 const openJsonDialogOptions: OpenDialogOptions = {
   properties: ["openFile"],
-  filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }],
+  filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }]
 };
 
 const openFileDialogOptions: OpenDialogOptions = {
@@ -29,9 +29,9 @@ const openFileDialogOptions: OpenDialogOptions = {
   filters: [
     {
       name: getStrings().notebooksFilterName,
-      extensions: ["pdf", "json"],
-    },
-  ],
+      extensions: ["pdf", "json"]
+    }
+  ]
 };
 
 export function loadPdf(path: string): Promise<INotebookIO> {
@@ -47,7 +47,7 @@ export function loadPdf(path: string): Promise<INotebookIO> {
 export function loadJson(path: string): Promise<INotebookIO> {
   return new Promise((resolve, reject) => {
     readFileSync(path, "utf-8").then((content) => {
-      let notebook = JSON.parse(content as string);
+      const notebook = JSON.parse(content as string);
       resolve({ notebook: notebook, notebookPath: path });
     });
   });
@@ -110,7 +110,7 @@ export function saveNotebook(
   notebookPath: string | undefined
 ): Promise<string> {
   const saveDialogOptions = {
-    filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }],
+    filters: [{ name: getStrings().notebooksFilterName, extensions: ["json"] }]
   };
 
   return new Promise((resolve, reject) => {

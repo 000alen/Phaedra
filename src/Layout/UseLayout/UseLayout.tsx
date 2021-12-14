@@ -9,7 +9,7 @@ import {
   LayoutRect,
   Orientation,
   PaneRect,
-  PaneRectProps,
+  PaneRectProps
 } from "./Rect";
 
 export interface UseLayoutProps {
@@ -111,8 +111,8 @@ export function emptyPane(): PaneJSON {
     previous: null,
     next: null,
     props: {
-      type: "default",
-    },
+      type: "default"
+    }
   };
 }
 
@@ -125,7 +125,7 @@ export function empty(): LayoutJSON {
     orientation: "horizontal",
     previous: null,
     next: null,
-    children: [emptyPane()],
+    children: [emptyPane()]
   };
 }
 
@@ -160,7 +160,7 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
       this.state = {
         layout: layout,
         panes: layout.getAllPanes(),
-        dividers: layout.getAllDividers(),
+        dividers: layout.getAllDividers()
       };
     }
 
@@ -240,11 +240,11 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
                 size: child.size,
                 previous: child.previous !== null ? child.previous.id : null,
                 next: child.next !== null ? child.next.id : null,
-                props: child.props,
+                props: child.props
               } as PaneJSON)
         ),
         previous: layout.previous !== null ? layout.previous.id : null,
-        next: layout.next !== null ? layout.next.id : null,
+        next: layout.next !== null ? layout.next.id : null
       } as LayoutJSON;
     }
 
@@ -294,20 +294,20 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
       const distances: [Direction, number][] = [
         [
           Direction.North,
-          this.computeAbsoluteSize(event, domRect, Direction.North),
+          this.computeAbsoluteSize(event, domRect, Direction.North)
         ],
         [
           Direction.South,
-          this.computeAbsoluteSize(event, domRect, Direction.South),
+          this.computeAbsoluteSize(event, domRect, Direction.South)
         ],
         [
           Direction.East,
-          this.computeAbsoluteSize(event, domRect, Direction.East),
+          this.computeAbsoluteSize(event, domRect, Direction.East)
         ],
         [
           Direction.West,
-          this.computeAbsoluteSize(event, domRect, Direction.West),
-        ],
+          this.computeAbsoluteSize(event, domRect, Direction.West)
+        ]
       ];
 
       if (
@@ -382,7 +382,7 @@ export function UseLayout<P extends UseLayoutInjectedProps>(
         pane.previous,
         pane.next,
         {
-          type: "new",
+          type: "new"
         }
       );
       layout.addChild(newPane);

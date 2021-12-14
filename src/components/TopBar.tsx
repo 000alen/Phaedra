@@ -31,7 +31,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
       this.handleMaximizeRestoreButtonClick.bind(this);
 
     this.state = {
-      showMaximize: true,
+      showMaximize: true
     };
   }
 
@@ -51,7 +51,7 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
 
   setMaximizeRestoreButton(isMaximizedApp: boolean) {
     this.setState({
-      showMaximize: !isMaximizedApp,
+      showMaximize: !isMaximizedApp
     });
   }
 
@@ -71,41 +71,41 @@ export class TopBar extends React.Component<TopBarProps, TopBarState> {
     const theme = getTheme();
 
     const topBarStyle = {
-      backgroundColor: theme.palette.white,
+      backgroundColor: theme.palette.white
     };
 
     const addIcon = {
       iconName: "Add",
       styles: {
-        root: { color: theme.palette.black },
-      },
+        root: { color: theme.palette.black }
+      }
     };
 
     const minimizeIcon = {
       iconName: "ChromeMinimize",
       styles: {
-        root: { color: theme.palette.black },
-      },
+        root: { color: theme.palette.black }
+      }
     };
     const maximizeIcon = {
       iconName: "ChromeFullScreen",
       styles: {
-        root: { color: theme.palette.black },
-      },
+        root: { color: theme.palette.black }
+      }
     };
 
     const restoreIcon = {
       iconName: "ChromeRestore",
       styles: {
-        root: { color: theme.palette.black },
-      },
+        root: { color: theme.palette.black }
+      }
     };
 
     const closeIcon = {
       iconName: "ChromeClose",
       styles: {
-        root: { color: theme.palette.black },
-      },
+        root: { color: theme.palette.black }
+      }
     };
 
     return (

@@ -1,6 +1,7 @@
 import * as pdfjs from "pdfjs-dist/legacy/build/pdf";
 import pdfjsWorker from "pdfjs-dist/legacy/build/pdf.worker.entry";
-import { encode, decode } from "../electron";
+
+import { decode, encode } from "../electron";
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 

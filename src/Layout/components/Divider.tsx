@@ -34,13 +34,13 @@ export class Divider extends React.Component<DividerProps, DividerState> {
       return {
         left: `${x * 100}%`,
         top: `${(y + divider.position! * h) * 100}%`,
-        width: `${w * 100}%`,
+        width: `${w * 100}%`
       };
     } else {
       return {
         top: `${y * 100}%`,
         left: `${(x + divider.position! * w) * 100}%`,
-        height: `${h * 100}%`,
+        height: `${h * 100}%`
       };
     }
   }

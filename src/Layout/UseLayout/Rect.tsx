@@ -2,12 +2,12 @@ export enum Direction {
   North,
   South,
   East,
-  West,
+  West
 }
 
 export enum Orientation {
   Horizontal,
-  Vertical,
+  Vertical
 }
 
 export class Rect {
@@ -90,7 +90,7 @@ export class Rect {
       left: left + width * this.left,
       top: top + height * this.top,
       width: width * this.width,
-      height: height * this.height,
+      height: height * this.height
     };
   }
 }

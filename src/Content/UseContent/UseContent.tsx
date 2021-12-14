@@ -1,5 +1,6 @@
 import React from "react";
 import { Subtract } from "utility-types";
+
 import { IPage } from "../../Notebook/types";
 import { NotebookManager } from "../../Notebook/UseNotebook";
 
@@ -54,7 +55,7 @@ type PropsWithoutRef<P extends UseContentInjectedProps> = Subtract<
 
 export function empty(): Delta {
   return {
-    ops: [],
+    ops: []
   };
 }
 
@@ -76,7 +77,7 @@ export function UseContent<P extends UseContentInjectedProps>(
         defaultContent !== undefined ? (defaultContent as Delta) : empty();
 
       this.state = {
-        defaultContent: _defaultContent,
+        defaultContent: _defaultContent
       };
     }
 

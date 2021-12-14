@@ -1,17 +1,18 @@
-import { v4 as uuidv4 } from "uuid";
-import {
-  ISource,
-  IPage,
-  INotebook,
-  IReference,
-  IQuill,
-  IPaneProps,
-  IPane,
-  ILayout,
-  IContent,
-} from "./types";
 import generateName from "project-name-generator";
+import { v4 as uuidv4 } from "uuid";
+
 import { Direction } from "../Layout/UseLayout/Rect";
+import {
+  IContent,
+  ILayout,
+  INotebook,
+  IPage,
+  IPane,
+  IPaneProps,
+  IQuill,
+  IReference,
+  ISource
+} from "./types";
 
 export function makeSource({
   id,
@@ -19,7 +20,7 @@ export function makeSource({
   type,
   content,
   path,
-  index,
+  index
 }: Partial<ISource>): ISource {
   if (id === undefined) id = uuidv4();
   if (title === undefined) title = generateName().spaced;
@@ -34,14 +35,14 @@ export function makeSource({
     type,
     content,
     path,
-    index,
+    index
   };
 }
 
 export function makeReference({
   id,
   title,
-  sourceId,
+  sourceId
 }: Partial<IReference>): IReference {
   if (id === undefined) id = uuidv4();
   if (title === undefined) title = generateName().spaced;
@@ -50,20 +51,20 @@ export function makeReference({
   return {
     id,
     title,
-    sourceId,
+    sourceId
   };
 }
 
 export function makePaneProps({
   type,
-  paramId,
+  paramId
 }: Partial<IPaneProps>): IPaneProps {
   if (type === undefined) type = "default";
   if (paramId === undefined) paramId = undefined;
 
   return {
     type,
-    paramId,
+    paramId
   };
 }
 
@@ -73,7 +74,7 @@ export function makePane({
   size,
   previous,
   next,
-  props,
+  props
 }: Partial<IPane>): IPane {
   if (id === undefined) id = uuidv4();
   if (position === undefined) position = 0;
@@ -89,7 +90,7 @@ export function makePane({
     size,
     previous,
     next,
-    props,
+    props
   };
 }
 
@@ -100,7 +101,7 @@ export function makeLayout({
   orientation,
   previous,
   next,
-  children,
+  children
 }: Partial<ILayout>): ILayout {
   if (id === undefined) id = uuidv4();
   if (position === undefined) position = 0;
@@ -118,7 +119,7 @@ export function makeLayout({
     orientation,
     previous,
     next,
-    children,
+    children
   };
 }
 
@@ -126,7 +127,7 @@ export function makeContent({ ops }: Partial<IContent>): IContent {
   if (ops === undefined) ops = [];
 
   return {
-    ops,
+    ops
   };
 }
 
@@ -136,7 +137,7 @@ export function makeQuill({ id, content }: Partial<IQuill>): IQuill {
 
   return {
     id,
-    content,
+    content
   };
 }
 
@@ -145,7 +146,7 @@ export function makePage({
   references,
   layout,
   content,
-  quills,
+  quills
 }: Partial<IPage>): IPage {
   if (id === undefined) id = uuidv4();
   if (references === undefined) references = [];
@@ -158,7 +159,7 @@ export function makePage({
     references,
     layout,
     content,
-    quills,
+    quills
   };
 }
 
@@ -180,7 +181,7 @@ export class Notebook {
       id: this.id,
       name: this.name,
       sources: this.sources,
-      pages: this.pages,
+      pages: this.pages
     };
   }
 

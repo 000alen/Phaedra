@@ -1,5 +1,7 @@
-import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
+
+import { Label, Spinner, SpinnerSize } from "@fluentui/react";
+
 import { wsummary } from "../../core/Knowledge";
 import { BlotsProps, BlotsState } from "./types";
 
@@ -14,7 +16,7 @@ export class SummaryComponent extends React.Component<BlotsProps, BlotsState> {
 
     this.state = {
       query,
-      response,
+      response
     };
   }
 
@@ -27,7 +29,9 @@ export class SummaryComponent extends React.Component<BlotsProps, BlotsState> {
       .then((response) => {
         this.setState({ response });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   getData() {

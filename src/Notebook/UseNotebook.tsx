@@ -1,13 +1,14 @@
-import { MessageBarType } from "@fluentui/react";
 import React from "react";
 import { Subtract } from "utility-types";
 import { v4 as uuidv4 } from "uuid";
-import { INotebookTabController, NotebookTabController } from "../contexts";
-import { saveNotebook } from "./IO";
 
+import { MessageBarType } from "@fluentui/react";
+
+import { empty as emptyContent } from "../Content/UseContent/UseContent";
+import { INotebookTabController, NotebookTabController } from "../contexts";
 import { getStrings } from "../i18n/i18n";
 import { empty as emptyLayout } from "../Layout/UseLayout/UseLayout";
-import { empty as emptyContent } from "../Content/UseContent/UseContent";
+import { saveNotebook } from "./IO";
 import {
   IContent,
   ILayout,
@@ -15,7 +16,7 @@ import {
   IPage,
   IQuill,
   IReference,
-  ISource,
+  ISource
 } from "./types";
 
 export interface UseNotebookProps {
@@ -73,7 +74,7 @@ type PropsWithoutRef<P extends UseNotebookInjectedProps> = Subtract<
 export function emptyQuill(): IQuill {
   return {
     id: uuidv4(),
-    content: emptyContent(),
+    content: emptyContent()
   };
 }
 
@@ -83,7 +84,7 @@ export function emptyPage(): IPage {
     references: [],
     layout: emptyLayout(),
     content: emptyContent(),
-    quills: [],
+    quills: []
   };
 }
 
@@ -94,7 +95,7 @@ export function empty(): INotebook {
     id,
     name: `Unnamed Notebook ${id}`,
     sources: [],
-    pages: [emptyPage()],
+    pages: [emptyPage()]
   } as INotebook;
 }
 
@@ -139,7 +140,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
 
       this.notebook = notebook !== undefined ? notebook : empty();
       this.notebookPath = notebookPath;
-      this.saved = notebookPath !== undefined ? true : false;
+      this.saved = notebookPath !== undefined;
     }
 
     async save() {
@@ -149,7 +150,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
       const taskId = uuidv4();
       appController.addTask({
         id: taskId,
-        name: getStrings().savingNotebookTaskLabel,
+        name: getStrings().savingNotebookTaskLabel
       });
 
       try {
@@ -163,7 +164,7 @@ export function UseNotebook<P extends UseNotebookInjectedProps>(
         appController.addMessage({
           id: uuidv4(),
           text: getStrings().savingNotebookTaskError,
-          type: MessageBarType.error,
+          type: MessageBarType.error
         });
       } finally {
         appController.removeTask(taskId);

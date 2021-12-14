@@ -20,7 +20,7 @@ export class Pre extends BlockEmbed {
     Pre.data = value;
     Pre.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

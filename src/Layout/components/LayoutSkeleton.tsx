@@ -26,7 +26,7 @@ export class LayoutSkeleton extends React.Component<
     this.handleKeyUp = this.handleKeyUp.bind(this);
 
     this.state = {
-      keyPressed: false,
+      keyPressed: false
     };
   }
 
@@ -42,13 +42,13 @@ export class LayoutSkeleton extends React.Component<
 
   handleKeyDown(event: KeyboardEvent) {
     this.setState({
-      keyPressed: true,
+      keyPressed: true
     });
   }
 
   handleKeyUp(event: KeyboardEvent) {
     this.setState({
-      keyPressed: false,
+      keyPressed: false
     });
   }
 
@@ -59,7 +59,7 @@ export class LayoutSkeleton extends React.Component<
       _panes,
       _dividers,
       _layoutManager,
-      _layoutContainerRef,
+      _layoutContainerRef
     } = this.props;
     const { keyPressed } = this.state;
 

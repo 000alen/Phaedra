@@ -1,5 +1,6 @@
-import { DialogType, MessageBarType, PanelType } from "@fluentui/react";
 import React from "react";
+
+import { DialogType, MessageBarType, PanelType } from "@fluentui/react";
 
 import { INotebook } from "./Notebook/types";
 import { NotebookManager } from "./Notebook/UseNotebook";
@@ -168,7 +169,7 @@ export const AppController = React.createContext<IAppController>({
 
   isTasksPanelShown: () => undefined,
   showTasksPanel: (callback?: () => void) => {},
-  hideTasksPanel: (callback?: () => void) => {},
+  hideTasksPanel: (callback?: () => void) => {}
 });
 
 export interface INotebookTabController {
@@ -187,7 +188,7 @@ export const NotebookTabController =
     handleDirt: (callback?: () => void) => {},
     getAppController: () => undefined,
     getTabId: () => undefined,
-    getNotebookManager: () => undefined,
+    getNotebookManager: () => undefined
   });
 
 export interface INotebookController {
@@ -197,5 +198,5 @@ export interface INotebookController {
 
 export const NotebookController = React.createContext<INotebookController>({
   getNotebookPageController: () => undefined,
-  getNotebook: () => undefined,
+  getNotebook: () => undefined
 });

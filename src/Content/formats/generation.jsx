@@ -20,7 +20,7 @@ export class Generation extends BlockEmbed {
     Generation.data = value;
     Generation.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

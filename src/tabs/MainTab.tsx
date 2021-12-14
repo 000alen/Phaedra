@@ -29,7 +29,7 @@ class MainTabSkeleton extends React.Component<TabProps, MainTabState> {
         <div
           className="select-none space-y-2"
           style={{
-            opacity: 0.5,
+            opacity: 0.5
           }}
         >
           {shortcuts.map((shortcut, index) => {

@@ -1,5 +1,6 @@
 import "./css/index.css";
 
+import Mousetrap from "mousetrap";
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -7,7 +8,6 @@ import { initializeIcons, ThemeProvider } from "@fluentui/react";
 
 import { App } from "./App";
 import { getTheme } from "./themes";
-import Mousetrap from "mousetrap";
 
 export const { ipcRenderer } = window.require("electron");
 

@@ -5,7 +5,7 @@ import {
   DialogType,
   mergeStyles,
   MessageBarType,
-  PanelType,
+  PanelType
 } from "@fluentui/react";
 
 import { Dialog } from "./components/Dialog";
@@ -15,12 +15,12 @@ import { TasksPanel } from "./components/TasksPanel";
 import { TopBar } from "./components/TopBar";
 import { AppController, IAppController } from "./contexts";
 import { IShortcut, UseShortcuts } from "./HOC/UseShortcuts";
-import { MainTab } from "./tabs/MainTab";
-import { getTheme } from "./themes";
-import { SettingsTab } from "./tabs/SettingsTab";
-import { DevelopmentTab } from "./tabs/DevelopmentTab";
 import { getStrings } from "./i18n/i18n";
+import { DevelopmentTab } from "./tabs/DevelopmentTab";
 import { EmptyTab } from "./tabs/EmptyTab";
+import { MainTab } from "./tabs/MainTab";
+import { SettingsTab } from "./tabs/SettingsTab";
+import { getTheme } from "./themes";
 import { IDialog, IMessage, IPanel, ITab, ITask, IWidget } from "./types";
 
 interface AppSkeletonProps {}
@@ -42,7 +42,7 @@ export function makeTab({
   title,
   component,
   props,
-  dirty,
+  dirty
 }: Partial<ITab>): ITab {
   if (id === undefined) id = uuidv4();
   if (title === undefined) title = getStrings().newTabTitle;
@@ -55,7 +55,7 @@ export function makeTab({
     title,
     component,
     props,
-    dirty,
+    dirty
   };
 }
 
@@ -159,7 +159,7 @@ export class AppSkeleton extends React.Component<
 
         isTasksPanelShown: this.isTasksPanelShown,
         showTasksPanel: this.showTasksPanel,
-        hideTasksPanel: this.hideTasksPanel,
+        hideTasksPanel: this.hideTasksPanel
       },
 
       messages: [],
@@ -168,7 +168,7 @@ export class AppSkeleton extends React.Component<
       tabs: [],
       activeTabId: undefined,
       tasks: [],
-      widgets: [],
+      widgets: []
     };
   }
 
@@ -339,7 +339,7 @@ export class AppSkeleton extends React.Component<
     this.setState(
       {
         tabs: newTabs,
-        activeTabId: newActiveTabId,
+        activeTabId: newActiveTabId
       },
       callback
     );
@@ -437,7 +437,7 @@ export class AppSkeleton extends React.Component<
   showTasksPanel(callback?: () => void) {
     this.setState(
       {
-        tasksPanelShown: true,
+        tasksPanelShown: true
       },
       callback
     );
@@ -446,7 +446,7 @@ export class AppSkeleton extends React.Component<
   hideTasksPanel(callback?: () => void) {
     this.setState(
       {
-        tasksPanelShown: false,
+        tasksPanelShown: false
       },
       callback
     );
@@ -490,20 +490,20 @@ export class AppSkeleton extends React.Component<
       tabs,
       activeTabId,
       tasks,
-      widgets,
+      widgets
     } = this.state;
 
     const scrollbarStyles = mergeStyles({
       "*::-webkit-scrollbar": {
-        width: "16px",
+        width: "16px"
       },
       "*::-webkit-scrollbar-thumb": {
         height: "56px",
         borderRadius: "8px",
         border: "4px solid transparent",
         backgroundClip: "content-box",
-        backgroundColor: getTheme().palette.themePrimary,
-      },
+        backgroundColor: getTheme().palette.themePrimary
+      }
     });
 
     const TabComponent =
@@ -557,21 +557,21 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
     description: "New tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
       appRef.current!.addTab(makeTab({}));
-    },
+    }
   },
   {
     keys: "ctrl+w",
     description: "Close tab",
     action: (appRef: React.RefObject<AppSkeleton>) => {
       appRef.current!.removeTab(appRef.current!.getActiveTabId()!);
-    },
+    }
   },
   {
     keys: "ctrl+shift+t",
     description: "Show tasks panel",
     action: (appRef: React.RefObject<AppSkeleton>) => {
       appRef.current!.showTasksPanel();
-    },
+    }
   },
   {
     keys: "ctrl+,",
@@ -582,9 +582,9 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
         title: "Settings",
         component: SettingsTab,
         props: {},
-        dirty: false,
+        dirty: false
       });
-    },
+    }
   },
   {
     keys: "ctrl+.",
@@ -595,10 +595,10 @@ export const AppShortcuts: IShortcut<AppSkeleton>[] = [
         title: "Development",
         component: DevelopmentTab,
         props: {},
-        dirty: false,
+        dirty: false
       });
-    },
-  },
+    }
+  }
 ];
 
 export const App = UseShortcuts(AppSkeleton, AppShortcuts);

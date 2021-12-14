@@ -1,9 +1,11 @@
-import React from "react";
-import { AppController } from "../contexts";
-import Form from "@rjsf/fluent-ui";
 import { JSONSchema7 } from "json-schema";
-import { getSettings, setSettings } from "../electron";
+import React from "react";
+
 import { PrimaryButton } from "@fluentui/react";
+import Form from "@rjsf/fluent-ui";
+
+import { AppController } from "../contexts";
+import { getSettings, setSettings } from "../electron";
 
 interface SettingsTabState {
   settings: object | null;
@@ -15,24 +17,24 @@ const schema = {
   properties: {
     name: {
       type: "string",
-      title: "Name",
+      title: "Name"
     },
     key: {
       type: "string",
-      title: "OpenAI API Key",
+      title: "OpenAI API Key"
     },
     locale: {
       type: "string",
-      title: "Locale",
-    },
+      title: "Locale"
+    }
   },
-  required: ["name", "key"],
+  required: ["name", "key"]
 } as JSONSchema7;
 
 const uiSchema = {
   key: {
-    "ui:widget": "password",
-  },
+    "ui:widget": "password"
+  }
 };
 
 export class SettingsTab extends React.Component<TabProps, SettingsTabState> {
@@ -42,7 +44,7 @@ export class SettingsTab extends React.Component<TabProps, SettingsTabState> {
     super(props);
 
     this.state = {
-      settings: null,
+      settings: null
     };
   }
 
@@ -54,7 +56,9 @@ export class SettingsTab extends React.Component<TabProps, SettingsTabState> {
       .then((settings: object) => {
         this.setState({ settings });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   componentWillUnmount() {

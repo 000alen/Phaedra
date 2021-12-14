@@ -99,5 +99,5 @@ export const es: Locale = {
 
   openingFileTaskLabel: "Abriendo archivo",
 
-  welcome: "Bienvenido/a/e a Phaedra!",
+  welcome: "Bienvenido/a/e a Phaedra!"
 };

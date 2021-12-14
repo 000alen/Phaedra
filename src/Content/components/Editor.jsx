@@ -23,7 +23,7 @@ Quill.register({
   "formats/wimage": WImage,
   "formats/wsuggestion": WSuggestion,
   "formats/wsummary": WSummary,
-  "formats/pre": Pre,
+  "formats/pre": Pre
 });
 
 export function register(toRegister) {
@@ -43,12 +43,12 @@ const MODULES = {
     ["link", "image", "video"],
     [{ color: [] }, { background: [] }],
 
-    ["clean"],
+    ["clean"]
   ],
   clipboard: {
-    matchVisual: false,
+    matchVisual: false
   },
-  blotFormatter: {},
+  blotFormatter: {}
 };
 
 const FORMATS = [
@@ -74,7 +74,7 @@ const FORMATS = [
   "wimage",
   "wsuggestion",
   "wsummary",
-  "pre",
+  "pre"
 ];
 
 const AUTOFORMAT = {};
@@ -101,7 +101,7 @@ export class Editor extends React.Component {
     this.toolbarContainerRef = React.createRef();
 
     this.state = {
-      embedBlots: [],
+      embedBlots: []
     };
   }
 
@@ -115,9 +115,9 @@ export class Editor extends React.Component {
       modules: {
         ...MODULES,
         autoformat: { ...AUTOFORMAT, ...autoformat },
-        ...modules,
+        ...modules
       },
-      formats: [...FORMATS, ...formats],
+      formats: [...FORMATS, ...formats]
     });
 
     this.editor.on("text-change", this.onContentChange);

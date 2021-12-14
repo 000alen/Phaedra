@@ -20,7 +20,7 @@ export class Mention extends BlockEmbed {
     Mention.data = value;
     Mention.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

@@ -13,13 +13,13 @@ export interface StatusBarProps {
 export function StatusBar({
   tasks,
   statusBarWidgets: widgets,
-  onShowTasksPanel,
+  onShowTasksPanel
 }: StatusBarProps): JSX.Element {
   let task;
   if (tasks.length > 0) task = tasks[0];
 
   const statusBarStyle = {
-    backgroundColor: getTheme().palette.white,
+    backgroundColor: getTheme().palette.white
   };
 
   return (

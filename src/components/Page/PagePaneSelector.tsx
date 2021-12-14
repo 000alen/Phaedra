@@ -71,7 +71,7 @@ export class PagePaneSelector extends React.Component<PagePaneSelectorProps> {
     const referenceItems = page.references.slice(0, 3).map((reference) => ({
       key: reference.id,
       name: reference.title,
-      onClick: () => this.openReference(reference.id),
+      onClick: () => this.openReference(reference.id)
     }));
 
     const referenceOverflowItems = page.references
@@ -79,7 +79,7 @@ export class PagePaneSelector extends React.Component<PagePaneSelectorProps> {
       .map((reference) => ({
         key: reference.id,
         name: reference.title,
-        onClick: () => this.openReference(reference.id),
+        onClick: () => this.openReference(reference.id)
       }));
 
     const referenceAddMenuProps = notebookManager
@@ -87,19 +87,19 @@ export class PagePaneSelector extends React.Component<PagePaneSelectorProps> {
       .map((source) => ({
         key: source.id,
         name: source.title,
-        onClick: () => this.addReference(source.id),
+        onClick: () => this.addReference(source.id)
       }));
 
     const quillItems = page.quills.slice(0, 3).map((quill) => ({
       key: quill.id,
       name: quill.id,
-      onClick: () => this.openQuill(quill.id),
+      onClick: () => this.openQuill(quill.id)
     }));
 
     const quillOverflowItems = page.quills.slice(3).map((quill) => ({
       key: quill.id,
       name: quill.id,
-      onClick: () => this.openQuill(quill.id),
+      onClick: () => this.openQuill(quill.id)
     }));
 
     return (

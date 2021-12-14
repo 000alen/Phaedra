@@ -54,7 +54,7 @@ export class Page extends React.Component<PageProps, PageState> {
       {
         id: referenceId,
         title: _notebookManager.getSource(sourceId)?.title!,
-        sourceId,
+        sourceId
       },
       () => {
         if (callback) callback(referenceId);
@@ -93,7 +93,7 @@ export class Page extends React.Component<PageProps, PageState> {
             onContentChange: this.onContentChange,
             onQuillChange: this.onQuillChange,
             addReference: this.addReference,
-            addQuill: this.addQuill,
+            addQuill: this.addQuill
           }}
         />
       </div>

@@ -1,27 +1,29 @@
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import {
   DefaultButton,
   DialogFooter,
   DialogType,
   IconButton,
-  PrimaryButton,
+  PrimaryButton
 } from "@fluentui/react";
-import React from "react";
+
 import { Page } from "../components/Page/Page";
 import {
   AppController,
   IAppController,
   INotebookTabController,
-  NotebookTabController,
+  NotebookTabController
 } from "../contexts";
 import { setFullscreen } from "../electron";
+import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import {
   NotebookManager,
   UseNotebook,
-  UseNotebookInjectedProps,
+  UseNotebookInjectedProps
 } from "../Notebook/UseNotebook";
 import { getTheme } from "../themes";
-import { v4 as uuidv4 } from "uuid";
-import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { NotebookTab } from "./NotebookTab";
 
 type PresentationTabSkeletonProps = TabProps & UseNotebookInjectedProps;
@@ -58,8 +60,8 @@ export class PresentationTabSkeleton extends React.Component<
         handleDirt: this.handleDirt,
         getAppController: this.getAppController,
         getTabId: this.getTabId,
-        getNotebookManager: this.getNotebookManager,
-      },
+        getNotebookManager: this.getNotebookManager
+      }
     };
   }
 
@@ -83,6 +85,7 @@ export class PresentationTabSkeleton extends React.Component<
   getAppController(): IAppController {
     return this.context;
   }
+
   getTabId(): string {
     return this.props.tabId;
   }
@@ -151,7 +154,7 @@ export class PresentationTabSkeleton extends React.Component<
             }}
           />
         </DialogFooter>
-      ),
+      )
     });
   }
 
@@ -159,7 +162,7 @@ export class PresentationTabSkeleton extends React.Component<
     const appController: IAppController = this.context;
     const { tabId, _notebookManager } = this.props;
     appController.setTabComponent(tabId, NotebookTab, {
-      notebook: _notebookManager?.notebook,
+      notebook: _notebookManager?.notebook
     });
   }
 
@@ -177,12 +180,12 @@ export class PresentationTabSkeleton extends React.Component<
       _defaultNotebook,
       _onLayoutChange,
       _onContentChange,
-      _onQuillChange,
+      _onQuillChange
     } = this.props;
     const { index, notebookTabController } = this.state;
 
     const containerStyle = {
-      backgroundColor: getTheme().palette.neutralLight,
+      backgroundColor: getTheme().palette.neutralLight
     };
 
     const page = _defaultNotebook.pages[index % _defaultNotebook.pages.length];
@@ -221,8 +224,8 @@ export const PresentationTabShortcuts: IShortcut<PresentationTabSkeleton>[] = [
     description: "Close presentation mode.",
     action: (presentationTabRef: React.RefObject<PresentationTabSkeleton>) => {
       presentationTabRef.current?.handleExit();
-    },
-  },
+    }
+  }
 ];
 
 export const PresentationTab = UseShortcuts(

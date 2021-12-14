@@ -4,7 +4,7 @@ import { Locale } from "./types";
 
 const locales = {
   en,
-  es,
+  es
 };
 
 export function getStrings(): Locale {

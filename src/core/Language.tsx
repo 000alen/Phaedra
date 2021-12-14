@@ -1,14 +1,15 @@
-import { getSettings } from "../settings";
 import OpenAI from "openai-api";
-import { chop, extractTextToPagesFromPdf, zip } from "./Text";
 import { v4 as uuidv4 } from "uuid";
-import { INotebook } from "../Notebook/types";
+
 import {
   makePage,
   makeReference,
   makeSource,
-  Notebook,
+  Notebook
 } from "../Notebook/Future";
+import { INotebook } from "../Notebook/types";
+import { getSettings } from "../settings";
+import { chop, extractTextToPagesFromPdf, zip } from "./Text";
 
 const summaryParameters = {
   max_tokens: 256,
@@ -17,7 +18,7 @@ const summaryParameters = {
   frequency_penalty: 0.2,
   presence_penalty: 0,
   stop: ['"""'],
-  engine: "davinci",
+  engine: "davinci"
 };
 
 const questionParameters = {
@@ -27,7 +28,7 @@ const questionParameters = {
   frequency_penalty: 0,
   presence_penalty: 0,
   stop: ['"""'],
-  engine: "davinci",
+  engine: "davinci"
 };
 
 const generationParameters = {
@@ -37,7 +38,7 @@ const generationParameters = {
   frequency_penalty: 0,
   presence_penalty: 0,
   stop: ['"""'],
-  engine: "davinci",
+  engine: "davinci"
 };
 
 export function summaryPrompt(text: string) {
@@ -59,7 +60,7 @@ export async function summary(text: string): Promise<string> {
 
   const gptResponse = await openAi.complete({
     ...summaryParameters,
-    prompt: summaryPrompt(text),
+    prompt: summaryPrompt(text)
   });
 
   return gptResponse.data.choices[0].text;
@@ -79,7 +80,7 @@ export async function question(
 
   const gptResponse = await openAi.complete({
     ...questionParameters,
-    prompt: questionPrompt(question, context),
+    prompt: questionPrompt(question, context)
   });
 
   return gptResponse.data.choices[0].text;
@@ -120,7 +121,7 @@ export async function generation(
 
   const gptResponse = await openAi.complete({
     ...generationParameters,
-    prompt: generationPrompt(prompt, context),
+    prompt: generationPrompt(prompt, context)
   });
 
   return gptResponse.data.choices[0].text;
@@ -167,7 +168,7 @@ export async function notebookFromPDF(
         type: "pdf",
         content: content,
         path: path,
-        index: index,
+        index: index
       })
     );
     notebook.addPage(makePage({ id: pageId }));

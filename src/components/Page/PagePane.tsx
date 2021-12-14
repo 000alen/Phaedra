@@ -30,43 +30,43 @@ const autoformat = {
     find: /\/"[\w ,.:;!?]+"/i,
     extract: /\/"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "generation",
+    insert: "generation"
   },
   mention: {
     trigger: /[\s.,;:!?]/,
     find: /@"[\w ,.:;!?]+"/i,
     extract: /@"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "mention",
+    insert: "mention"
   },
   question: {
     trigger: /[\s.,;:!?]/,
     find: /\?"[\w ,.:;!?]+"/i,
     extract: /\?"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "question",
+    insert: "question"
   },
   wimage: {
     trigger: /[\s.,;:!?]/,
     find: /image"[\w ,.:;!?]+"/i,
     extract: /image"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "wimage",
+    insert: "wimage"
   },
   wsuggestion: {
     trigger: /[\s.,;:!?]/,
     find: /suggestion"[\w ,.:;!?]+"/i,
     extract: /suggestion"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "wsuggestion",
+    insert: "wsuggestion"
   },
   wsummary: {
     trigger: /[\s.,;:!?]/,
     find: /summary"[\w ,.:;!?]+"/i,
     extract: /summary"([\w ,.:;!?]+)"/i,
     transform: "$1",
-    insert: "wsummary",
-  },
+    insert: "wsummary"
+  }
 };
 
 export function PagePane({
@@ -78,7 +78,7 @@ export function PagePane({
   addReference,
   addQuill,
   paneProps,
-  setPaneProps,
+  setPaneProps
 }: PagePaneProps) {
   const { type, paramId } = paneProps;
 

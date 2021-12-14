@@ -5,7 +5,7 @@ const {
   globalShortcut,
   shell,
   session,
-  dialog,
+  dialog
 } = require("electron");
 const path = require("path");
 const os = require("os");
@@ -25,7 +25,7 @@ const defaultSettings = JSON.parse(
 );
 const settingsStore = new Store({
   configName: "settings",
-  defaults: { settings: defaultSettings },
+  defaults: { settings: defaultSettings }
 });
 
 let splashWindow;
@@ -43,10 +43,10 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      devTools: true,
+      devTools: true
     },
     show: false,
-    fullscreenable: true,
+    fullscreenable: true
   });
 
   splashWindow = new BrowserWindow({
@@ -55,7 +55,7 @@ function createWindow() {
     frame: false,
     title: "Phaedra",
     alwaysOnTop: true,
-    icon: icon,
+    icon: icon
   });
 
   if (app.isPackaged) {
@@ -116,7 +116,7 @@ app.on("activate", () => {
 });
 
 app.on("browser-window-focus", function () {
-  globalShortcut.register("CommandOrControl+W", () => { });
+  globalShortcut.register("CommandOrControl+W", () => {});
 });
 
 app.on("browser-window-blur", function () {

@@ -5,7 +5,7 @@ import {
   Direction,
   DividerRect,
   PaneRect,
-  PaneRectProps,
+  PaneRectProps
 } from "../UseLayout/Rect";
 import { LayoutManager } from "../UseLayout/UseLayout";
 
@@ -34,7 +34,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
     this.paneRef = React.createRef();
 
     this.state = {
-      edge: null,
+      edge: null
     };
   }
 
@@ -102,7 +102,7 @@ export class Pane<P> extends React.Component<PaneProps<P>, PaneState> {
       top: `${pane.top * 100}%`,
       width: `${pane.width * 100}%`,
       height: `${pane.height * 100}%`,
-      cursor: this.cursor,
+      cursor: this.cursor
     };
 
     return (

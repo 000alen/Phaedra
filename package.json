@@ -1,7 +1,6 @@
 {
   "name": "phaedra",
   "version": "0.1.0",
-  "private": true,
   "license": "MIT",
   "main": "public/electron.js",
   "homepage": "./",
@@ -40,6 +39,7 @@
     "utility-types": "^3.10.0",
     "uuid": "^8.3.2",
     "wait-on": "^6.0.0",
+    "web-vitals": "^2.1.2",
     "wikijs": "^6.3.2",
     "y-websocket": "^1.2.4",
     "yjs": "^13.0.4"
@@ -49,15 +49,10 @@
     "build:electron": "electron-builder",
     "build:craco": "craco build",
     "start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
+    "lint": "eslint --fix .",
     "build": "yarn build:craco && yarn build:electron",
     "test": "craco test",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
@@ -83,7 +78,20 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-pdf": "^5.0.9",
     "@types/uuid": "^8.3.3",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "babel-eslint": "^10.1.0",
     "electron": "^15.3.0",
-    "electron-builder": "^22.13.1"
+    "electron-builder": "^22.13.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard-react": "^11.0.1",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "prettier": "^2.5.1"
   }
 }

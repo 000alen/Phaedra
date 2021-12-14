@@ -23,8 +23,8 @@ export const lightTheme = createTheme({
     neutralPrimary: "#000000",
     neutralDark: "#151515",
     black: "#0b0b0b",
-    white: "#ffffff",
-  },
+    white: "#ffffff"
+  }
 });
 
 // ! TODO Compatibility
@@ -51,8 +51,8 @@ export const darkTheme = createTheme({
     neutralPrimary: "#ffffff",
     neutralDark: "#f4f4f4",
     black: "#f8f8f8",
-    white: "#1f1f1f",
-  },
+    white: "#1f1f1f"
+  }
 });
 
 export function getTheme(): Theme {

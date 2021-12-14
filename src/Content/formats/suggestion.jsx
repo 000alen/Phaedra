@@ -20,7 +20,7 @@ export class WSuggestion extends BlockEmbed {
     WSuggestion.data = value;
     WSuggestion.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

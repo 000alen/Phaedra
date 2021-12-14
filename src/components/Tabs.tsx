@@ -6,7 +6,7 @@ import {
   IOverflowSetItemProps,
   Label,
   OverflowSet,
-  ResizeGroup,
+  ResizeGroup
 } from "@fluentui/react";
 
 import { AppController, IAppController } from "../contexts";
@@ -33,11 +33,11 @@ export interface TabProps {
 
 export const iconButtonStyles = {
   rootHovered: {
-    backgroundColor: "transparent",
+    backgroundColor: "transparent"
   },
   rootPressed: {
-    backgroundColor: "transparent",
-  },
+    backgroundColor: "transparent"
+  }
 };
 
 export function Tab({ id, title, dirty, active }: TabProps) {
@@ -58,8 +58,8 @@ export function Tab({ id, title, dirty, active }: TabProps) {
   const cancelIcon = {
     iconName: "Cancel",
     styles: {
-      root: { color: theme.palette.white },
-    },
+      root: { color: theme.palette.white }
+    }
   };
 
   const activeTabStyle = { backgroundColor: theme.palette.themePrimary };
@@ -67,8 +67,8 @@ export function Tab({ id, title, dirty, active }: TabProps) {
   const activeCancelIcon = {
     iconName: "Cancel",
     styles: {
-      root: { color: theme.palette.white },
-    },
+      root: { color: theme.palette.white }
+    }
   };
 
   return (
@@ -132,7 +132,7 @@ export class Tabs extends React.Component<TabsProps> {
     }
     const overflow = [
       ...currentData.primary.slice(-1),
-      ...currentData.overflow,
+      ...currentData.overflow
     ];
     const primary = currentData.primary.slice(0, -1);
     const cacheKey = this.computeCacheKey(primary);
@@ -146,7 +146,7 @@ export class Tabs extends React.Component<TabsProps> {
     const overflow = currentData.overflow.slice(1);
     const primary = [
       ...currentData.primary,
-      ...currentData.overflow.slice(0, 1),
+      ...currentData.overflow.slice(0, 1)
     ];
     const cacheKey = this.computeCacheKey(primary);
     return { primary, overflow, cacheKey };
@@ -206,7 +206,7 @@ export class Tabs extends React.Component<TabsProps> {
           dirty={tab.dirty}
           active={tab.id === activeTabId}
         />
-      ),
+      )
     };
   }
 
@@ -217,7 +217,7 @@ export class Tabs extends React.Component<TabsProps> {
     return {
       primary: items,
       overflow: [] as any[],
-      cacheKey: cacheKey,
+      cacheKey: cacheKey
     };
   }
 

@@ -43,7 +43,7 @@ export class Autoformat {
       {
         key: 38, // Arrow Up
         collapsed: true,
-        format: ["autoformat-helper"],
+        format: ["autoformat-helper"]
       },
       this.forwardKeyboardUp.bind(this)
     );
@@ -52,7 +52,7 @@ export class Autoformat {
       {
         key: 40, // Arrow Down
         collapsed: true,
-        format: ["autoformat-helper"],
+        format: ["autoformat-helper"]
       },
       this.forwardKeyboardDown.bind(this)
     );
@@ -157,24 +157,24 @@ export class Autoformat {
   }
 
   forwardKeyboardUp(range, context) {
-    var e = new KeyboardEvent("keydown", {
+    const e = new KeyboardEvent("keydown", {
       key: "ArrowUp",
       keyCode: 38,
       which: 38,
       bubbles: true,
-      cancelable: true,
+      cancelable: true
     });
     context.event = e;
     this.forwardKeyboard(range, context);
   }
 
   forwardKeyboardDown(range, context) {
-    var e = new KeyboardEvent("keydown", {
+    const e = new KeyboardEvent("keydown", {
       key: "ArrowDown",
       keyCode: 40,
       which: 40,
       bubbles: true,
-      cancelable: true,
+      cancelable: true
     });
     context.event = e;
     this.forwardKeyboard(range, context);
@@ -304,6 +304,6 @@ function transformedMatchOps(transform, result) {
 
   return {
     ops,
-    rightIndex,
+    rightIndex
   };
 }

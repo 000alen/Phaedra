@@ -20,7 +20,7 @@ export class Question extends BlockEmbed {
     Question.data = value;
     Question.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

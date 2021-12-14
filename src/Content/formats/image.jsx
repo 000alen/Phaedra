@@ -20,7 +20,7 @@ export class WImage extends BlockEmbed {
     WImage.data = value;
     WImage.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

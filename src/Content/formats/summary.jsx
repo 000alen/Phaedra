@@ -20,7 +20,7 @@ export class WSummary extends BlockEmbed {
     WSummary.data = value;
     WSummary.refs = {
       ...refs,
-      [id]: React.createRef(),
+      [id]: React.createRef()
     };
     return node;
   }

@@ -1,11 +1,12 @@
-import { UseNotebook } from "./UseNotebook";
-
 import React from "react";
 
-import { getTheme } from "../themes";
 import { Page } from "../components/Page/Page";
-import { UseNotebookInjectedProps } from "./UseNotebook";
-import { emptyPage } from "./UseNotebook";
+import { getTheme } from "../themes";
+import {
+  emptyPage,
+  UseNotebook,
+  UseNotebookInjectedProps
+} from "./UseNotebook";
 
 export type NotebookSkeletonProps = UseNotebookInjectedProps;
 
@@ -35,11 +36,11 @@ export class NotebookSkeleton extends React.Component<
       _defaultNotebook,
       _onLayoutChange,
       _onContentChange,
-      _onQuillChange,
+      _onQuillChange
     } = this.props;
 
     const containerStyle = {
-      backgroundColor: getTheme().palette.neutralLight,
+      backgroundColor: getTheme().palette.neutralLight
     };
 
     return (

@@ -1,5 +1,7 @@
-import { Label, Spinner, SpinnerSize } from "@fluentui/react";
 import React from "react";
+
+import { Label, Spinner, SpinnerSize } from "@fluentui/react";
+
 import { wsuggestion } from "../../core/Knowledge";
 import { BlotsProps, BlotsState } from "./types";
 
@@ -17,7 +19,7 @@ export class SuggestionComponent extends React.Component<
 
     this.state = {
       query,
-      response,
+      response
     };
   }
 
@@ -30,7 +32,9 @@ export class SuggestionComponent extends React.Component<
       .then((response) => {
         this.setState({ response });
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   getData() {

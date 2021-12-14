@@ -6,7 +6,7 @@ import {
   DialogFooter,
   DialogType,
   IconButton,
-  PrimaryButton,
+  PrimaryButton
 } from "@fluentui/react";
 
 import { saveAction } from "../actions";
@@ -14,12 +14,12 @@ import {
   AppController,
   IAppController,
   INotebookTabController,
-  NotebookTabController,
+  NotebookTabController
 } from "../contexts";
 import { IShortcut, UseShortcuts } from "../HOC/UseShortcuts";
 import { Notebook } from "../Notebook/Notebook";
-import { emptyPage, NotebookManager } from "../Notebook/UseNotebook";
 import { INotebook } from "../Notebook/types";
+import { emptyPage, NotebookManager } from "../Notebook/UseNotebook";
 import { PresentationTab } from "./PresentationTab";
 
 type NotebookTabProps = TabProps & {
@@ -58,8 +58,8 @@ class NotebookTabSkeleton extends React.Component<
         handleDirt: this.handleDirt,
         getAppController: this.getAppController,
         getTabId: this.getTabId,
-        getNotebookManager: this.getNotebookManager,
-      },
+        getNotebookManager: this.getNotebookManager
+      }
     };
   }
 
@@ -80,6 +80,7 @@ class NotebookTabSkeleton extends React.Component<
   getAppController(): IAppController {
     return this.context;
   }
+
   getTabId(): string {
     return this.props.tabId;
   }
@@ -147,7 +148,7 @@ class NotebookTabSkeleton extends React.Component<
             }}
           />
         </DialogFooter>
-      ),
+      )
     });
   }
 
@@ -159,7 +160,7 @@ class NotebookTabSkeleton extends React.Component<
     const appController: IAppController = this.context;
     const { tabId } = this.props;
     appController.setTabComponent(tabId, PresentationTab, {
-      notebook: this.notebookManager?.notebook,
+      notebook: this.notebookManager?.notebook
     });
   }
 
@@ -201,8 +202,8 @@ export const NotebookTabShortcuts: IShortcut<NotebookTabSkeleton>[] = [
     keys: "ctrl+s",
     description: "Save notebook",
     action: (notebookTabRef: React.RefObject<NotebookTabSkeleton>) =>
-      saveAction(notebookTabRef.current!),
-  },
+      saveAction(notebookTabRef.current!)
+  }
 ];
 
 export const NotebookTab = UseShortcuts(

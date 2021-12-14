@@ -9,7 +9,7 @@ export interface StatusBarLoadingProps {
 
 export function StatusBarLoading({
   text,
-  onShowTasksPanel,
+  onShowTasksPanel
 }: StatusBarLoadingProps) {
   return (
     <div

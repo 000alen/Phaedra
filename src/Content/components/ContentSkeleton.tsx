@@ -1,8 +1,9 @@
 import "quill/dist/quill.bubble.css";
 
 import React from "react";
-import { Editor } from "./Editor";
+
 import { UseContentInjectedProps } from "../UseContent/UseContent";
+import { Editor } from "./Editor";
 
 export type ContentSkeletonProps = UseContentInjectedProps;
 
@@ -18,7 +19,7 @@ export const ContentSkeleton = React.memo(
     _spellCheck,
     _id,
     _notebookManager,
-    _page,
+    _page
   }: ContentSkeletonProps) => {
     return (
       <Editor

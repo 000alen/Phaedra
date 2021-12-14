@@ -19,7 +19,7 @@ export function Dialog({
   type,
   visible,
   footer,
-  onDismiss,
+  onDismiss
 }: DialogProps) {
   return (
     <FluentDialog
@@ -29,7 +29,7 @@ export function Dialog({
       dialogContentProps={{
         type: type,
         title: title,
-        subText: subText,
+        subText: subText
       }}
     >
       {footer}

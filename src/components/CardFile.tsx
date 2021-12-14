@@ -5,7 +5,7 @@ import {
   DocumentCardPreview,
   DocumentCardTitle,
   DocumentCardType,
-  IDocumentCardPreviewProps,
+  IDocumentCardPreviewProps
 } from "@fluentui/react";
 import { getTheme } from "../themes";
 
@@ -23,13 +23,13 @@ const previewPropsUsingIcon: IDocumentCardPreviewProps = {
       previewIconProps: {
         iconName: "OpenFile",
         styles: {
-          root: { fontSize: fonts.superLarge.fontSize, color: palette.white },
-        },
+          root: { fontSize: fonts.superLarge.fontSize, color: palette.white }
+        }
       },
-      width: 100,
-    },
+      width: 100
+    }
   ],
-  styles: { previewIcon: { backgroundColor: palette.themePrimary } },
+  styles: { previewIcon: { backgroundColor: palette.themePrimary } }
 };
 
 export function CardFile({ name, onClick }: CardFileProps) {

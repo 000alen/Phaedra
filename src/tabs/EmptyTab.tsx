@@ -5,19 +5,19 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CardButton } from "../components/CardButton";
 import { AppController, IAppController } from "../contexts";
-import { openFile } from "../Notebook/IO";
 import { getStrings } from "../i18n/i18n";
-import { NotebookTab } from "./NotebookTab";
+import { openFile } from "../Notebook/IO";
 import { empty as emptyNotebook } from "../Notebook/UseNotebook";
+import { NotebookTab } from "./NotebookTab";
 
 interface EmptyTabState {}
 
 const openIcon = {
-  iconName: "OpenFile",
+  iconName: "OpenFile"
 };
 
 const newIcon = {
-  iconName: "FileTemplate",
+  iconName: "FileTemplate"
 };
 
 export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
@@ -47,7 +47,7 @@ export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
     const taskId = uuidv4();
     appController.addTask({
       id: taskId,
-      name: getStrings().openingFileTaskLabel,
+      name: getStrings().openingFileTaskLabel
     });
 
     openFile().then(({ notebook, notebookPath }) => {
@@ -57,7 +57,7 @@ export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
 
       appController.setTabComponent(tabId, NotebookTab, {
         notebook: notebook,
-        notebookPath: notebookPath,
+        notebookPath: notebookPath
       });
     });
   }
@@ -70,7 +70,7 @@ export class EmptyTab extends React.Component<TabProps, EmptyTabState> {
 
     appController.setTabComponent(tabId, NotebookTab, {
       notebook: notebook,
-      notebookPath: undefined,
+      notebookPath: undefined
     });
   }
 

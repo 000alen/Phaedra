@@ -1,10 +1,10 @@
-import { Layout } from "../../Layout/Layout";
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
-import { PagePane } from "./PagePane";
+import { Layout } from "../../Layout/Layout";
 import { IContent, ILayout, IPage } from "../../Notebook/types";
 import { emptyQuill, NotebookManager } from "../../Notebook/UseNotebook";
-import { v4 as uuidv4 } from "uuid";
+import { PagePane } from "./PagePane";
 
 export interface PageProps {
   id: string;
@@ -74,7 +74,6 @@ export class Page extends React.Component<PageProps, PageState> {
     });
   }
 
-  // ! TODO: Cannot get rid of @ts-ignore
   render() {
     const { id, page, _notebookManager } = this.props;
 
@@ -84,6 +83,7 @@ export class Page extends React.Component<PageProps, PageState> {
         <Layout
           defaultLayout={page.layout}
           onLayoutChange={this.onLayoutChange}
+          // TODO(#44): Cannot get rid of @ts-ignore
           // @ts-ignore
           PaneComponent={PagePane}
           props={{

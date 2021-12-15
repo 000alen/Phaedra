@@ -31,6 +31,6 @@
     "import/export": 0,
     "no-unused-vars": 0,
     "no-undef": 0,
-    "no-use-before-define": "off",
+    "no-use-before-define": "off"
   }
 }

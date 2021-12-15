@@ -1,0 +1,2 @@
+/// <reference types="react" />
+export declare const Content: import("react").ForwardRefExoticComponent<Pick<Pick<import("./UseContent/UseContent").UseContentInjectedProps & import("./UseContent/UseContent").UseContentProps, "forwardedRef" | "defaultContent" | "onContentChange" | "modules" | "formats" | "autoformat" | "readOnly" | "spellCheck">, "defaultContent" | "onContentChange" | "modules" | "formats" | "autoformat" | "readOnly" | "spellCheck"> & import("react").RefAttributes<unknown>>;

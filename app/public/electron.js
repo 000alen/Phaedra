@@ -45,7 +45,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       devTools: true,
-      preload: "preload.js"
+      preload: path.join(__dirname, "./preload.js")
     },
     show: false,
     fullscreenable: true

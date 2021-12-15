@@ -1,0 +1,2 @@
+/// <reference types="react" />
+export declare const Layout: import("react").ForwardRefExoticComponent<Pick<Pick<import("./components/Layout").LayoutSkeletonProps<unknown> & import("./UseLayout/UseLayout").UseLayoutProps, "Component" | "props" | "panes" | "dividers" | "forwardedRef" | "defaultLayout" | "onLayoutChange">, "Component" | "props" | "panes" | "dividers" | "defaultLayout" | "onLayoutChange"> & import("react").RefAttributes<unknown>>;

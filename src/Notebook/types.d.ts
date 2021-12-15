@@ -1,6 +1,3 @@
-import { PaneRectProps } from "../Layout/UseLayout/Rect";
-import { LayoutJSON, PaneJSON } from "../Layout/UseLayout/UseLayout";
-
 export interface ISource {
   id: string;
   title: string;
@@ -25,11 +22,31 @@ export interface IQuill {
   content: IContent;
 }
 
-export type IPaneProps = PaneRectProps;
+export interface IPaneProps {
+  type: string;
+  paramId?: string | undefined;
+}
 
-export type IPane = PaneJSON;
+export interface IPane {
+  type: "pane";
+  id: string;
+  position: number;
+  size: number;
+  previous: string | null;
+  next: string | null;
+  props: IPaneProps;
+}
 
-export type ILayout = LayoutJSON;
+export interface ILayout {
+  type: "layout";
+  id: string;
+  position: number;
+  size: number;
+  orientation: "horizontal" | "vertical";
+  previous: string | null;
+  next: string | null;
+  children: (ILayout | IPane)[];
+}
 
 export interface IPage {
   id: string;

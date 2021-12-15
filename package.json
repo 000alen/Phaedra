@@ -14,7 +14,9 @@
     "start:content": "npm run start --workspace=packages/phaedra-content",
     "start:layout": "npm run start --workspace=packages/phaedra-layout",
     "build:content": "npm run build --workspace=packages/phaedra-content",
-    "build:layout": "npm run build --workspace=packages/phaedra-layout"
+    "build:layout": "npm run build --workspace=packages/phaedra-layout",
+    "example:content": "npm run start --workspace=packages/phaedra-content/example/",
+    "example:layout": "npm run start --workspace=packages/phaedra-layout/example/"
   },
   "dependencies": {},
   "devDependencies": {

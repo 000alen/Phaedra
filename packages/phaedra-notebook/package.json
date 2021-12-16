@@ -1,0 +1,55 @@
+{
+  "name": "phaedra-notebook",
+  "version": "0.1.0",
+  "description": "Made with create-react-library",
+  "author": "000alen",
+  "license": "MIT",
+  "repository": "000alen/phaedra-notebook",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.modern.js",
+  "source": "src/index.tsx",
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "microbundle-crl --no-compress --format modern,cjs",
+    "start": "microbundle-crl watch --no-compress --format modern,cjs",
+    "prepare": "run-s build",
+    "test": "run-s test:unit test:build",
+    "test:build": "run-s build",
+    "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
+    "test:watch": "react-scripts test --env=jsdom",
+    "predeploy": "cd example && npm install && npm run build",
+    "deploy": "gh-pages -d example/build"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0"
+  },
+  "dependencies": {
+    "project-name-generator": "^2.1.9",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^12.12.38",
+    "@types/react": "^16.9.27",
+    "@types/react-dom": "^16.9.7",
+    "@types/uuid": "^8.3.3",
+    "@types/project-name-generator": "^2.1.1",
+    "microbundle-crl": "^0.13.10",
+    "cross-env": "^7.0.2",
+    "gh-pages": "^2.2.0",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "^3.4.1",
+    "typescript": "^3.7.5"
+  },
+  "files": [
+    "dist"
+  ]
+}

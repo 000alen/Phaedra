@@ -1,6 +1,6 @@
+import { IDirection, ILayoutController, IOrientation, IPane, IPaneProps } from "phaedra-notebook";
 import React from "react";
 
-import { IDirection, ILayoutController, IOrientation, IPane, IPaneProps } from "../types";
 import { computePosition, computeSize } from "../utils";
 
 export interface PaneProps {
@@ -30,12 +30,14 @@ export class Pane extends React.Component<PaneProps> {
 
     const { clientX, clientY } = event;
 
-    const [distance, closestDirection] = ([
-      [clientX - left, "west"],
-      [right - clientX, "east"],
-      [clientY - top, "north"],
-      [bottom - clientY, "south"]
-    ] as [number, IDirection][]).sort(([a, b], [c, d]) => a - c)[0];
+    const [distance, closestDirection] = (
+      [
+        [clientX - left, "west"],
+        [right - clientX, "east"],
+        [clientY - top, "north"],
+        [bottom - clientY, "south"]
+      ] as [number, IDirection][]
+    ).sort(([a, b], [c, d]) => a - c)[0];
 
     return distance <= 100 ? (closestDirection as IDirection) : null;
   }

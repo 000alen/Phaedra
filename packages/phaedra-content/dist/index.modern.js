@@ -5,9 +5,85 @@ import defer from 'lodash/defer';
 import map from 'lodash/map';
 import { v4 } from 'uuid';
 
-const Delta = Quill.import("delta");
-class Autoformat {
-  constructor(quill, options) {
+function _extends() {
+  _extends = Object.assign || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
+}
+
+function _inheritsLoose(subClass, superClass) {
+  subClass.prototype = Object.create(superClass.prototype);
+  subClass.prototype.constructor = subClass;
+
+  _setPrototypeOf(subClass, superClass);
+}
+
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+function _toPrimitive(input, hint) {
+  if (typeof input !== "object" || input === null) return input;
+  var prim = input[Symbol.toPrimitive];
+
+  if (prim !== undefined) {
+    var res = prim.call(input, hint || "default");
+    if (typeof res !== "object") return res;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+
+  return (hint === "string" ? String : Number)(input);
+}
+
+function _toPropertyKey(arg) {
+  var key = _toPrimitive(arg, "string");
+
+  return typeof key === "symbol" ? key : String(key);
+}
+
+var Delta = Quill["import"]("delta");
+var Autoformat = /*#__PURE__*/function () {
+  function Autoformat(quill, options) {
     this.quill = quill;
     this.options = options;
     this.transforms = options;
@@ -15,27 +91,38 @@ class Autoformat {
     this.registerPasteListener();
   }
 
-  registerPasteListener() {
-    for (const name in this.transforms) {
-      const transform = this.transforms[name];
-      this.quill.clipboard.addMatcher(Node.TEXT_NODE, (node, delta) => {
+  var _proto = Autoformat.prototype;
+
+  _proto.registerPasteListener = function registerPasteListener() {
+    var _this = this;
+
+    var _loop = function _loop(name) {
+      var transform = _this.transforms[name];
+
+      _this.quill.clipboard.addMatcher(Node.TEXT_NODE, function (node, delta) {
         if (typeof node.data !== "string") {
           return;
         }
 
-        delta.ops.forEach((op, index, deltaOps) => {
+        delta.ops.forEach(function (op, index, deltaOps) {
           if (typeof op.insert === "string") {
-            const changeDelta = makeTransformedDelta(transform, op.insert);
-            const composedDelta = new Delta([op]).compose(changeDelta);
-            deltaOps.splice(index, 1, ...composedDelta.ops);
+            var changeDelta = makeTransformedDelta(transform, op.insert);
+            var composedDelta = new Delta([op]).compose(changeDelta);
+            deltaOps.splice.apply(deltaOps, [index, 1].concat(composedDelta.ops));
           }
         });
         return delta;
       });
-    }
-  }
+    };
 
-  registerTypeListener() {
+    for (var name in this.transforms) {
+      _loop(name);
+    }
+  };
+
+  _proto.registerTypeListener = function registerTypeListener() {
+    var _this2 = this;
+
     this.quill.keyboard.addBinding({
       key: 38,
       collapsed: true,
@@ -46,15 +133,15 @@ class Autoformat {
       collapsed: true,
       format: ["autoformat-helper"]
     }, this.forwardKeyboardDown.bind(this));
-    this.quill.on(Quill.events.TEXT_CHANGE, (delta, oldDelta, source) => {
-      const ops = delta.ops;
+    this.quill.on(Quill.events.TEXT_CHANGE, function (delta, oldDelta, source) {
+      var ops = delta.ops;
 
       if (source !== "user" || !ops || ops.length < 1) {
         return;
       }
 
-      let lastOpIndex = ops.length - 1;
-      let lastOp = ops[lastOpIndex];
+      var lastOpIndex = ops.length - 1;
+      var lastOp = ops[lastOpIndex];
 
       while (!lastOp.insert && lastOpIndex > 0) {
         lastOpIndex--;
@@ -65,69 +152,75 @@ class Autoformat {
         return;
       }
 
-      const isEnter = lastOp.insert === "\n";
-      const sel = this.quill.getSelection();
+      var isEnter = lastOp.insert === "\n";
+
+      var sel = _this2.quill.getSelection();
 
       if (!sel) {
         return;
       }
 
-      const endSelIndex = this.quill.getLength() - sel.index - (isEnter ? 1 : 0);
-      const checkIndex = sel.index;
-      const [leaf] = this.quill.getLeaf(checkIndex);
+      var endSelIndex = _this2.quill.getLength() - sel.index - (isEnter ? 1 : 0);
+      var checkIndex = sel.index;
+
+      var _this2$quill$getLeaf = _this2.quill.getLeaf(checkIndex),
+          leaf = _this2$quill$getLeaf[0];
 
       if (!leaf || !leaf.text) {
         return;
       }
 
-      const leafIndex = leaf.offset(leaf.scroll);
-      const leafSelIndex = checkIndex - leafIndex;
-      let transformed = false;
+      var leafIndex = leaf.offset(leaf.scroll);
+      var leafSelIndex = checkIndex - leafIndex;
+      var transformed = false;
 
-      for (const name in this.transforms) {
-        const transform = this.transforms[name];
+      for (var name in _this2.transforms) {
+        var transform = _this2.transforms[name];
 
         if (transform.helper && transform.helper.trigger) {
           if (lastOp.insert.match(transform.helper.trigger)) {
-            this.quill.formatText(checkIndex, 1, "autoformat-helper", name, Quill.sources.API);
-            this.openHelper(transform, checkIndex);
+            _this2.quill.formatText(checkIndex, 1, "autoformat-helper", name, Quill.sources.API);
+
+            _this2.openHelper(transform, checkIndex);
+
             continue;
           }
         }
 
         if (lastOp.insert.match(transform.trigger || /./)) {
-          this.closeHelper(transform);
+          _this2.closeHelper(transform);
 
-          let _ops = new Delta().retain(leafIndex);
+          var _ops = new Delta().retain(leafIndex);
 
-          const transformOps = makeTransformedDelta(transform, leaf.text, leafSelIndex);
+          var transformOps = makeTransformedDelta(transform, leaf.text, leafSelIndex);
 
           if (transformOps) {
             _ops = _ops.concat(transformOps);
           }
 
-          this.quill.updateContents(_ops, "api");
+          _this2.quill.updateContents(_ops, "api");
+
           transformed = true;
         }
       }
 
       if (transformed) {
-        setTimeout(() => {
-          this.quill.setSelection(this.quill.getLength() - endSelIndex, "api");
+        setTimeout(function () {
+          _this2.quill.setSelection(_this2.quill.getLength() - endSelIndex, "api");
         }, 0);
       }
     });
-  }
+  };
 
-  forwardKeyboard(range, context) {
+  _proto.forwardKeyboard = function forwardKeyboard(range, context) {
     if (this.currentHelper && this.currentHelper.container) {
-      const target = this.currentHelper.container.querySelector(".dropdown-menu");
+      var target = this.currentHelper.container.querySelector(".dropdown-menu");
       console.log("keyboard", target, context.event);
       target.dispatchEvent(context.event);
     }
-  }
+  };
 
-  forwardKeyboardUp(range, context) {
+  _proto.forwardKeyboardUp = function forwardKeyboardUp(range, context) {
     var e = new KeyboardEvent("keydown", {
       key: "ArrowUp",
       keyCode: 38,
@@ -137,9 +230,9 @@ class Autoformat {
     });
     context.event = e;
     this.forwardKeyboard(range, context);
-  }
+  };
 
-  forwardKeyboardDown(range, context) {
+  _proto.forwardKeyboardDown = function forwardKeyboardDown(range, context) {
     var e = new KeyboardEvent("keydown", {
       key: "ArrowDown",
       keyCode: 40,
@@ -149,16 +242,16 @@ class Autoformat {
     });
     context.event = e;
     this.forwardKeyboard(range, context);
-  }
+  };
 
-  openHelper(transform, index) {
+  _proto.openHelper = function openHelper(transform, index) {
     if (transform.helper) {
       this.currentHelper = transform.helper;
 
       if (typeof transform.helper.open === "function") {
         console.log("openHelper", index, this.quill.getFormat(index));
-        const pos = this.quill.getBounds(index);
-        const helperNode = this.quill.addContainer("ql-helper");
+        var pos = this.quill.getBounds(index);
+        var helperNode = this.quill.addContainer("ql-helper");
         helperNode.style.position = "absolute";
         helperNode.style.top = pos.top + "px";
         helperNode.style.left = pos.left + "px";
@@ -169,20 +262,21 @@ class Autoformat {
         transform.helper.open(helperNode);
       }
     }
-  }
+  };
 
-  closeHelper(transform) {
+  _proto.closeHelper = function closeHelper(transform) {
     if (transform.helper) {
       if (typeof transform.helper.close === "function") {
         transform.helper.close(transform.helper.container);
       }
     }
-  }
+  };
 
-}
+  return Autoformat;
+}();
 
 function getFormat(transform, match) {
-  let format = {};
+  var format = {};
 
   if (typeof transform.format === "string") {
     format[transform.format] = match;
@@ -194,14 +288,14 @@ function getFormat(transform, match) {
 }
 
 function transformMatch(transform, match) {
-  const find = new RegExp(transform.extract || transform.find);
+  var find = new RegExp(transform.extract || transform.find);
   return transform.transform ? match.replace(find, transform.transform) : match;
 }
 
 function applyExtract(transform, match) {
   if (transform.extract) {
-    const extract = new RegExp(transform.extract);
-    const extractMatch = extract.exec(match[0]);
+    var extract = new RegExp(transform.extract);
+    var extractMatch = extract.exec(match[0]);
 
     if (!extractMatch || !extractMatch.length) {
       return match;
@@ -220,9 +314,9 @@ function makeTransformedDelta(transform, text, atIndex) {
   }
 
   transform.find.lastIndex = 0;
-  let ops = new Delta();
-  let findResult = null;
-  const checkAtIndex = atIndex !== undefined && atIndex !== null;
+  var ops = new Delta();
+  var findResult = null;
+  var checkAtIndex = atIndex !== undefined && atIndex !== null;
 
   if (checkAtIndex) {
     findResult = transform.find.exec(text);
@@ -237,7 +331,7 @@ function makeTransformedDelta(transform, text, atIndex) {
     }
   } else {
     while ((findResult = transform.find.exec(text)) !== null) {
-      const transformedMatch = transformedMatchOps(transform, findResult);
+      var transformedMatch = transformedMatchOps(transform, findResult);
       ops = ops.concat(transformedMatch.ops);
       text = text.substr(transformedMatch.rightIndex);
       transform.find.lastIndex = 0;
@@ -249,40 +343,48 @@ function makeTransformedDelta(transform, text, atIndex) {
 
 function transformedMatchOps(transform, result) {
   result = applyExtract(transform, result);
-  const resultIndex = result.index;
-  const transformedMatch = transformMatch(transform, result[0]);
-  let insert = transformedMatch;
+  var resultIndex = result.index;
+  var transformedMatch = transformMatch(transform, result[0]);
+  var insert = transformedMatch;
 
   if (transform.insert) {
     insert = {};
     insert[transform.insert] = transformedMatch;
   }
 
-  const format = getFormat(transform, transformedMatch);
-  const ops = new Delta();
-  ops.retain(resultIndex).delete(result[0].length).insert(insert, format);
-  const rightIndex = resultIndex + result[0].length;
+  var format = getFormat(transform, transformedMatch);
+  var ops = new Delta();
+  ops.retain(resultIndex)["delete"](result[0].length).insert(insert, format);
+  var rightIndex = resultIndex + result[0].length;
   return {
-    ops,
-    rightIndex
+    ops: ops,
+    rightIndex: rightIndex
   };
 }
 
-const Embed = Quill.import("blots/embed");
-class Mention extends Embed {
-  static create(value) {
-    const node = super.create(value);
+var Embed = Quill["import"]("blots/embed");
+var Mention = /*#__PURE__*/function (_Embed) {
+  _inheritsLoose(Mention, _Embed);
+
+  function Mention() {
+    return _Embed.apply(this, arguments) || this;
+  }
+
+  Mention.create = function create(value) {
+    var node = _Embed.create.call(this, value);
+
     node.setAttribute("title", value);
     node.setAttribute("href", this.BASE_URL + value);
     node.textContent = "@" + value;
     return node;
-  }
+  };
 
-  static value(domNode) {
+  Mention.value = function value(domNode) {
     return domNode.textContent;
-  }
+  };
 
-}
+  return Mention;
+}(Embed);
 Mention.blotName = "mention";
 Mention.className = "ql-mention";
 Mention.tagName = "A";
@@ -1546,14 +1648,14 @@ var reactDom_production_min = {
 var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 var ReactPropTypesSecret_1 = ReactPropTypesSecret;
 
-var printWarning = function () {};
+var printWarning = function printWarning() {};
 
 if (process.env.NODE_ENV !== 'production') {
   var ReactPropTypesSecret$1 = ReactPropTypesSecret_1;
   var loggedTypeFailures = {};
   var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
-  printWarning = function (text) {
+  printWarning = function printWarning(text) {
     var message = 'Warning: ' + text;
 
     if (typeof console !== 'undefined') {
@@ -27004,71 +27106,92 @@ if (process.env.NODE_ENV === 'production') {
 }
 });
 
-const BlockEmbed = Quill.import("blots/block/embed");
-class Poll extends BlockEmbed {
-  static create(value) {
-    const id = v4();
-    const node = super.create(value);
-    const refs = Poll.refs;
+var BlockEmbed = Quill["import"]("blots/block/embed");
+var Poll = /*#__PURE__*/function (_BlockEmbed) {
+  _inheritsLoose(Poll, _BlockEmbed);
+
+  Poll.create = function create(value) {
+    var _extends2;
+
+    var id = v4();
+
+    var node = _BlockEmbed.create.call(this, value);
+
+    var refs = Poll.refs;
     node.setAttribute("data-id", id);
     Poll.data = value;
-    Poll.refs = { ...refs,
-      [id]: React.createRef()
-    };
+    Poll.refs = _extends({}, refs, (_extends2 = {}, _extends2[id] = React.createRef(), _extends2));
     return node;
-  }
+  };
 
-  static value(domNode) {
-    const id = domNode.getAttribute("data-id");
-    const ref = Poll.refs[id];
+  Poll.value = function value(domNode) {
+    var id = domNode.getAttribute("data-id");
+    var ref = Poll.refs[id];
     return ref && ref.current && ref.current.getData();
+  };
+
+  function Poll(domNode) {
+    var _this;
+
+    _this = _BlockEmbed.call(this, domNode) || this;
+    _this.id = domNode.getAttribute("data-id");
+    _this.data = Poll.data;
+    return _this;
   }
 
-  constructor(domNode) {
-    super(domNode);
-    this.id = domNode.getAttribute("data-id");
-    this.data = Poll.data;
-  }
+  var _proto = Poll.prototype;
 
-  attach() {
-    super.attach();
+  _proto.attach = function attach() {
+    _BlockEmbed.prototype.attach.call(this);
+
     this.scroll.emitter.emit("blot-mount", this);
-  }
+  };
 
-  renderPortal(id) {
-    const {
-      options
-    } = Quill.find(this.scroll.domNode.parentNode);
-    const ref = Poll.refs[id];
+  _proto.renderPortal = function renderPortal(id) {
+    var _Quill$find = Quill.find(this.scroll.domNode.parentNode),
+        options = _Quill$find.options;
+
+    var ref = Poll.refs[id];
     return reactDom.createPortal( /*#__PURE__*/React.createElement(PollComponent, {
       type: Poll.blotName,
       node: this.data,
       ref: ref,
       readOnly: options.readOnly
     }), this.domNode);
-  }
+  };
 
-  detach() {
-    super.detach();
+  _proto.detach = function detach() {
+    _BlockEmbed.prototype.detach.call(this);
+
     this.scroll.emitter.emit("blot-unmount", this);
-  }
+  };
 
-}
+  return Poll;
+}(BlockEmbed);
 Poll.blotName = "poll";
 Poll.tagName = "div";
-Poll.className = `ql-custom`;
+Poll.className = "ql-custom";
 Poll.ref = {};
 
-class PollComponent extends React.Component {
-  getData() {
+var PollComponent = /*#__PURE__*/function (_React$Component) {
+  _inheritsLoose(PollComponent, _React$Component);
+
+  function PollComponent() {
+    return _React$Component.apply(this, arguments) || this;
+  }
+
+  var _proto2 = PollComponent.prototype;
+
+  _proto2.getData = function getData() {
     return "data";
-  }
+  };
 
-  render() {
+  _proto2.render = function render() {
     return /*#__PURE__*/React.createElement("div", null, "Poll Component");
-  }
+  };
 
-}
+  return PollComponent;
+}(React.Component);
 
 Quill.register({
   "modules/autoformat": Autoformat,
@@ -27078,7 +27201,7 @@ Quill.register({
 function register(toRegister) {
   Quill.register(toRegister);
 }
-const MODULES = {
+var MODULES = {
   toolbar: [["bold", "italic", "underline", "strike"], [{
     align: []
   }], [{
@@ -27102,105 +27225,111 @@ const MODULES = {
     matchVisual: false
   }
 };
-const FORMATS = ["bold", "italic", "underline", "strike", "align", "list", "indent", "size", "header", "link", "image", "video", "color", "background", "clean", "mention", "poll"];
-const AUTOFORMAT = {};
-class Editor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onMount = this.onMount.bind(this);
-    this.onUnmount = this.onUnmount.bind(this);
-    this.onContentChange = this.onContentChange.bind(this);
-    this.editor = null;
-    this.editorContainer = React.createRef();
-    this.state = {
+var FORMATS = ["bold", "italic", "underline", "strike", "align", "list", "indent", "size", "header", "link", "image", "video", "color", "background", "clean", "mention", "poll"];
+var AUTOFORMAT = {};
+var Editor = /*#__PURE__*/function (_React$Component) {
+  _inheritsLoose(Editor, _React$Component);
+
+  function Editor(props) {
+    var _this;
+
+    _this = _React$Component.call(this, props) || this;
+    _this.onMount = _this.onMount.bind(_assertThisInitialized(_this));
+    _this.onUnmount = _this.onUnmount.bind(_assertThisInitialized(_this));
+    _this.onContentChange = _this.onContentChange.bind(_assertThisInitialized(_this));
+    _this.editor = null;
+    _this.editorContainer = React.createRef();
+    _this.state = {
       embedBlots: []
     };
+    return _this;
   }
 
-  componentDidMount() {
-    const {
-      readOnly,
-      modules,
-      formats,
-      autoformat,
-      defaultContent
-    } = this.props;
+  var _proto = Editor.prototype;
+
+  _proto.componentDidMount = function componentDidMount() {
+    var _this2 = this;
+
+    var _this$props = this.props,
+        readOnly = _this$props.readOnly,
+        modules = _this$props.modules,
+        formats = _this$props.formats,
+        autoformat = _this$props.autoformat,
+        defaultContent = _this$props.defaultContent;
     this.editor = new Quill(this.editorContainer.current, {
       theme: "bubble",
-      readOnly,
-      modules: { ...MODULES,
-        ...modules,
-        autoformat: { ...AUTOFORMAT,
-          ...autoformat
-        }
-      },
-      formats: [...FORMATS, ...formats]
+      readOnly: readOnly,
+      modules: _extends({}, MODULES, modules, {
+        autoformat: _extends({}, AUTOFORMAT, autoformat)
+      }),
+      formats: [].concat(FORMATS, formats)
     });
     this.editor.on("text-change", this.onContentChange);
-    let blots = [];
-    this.editor.scroll.emitter.on("blot-mount", blot => {
+    var blots = [];
+    this.editor.scroll.emitter.on("blot-mount", function (blot) {
       blots.push(blot);
-      defer(() => {
+      defer(function () {
         if (blots.length > 0) {
-          this.onMount(...blots);
+          _this2.onMount.apply(_this2, blots);
+
           blots = [];
         }
       });
     });
     this.editor.scroll.emitter.on("blot-unmount", this.onUnmount);
     this.editor.setContents(defaultContent);
-  }
+  };
 
-  onMount(...blots) {
-    const embeds = blots.reduce((memo, blot) => {
+  _proto.onMount = function onMount() {
+    for (var _len = arguments.length, blots = new Array(_len), _key = 0; _key < _len; _key++) {
+      blots[_key] = arguments[_key];
+    }
+
+    var embeds = blots.reduce(function (memo, blot) {
       memo[blot.id] = blot;
       return memo;
-    }, { ...this.state.embedBlots
-    });
+    }, _extends({}, this.state.embedBlots));
     this.setState({
       embedBlots: embeds
     });
-  }
+  };
 
-  onUnmount(unmountedBlot) {
-    const {
-      [unmountedBlot.id]: blot,
-      ...embedBlots
-    } = this.state.embedBlots;
+  _proto.onUnmount = function onUnmount(unmountedBlot) {
+    var _this$state$embedBlot = this.state.embedBlots,
+        _unmountedBlot$id = unmountedBlot.id,
+        embedBlots = _objectWithoutPropertiesLoose(_this$state$embedBlot, [_unmountedBlot$id].map(_toPropertyKey));
+
     this.setState({
-      embedBlots
+      embedBlots: embedBlots
     });
-  }
+  };
 
-  onContentChange(delta, oldDelta, source) {
-    const {
-      onContentChange
-    } = this.props;
+  _proto.onContentChange = function onContentChange(delta, oldDelta, source) {
+    var onContentChange = this.props.onContentChange;
     onContentChange(this.editor.getContents());
-  }
+  };
 
-  render() {
-    const {
-      spellCheck
-    } = this.props;
+  _proto.render = function render() {
+    var spellCheck = this.props.spellCheck;
     return /*#__PURE__*/React.createElement("div", {
       spellCheck: spellCheck,
       ref: this.editorContainer
-    }, map(this.state.embedBlots, blot => blot.renderPortal(blot.id)));
-  }
+    }, map(this.state.embedBlots, function (blot) {
+      return blot.renderPortal(blot.id);
+    }));
+  };
 
-}
+  return Editor;
+}(React.Component);
 
-const ContentSkeleton = React.memo(({
-  _contentManager,
-  _defaultContent,
-  _onContentChange,
-  _modules,
-  _formats,
-  _autoformat,
-  _readOnly,
-  _spellCheck
-}) => {
+var ContentSkeleton = React.memo(function (_ref) {
+  var _defaultContent = _ref._defaultContent,
+      _onContentChange = _ref._onContentChange,
+      _modules = _ref._modules,
+      _formats = _ref._formats,
+      _autoformat = _ref._autoformat,
+      _readOnly = _ref._readOnly,
+      _spellCheck = _ref._spellCheck;
   return React.createElement(Editor, {
     defaultContent: _defaultContent,
     onContentChange: _onContentChange,
@@ -27212,49 +27341,51 @@ const ContentSkeleton = React.memo(({
   });
 });
 
+var _excluded = ["forwardedRef", "modules", "formats", "autoformat", "readOnly", "spellCheck"];
 function UseContent(Component) {
-  class WithContent extends React.Component {
-    constructor(props) {
-      super(props);
-      this.onContentChange = this.onContentChange.bind(this);
-      this.empty = this.empty.bind(this);
-      const {
-        defaultContent
-      } = this.props;
+  var WithContent = /*#__PURE__*/function (_React$Component) {
+    _inheritsLoose(WithContent, _React$Component);
 
-      const _defaultContent = defaultContent !== undefined ? defaultContent : this.empty();
+    function WithContent(props) {
+      var _this;
 
-      this.state = {
+      _this = _React$Component.call(this, props) || this;
+      _this.onContentChange = _this.onContentChange.bind(_assertThisInitialized(_this));
+      _this.empty = _this.empty.bind(_assertThisInitialized(_this));
+      var defaultContent = _this.props.defaultContent;
+
+      var _defaultContent = defaultContent !== undefined ? defaultContent : _this.empty();
+
+      _this.state = {
         defaultContent: _defaultContent
       };
+      return _this;
     }
 
-    onContentChange(content) {
-      const {
-        onContentChange
-      } = this.props;
+    var _proto = WithContent.prototype;
+
+    _proto.onContentChange = function onContentChange(content) {
+      var onContentChange = this.props.onContentChange;
       if (onContentChange !== undefined) onContentChange(content);
-    }
+    };
 
-    empty() {
+    _proto.empty = function empty() {
       return {
         ops: []
       };
-    }
+    };
 
-    render() {
-      const {
-        forwardedRef,
-        modules,
-        formats,
-        autoformat,
-        readOnly,
-        spellCheck,
-        ...rest
-      } = this.props;
-      const {
-        defaultContent
-      } = this.state;
+    _proto.render = function render() {
+      var _this$props = this.props,
+          forwardedRef = _this$props.forwardedRef,
+          modules = _this$props.modules,
+          formats = _this$props.formats,
+          autoformat = _this$props.autoformat,
+          readOnly = _this$props.readOnly,
+          spellCheck = _this$props.spellCheck,
+          rest = _objectWithoutPropertiesLoose(_this$props, _excluded);
+
+      var defaultContent = this.state.defaultContent;
       return React.createElement(Component, Object.assign({}, rest, {
         ref: forwardedRef,
         _contentManager: this,
@@ -27266,16 +27397,19 @@ function UseContent(Component) {
         _readOnly: readOnly !== undefined ? readOnly : false,
         _spellCheck: spellCheck !== undefined ? spellCheck : false
       }));
-    }
+    };
 
-  }
+    return WithContent;
+  }(React.Component);
 
-  return React.forwardRef((props, ref) => React.createElement(WithContent, Object.assign({}, props, {
-    forwardedRef: ref
-  })));
+  return React.forwardRef(function (props, ref) {
+    return React.createElement(WithContent, Object.assign({}, props, {
+      forwardedRef: ref
+    }));
+  });
 }
 
-const Content = UseContent(ContentSkeleton);
+var Content = UseContent(ContentSkeleton);
 
 export { Content, ContentSkeleton, Editor, register };
 //# sourceMappingURL=index.modern.js.map

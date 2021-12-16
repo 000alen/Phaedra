@@ -1,5 +1,5 @@
+import { IOrientation } from "phaedra-notebook";
 import React from "react";
-import { IOrientation } from "./types";
 
 export function computePosition(
   orientation: IOrientation,

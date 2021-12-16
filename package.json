@@ -13,10 +13,13 @@
     "start:gh-pages": "npm run start --workspace=gh-pages",
     "start:content": "npm run start --workspace=packages/phaedra-content",
     "start:layout": "npm run start --workspace=packages/phaedra-layout",
+    "start:notebook": "npm run start --workspace=packages/phaedra-notebook",
     "build:content": "npm run build --workspace=packages/phaedra-content",
     "build:layout": "npm run build --workspace=packages/phaedra-layout",
+    "build:notebook": "npm run build --workspace=packages/phaedra-notebook",
     "example:content": "npm run start --workspace=packages/phaedra-content/example/",
-    "example:layout": "npm run start --workspace=packages/phaedra-layout/example/"
+    "example:layout": "npm run start --workspace=packages/phaedra-layout/example/",
+    "example:notebook": "npm run start --workspace=packages/phaedra-notebook/example/"
   },
   "dependencies": {},
   "devDependencies": {

@@ -1,6 +1,6 @@
+import { ILayout, ILayoutController, IOrientation, IPaneProps } from "phaedra-notebook";
 import React from "react";
-import { IOrientation } from "..";
-import { ILayout, ILayoutController, IPaneProps } from "../types";
+
 import { computePosition, computeSize } from "../utils";
 import { Divider } from "./Divider";
 import { Pane } from "./Pane";

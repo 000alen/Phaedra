@@ -5,6 +5,7 @@
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
+    "dmg-license": "1.0.10",
     "@craco/craco": "^6.3.0",
     "@fluentui/react": "^8.37.1",
     "@rjsf/core": "^3.2.1",
@@ -39,15 +40,14 @@
     "wait-on": "^6.0.0",
     "web-vitals": "^2.1.2",
     "wikijs": "^6.3.2",
-    "y-websocket": "^1.2.4",
-    "yjs": "^13.0.4"
+    "json-schema": "0.4.0"
   },
   "scripts": {
     "build:react": "react-scripts build",
     "build:electron": "electron-builder",
     "build:craco": "craco build",
-    "start": "npx concurrently \"npx cross-env BROWSER=none npx cross-env TAILWIND_MODE=watch npx craco start\" \"npx wait-on http://localhost:3000 && npx electron .\"",
-    "build": "yarn build:craco && yarn build:electron",
+    "start": "concurrently \"cross-env BROWSER=none cross-env TAILWIND_MODE=watch craco start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "npm run build:craco && npm run build:electron",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
@@ -65,7 +65,6 @@
   },
   "devDependencies": {
     "@types/aria-query": "^5.0.0",
-    "@types/electron": "^1.6.10",
     "@types/jest": "^27.0.3",
     "@types/lodash": "^4.14.178",
     "@types/mousetrap": "^1.6.8",
@@ -75,7 +74,23 @@
     "@types/react-dom": "^17.0.11",
     "@types/react-pdf": "^5.0.9",
     "@types/uuid": "^8.3.3",
+    "@types/json-schema": "^7.0.7",
     "electron": "^15.3.0",
-    "electron-builder": "^22.13.1"
+    "electron-builder": "^22.13.1",
+    "concurrently": "^6.3.0",
+    "cross-env": "^7.0.3",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "babel-eslint": "^10.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-config-standard-react": "^11.0.1",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "prettier": "^2.5.1"
   }
 }

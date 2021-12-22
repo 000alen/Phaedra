@@ -4,9 +4,8 @@
   "description": "Made with create-react-library",
   "author": "000alen",
   "license": "MIT",
-  "repository": "000alen/phaedra-layout",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "module": "dist/index.modern.js",
   "source": "src/index.tsx",
   "engines": {
@@ -19,9 +18,7 @@
     "test": "run-s test:unit test:build",
     "test:build": "run-s build",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
-    "test:watch": "react-scripts test --env=jsdom",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "test:watch": "react-scripts test --env=jsdom"
   },
   "peerDependencies": {
     "react": "^16.0.0"
@@ -51,6 +48,7 @@
   ],
   "dependencies": {
     "mousetrap": "^1.6.5",
-    "utility-types": "^3.10.0"
+    "utility-types": "^3.10.0",
+    "phaedra-notebook": "0.1.0"
   }
 }

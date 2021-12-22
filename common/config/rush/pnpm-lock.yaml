@@ -1,14 +1,18 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@babel/plugin-syntax-object-rest-spread': ^7.8.3
   '@craco/craco': ^6.3.0
   '@rjsf/core': ^3.2.1
   '@rjsf/fluent-ui': ^3.2.1
   '@rush-temp/gh-page': file:./projects/gh-page.tgz
   '@rush-temp/phaedra': file:./projects/phaedra.tgz
   '@rush-temp/phaedra-content': file:./projects/phaedra-content.tgz
+  '@rush-temp/phaedra-content-example': file:./projects/phaedra-content-example.tgz
   '@rush-temp/phaedra-layout': file:./projects/phaedra-layout.tgz
+  '@rush-temp/phaedra-layout-example': file:./projects/phaedra-layout-example.tgz
   '@rush-temp/phaedra-notebook': file:./projects/phaedra-notebook.tgz
+  '@rush-temp/phaedra-notebook-example': file:./projects/phaedra-notebook-example.tgz
   '@types/aria-query': ^5.0.0
   '@types/json-schema': ^7.0.7
   '@types/lodash': ^4.14.178
@@ -60,14 +64,18 @@ specifiers:
   wikijs: ^6.3.2
 
 dependencies:
+  '@babel/plugin-syntax-object-rest-spread': 7.8.3
   '@craco/craco': 6.4.3
   '@rjsf/core': 3.2.1
   '@rjsf/fluent-ui': 3.2.1_@rjsf+core@3.2.1
   '@rush-temp/gh-page': file:projects/gh-page.tgz
   '@rush-temp/phaedra': file:projects/phaedra.tgz
   '@rush-temp/phaedra-content': file:projects/phaedra-content.tgz
+  '@rush-temp/phaedra-content-example': file:projects/phaedra-content-example.tgz
   '@rush-temp/phaedra-layout': file:projects/phaedra-layout.tgz
+  '@rush-temp/phaedra-layout-example': file:projects/phaedra-layout-example.tgz
   '@rush-temp/phaedra-notebook': file:projects/phaedra-notebook.tgz
+  '@rush-temp/phaedra-notebook-example': file:projects/phaedra-notebook-example.tgz
   '@types/aria-query': 5.0.0
   '@types/json-schema': 7.0.9
   '@types/lodash': 4.14.178
@@ -1189,6 +1197,14 @@ packages:
       '@babel/core': ^7.0.0-0
     dependencies:
       '@babel/core': 7.9.0
+      '@babel/helper-plugin-utils': 7.16.5
+    dev: false
+
+  /@babel/plugin-syntax-object-rest-spread/7.8.3:
+    resolution: {integrity: sha512-XoqMijGZb9y3y2XskN+P1wUGiVwWZ5JmoDRwx5+3GmEplNyVM2s2Dg8ILFQm8rWM48orGy5YpI5Bl8U1y7ydlA==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
       '@babel/helper-plugin-utils': 7.16.5
     dev: false
 
@@ -19748,6 +19764,45 @@ packages:
       - webpack-plugin-serve
     dev: false
 
+  file:projects/phaedra-content-example.tgz:
+    resolution: {integrity: sha512-btWUA7XoAvEqLeyYqr4CCej5/wA703VLKwsczZvwVogfs4sb9hG2kjIoa5FpuLl8PrORu15k3df+lAvr7lsrQQ==, tarball: file:projects/phaedra-content-example.tgz}
+    name: '@rush-temp/phaedra-content-example'
+    version: 0.0.0
+    dependencies:
+      '@babel/plugin-syntax-object-rest-spread': 7.8.3
+      '@testing-library/jest-dom': 5.16.1
+      '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
+      '@testing-library/user-event': 12.8.3
+      '@types/jest': 27.0.3
+      '@types/node': 16.11.15
+      '@types/react': 17.0.37
+      '@types/react-dom': 17.0.11
+      quill: 1.3.7
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-scripts: 4.0.3_react@17.0.2+typescript@4.5.4
+      typescript: 4.5.4
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@testing-library/dom'
+      - '@types/webpack'
+      - acorn
+      - bufferutil
+      - canvas
+      - fibers
+      - node-sass
+      - sass
+      - sockjs-client
+      - supports-color
+      - ts-node
+      - type-fest
+      - utf-8-validate
+      - webpack-cli
+      - webpack-command
+      - webpack-hot-middleware
+      - webpack-plugin-serve
+    dev: false
+
   file:projects/phaedra-content.tgz:
     resolution: {integrity: sha512-OZicC92vKYidu6Uat9XErmF9IDUGbqsVSegkXJyo8kmNR9vA3G4rexmIsE4sF1yA4EUBwNNcwnDDPSDHIJfdNA==, tarball: file:projects/phaedra-content.tgz}
     name: '@rush-temp/phaedra-content'
@@ -19785,6 +19840,44 @@ packages:
       - webpack-cli
     dev: false
 
+  file:projects/phaedra-layout-example.tgz:
+    resolution: {integrity: sha512-o+zuzcQxd3X7EPLjTIUJF/M2HEB8+ik3saSpPGSt39A507CSt0PzVJ0EY5lGVVI2eDmF551tu1YMPzBX8slt4A==, tarball: file:projects/phaedra-layout-example.tgz}
+    name: '@rush-temp/phaedra-layout-example'
+    version: 0.0.0
+    dependencies:
+      '@babel/plugin-syntax-object-rest-spread': 7.8.3
+      '@testing-library/jest-dom': 5.16.1
+      '@testing-library/react': 11.2.7_react-dom@17.0.2+react@17.0.2
+      '@testing-library/user-event': 12.8.3
+      '@types/jest': 27.0.3
+      '@types/node': 16.11.15
+      '@types/react': 17.0.37
+      '@types/react-dom': 17.0.11
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-scripts: 4.0.3_react@17.0.2+typescript@4.5.4
+      typescript: 4.5.4
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@testing-library/dom'
+      - '@types/webpack'
+      - acorn
+      - bufferutil
+      - canvas
+      - fibers
+      - node-sass
+      - sass
+      - sockjs-client
+      - supports-color
+      - ts-node
+      - type-fest
+      - utf-8-validate
+      - webpack-cli
+      - webpack-command
+      - webpack-hot-middleware
+      - webpack-plugin-serve
+    dev: false
+
   file:projects/phaedra-layout.tgz:
     resolution: {integrity: sha512-Fc8/tx/03e7y4MtrmkSC/w8YCErqkYfqe/rJmT+hfPW4vXN0F/CqtC34pl3Y27uMIwI7Wpx+1RlF7ykN6onLsA==, tarball: file:projects/phaedra-layout.tgz}
     name: '@rush-temp/phaedra-layout'
@@ -19811,6 +19904,33 @@ packages:
       typescript: 3.9.10
       utility-types: 3.10.0
     transitivePeerDependencies:
+      - '@testing-library/dom'
+      - fibers
+      - node-sass
+      - sass
+      - supports-color
+      - webpack-cli
+    dev: false
+
+  file:projects/phaedra-notebook-example.tgz:
+    resolution: {integrity: sha512-MQ7Cx9MatFE/s1SUMTEE6K4ha2vUr+DaT9qaIW6ZpY6q9eFZ9Xs43WlUwKpm0oir0zQxlHXp8t49JgfD18RfwQ==, tarball: file:projects/phaedra-notebook-example.tgz}
+    name: '@rush-temp/phaedra-notebook-example'
+    version: 0.0.0
+    dependencies:
+      '@babel/plugin-syntax-object-rest-spread': 7.8.3
+      '@testing-library/jest-dom': 4.2.4
+      '@testing-library/react': 9.5.0_react-dom@16.14.0+react@16.14.0
+      '@testing-library/user-event': 7.2.1
+      '@types/jest': 25.2.3
+      '@types/node': 12.20.38
+      '@types/react': 16.14.21
+      '@types/react-dom': 16.9.14
+      react: 16.14.0
+      react-dom: 16.14.0_react@16.14.0
+      react-scripts: 3.4.4_typescript@3.9.10
+      typescript: 3.9.10
+    transitivePeerDependencies:
+      - '@babel/core'
       - '@testing-library/dom'
       - fibers
       - node-sass

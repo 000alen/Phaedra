@@ -1,6 +1,7 @@
-import "phaedra-layout/dist/index.css";
-import { Layout, ILayout, ILayoutController, IDirection } from "phaedra-layout";
+import { Layout } from "phaedra-layout";
+import { IDirection, ILayout, ILayoutController } from "phaedra-notebook";
 import React from "react";
+
 import { Item } from "./components/Item";
 
 const defaultLayout = {
@@ -42,7 +43,7 @@ const defaultLayout = {
       ]
     }
   ]
-};
+} as ILayout;
 
 function App() {
   const [layout] = React.useState<ILayout>(defaultLayout);

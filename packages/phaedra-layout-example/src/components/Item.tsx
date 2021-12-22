@@ -1,8 +1,9 @@
+import { IPaneProps } from "phaedra-notebook";
 import React from "react";
 
 import style from "../css/Item.module.css";
 
-interface ItemProps {}
+interface ItemProps extends IPaneProps {}
 
 interface ItemState {
   background: string;

@@ -447,6 +447,18 @@
     {
       "packageName": "gh-page",
       "projectFolder": "gh-page"
+    },
+    {
+      "packageName": "phaedra-notebook-example",
+      "projectFolder": "packages/phaedra-notebook-example"
+    },
+    {
+      "packageName": "phaedra-layout-example",
+      "projectFolder": "packages/phaedra-layout-example"
+    },
+    {
+      "packageName": "phaedra-content-example",
+      "projectFolder": "packages/phaedra-content-example"
     }
   ]
 }
